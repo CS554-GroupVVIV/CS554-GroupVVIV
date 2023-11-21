@@ -1,14 +1,14 @@
 import React from 'react';
-import './App.css';
+import '../App.css';
 import {Route, Routes} from 'react-router-dom';
-import Account from './components/Account';
-import Home from './components/Home';
-import Landing from './components/Landing';
-import Navigation from './components/Navigation';
-import SignIn from './components/SignIn';
-import SignUp from './components/SignUp';
-import {AuthProvider} from './context/AuthContext';
-import PrivateRoute from './components/PrivateRoute';
+import Account from './Account';
+import Home from './Home';
+import Landing from './Landing';
+import Navigation from './Navigation';
+import SignIn from './SignIn';
+import SignUp from './SignUp';
+import {AuthProvider} from '../context/AuthContext';
+import PrivateRoute from './PrivateRoute';
 function App() {
   return (
     <AuthProvider>
