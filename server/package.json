@@ -1,0 +1,21 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "CS554 GroupVVIV Final Project - Stevens Marketplace",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tzuminglu/CS554-GroupVVIV.git"
+  },
+  "author": "cs554-groupvviv",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tzuminglu/CS554-GroupVVIV/issues"
+  },
+  "homepage": "https://github.com/tzuminglu/CS554-GroupVVIV#readme"
+}
