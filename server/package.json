@@ -17,5 +17,10 @@
   "bugs": {
     "url": "https://github.com/tzuminglu/CS554-GroupVVIV/issues"
   },
-  "homepage": "https://github.com/tzuminglu/CS554-GroupVVIV#readme"
+  "homepage": "https://github.com/tzuminglu/CS554-GroupVVIV#readme",
+  "dependencies": {
+    "@apollo/server": "^4.9.5",
+    "graphql": "^16.8.1",
+    "mongodb": "^6.3.0"
+  }
 }
