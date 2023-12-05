@@ -8,6 +8,7 @@ export const typeDefs = `#graphql
 
     type Query {
         products: [Product],
+        searchProducts(searchTerm: String!): [Product],
         searchProductsByName(name: String!): [Product],
         getProductById(_id:ObjectID!):Product
     }

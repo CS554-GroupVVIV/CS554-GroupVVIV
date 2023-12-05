@@ -26,12 +26,35 @@ export const resolvers = {
       }
     },
 
+    searchProducts: async (_, args) => {
+      try {
+        const products = await productCollection();
+        products.createIndex({
+          name: "text",
+          // description: "text",
+          // category: "text",
+        });
+
+        const productList = await products
+          .find({ $text: { $search: args.searchTerm } })
+          .toArray();
+        if (!productList) {
+          throw new GraphQLError("product not found", {
+            extensions: { code: "NOT_FOUND" },
+          });
+        }
+        return productList;
+      } catch (error) {
+        throw new GraphQLError(error.message);
+      }
+    },
+
     searchProductsByName: async (_, args) => {
       try {
         let productName = checkName(args.name);
         const products = await productCollection();
         const productsByName = await products
-          .find({ name: productName })
+          .find({ name: { $regex: productName, $options: "i" } })
           .toArray();
         if (!productsByName) {
           throw new GraphQLError("product not found", {

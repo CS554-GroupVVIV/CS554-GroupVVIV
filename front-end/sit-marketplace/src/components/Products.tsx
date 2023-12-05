@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from "react";
 
+import { useNavigate } from "react-router-dom";
+
 import { useQuery } from "@apollo/client";
 import { GET_PRODUCTS } from "../queries";
 
+import ProductForm from "./ProductForm";
 import ProductCard from "./ProductCard";
 
 type Product = {
@@ -11,6 +14,8 @@ type Product = {
 };
 
 export default function Products() {
+  const navigate = useNavigate();
+
   const { loading, error, data } = useQuery(GET_PRODUCTS, {
     fetchPolicy: "cache-and-network",
   });
@@ -25,6 +30,16 @@ export default function Products() {
 
   return (
     <div>
+      <button
+        onClick={() => {
+          navigate("/");
+        }}
+      >
+        Home
+      </button>
+
+      <ProductForm />
+
       <h1>Products:</h1>
       {products &&
         products.map((product: Product) => {
