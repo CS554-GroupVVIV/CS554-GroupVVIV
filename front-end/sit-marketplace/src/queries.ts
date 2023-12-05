@@ -8,3 +8,12 @@ export const GET_PRODUCTS = gql`
     }
   }
 `;
+
+export const GET_POSTS = gql`
+  query {
+    posts {
+      _id
+      title
+    }
+  }
+`;

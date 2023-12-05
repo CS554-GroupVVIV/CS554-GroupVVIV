@@ -1,12 +1,16 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
 import Home from "./components/Home.tsx";
+import Products from "./components/Products.tsx";
+import Posts from "./components/Posts.tsx";
 
 function App() {
   return (
     <div className="App">
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/products" element={<Products />} />
+        <Route path="/posts" element={<Posts />} />
       </Routes>
     </div>
   );

@@ -1,34 +1,61 @@
 import React, { useState, useEffect } from "react";
 
-import { useQuery } from "@apollo/client";
-import { GET_PRODUCTS } from "../queries";
+import { useNavigate } from "react-router-dom";
 
-function Home() {
+import { useQuery } from "@apollo/client";
+import { GET_PRODUCTS, GET_POSTS } from "../queries";
+
+import ProductCard from "./ProductCard";
+
+type Product = {
+  _id: string;
+  name: string;
+};
+
+export default function Home() {
+  const navigate = useNavigate();
+
   const { loading, error, data } = useQuery(GET_PRODUCTS, {
     fetchPolicy: "cache-and-network",
   });
 
-  const [products, setProducts] = useState(undefined);
+  const [firstTenProducts, setFirstTenProducts] = useState([]);
 
   useEffect(() => {
     if (!loading && !error && data.products) {
-      setProducts(data.products);
+      setFirstTenProducts(data.products.slice(0, 10));
     }
-  }, [loading, data]);
+  }, [loading]);
 
   return (
     <div>
       <h1>Home</h1>
 
-      <h2>Products:</h2>
-      <ul>
-        {products &&
-          products.map((product) => {
-            return <li key={product._id}>{product.name}</li>;
+      <div>
+        <h2>First 10 Products:</h2>
+        {firstTenProducts &&
+          firstTenProducts.map((product: Product) => {
+            return <ProductCard key={product._id} productData={product} />;
           })}
-      </ul>
+        <button
+          onClick={() => {
+            navigate("/products");
+          }}
+        >
+          More
+        </button>
+      </div>
+
+      <div>
+        <h2>First 10 Posts:</h2>
+        <button
+          onClick={() => {
+            navigate("/posts");
+          }}
+        >
+          More
+        </button>
+      </div>
     </div>
   );
 }
-
-export default Home;
