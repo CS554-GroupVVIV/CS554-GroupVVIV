@@ -1,6 +1,8 @@
 import { useState, useRef, useEffect } from "react";
 import React from "react";
-import { useRouter } from "next/navigation";
+// import { useRouter } from "next/navigation";
+import { useMutation, useQuery } from "@apollo/client";
+
 import moment, { Moment } from "moment";
 import axios from "axios";
 
@@ -144,10 +146,11 @@ export default function SellForm() {
         }
   };
 
-  const router = useRouter();
+  // const router = useRouter();
 
   const submit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    console.log("submit");
 
     helper.checkName();
     helper.checkPrice();
@@ -163,6 +166,7 @@ export default function SellForm() {
       descriptionError ||
       categoryError
     ) {
+      console.log("error", nameError, priceError, conditionError, descriptionError, categoryError);
       return;
     }
 
@@ -176,16 +180,6 @@ export default function SellForm() {
         formData.append("image", image);
     }
 
-    try {
-      const res = await axios.post(
-        "http://localhost:3000/api/upload",
-        formData,
-        { headers: { "Content-Type": "multipart/form-data" } }
-      );
-      console.log(res);
-    } catch (err) {
-      console.log(err);
-    }
   };
 
   return (
