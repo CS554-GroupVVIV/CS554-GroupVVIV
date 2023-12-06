@@ -6,6 +6,7 @@ import { useQuery } from "@apollo/client";
 import { GET_PRODUCTS, GET_POSTS } from "../queries";
 
 import ProductCard from "./ProductCard";
+import SearchProduct from "./SearchProduct";
 
 type Product = {
   _id: string;
@@ -21,6 +22,9 @@ export default function Home() {
 
   const [firstTenProducts, setFirstTenProducts] = useState([]);
 
+  const [text, setText] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
+
   useEffect(() => {
     if (!loading && !error && data.products) {
       setFirstTenProducts(data.products.slice(0, 10));
@@ -30,6 +34,26 @@ export default function Home() {
   return (
     <div>
       <h1>Home</h1>
+
+      <form
+        onSubmit={(event) => {
+          event.preventDefault();
+          setSearchTerm(text);
+          setText("");
+        }}
+      >
+        <label>
+          Search Product:
+          <input
+            type="text"
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+          />
+        </label>
+        <input type="submit" />
+      </form>
+
+      {searchTerm && <SearchProduct searchTerm={searchTerm} />}
 
       <div>
         <h2>First 10 Products:</h2>
