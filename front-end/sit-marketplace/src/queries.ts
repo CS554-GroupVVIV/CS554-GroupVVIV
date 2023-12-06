@@ -14,6 +14,23 @@ export const GET_PRODUCTS = gql`
   }
 `;
 
+export const GET_POSTS = gql`
+  query {
+    posts {
+      _id
+      buyer_id
+      seller_id
+      item
+      category
+      price
+      condition
+      date
+      description
+      isComplete
+    }
+  }
+`;
+
 export const ADD_PRODUCT = gql`
   mutation (
     $name: String!
@@ -45,6 +62,37 @@ export const ADD_PRODUCT = gql`
   }
 `;
 
+export const ADD_POST = gql`
+  mutation (
+    $buyer_id: String!
+    $item: String!
+    $category: String!
+    $price: Number!
+    $condition: String!
+    $description: String!
+  ) {
+    addPost(
+      buyer_id: $buyer_id
+      item: $item
+      category: $category
+      price: $price
+      condition: $condition
+      description: $description
+    ) {
+      _id
+      buyer_id
+      seller_id
+      item
+      category
+      price
+      condition
+      date
+      description
+      isComplete
+    }
+  }
+`;
+
 export const SEARCH_PRODUCTS = gql`
   query ($searchTerm: String!) {
     searchProducts(searchTerm: $searchTerm) {
@@ -59,15 +107,6 @@ export const SEARCH_PRODUCTS_BY_NAME = gql`
     searchProductsByName(name: $name) {
       _id
       name
-    }
-  }
-`;
-
-export const GET_POSTS = gql`
-  query {
-    posts {
-      _id
-      title
     }
   }
 `;

@@ -8,6 +8,7 @@ export const typeDefs = `#graphql
 
     type Query {
         products: [Product],
+        posts: [Post],
         searchProducts(searchTerm: String!): [Product],
         searchProductsByName(name: String!): [Product],
         getProductById(_id:ObjectID!):Product
@@ -20,16 +21,30 @@ export const typeDefs = `#graphql
         date:DateTime!,
         description:String,
         condition:String,
-        seller_id:String!,
+        seller_id:ObjectID,
         buyer_id:ObjectID,
         image:base64,
         category:String,
         isSold:Boolean!
     }
 
+    type Post {
+      _id: ObjectID!,
+      buyer_id: ObjectID!,
+      seller_id: ObjectID,
+      item: String!,
+      category:String!,
+      price: Number!,
+      condition:String,
+      date:DateTime!,
+      description:String,
+      isComplete:Boolean!
+  }
+
     type Mutation {
-        addProduct(name:String!, price: Number!,date:DateTime!,description:String!,condition:String!,seller_id:String!, image:base64!,category:String!):Product,
-        editProduct(_id: ObjectID!, name:String, price: Number,date:DateTime,description:String,condition:String,seller_id:String,buyer_id:ObjectID, image:base64,category:String,isSold:Boolean! ):Product,
+        addProduct(name:String!, price: Number!,date:DateTime!,description:String!,condition:String!,seller_id:ObjectID!, image:base64!,category:String!):Product,
+        addPost(buyer_id: String!, item:String!, category:String!, price: Number!, condition:String!, description:String!):Post,
+        editProduct(_id: ObjectID!, name:String, price: Number,date:DateTime,description:String,condition:String,seller_id:ObjectID!,buyer_id:ObjectID, image:base64,category:String,isSold:Boolean! ):Product,
         removeProduct(_id:ObjectID!):Product
     }
 `;

@@ -4,7 +4,9 @@ import Home from "./components/Home.tsx";
 import Products from "./components/Products.tsx";
 import Posts from "./components/Posts.tsx";
 import Login from "./components/Login.tsx";
-import { AuthProvider } from "./context/AuthContext"
+import SignUp from "./components/Signup.tsx";
+import { AuthProvider } from "./context/AuthContext";
+import PostForm from "./components/PostForm.tsx";
 
 function App() {
   return (
@@ -15,6 +17,8 @@ function App() {
           <Route path="/products" element={<Products />} />
           <Route path="/posts" element={<Posts />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/newpost" element={<PostForm />} />
         </Routes>
       </div>
     </AuthProvider>
