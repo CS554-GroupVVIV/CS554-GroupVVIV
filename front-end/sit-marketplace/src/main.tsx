@@ -11,6 +11,11 @@ import {
   ApolloProvider,
 } from "@apollo/client";
 
+import fbconfig from "./firebase/FirebaseConfig";
+import { initializeApp } from "firebase/app";
+
+const app = initializeApp(fbconfig);
+
 const client = new ApolloClient({
   cache: new InMemoryCache(),
   link: new HttpLink({
