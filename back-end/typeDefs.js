@@ -21,7 +21,7 @@ export const typeDefs = `#graphql
         date:DateTime!,
         description:String,
         condition:String,
-        seller_id:String!,
+        seller_id:ObjectID,
         buyer_id:ObjectID,
         image:base64,
         category:String,
@@ -42,9 +42,9 @@ export const typeDefs = `#graphql
   }
 
     type Mutation {
-        addProduct(name:String!, price: Number!,date:DateTime!,description:String!,condition:String!,seller_id:String!, image:base64!,category:String!):Product,
+        addProduct(name:String!, price: Number!,date:DateTime!,description:String!,condition:String!,seller_id:ObjectID!, image:base64!,category:String!):Product,
         addPost(buyer_id: String!, item:String!, category:String!, price: Number!, condition:String!, description:String!):Post,
-        editProduct(_id: ObjectID!, name:String, price: Number,date:DateTime,description:String,condition:String,seller_id:String,buyer_id:ObjectID, image:base64,category:String,isSold:Boolean! ):Product,
+        editProduct(_id: ObjectID!, name:String, price: Number,date:DateTime,description:String,condition:String,seller_id:ObjectID!,buyer_id:ObjectID, image:base64,category:String,isSold:Boolean! ):Product,
         removeProduct(_id:ObjectID!):Product
     }
 `;

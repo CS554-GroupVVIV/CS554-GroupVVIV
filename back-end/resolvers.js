@@ -99,7 +99,8 @@ export const resolvers = {
         console.log(args);
         let id = checkId(args._id.toString());
         const products = await productCollection();
-        const product = await products.find({ _id: id });
+        const product = await products.findOne({ _id: id });
+        console.log(product);
         if (!product) {
           throw new GraphQLError("product not found", {
             extensions: { code: "NOT_FOUND" },
@@ -120,7 +121,7 @@ export const resolvers = {
         }
         let name = args.name;
         let price = args.price;
-        let date = args.date;
+        let date = new Date();
         let description = args.description;
         let condition = args.condition;
         let seller_id = args.seller_id;
@@ -129,7 +130,7 @@ export const resolvers = {
         // ********need input check*************
         const products = await productCollection();
         const newProduct = {
-          _id: new ObjectId().toString(),
+          _id: new ObjectId(),
           name: name,
           price: price,
           date: date,
