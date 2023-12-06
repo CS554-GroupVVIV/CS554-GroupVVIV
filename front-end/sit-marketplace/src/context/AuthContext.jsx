@@ -6,7 +6,6 @@ export const AuthContext = React.createContext();
 export const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
   const [loadingUser, setLoadingUser] = useState(true);
-  console.log(123);
   const auth = getAuth();
   useEffect(() => {
     let myListener = onAuthStateChanged(auth, (user) => {

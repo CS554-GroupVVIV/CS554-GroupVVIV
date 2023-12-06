@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 
 import { useNavigate } from "react-router-dom";
 
@@ -7,6 +7,8 @@ import { GET_PRODUCTS, GET_POSTS } from "../queries";
 
 import ProductCard from "./ProductCard";
 import SearchProduct from "./SearchProduct";
+import LogoutButton from "./LogoutButton";
+import { AuthContext } from "../context/AuthContext";
 
 type Product = {
   _id: string;
@@ -15,6 +17,7 @@ type Product = {
 
 export default function Home() {
   const navigate = useNavigate();
+  const { currentUser } = useContext(AuthContext);
 
   const { loading, error, data } = useQuery(GET_PRODUCTS, {
     fetchPolicy: "cache-and-network",
@@ -30,7 +33,7 @@ export default function Home() {
       setFirstTenProducts(data.products.slice(0, 10));
     }
   }, [loading]);
-
+  console.log(currentUser);
   return (
     <div>
       <h1>Home</h1>
@@ -80,6 +83,17 @@ export default function Home() {
           More
         </button>
       </div>
+      {currentUser ? (
+        <LogoutButton />
+      ) : (
+        <button
+          onClick={() => {
+            navigate("/login");
+          }}
+        >
+          Login
+        </button>
+      )}
     </div>
   );
 }

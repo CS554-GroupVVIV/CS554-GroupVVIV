@@ -4,7 +4,7 @@ import { doSignOut } from "../firebase/FirebaseFunction";
 const LogoutButton = () => {
   return (
     <button className="button" type="button" onClick={doSignOut}>
-      Sign Out
+      Log Out
     </button>
   );
 };
