@@ -15,7 +15,7 @@ const checkName = (str) => {
 const checkId = (str) => {
   if (!str) throw new Error("Must provide an id");
   if (!ObjectId.isValid(str)) throw new Error("Invalid id");
-  return new ObjectId(str);
+  return str;
 };
 
 const checkItem = (str) => {

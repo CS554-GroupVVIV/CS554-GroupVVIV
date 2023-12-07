@@ -76,6 +76,7 @@ export const ObjectID = new GraphQLScalarType({
 });
 
 export const DateTime = new GraphQLScalarType({
+  // MM/DD/YYYY LOCALTIME
   name: "DateTime",
   description: "DateTime scalar type",
   serialize(value) {
