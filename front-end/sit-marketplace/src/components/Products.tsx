@@ -22,6 +22,9 @@ export default function Products() {
 
   const [products, setProducts] = useState([]);
 
+  const [text, setText] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
+
   useEffect(() => {
     if (!loading && !error && data.products) {
       setProducts(data.products);
@@ -37,6 +40,26 @@ export default function Products() {
       >
         Home
       </button>
+
+      <form
+        onSubmit={(event) => {
+          event.preventDefault();
+          setSearchTerm(text);
+          setText("");
+        }}
+      >
+        <label>
+          Search Product:
+          <input
+            type="text"
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+          />
+        </label>
+        <input type="submit" />
+      </form>
+
+      {searchTerm && <SearchProduct searchTerm={searchTerm} />}
 
       <ProductForm />
 
