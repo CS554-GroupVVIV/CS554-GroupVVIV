@@ -21,3 +21,4 @@ NOTE: YOU WILL NEED TO CHANGE THE CODE BELOW AND UNCOMMENT IT TO HAVE THE COLLEC
 export const users = getCollectionFn("users");
 export const products = getCollectionFn("products");
 export const posts = getCollectionFn("posts");
+export const chats = getCollectionFn("chats");

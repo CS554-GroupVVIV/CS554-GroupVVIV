@@ -3,6 +3,7 @@ import {
   products as productCollection,
   posts as postCollection,
   users as userCollection,
+  chats as chatCollection,
 } from "./config/mongoCollections.js";
 // import { v4 as uuid } from "uuid";
 import { ObjectId } from "mongodb";
@@ -17,7 +18,7 @@ import {
   checkDate,
   checkDescription,
   checkEmail,
-  checkUserId,
+  checkUserAndChatId,
 } from "./helper.js";
 
 export const resolvers = {
@@ -116,7 +117,7 @@ export const resolvers = {
     getUserById: async (_, args) => {
       try {
         console.log(args);
-        let id = checkUserId(args._id.toString());
+        let id = checkUserAndChatId(args._id.toString());
         const usersData = await userCollection();
         const user = await usersData.findOne({ _id: id });
         console.log(user);
@@ -126,6 +127,24 @@ export const resolvers = {
           });
         }
         return user;
+      } catch (error) {
+        throw new GraphQLError(error.message);
+      }
+    },
+
+    getChatById: async (_, args) => {
+      try {
+        console.log(args);
+        let id = checkUserAndChatId(args._id.toString());
+        const chatData = await chatCollection();
+        const chat = await usersData.findOne({ _id: id });
+        console.log(chat);
+        if (!chat) {
+          throw new GraphQLError("Chat not found", {
+            extensions: { code: "NOT_FOUND" },
+          });
+        }
+        return chat;
       } catch (error) {
         throw new GraphQLError(error.message);
       }
@@ -226,6 +245,56 @@ export const resolvers = {
           });
         }
         return newUser;
+      } catch (error) {
+        throw new GraphQLError(error.message);
+      }
+    },
+
+    addChat: async (_, args) => {
+      try {
+        let { particpant } = args;
+        const chatData = await chatCollection();
+        const newChat = {
+          _id: new ObjectId().toString(),
+          particpant,
+          messages: [],
+        };
+        let insertedChat = await chatData.insertOne(newChat);
+        if (!insertedChat) {
+          throw new GraphQLError(`Could not Add chat`, {
+            extensions: { code: "INTERNAL_SERVER_ERROR" },
+          });
+        }
+        return newChat;
+      } catch (error) {
+        throw new GraphQLError(error.message);
+      }
+    },
+
+    addMessage: async (_, args) => {
+      try {
+        let { _id, sender, time, message } = args;
+        const chatData = await chatCollection();
+        const newMessage = {
+          sender,
+          time,
+          message,
+        };
+
+        let insertedMessage = await chatData.findOneAndUpdate(
+          { _id: _id.toString() },
+          {
+            $push: {
+              messages: newMessage,
+            },
+          }
+        );
+        if (!insertedMessage) {
+          throw new GraphQLError(`Could not Add Message`, {
+            extensions: { code: "INTERNAL_SERVER_ERROR" },
+          });
+        }
+        return newMessage;
       } catch (error) {
         throw new GraphQLError(error.message);
       }

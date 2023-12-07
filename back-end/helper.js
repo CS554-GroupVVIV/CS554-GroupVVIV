@@ -108,7 +108,7 @@ export const checkEmail = (email) => {
   return email;
 };
 
-export const checkUserId = (id) => {
+export const checkUserAndChatId = (id) => {
   if (!id) throw "You must provide an id to search for";
   if (typeof id !== "string" && typeof id !== "object")
     throw "Id must be a string or ObjectId";

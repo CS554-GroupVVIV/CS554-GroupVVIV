@@ -84,7 +84,16 @@ export default function Home() {
         </button>
       </div>
       {currentUser ? (
-        <LogoutButton />
+        <>
+          <LogoutButton />
+          <button
+            onClick={() => {
+              navigate("/chat");
+            }}
+          >
+            Chat
+          </button>
+        </>
       ) : (
         <>
           <button
