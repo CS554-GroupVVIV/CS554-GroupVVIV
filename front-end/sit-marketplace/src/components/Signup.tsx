@@ -2,24 +2,40 @@ import React, { useContext, useState } from "react";
 import { Navigate } from "react-router-dom";
 import { doCreateUserWithEmailAndPassword } from "../firebase/FirebaseFunction";
 import { AuthContext } from "../context/AuthContext";
+import { useMutation } from "@apollo/client";
+import { ADD_USER } from "../queries";
 
 function SignUp() {
-  const { currentUser } = useContext(AuthContext);
+  let { currentUser } = useContext(AuthContext);
+  const [addUser] = useMutation(ADD_USER);
+
   const [pwMatch, setPwMatch] = useState("");
+
   const handleSignUp = async (e) => {
     e.preventDefault();
-    const { displayName, email, passwordOne, passwordTwo } = e.target.elements;
+    let { displayFirstName, displayLastName, email, passwordOne, passwordTwo } =
+      e.target.elements;
     if (passwordOne.value !== passwordTwo.value) {
       setPwMatch("Passwords do not match");
       return false;
     }
 
     try {
-      await doCreateUserWithEmailAndPassword(
+      let user = await doCreateUserWithEmailAndPassword(
         email.value,
         passwordOne.value,
-        displayName.value
+        displayFirstName.value
       );
+      console.log(user);
+
+      addUser({
+        variables: {
+          _id: user.uid,
+          email: user.email,
+          lastname: displayLastName.value,
+          firstname: displayFirstName.value,
+        },
+      });
     } catch (error) {
       alert(error);
     }
@@ -36,14 +52,28 @@ function SignUp() {
       <form onSubmit={handleSignUp}>
         <div className="form-group">
           <label>
-            Name:
+            First Name:
             <br />
             <input
               className="form-control"
               required
-              name="displayName"
+              name="displayFirstName"
               type="text"
-              placeholder="Name"
+              placeholder="First Name"
+              autoFocus={true}
+            />
+          </label>
+        </div>
+        <div className="form-group">
+          <label>
+            Last Name:
+            <br />
+            <input
+              className="form-control"
+              required
+              name="displayLastName"
+              type="text"
+              placeholder="Last Name"
               autoFocus={true}
             />
           </label>

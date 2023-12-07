@@ -95,6 +95,28 @@ const checkDate = (date) => {
   return date;
 };
 
+export const checkEmail = (email) => {
+  const regex = new RegExp(
+    /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@(stevens.edu)$/i
+  );
+  email = email.trim().toLowerCase();
+  if (!email) throw "You must provide a user email to search for";
+  if (typeof email !== "string") throw "User email must be a string";
+  if (email.length === 0)
+    throw "User email cannot be an empty string or just spaces";
+  if (!regex.test(email)) throw `You must provide a valid Stevens' email address`
+  return email;
+};
+
+export const checkUserId = (id) => {
+  if (!id) throw "You must provide an id to search for";
+  if (typeof id !== "string" && typeof id !== "object")
+    throw "Id must be a string or ObjectId";
+  if (id.trim().length === 0)
+    throw "id cannot be an empty string or just spaces";
+  return id.trim();
+};
+
 export {
   checkId,
   checkName,

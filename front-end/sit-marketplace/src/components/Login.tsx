@@ -31,6 +31,7 @@ function Login() {
       );
     }
   };
+  
   if (currentUser) {
     return <Navigate to="/" />;
   }

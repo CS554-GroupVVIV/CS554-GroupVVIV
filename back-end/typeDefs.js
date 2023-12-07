@@ -12,6 +12,7 @@ export const typeDefs = `#graphql
         searchProducts(searchTerm: String!): [Product],
         searchProductsByName(name: String!): [Product],
         getProductById(_id:ObjectID!):Product
+        getUserById(_id: String!): User
     }
     
     type Product {
@@ -41,11 +42,19 @@ export const typeDefs = `#graphql
       isComplete:Boolean!
   }
 
+    type User{
+    _id : String,
+    email: String,
+    firstname: String,
+    lastname: String
+  }
+
     type Mutation {
         addProduct(name:String!, price: Number!,date:DateTime!,description:String!,condition:String!,seller_id:ObjectID!, image:base64!,category:String!):Product,
         addPost(buyer_id: String!, item:String!, category:String!, price: Number!, condition:String!, description:String!):Post,
         editProduct(_id: ObjectID!, name:String, price: Number,date:DateTime,description:String,condition:String,seller_id:ObjectID!,buyer_id:ObjectID, image:base64,category:String,isSold:Boolean! ):Product,
-        removeProduct(_id:ObjectID!):Product
+        removeProduct(_id:ObjectID!):Product,
+        addUser(_id: String!, email: String!, firstname: String!, lastname: String!): User,
     }
 `;
 

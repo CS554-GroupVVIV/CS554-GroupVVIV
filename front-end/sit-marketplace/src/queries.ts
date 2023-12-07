@@ -31,6 +31,17 @@ export const GET_POSTS = gql`
   }
 `;
 
+export const GET_USER = gql`
+  query {
+    getUserById(_id: $_id) {
+      _id
+      email
+      firstname
+      lastname
+    }
+  }
+`;
+
 export const ADD_PRODUCT = gql`
   mutation (
     $name: String!
@@ -89,6 +100,27 @@ export const ADD_POST = gql`
       date
       description
       isComplete
+    }
+  }
+`;
+
+export const ADD_USER = gql`
+  mutation (
+    $_id: String!
+    $email: String!
+    $firstname: String!
+    $lastname: String!
+  ) {
+    addUser(
+      _id: $_id
+      email: $email
+      firstname: $firstname
+      lastname: $lastname
+    ) {
+      _id
+      email
+      firstname
+      lastname
     }
   }
 `;

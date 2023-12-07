@@ -2,6 +2,7 @@ import { GraphQLError } from "graphql";
 import {
   products as productCollection,
   posts as postCollection,
+  users as userCollection,
 } from "./config/mongoCollections.js";
 // import { v4 as uuid } from "uuid";
 import { ObjectId } from "mongodb";
@@ -15,6 +16,8 @@ import {
   checkCondition,
   checkDate,
   checkDescription,
+  checkEmail,
+  checkUserId,
 } from "./helper.js";
 
 export const resolvers = {
@@ -111,6 +114,24 @@ export const resolvers = {
         throw new GraphQLError(error.message);
       }
     },
+
+    getUserById: async (_, args) => {
+      try {
+        console.log(args);
+        let id = checkUserId(args._id.toString());
+        const usersData = await userCollection();
+        const user = await usersData.findOne({ _id: id });
+        console.log(user);
+        if (!user) {
+          throw new GraphQLError("User not found", {
+            extensions: { code: "NOT_FOUND" },
+          });
+        }
+        return user;
+      } catch (error) {
+        throw new GraphQLError(error.message);
+      }
+    },
   },
 
   Mutation: {
@@ -185,6 +206,28 @@ export const resolvers = {
           });
         }
         return newPost;
+      } catch (error) {
+        throw new GraphQLError(error.message);
+      }
+    },
+
+    addUser: async (_, args) => {
+      try {
+        let { _id, email, firstname, lastname } = args;
+        const usersData = await userCollection();
+        const newUser = {
+          _id,
+          email,
+          firstname,
+          lastname,
+        };
+        let insertedUser = await usersData.insertOne(newUser);
+        if (!insertedUser) {
+          throw new GraphQLError(`Could not Add User`, {
+            extensions: { code: "INTERNAL_SERVER_ERROR" },
+          });
+        }
+        return newUser;
       } catch (error) {
         throw new GraphQLError(error.message);
       }
