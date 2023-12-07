@@ -6,6 +6,7 @@ import Posts from "./components/Posts.tsx";
 import Login from "./components/Login.tsx";
 import { AuthProvider } from "./context/AuthContext";
 import PostForm from "./components/PostForm.tsx";
+import ProductDetail from "./components/ProductDetail.tsx";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
           <Route path="/posts" element={<Posts />} />
           <Route path="/login" element={<Login />} />
           <Route path="/newpost" element={<PostForm />} />
+          <Route path="/product/:id" element={<ProductDetail />} />
         </Routes>
       </div>
     </AuthProvider>

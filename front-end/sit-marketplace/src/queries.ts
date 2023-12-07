@@ -110,3 +110,19 @@ export const SEARCH_PRODUCTS_BY_NAME = gql`
     }
   }
 `;
+
+export const SEARCH_PRODUCTS_BY_ID = gql`
+  query Query($id: ObjectID!) {
+    getProductById(_id: $id) {
+      _id
+      category
+      condition
+      date
+      description
+      image
+      isSold
+      name
+      price
+    }
+  }
+`;
