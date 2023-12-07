@@ -96,11 +96,9 @@ export const resolvers = {
 
     getProductById: async (_, args) => {
       try {
-        console.log(args);
-        let id = checkId(args._id.toString());
+        let id = checkId(args._id);
         const products = await productCollection();
-        const product = await products.findOne({ _id: id });
-        console.log(product);
+        const product = await products.findOne({ _id: id.toString() });
         if (!product) {
           throw new GraphQLError("product not found", {
             extensions: { code: "NOT_FOUND" },
