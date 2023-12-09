@@ -4,6 +4,7 @@ import { doCreateUserWithEmailAndPassword } from "../firebase/FirebaseFunction";
 import { AuthContext } from "../context/AuthContext";
 import { useMutation } from "@apollo/client";
 import { ADD_USER } from "../queries";
+import * as validation from "../helper.tsx";
 
 function SignUp() {
   let { currentUser } = useContext(AuthContext);
@@ -21,10 +22,25 @@ function SignUp() {
     }
 
     try {
+      displayFirstName = validation.checkFirstNameAndLastName(
+        displayFirstName.value,
+        "First Name"
+      );
+      displayLastName = validation.checkFirstNameAndLastName(
+        displayLastName.value,
+        "Last Name"
+      );
+      email = validation.checkEmail(email.value);
+    } catch (error) {
+      alert(error);
+      return false;
+    }
+
+    try {
       let user = await doCreateUserWithEmailAndPassword(
-        email.value,
+        email,
         passwordOne.value,
-        displayFirstName.value
+        displayFirstName
       );
       console.log(user);
 
@@ -32,8 +48,8 @@ function SignUp() {
         variables: {
           _id: user.uid,
           email: user.email,
-          lastname: displayLastName.value,
-          firstname: displayFirstName.value,
+          lastname: displayLastName,
+          firstname: displayFirstName,
         },
       });
     } catch (error) {
@@ -48,7 +64,6 @@ function SignUp() {
   return (
     <div className="card">
       <h1>Sign up</h1>
-      {pwMatch && <h4 className="error">{pwMatch}</h4>}
       <form onSubmit={handleSignUp}>
         <div className="form-group">
           <label>
@@ -120,6 +135,7 @@ function SignUp() {
             />
           </label>
         </div>
+        {pwMatch && <h4 className="error">{pwMatch}</h4>}
         <button
           className="button"
           id="submitButton"
