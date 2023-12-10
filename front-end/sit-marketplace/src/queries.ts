@@ -42,6 +42,15 @@ export const GET_USER = gql`
   }
 `;
 
+export const GET_CHAT_BY_PARTICIPANTS = gql`
+  query ($participants: [String!]!) {
+    getChatByParticipants (participants: $participants){
+    participants : [String],
+    messages : [Message]
+    }
+  }
+`;
+
 export const ADD_PRODUCT = gql`
   mutation (
     $name: String!

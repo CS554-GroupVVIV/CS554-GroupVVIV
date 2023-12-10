@@ -20,7 +20,7 @@ import {
   checkEmail,
   checkUserAndChatId,
   checkFirstNameAndLastName,
-  capitalizeName
+  capitalizeName,
 } from "./helper.js";
 import bcrypt from "bcryptjs";
 const { hash, compare } = bcrypt;
@@ -139,8 +139,28 @@ export const resolvers = {
         console.log(args);
         let id = checkUserAndChatId(args._id.toString());
         const chatData = await chatCollection();
-        const chat = await usersData.findOne({ _id: id });
-        console.log(chat);
+        const chat = await chatData.findOne({ _id: id });
+        // console.log(chat);
+        if (!chat) {
+          throw new GraphQLError("Chat not found", {
+            extensions: { code: "NOT_FOUND" },
+          });
+        }
+        return chat;
+      } catch (error) {
+        throw new GraphQLError(error.message);
+      }
+    },
+
+    getChatByParticipants: async (_, args) => {
+      try {
+        console.log(args);
+
+        const chatData = await chatCollection();
+        const chat = await chatData.findOne({
+          participants: { $all: args.participants },
+        });
+        // console.log(chat);
         if (!chat) {
           throw new GraphQLError("Chat not found", {
             extensions: { code: "NOT_FOUND" },
@@ -236,8 +256,12 @@ export const resolvers = {
         const saltRounds = 10;
         // check ID not implement yet
         email = checkEmail(email);
-        firstname = capitalizeName(checkFirstNameAndLastName(firstname, "First Name"));
-        lastname = capitalizeName(checkFirstNameAndLastName(lastname, "Last Name"));
+        firstname = capitalizeName(
+          checkFirstNameAndLastName(firstname, "First Name")
+        );
+        lastname = capitalizeName(
+          checkFirstNameAndLastName(lastname, "Last Name")
+        );
 
         password = await bcrypt.hash(password, saltRounds);
         const usersData = await userCollection();
@@ -265,9 +289,12 @@ export const resolvers = {
         let { _id, email, firstname, lastname, password } = args;
         // check ID not implement yet
         email = checkEmail(email);
-        firstname = capitalizeName(checkFirstNameAndLastName(firstname, "First Name"));
-        lastname = capitalizeName(checkFirstNameAndLastName(lastname, "Last Name"));
-
+        firstname = capitalizeName(
+          checkFirstNameAndLastName(firstname, "First Name")
+        );
+        lastname = capitalizeName(
+          checkFirstNameAndLastName(lastname, "Last Name")
+        );
 
         const usersData = await userCollection();
         const updatedUserInfo = {
@@ -325,11 +352,11 @@ export const resolvers = {
 
     addChat: async (_, args) => {
       try {
-        let { particpant } = args;
+        let { participants } = args;
         const chatData = await chatCollection();
         const newChat = {
-          _id: new ObjectId().toString(),
-          particpant,
+          _id: new ObjectId(),
+          participants,
           messages: [],
         };
         let insertedChat = await chatData.insertOne(newChat);
@@ -355,7 +382,7 @@ export const resolvers = {
         };
 
         let insertedMessage = await chatData.findOneAndUpdate(
-          { _id: _id.toString() },
+          { _id: new ObjectId(_id.toString()) },
           {
             $push: {
               messages: newMessage,

@@ -3,20 +3,35 @@ import io from "socket.io-client";
 import { AuthContext } from "../context/AuthContext";
 
 // import './App.css';
-import Chat from './Chat';
+import Chat from "./Chat";
+
+import { useQuery } from "@apollo/client";
+import { GET_CHAT_BY_PARTICIPANTS } from "../queries";
 
 export default function Chatbox() {
   const { currentUser } = useContext(AuthContext);
-  const [state, setState] = useState({ message: "", name: currentUser.displayName });
+  const [state, setState] = useState({
+    message: "",
+    name: currentUser.displayName,
+  });
   const [chat, setChat] = useState([]);
   const socketRef = useRef();
+
+  const { loading, error, data } = useQuery(GET_CHAT_BY_PARTICIPANTS, {
+    variables: { participants: [currentUser.uid] },
+    fetchPolicy: "cache-and-network",
+  });
 
   useEffect(() => {
     socketRef.current = io("http://localhost:4001");
     return () => {
       socketRef.current.disconnect();
     };
-  }, []);
+
+    if (!loading) {
+      console.log(data);
+    }
+  }, [loading]);
 
   useEffect(() => {
     socketRef.current.on("message", ({ name, message }) => {
@@ -44,7 +59,16 @@ export default function Chatbox() {
 
   const onMessageSubmit = (e) => {
     let msgEle = document.getElementById("message");
-    console.log([msgEle.name], msgEle.value);
+
+    const curDateTime = new Date();
+    const msgData = {
+      sender: currentUser.uid,
+      time: curDateTime.toISOString(),
+      message: msgEle.value,
+    };
+    // console.log([msgEle.name], msgEle.value);
+    console.log(msgData);
+
     setState({ ...state, [msgEle.name]: msgEle.value });
     console.log("Going to send the message event to the server");
     socketRef.current.emit("message", {

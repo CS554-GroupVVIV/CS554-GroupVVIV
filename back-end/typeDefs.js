@@ -13,7 +13,8 @@ export const typeDefs = `#graphql
         searchProductsByName(name: String!): [Product],
         getProductById(_id:ObjectID!):Product,
         getUserById(_id: String!): User,
-        getChatById(_id: String!): Chat
+        getChatById(_id: String!): Chat,
+        getChatByParticipants(participants: [String!]!): Chat
     }
     
     type Product {
@@ -59,7 +60,7 @@ export const typeDefs = `#graphql
 
     type Chat{
     _id : ObjectID!,
-    particpant : [String],
+    participants : [String],
     messages : [Message]
   }
 
@@ -71,7 +72,7 @@ export const typeDefs = `#graphql
         addUser(_id: String!, email: String!, firstname: String!, lastname: String!, password: String!): User,
         editUser(_id: String!, email: String!, firstname: String!, lastname: String!, password: String!): User,
         editPassword(_id: String!, prePassword: String!, newPassword: String!): User,
-        addChat(particpant: [String!]!): Chat,
+        addChat(participants: [String!]!): Chat,
         addMessage(_id: ObjectID!, sender: ID!, time: DateTime!, message: String!): Message
     }
 `;
