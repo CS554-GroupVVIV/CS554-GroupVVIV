@@ -10,39 +10,67 @@ import { GET_CHAT_BY_PARTICIPANTS } from "../queries";
 
 export default function Chatbox() {
   const { currentUser } = useContext(AuthContext);
+  const userId = currentUser.uid;
+
   const [state, setState] = useState({
     message: "",
-    name: currentUser.displayName,
+    sender: userId,
   });
   const [chat, setChat] = useState([]);
   const socketRef = useRef();
 
   const { loading, error, data } = useQuery(GET_CHAT_BY_PARTICIPANTS, {
-    variables: { participants: [currentUser.uid] },
+    variables: { participants: [userId] },
     fetchPolicy: "cache-and-network",
   });
+
+  const [chatHistoryLoaded, setChatHistoryLoaded] = useState(false);
+  const [participants, setParticipants] = useState(undefined);
+
+  useEffect(() => {
+    if (!loading) {
+      if (error) {
+        console.log(error);
+      } else {
+        setParticipants(data.getChatByParticipants.participants);
+
+        if (!chatHistoryLoaded) {
+          const chatHistory = data.getChatByParticipants.messages;
+          // console.log(chatHistory);
+          chatHistory &&
+            chatHistory.map((message) => {
+              // console.log(message.sender, message.message);
+              setChat([
+                ...chat,
+                {
+                  sender: message.sender,
+                  message: message.message,
+                },
+              ]);
+            });
+          setChatHistoryLoaded(true);
+        }
+      }
+    }
+  }, [loading]);
 
   useEffect(() => {
     socketRef.current = io("http://localhost:4001");
     return () => {
       socketRef.current.disconnect();
     };
-
-    if (!loading) {
-      console.log(data);
-    }
-  }, [loading]);
+  }, []);
 
   useEffect(() => {
-    socketRef.current.on("message", ({ name, message }) => {
+    socketRef.current.on("message", ({ sender, message }) => {
       console.log("The server has broadcast message data to all clients");
-      setChat([...chat, { name, message }]);
+      setChat([...chat, { sender, message }]);
     });
     socketRef.current.on("user_join", function (data) {
       console.log("The server has broadcast user join event to all clients");
       setChat([
         ...chat,
-        { name: "ChatBot", message: `${data} has joined the chat` },
+        { sender: "ChatBot", message: `${data} has joined the chat` },
       ]);
     });
 
@@ -54,7 +82,7 @@ export default function Chatbox() {
 
   const userjoin = (currentUser) => {
     console.log("Going to send the user join event to the server");
-    socketRef.current.emit("user_join", currentUser.displayName);
+    socketRef.current.emit("user_join", currentUser);
   };
 
   const onMessageSubmit = (e) => {
@@ -62,7 +90,7 @@ export default function Chatbox() {
 
     const curDateTime = new Date();
     const msgData = {
-      sender: currentUser.uid,
+      sender: userId,
       time: curDateTime.toISOString(),
       message: msgEle.value,
     };
@@ -72,22 +100,22 @@ export default function Chatbox() {
     setState({ ...state, [msgEle.name]: msgEle.value });
     console.log("Going to send the message event to the server");
     socketRef.current.emit("message", {
-      name: state.name,
+      sender: userId,
       message: msgEle.value,
     });
     e.preventDefault();
-    setState({ message: "", name: state.name });
+    setState({ message: "", sender: userId });
     msgEle.value = "";
     msgEle.focus();
   };
 
   return (
     <div>
-      {state.name && (
+      {state.sender && (
         <div className="card">
           <div className="render-chat">
             <h1>Chat Log</h1>
-            <Chat chat={chat} />
+            <Chat chat={chat} participants={participants} />
           </div>
           <form className="chatform" onSubmit={onMessageSubmit}>
             <input

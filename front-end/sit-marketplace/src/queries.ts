@@ -32,7 +32,7 @@ export const GET_POSTS = gql`
 `;
 
 export const GET_USER = gql`
-  query {
+  query ($_id: String!) {
     getUserById(_id: $_id) {
       _id
       email
@@ -42,11 +42,27 @@ export const GET_USER = gql`
   }
 `;
 
+export const GET_USERS_BY_IDS = gql`
+  query ($ids: [String!]!) {
+    getUsersByIds(ids: $ids) {
+      _id
+      firstname
+      lastname
+      email
+    }
+  }
+`;
+
 export const GET_CHAT_BY_PARTICIPANTS = gql`
   query ($participants: [String!]!) {
-    getChatByParticipants (participants: $participants){
-    participants : [String],
-    messages : [Message]
+    getChatByParticipants(participants: $participants) {
+      _id
+      participants
+      messages {
+        message
+        sender
+        time
+      }
     }
   }
 `;

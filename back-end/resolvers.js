@@ -134,6 +134,25 @@ export const resolvers = {
       }
     },
 
+    getUsersByIds: async (_, args) => {
+      try {
+        // console.log(args);
+        // let ids = checkUserAndChatId();
+        const usersData = await userCollection();
+        const users = await usersData
+          .find({ _id: { $in: args.ids } })
+          .toArray();
+        if (!users) {
+          throw new GraphQLError("User not found", {
+            extensions: { code: "NOT_FOUND" },
+          });
+        }
+        return users;
+      } catch (error) {
+        throw new GraphQLError(error.message);
+      }
+    },
+
     getChatById: async (_, args) => {
       try {
         console.log(args);
@@ -160,7 +179,6 @@ export const resolvers = {
         const chat = await chatData.findOne({
           participants: { $all: args.participants },
         });
-        // console.log(chat);
         if (!chat) {
           throw new GraphQLError("Chat not found", {
             extensions: { code: "NOT_FOUND" },
