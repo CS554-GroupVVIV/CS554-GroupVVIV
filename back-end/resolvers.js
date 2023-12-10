@@ -19,7 +19,11 @@ import {
   checkDescription,
   checkEmail,
   checkUserAndChatId,
+  checkFirstNameAndLastName,
+  capitalizeName
 } from "./helper.js";
+import bcrypt from "bcryptjs";
+const { hash, compare } = bcrypt;
 
 export const resolvers = {
   ObjectID: ObjectID,
@@ -116,11 +120,9 @@ export const resolvers = {
 
     getUserById: async (_, args) => {
       try {
-        console.log(args);
         let id = checkUserAndChatId(args._id.toString());
         const usersData = await userCollection();
         const user = await usersData.findOne({ _id: id });
-        console.log(user);
         if (!user) {
           throw new GraphQLError("User not found", {
             extensions: { code: "NOT_FOUND" },
@@ -230,21 +232,92 @@ export const resolvers = {
 
     addUser: async (_, args) => {
       try {
-        let { _id, email, firstname, lastname } = args;
+        let { _id, email, firstname, lastname, password } = args;
+        const saltRounds = 10;
+        // check ID not implement yet
+        email = checkEmail(email);
+        firstname = capitalizeName(checkFirstNameAndLastName(firstname, "First Name"));
+        lastname = capitalizeName(checkFirstNameAndLastName(lastname, "Last Name"));
+
+        password = await bcrypt.hash(password, saltRounds);
         const usersData = await userCollection();
         const newUser = {
           _id,
           email,
           firstname,
           lastname,
+          password,
         };
-        let insertedUser = await usersData.insertOne(newUser);
+        const insertedUser = await usersData.insertOne(newUser);
         if (!insertedUser) {
           throw new GraphQLError(`Could not Add User`, {
             extensions: { code: "INTERNAL_SERVER_ERROR" },
           });
         }
         return newUser;
+      } catch (error) {
+        throw new GraphQLError(error);
+      }
+    },
+
+    editUser: async (_, args) => {
+      try {
+        let { _id, email, firstname, lastname, password } = args;
+        // check ID not implement yet
+        email = checkEmail(email);
+        firstname = capitalizeName(checkFirstNameAndLastName(firstname, "First Name"));
+        lastname = capitalizeName(checkFirstNameAndLastName(lastname, "Last Name"));
+
+
+        const usersData = await userCollection();
+        const updatedUserInfo = {
+          email,
+          firstname,
+          lastname,
+        };
+
+        let preUserInfo = await usersData.findOne({ _id });
+        if (!(await bcrypt.compare(password, preUserInfo.password)))
+          throw "Password doesn't match the previous password";
+        let updatedUser = await usersData.findOneAndUpdate(
+          { _id },
+          { $set: updatedUserInfo },
+          { returnDocument: "after" }
+        );
+        if (!updatedUser) {
+          throw new GraphQLError(`Could not Edit User`, {
+            extensions: { code: "INTERNAL_SERVER_ERROR" },
+          });
+        }
+        return updatedUser;
+      } catch (error) {
+        throw new GraphQLError(error);
+      }
+    },
+
+    editPassword: async (_, args) => {
+      try {
+        let { _id, prePassword, newPassword } = args;
+        const usersData = await userCollection();
+        newPassword = await bcrypt.hash(newPassword, 10);
+        const updatedUserInfo = {
+          password: newPassword,
+        };
+
+        let preUserInfo = await usersData.findOne({ _id });
+        if (!(await bcrypt.compare(prePassword, preUserInfo.password)))
+          throw "Password doesn't match the previous password";
+        let updatedInfo = await usersData.findOneAndUpdate(
+          { _id },
+          { $set: updatedUserInfo },
+          { returnDocument: "after" }
+        );
+        if (!updatedInfo) {
+          throw new GraphQLError(`Could not Chage Password`, {
+            extensions: { code: "INTERNAL_SERVER_ERROR" },
+          });
+        }
+        return updatedInfo;
       } catch (error) {
         throw new GraphQLError(error.message);
       }

@@ -8,7 +8,7 @@ export const checkFirstNameAndLastName = (str, valStr) => {
     throw new Error(`${valStr} should not be just space`);
   if (str.length < 1)
     throw new Error(`${valStr} should have at least 1 character.`);
-  let pattern = new RegExp("^[A-Za-z]+$");
+  let pattern = new RegExp(/^(?=.{1,50}$)[a-z]+(?:['_.\s][a-z]+)*$/i);
   if (!pattern.test(str))
     throw new Error(`${valStr} should only contain letters.`);
   str = str.charAt(0).toUpperCase() + str.slice(1);

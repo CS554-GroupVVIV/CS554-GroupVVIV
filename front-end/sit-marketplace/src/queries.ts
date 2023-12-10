@@ -125,6 +125,27 @@ export const ADD_USER = gql`
   }
 `;
 
+export const EDIT_USER = gql`
+  mutation (
+    $id: String!
+    $email: String!
+    $firstname: String!
+    $lastname: String!
+  ) {
+    editUser(
+      _id: $id
+      email: $email
+      firstname: $firstname
+      lastname: $lastname
+    ) {
+      _id
+      email
+      firstname
+      lastname
+    }
+  }
+`;
+
 export const SEARCH_PRODUCTS = gql`
   query ($searchTerm: String!) {
     searchProducts(searchTerm: $searchTerm) {
