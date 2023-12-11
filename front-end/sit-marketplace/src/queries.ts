@@ -129,6 +129,21 @@ export const ADD_POST = gql`
   }
 `;
 
+export const ADD_MESSAGE = gql`
+  mutation (
+    $chatId: String!
+    $sender: ID!
+    $message: String!
+    $time: DateTime!
+  ) {
+    addMessage(_id: $chatId, sender: $sender, message: $message, time: $time) {
+      message
+      sender
+      time
+    }
+  }
+`;
+
 export const ADD_USER = gql`
   mutation (
     $_id: String!

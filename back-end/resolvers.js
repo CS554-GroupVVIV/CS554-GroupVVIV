@@ -179,6 +179,7 @@ export const resolvers = {
         const chat = await chatData.findOne({
           participants: { $all: args.participants },
         });
+
         if (!chat) {
           throw new GraphQLError("Chat not found", {
             extensions: { code: "NOT_FOUND" },
@@ -400,7 +401,7 @@ export const resolvers = {
         };
 
         let insertedMessage = await chatData.findOneAndUpdate(
-          { _id: new ObjectId(_id.toString()) },
+          { _id: new ObjectId(_id) },
           {
             $push: {
               messages: newMessage,
