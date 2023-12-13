@@ -18,34 +18,51 @@ export default function RoomList() {
     socketRef.current.on("rooms", (data) => setRooms(data));
   }, [socketRef.current]);
 
-  const [rooms, setRooms] = useState([]);
+  const [rooms, setRooms] = useState({});
   const [curRoom, setCurRoom] = useState(undefined);
 
-  return (
-    <div>
-      <h2>Room List:</h2>
+  if (Object.keys(rooms).length > 0) {
+    return (
       <div>
-        <ul>
-          {rooms &&
-            Object.keys(rooms).map((room, i) => {
-              return (
-                <li key={i}>
-                  <button
-                    onClick={(e) => {
-                      e.preventDefault();
-                      curRoom === room
-                        ? setCurRoom(undefined)
-                        : setCurRoom(room);
-                    }}
-                  >
-                    {room}
-                  </button>
-                </li>
-              );
-            })}
-        </ul>
+        <button
+          onClick={(e) => {
+            e.preventDefault();
+          }}
+        >
+          Close All
+        </button>
+        <div>
+          <ul>
+            {rooms &&
+              Object.keys(rooms).map((room, i) => {
+                return (
+                  <li key={i}>
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault();
+                        curRoom === room
+                          ? setCurRoom(undefined)
+                          : setCurRoom(room);
+                      }}
+                    >
+                      {room}
+                    </button>
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault();
+                      }}
+                    >
+                      Close
+                    </button>
+                  </li>
+                );
+              })}
+          </ul>
+        </div>
+        <div>{curRoom && <ChatRoom room={curRoom} />}</div>
       </div>
-      <div>{curRoom && <ChatRoom room={curRoom} />}</div>
-    </div>
-  );
+    );
+  } else {
+    return <h4>Nothing here...</h4>;
+  }
 }

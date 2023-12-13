@@ -11,8 +11,8 @@ import LogoutButton from "./LogoutButton";
 import { AuthContext } from "../context/AuthContext";
 
 import ChatRooms from "./ChatRooms";
-import Chatbox from "./Chatbox";
-import RoomList from "./ChatRooms";
+
+import { Grid } from "@mui/material";
 
 type Product = {
   _id: string;
@@ -34,38 +34,11 @@ export default function Home() {
       setFirstTenProducts(data.products.slice(0, 10));
     }
   }, [loading]);
-  console.log(currentUser);
+  // console.log(currentUser);
   return (
     <div>
       <h1>Home</h1>
 
-      {currentUser ? <ChatRooms /> : <></>}
-
-      <div>
-        <h2>First 10 Products:</h2>
-        {firstTenProducts &&
-          firstTenProducts.map((product: Product) => {
-            return <ProductCard key={product._id} productData={product} />;
-          })}
-        <button
-          onClick={() => {
-            navigate("/products");
-          }}
-        >
-          More
-        </button>
-      </div>
-
-      <div>
-        <h2>First 10 Posts:</h2>
-        <button
-          onClick={() => {
-            navigate("/posts");
-          }}
-        >
-          More
-        </button>
-      </div>
       {currentUser ? (
         <>
           <LogoutButton />
@@ -88,6 +61,69 @@ export default function Home() {
           </button>
         </>
       )}
+
+      <Grid container direction={"row"} spacing={2} marginTop={1}>
+        <Grid item>
+          <div style={{ textAlign: "center" }}>
+            <h2>First 10 Products:</h2>
+            <button
+              onClick={() => {
+                navigate("/products");
+              }}
+            >
+              More
+            </button>
+          </div>
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            <Grid
+              container
+              spacing={2}
+              style={{
+                overflowX: "auto",
+                flexWrap: "nowrap",
+                padding: "16px",
+                maxWidth: "70vw",
+              }}
+            >
+              {firstTenProducts &&
+                firstTenProducts.map((product: Product) => {
+                  return (
+                    <ProductCard key={product._id} productData={product} />
+                  );
+                })}
+            </Grid>
+          </div>
+
+          <div style={{ textAlign: "center" }}>
+            <h2>First 10 Posts:</h2>
+            <button
+              onClick={() => {
+                navigate("/posts");
+              }}
+            >
+              More
+            </button>
+          </div>
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            <Grid
+              container
+              spacing={2}
+              style={{
+                overflowX: "auto",
+                flexWrap: "nowrap",
+                padding: "16px",
+                maxWidth: "70vw",
+              }}
+            ></Grid>
+          </div>
+        </Grid>
+        <Grid item>
+          <h2>Chat Rooms:</h2>
+          <div>
+            {currentUser ? <ChatRooms /> : <h4>Please Login to chat</h4>}
+          </div>
+        </Grid>
+      </Grid>
     </div>
   );
 }
