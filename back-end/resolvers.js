@@ -132,13 +132,52 @@ export const resolvers = {
       }
     },
 
+    getUsersByIds: async (_, args) => {
+      try {
+        // console.log(args);
+        // let ids = checkUserAndChatId();
+        const usersData = await userCollection();
+        const users = await usersData
+          .find({ _id: { $in: args.ids } })
+          .toArray();
+        if (!users) {
+          throw new GraphQLError("User not found", {
+            extensions: { code: "NOT_FOUND" },
+          });
+        }
+        return users;
+      } catch (error) {
+        throw new GraphQLError(error.message);
+      }
+    },
+
     getChatById: async (_, args) => {
       try {
         console.log(args);
         let id = checkUserAndChatId(args._id.toString());
         const chatData = await chatCollection();
-        const chat = await usersData.findOne({ _id: id });
-        console.log(chat);
+        const chat = await chatData.findOne({ _id: id });
+        // console.log(chat);
+        if (!chat) {
+          throw new GraphQLError("Chat not found", {
+            extensions: { code: "NOT_FOUND" },
+          });
+        }
+        return chat;
+      } catch (error) {
+        throw new GraphQLError(error.message);
+      }
+    },
+
+    getChatByParticipants: async (_, args) => {
+      try {
+        // console.log(args);
+
+        const chatData = await chatCollection();
+        const chat = await chatData.findOne({
+          participants: { $all: args.participants },
+        });
+
         if (!chat) {
           throw new GraphQLError("Chat not found", {
             extensions: { code: "NOT_FOUND" },
@@ -232,7 +271,11 @@ export const resolvers = {
       try {
         let { _id, email, firstname, lastname } = args;
         // check ID not implement yet
+<<<<<<< HEAD
         // email = checkEmail(email);
+=======
+        email = checkEmail(email);
+>>>>>>> 94e128f8f5f119946e595d2cdddd60247de61086
         firstname = capitalizeName(
           checkFirstNameAndLastName(firstname, "First Name")
         );
@@ -264,7 +307,11 @@ export const resolvers = {
         let { _id, email, firstname, lastname } = args;
         console.log(args)
         // check ID not implement yet
+<<<<<<< HEAD
         // email = checkEmail(email);
+=======
+        email = checkEmail(email);
+>>>>>>> 94e128f8f5f119946e595d2cdddd60247de61086
         firstname = capitalizeName(
           checkFirstNameAndLastName(firstname, "First Name")
         );
@@ -297,11 +344,11 @@ export const resolvers = {
 
     addChat: async (_, args) => {
       try {
-        let { particpant } = args;
+        let { participants } = args;
         const chatData = await chatCollection();
         const newChat = {
-          _id: new ObjectId().toString(),
-          particpant,
+          _id: new ObjectId(),
+          participants,
           messages: [],
         };
         let insertedChat = await chatData.insertOne(newChat);
@@ -327,7 +374,7 @@ export const resolvers = {
         };
 
         let insertedMessage = await chatData.findOneAndUpdate(
-          { _id: _id.toString() },
+          { _id: new ObjectId(_id) },
           {
             $push: {
               messages: newMessage,

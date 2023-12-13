@@ -13,7 +13,9 @@ export const typeDefs = `#graphql
         searchProductsByName(name: String!): [Product],
         getProductById(_id:ObjectID!):Product,
         getUserById(_id: String!): User,
-        getChatById(_id: String!): Chat
+        getChatById(_id: String!): Chat,
+        getChatByParticipants(participants: [String!]!): Chat,
+        getUsersByIds(ids: [String!]!): [User]
     }
     
     type Product {
@@ -23,8 +25,8 @@ export const typeDefs = `#graphql
         date:DateTime!,
         description:String,
         condition:String,
-        seller_id:ObjectID,
-        buyer_id:ObjectID,
+        seller_id:String,
+        buyer_id:String,
         image:base64,
         category:String,
         isSold:Boolean!
@@ -58,19 +60,19 @@ export const typeDefs = `#graphql
 
     type Chat{
     _id : ObjectID!,
-    particpant : [String],
+    participants : [String],
     messages : [Message]
   }
 
     type Mutation {
-        addProduct(name:String!, price: Number!,date:DateTime!,description:String!,condition:String!,seller_id:ObjectID!, image:base64!,category:String!):Product,
+        addProduct(name:String!, price: Number!,date:DateTime!,description:String!,condition:String!,seller_id:String!, image:base64!,category:String!):Product,
         addPost(buyer_id: String!, item:String!, category:String!, price: Number!, condition:String!, description:String!):Post,
         editProduct(_id: ObjectID!, name:String, price: Number,date:DateTime,description:String,condition:String,seller_id:ObjectID!,buyer_id:ObjectID, image:base64,category:String,isSold:Boolean! ):Product,
         removeProduct(_id:ObjectID!):Product,
         addUser(_id: String!, email: String!, firstname: String!, lastname: String!): User,
         editUser(_id: String!, email: String!, firstname: String!, lastname: String!): User,
-        addChat(particpant: [String!]!): Chat,
-        addMessage(_id: ObjectID!, sender: ID!, time: DateTime!, message: String!): Message
+        addChat(participants: [String!]!): Chat,
+        addMessage(_id: String!, sender: ID!, time: DateTime!, message: String!): Message
     }
 `;
 

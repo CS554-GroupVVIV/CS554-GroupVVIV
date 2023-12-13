@@ -24,7 +24,7 @@ export default function AddProducts() {
           name: `product ${Math.floor(Math.random() * 100)}`,
           price: Math.floor(Math.random() * 50),
           description: "some product description",
-          sellerId: "123",
+          sellerId: "70wtiJj79ZQv8zlQE1h1nNEPVu33",
           date: `2023/${Math.floor(Math.random() * 12) + 1}/${
             Math.floor(Math.random() * 31) + 1
           }`,

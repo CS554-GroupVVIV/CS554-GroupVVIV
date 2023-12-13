@@ -9,7 +9,9 @@ export const GET_PRODUCTS = gql`
       date
       description
       condition
+      seller_id
       category
+      isSold
     }
   }
 `;
@@ -38,6 +40,31 @@ export const GET_USER = gql`
       email
       firstname
       lastname
+    }
+  }
+`;
+
+export const GET_USERS_BY_IDS = gql`
+  query ($ids: [String!]!) {
+    getUsersByIds(ids: $ids) {
+      _id
+      firstname
+      lastname
+      email
+    }
+  }
+`;
+
+export const GET_CHAT_BY_PARTICIPANTS = gql`
+  query ($participants: [String!]!) {
+    getChatByParticipants(participants: $participants) {
+      _id
+      participants
+      messages {
+        message
+        sender
+        time
+      }
     }
   }
 `;
@@ -104,6 +131,21 @@ export const ADD_POST = gql`
   }
 `;
 
+export const ADD_MESSAGE = gql`
+  mutation (
+    $chatId: String!
+    $sender: ID!
+    $message: String!
+    $time: DateTime!
+  ) {
+    addMessage(_id: $chatId, sender: $sender, message: $message, time: $time) {
+      message
+      sender
+      time
+    }
+  }
+`;
+
 export const ADD_USER = gql`
   mutation (
     $id: String!
@@ -121,6 +163,15 @@ export const ADD_USER = gql`
       email
       firstname
       lastname
+    }
+  }
+`;
+
+export const ADD_CHAT = gql`
+  mutation ($participants: [String!]!) {
+    addChat(participants: $participants) {
+      _id
+      participants
     }
   }
 `;
