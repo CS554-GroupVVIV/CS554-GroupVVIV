@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 import { AuthContext } from "../context/AuthContext";
 
-import io from "socket.io-client";
+import { socketID, socket } from "./socket";
 
 import { Card, CardHeader, CardContent, Grid } from "@mui/material";
 
@@ -51,13 +51,10 @@ export default function ProductCard({ productData }) {
                 hidden={currentUser ? false : true}
                 onClick={() => {
                   if (currentUser.uid) {
-                    socketRef.current = io("http://localhost:4001").emit(
-                      "join room",
-                      {
-                        room: productData.seller_id,
-                        user: currentUser.uid,
-                      }
-                    );
+                    socket.emit("join room", {
+                      room: productData.seller_id,
+                      user: currentUser.uid,
+                    });
                   }
                 }}
               >
