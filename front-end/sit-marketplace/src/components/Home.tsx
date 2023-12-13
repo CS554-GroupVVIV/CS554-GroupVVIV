@@ -10,6 +10,10 @@ import SearchProduct from "./SearchProduct";
 import LogoutButton from "./LogoutButton";
 import { AuthContext } from "../context/AuthContext";
 
+import ChatRooms from "./ChatRooms";
+import Chatbox from "./Chatbox";
+import RoomList from "./ChatRooms";
+
 type Product = {
   _id: string;
   name: string;
@@ -34,6 +38,8 @@ export default function Home() {
   return (
     <div>
       <h1>Home</h1>
+
+      {currentUser ? <ChatRooms /> : <></>}
 
       <div>
         <h2>First 10 Products:</h2>
@@ -63,13 +69,6 @@ export default function Home() {
       {currentUser ? (
         <>
           <LogoutButton />
-          <button
-            onClick={() => {
-              navigate("/chat");
-            }}
-          >
-            Chat
-          </button>
         </>
       ) : (
         <>

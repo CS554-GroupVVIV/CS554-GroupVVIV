@@ -1,8 +1,8 @@
 import { ApolloServer } from "@apollo/server";
 import { startStandaloneServer } from "@apollo/server/standalone";
-import app from 'express';
-import {createServer} from 'http';
-import {Server} from 'socket.io'; //replaces (import socketIo from 'socket.io')
+import app from "express";
+import { createServer } from "http";
+import { Server } from "socket.io"; //replaces (import socketIo from 'socket.io')
 
 import { typeDefs } from "./typeDefs.js";
 import { resolvers } from "./resolvers.js";
@@ -13,29 +13,87 @@ const server = new ApolloServer({
 });
 
 const httpServer = createServer(app);
-const io = new Server(httpServer, {cors: {origin: '*'}});
+const io = new Server(httpServer, { cors: { origin: "*" } });
 
 const { url } = await startStandaloneServer(server);
 
 console.log(`🚀 Server ready at ${url}`);
 
+// socket io:
 
-io.on('connection', (socket) => {
-  console.log('new client connected', socket.id);
+// global list of available room
+const rooms = {};
 
-  socket.on('user_join', (name) => {
-    console.log('A user joined their name is ' + name);
-    socket.broadcast.emit('user_join', name);
+io.on("connection", (socket) => {
+  console.log("User connected", socket.id);
+
+  // emit the initial list of available rooms
+  socket.emit("rooms", rooms);
+
+  socket.on("join room", ({ room, user }) => {
+    if (socket.room) {
+      socket.leave(socket.room);
+      rooms[socket.room]--;
+      if (rooms[socket.room] === 0) {
+        delete rooms[socket.room];
+      }
+    }
+
+    socket.join(room);
+    socket.room = room;
+
+    // get user name
+    const username = user;
+    socket.username = username;
+
+    // room doesn't exist
+    if (!rooms[room]) {
+      rooms[room] = {
+        admin: socket.id,
+        users: {},
+      };
+    }
+
+    // add user to room
+    rooms[room].users[socket.id] = {
+      username,
+    };
+
+    io.emit("rooms", rooms);
+    console.log(`User ${socket.id} joined room ${room} as ${username}`);
+
+    socket.emit("join room", { room, username });
   });
 
-  socket.on('message', ({name, message}) => {
-    console.log(name, message, socket.id);
-    io.emit('message', {name, message});
+  socket.on("leave", () => {
+    if (socket.room) {
+      socket.leave(socket.room);
+      rooms[socket.room]--;
+      if (rooms[socket.room] === 0) {
+        delete rooms[socket.room];
+      }
+      io.emit("rooms", rooms);
+      console.log(`User ${socket.id} (${username}) left room ${room}`);
+      socket.room = null;
+    }
+  });
+
+  socket.on("disconnect", (room) => {
+    if (socket.room) {
+      socket.leave(socket.room);
+      rooms[socket.room]--;
+      if (rooms[socket.room] === 0) {
+        delete rooms[socket.room];
+      }
+      io.emit("rooms", rooms);
+    }
+    console.log("User disconnected:", socket.id);
+  });
+
+  socket.on("message", ({ room, sender, message }) => {
+    console.log(`${sender} sent ${message} to room: ${room}`);
+    io.to(room).emit("message", { sender, message });
     // Place to write into mogodb
-  });
-
-  socket.on('disconnect', () => {
-    console.log('Disconnect Fired');
   });
 });
 

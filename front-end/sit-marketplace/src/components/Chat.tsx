@@ -37,7 +37,7 @@ export default function Chat({ chat, participants }) {
             key={index}
             style={{
               alignSelf: sender === currentUser.uid ? "flex-end" : "flex-start",
-              backgroundColor: sender === currentUser.uid ? "blue" : "green",
+              // backgroundColor: sender === currentUser.uid ? "blue" : "green",
             }}
           >
             <p>

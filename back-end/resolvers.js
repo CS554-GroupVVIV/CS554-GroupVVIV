@@ -173,7 +173,7 @@ export const resolvers = {
 
     getChatByParticipants: async (_, args) => {
       try {
-        console.log(args);
+        // console.log(args);
 
         const chatData = await chatCollection();
         const chat = await chatData.findOne({

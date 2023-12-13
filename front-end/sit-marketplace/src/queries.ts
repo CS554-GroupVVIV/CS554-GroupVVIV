@@ -9,7 +9,9 @@ export const GET_PRODUCTS = gql`
       date
       description
       condition
+      seller_id
       category
+      isSold
     }
   }
 `;
@@ -161,6 +163,15 @@ export const ADD_USER = gql`
       email
       firstname
       lastname
+    }
+  }
+`;
+
+export const ADD_CHAT = gql`
+  mutation ($participants: [String!]!) {
+    addChat(participants: $participants) {
+      _id
+      participants
     }
   }
 `;

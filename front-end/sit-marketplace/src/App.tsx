@@ -5,7 +5,7 @@ import Products from "./components/Products.tsx";
 import Posts from "./components/Posts.tsx";
 import Login from "./components/Login.tsx";
 import SignUp from "./components/Signup.tsx";
-import Chatbox from "./components/Chatbox.tsx";
+import ChatRooms from "./components/ChatRooms.tsx";
 import { AuthProvider, AuthContext } from "./context/AuthContext.jsx";
 import PostForm from "./components/PostForm.tsx";
 import ProductDetail from "./components/ProductDetail.tsx";
@@ -35,8 +35,8 @@ function App() {
           <Route path="/product/:id" element={<ProductDetail />} />
           <Route path="/newproduct" element={<ProductForm />} />
           <Route
-            path="/chat"
-            element={user ? <Chatbox /> : <Navigate to={"/login"} />}
+            path="/chatrooms"
+            element={user ? <ChatRooms /> : <Navigate to={"/login"} />}
           />
         </Routes>
       </div>
