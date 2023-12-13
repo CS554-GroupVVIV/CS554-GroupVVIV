@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
 
-import io from "socket.io-client";
+import { socketID, socket } from "./socket";
 
 import { useQuery, useMutation } from "@apollo/client";
 import { GET_CHAT_BY_PARTICIPANTS, ADD_CHAT, ADD_MESSAGE } from "../queries";
@@ -8,31 +8,14 @@ import { GET_CHAT_BY_PARTICIPANTS, ADD_CHAT, ADD_MESSAGE } from "../queries";
 import { AuthContext } from "../context/AuthContext";
 
 import Chat from "./Chat";
-import RoomList from "./ChatRoomList";
-// const socket = io("http://localhost:4001"); // Replace with your server URL
 
 export default function ChatRoom({ room }) {
   const { currentUser } = useContext(AuthContext);
-
-  const socketRef = useRef();
 
   const { loading, error, data } = useQuery(GET_CHAT_BY_PARTICIPANTS, {
     variables: { participants: [currentUser.uid, room] },
     fetchPolicy: "cache-and-network",
   });
-
-  useEffect(() => {
-    socketRef.current = io("http://localhost:4001").emit("join room", {
-      room: room,
-      user: currentUser.uid,
-    });
-
-    setChat([]);
-
-    return () => {
-      socketRef.current.disconnect();
-    };
-  }, [room]);
 
   const [addChat] = useMutation(ADD_CHAT);
   const [chatHistory, setChatHistory] = useState([]);
@@ -91,23 +74,27 @@ export default function ChatRoom({ room }) {
   };
 
   useEffect(() => {
-    socketRef.current.on("message", ({ sender, room, message }) => {
+    socket.on("message", ({ sender, room, message }) => {
       // console.log("The server has broadcast message data to all clients");
 
       setChat([...chat, { sender, message }]);
     });
 
     return () => {
-      socketRef.current.off("message");
+      socket.off("message");
     };
   }, [chat, room]);
+
+  useEffect(() => {
+    setChat([]);
+  }, [room]);
 
   const onMessageSubmit = (e) => {
     e.preventDefault();
     let msgEle = document.getElementById("message");
 
     // console.log("Going to send the message event to the server");
-    socketRef.current.emit("message", {
+    socket.emit("message", {
       room: room,
       sender: currentUser.uid,
       message: msgEle.value,

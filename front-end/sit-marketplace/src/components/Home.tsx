@@ -82,7 +82,7 @@ export default function Home() {
                 overflowX: "auto",
                 flexWrap: "nowrap",
                 padding: "16px",
-                maxWidth: "70vw",
+                maxWidth: "60vw",
               }}
             >
               {firstTenProducts &&
@@ -120,7 +120,11 @@ export default function Home() {
         <Grid item>
           <h2>Chat Room List:</h2>
           <div>
-            {currentUser ? <ChatRoomList /> : <h4>Please Login to chat</h4>}
+            {currentUser ? (
+              <ChatRoomList uid={currentUser.uid} />
+            ) : (
+              <h4>Please Login to chat</h4>
+            )}
           </div>
         </Grid>
       </Grid>

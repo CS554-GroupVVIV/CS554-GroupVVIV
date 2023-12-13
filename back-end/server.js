@@ -41,6 +41,7 @@ io.on("connection", (socket) => {
 
     socket.join(room);
     socket.room = room;
+    // console.log(socket.room);
 
     // get user name
     const username = user;
@@ -66,19 +67,21 @@ io.on("connection", (socket) => {
   });
 
   socket.on("leave", () => {
+    console.log(`${socket.id}: leave event for room ${socket.room} fired!`);
+
     if (socket.room) {
       socket.leave(socket.room);
       rooms[socket.room]--;
-      if (rooms[socket.room] === 0) {
+      if (!rooms[socket.room]) {
         delete rooms[socket.room];
       }
       io.emit("rooms", rooms);
-      console.log(`User ${socket.id} (${username}) left room ${room}`);
+      console.log(`User ${socket.id} left room ${socket.room}`);
       socket.room = null;
     }
   });
 
-  socket.on("disconnect", (room) => {
+  socket.on("disconnect", () => {
     if (socket.room) {
       socket.leave(socket.room);
       rooms[socket.room]--;
@@ -91,7 +94,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("message", ({ room, sender, message }) => {
-    console.log(`${sender} sent ${message} to room: ${room}`);
+    console.log(`${sender} sent "${message}" to room: ${room}`);
     io.to(room).emit("message", { sender, message });
     // Place to write into mogodb
   });
