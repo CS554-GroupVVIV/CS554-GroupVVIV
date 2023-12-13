@@ -10,6 +10,7 @@ import { AuthProvider, AuthContext } from "./context/AuthContext.jsx";
 import PostForm from "./components/PostForm.tsx";
 import ProductDetail from "./components/ProductDetail.tsx";
 import ProductForm from "./components/NewProduct.tsx";
+import UserProfile from "./components/UserProfile.tsx";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 function App() {
@@ -37,6 +38,10 @@ function App() {
           <Route
             path="/chat"
             element={user ? <Chatbox /> : <Navigate to={"/login"} />}
+          />
+          <Route
+            path="/userprofile"
+            element={user ? <UserProfile /> : <Navigate to={"/login"} />}
           />
         </Routes>
       </div>

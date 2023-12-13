@@ -31,6 +31,7 @@ function SignUp() {
         "Last Name"
       );
       email = validation.checkEmail(email.value);
+      // email = email.value (Cancel to use Steven's email address)
     } catch (error) {
       alert(error);
       return false;
@@ -42,11 +43,10 @@ function SignUp() {
         passwordOne.value,
         displayFirstName
       );
-      console.log(user);
 
       addUser({
         variables: {
-          _id: user.uid,
+          id: user.uid.toString(),
           email: user.email,
           lastname: displayLastName,
           firstname: displayFirstName,

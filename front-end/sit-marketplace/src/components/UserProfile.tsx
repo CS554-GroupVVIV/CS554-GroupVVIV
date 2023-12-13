@@ -1,29 +1,52 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Navigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext.jsx";
 import { useMutation, useQuery } from "@apollo/client";
 import { EDIT_USER, GET_USER } from "../queries.ts";
+import {
+  doPasswordReset,
+  updateUserProfile,
+} from "../firebase/FirebaseFunction";
 import * as validation from "../helper.tsx";
 
 function UserProfile() {
   let { currentUser } = useContext(AuthContext);
-  const [getUser] = useQuery(GET_USER);
-  const [editUser] = useMutation(EDIT_USER);
+  console.log(currentUser);
+  const [userInfo, setUserInfo] = useState(null);
+  const [firstname, setFirstname] = useState("");
+  const [lastname, setLastname] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const { loading, error, data } = useQuery(GET_USER, {
+    variables: { id: currentUser.uid },
+    fetchPolicy: "cache-and-network",
+  });
 
-  const [userInfo, setUserInfo] = useState(getUser(currentUser.uid));
-  const [pwMatch, setPwMatch] = useState("");
-  const [firstname, setFirstName] = useState(userInfo.firstname);
-  const [lastname, setLastName] = useState(userInfo.lastname);
+  useEffect(() => {
+    if (!loading && !error && data.getUserById) {
+      setUserInfo(data.getUserById);
+      setFirstname(data.getUserById.firstname);
+      setLastname(data.getUserById.lastname);
+      setEmail(data.getUserById.email);
+    }
+    console.log(userInfo);
+  }, [loading]);
+
+  const passwordReset = (event) => {
+    event.preventDefault();
+    if (userInfo && currentUser) {
+      doPasswordReset(userInfo.email);
+      alert("Password reset email was sent");
+    } else {
+      alert(
+        "Please enter an email address below before you click the forgot password link"
+      );
+    }
+  };
 
   const handleEdit = async (e) => {
     e.preventDefault();
-    let { displayFirstName, displayLastName, email, passwordOne, passwordTwo } =
-      e.target.elements;
-    if (passwordOne.value !== passwordTwo.value) {
-      setPwMatch("Passwords do not match");
-      return false;
-    }
-
+    let { displayFirstName, displayLastName, email, password } = e.target.elements;
     try {
       displayFirstName = validation.checkFirstNameAndLastName(
         displayFirstName.value,
@@ -34,35 +57,26 @@ function UserProfile() {
         "Last Name"
       );
       email = validation.checkEmail(email.value);
+      password = password.value
+      // email = email.value; (cancel to use stevens' email address)
     } catch (error) {
       alert(error);
       return false;
     }
 
     try {
-      let user = await doCreateUserWithEmailAndPassword(
+      let user = await updateUserProfile(
+        displayFirstName,
+        currentUser.email,
         email,
-        passwordOne.value,
-        displayFirstName
+        password
       );
-      console.log(user);
 
-      addUser({
-        variables: {
-          _id: user.uid,
-          email: user.email,
-          lastname: displayLastName,
-          firstname: displayFirstName,
-        },
-      });
+      console.log(user);
     } catch (error) {
       alert(error);
     }
   };
-
-  if (currentUser) {
-    return <Navigate to="/" />;
-  }
 
   return (
     <div className="card">
@@ -78,7 +92,8 @@ function UserProfile() {
               name="displayFirstName"
               type="text"
               placeholder="First Name"
-              autoFocus={true}
+              value={firstname}
+              onChange={(e) => setFirstname(e.target.value)}
             />
           </label>
         </div>
@@ -92,7 +107,8 @@ function UserProfile() {
               name="displayLastName"
               type="text"
               placeholder="Last Name"
-              autoFocus={true}
+              value={lastname}
+              onChange={(e) => setLastname(e.target.value)}
             />
           </label>
         </div>
@@ -106,46 +122,38 @@ function UserProfile() {
               name="email"
               type="email"
               placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
             />
           </label>
         </div>
         <div className="form-group">
           <label>
-            Password:
+            Verified Password:
             <br />
             <input
               className="form-control"
-              id="passwordOne"
-              name="passwordOne"
+              required
+              name="password"
               type="password"
               placeholder="Password"
-              autoComplete="off"
-              required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
             />
           </label>
         </div>
-        <div className="form-group">
-          <label>
-            Confirm Password:
-            <br />
-            <input
-              className="form-control"
-              name="passwordTwo"
-              type="password"
-              placeholder="Confirm Password"
-              autoComplete="off"
-              required
-            />
-          </label>
-        </div>
-        {pwMatch && <h4 className="error">{pwMatch}</h4>}
+        <br />
         <button
           className="button"
           id="submitButton"
           name="submitButton"
           type="submit"
         >
-          Sign Up
+          Update
+        </button>
+
+        <button className="forgotPassword" onClick={passwordReset}>
+          Reset Password
         </button>
       </form>
       <br />

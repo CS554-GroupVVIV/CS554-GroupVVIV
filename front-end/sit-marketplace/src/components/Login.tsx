@@ -1,21 +1,34 @@
-import React, { useContext } from "react";
-import { Navigate } from "react-router-dom";
+import React, { useContext, useEffect, useState } from "react";
+import { Navigate, useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import {
   doSignInWithEmailAndPassword,
   doPasswordReset,
 } from "../firebase/FirebaseFunction";
+import { useMutation, useQuery } from "@apollo/client";
+import { EDIT_USER, GET_USER } from "../queries.ts";
 
 function Login() {
+  const navigate = useNavigate();
   const { currentUser } = useContext(AuthContext);
+  const { loading, error, data } = useQuery(GET_USER, {
+    variables: { id: currentUser ? currentUser.uid : "" },
+    fetchPolicy: "cache-and-network",
+  });
+  const [emailInDOM, setEmailInDOM] = useState("");
+  const [editUser] = useMutation(EDIT_USER);
+
   const handleLogin = async (event) => {
     event.preventDefault();
     let { email, password } = event.target.elements;
+    setEmailInDOM(email.value);
 
     try {
       await doSignInWithEmailAndPassword(email.value, password.value);
     } catch (error) {
-      alert(error);
+      alert(
+        "Invalid email or password. Please check your credentials and try again."
+      );
     }
   };
 
@@ -31,10 +44,51 @@ function Login() {
       );
     }
   };
-  
-  if (currentUser) {
+
+  // if (!loading && !error && currentUser) {
+  //   useEffect(() => {
+  //     if (
+  //       data.getUserById &&
+  //       currentUser.email === emailInDOM &&
+  //       data.getUserById.email !== emailInDOM
+  //     ) {
+  //       editUser({
+  //         variables: {
+  //           id: currentUser.uid,
+  //           email: currentUser.email,
+  //           lastname: data.getUserById.lastname,
+  //           firstname: data.getUserById.firstname,
+  //         },
+  //       });
+  //       setEmailInDOM("");
+  //     }
+  //   }, [currentUser]);
+  //   return <Navigate to="/" />;
+  // }
+  useEffect(() => {
+    if (!loading && !error && currentUser) {
+      if (
+        data.getUserById &&
+        currentUser.email === emailInDOM &&
+        data.getUserById.email !== emailInDOM
+      ) {
+        editUser({
+          variables: {
+            id: currentUser.uid,
+            email: currentUser.email,
+            lastname: data.getUserById.lastname,
+            firstname: data.getUserById.firstname,
+          },
+        });
+        setEmailInDOM("");
+      }
+    }
+  }, [loading, error, currentUser, data, emailInDOM, editUser]);
+
+  if (!loading && !error && currentUser) {
     return <Navigate to="/" />;
   }
+
   return (
     <div>
       <div className="card">
@@ -70,11 +124,20 @@ function Login() {
           </div>
 
           <button className="button" type="submit">
-            Log in
+            Log In
           </button>
 
           <button className="forgotPassword" onClick={passwordReset}>
             Forgot Password
+          </button>
+
+          <button
+            className="forgotPassword"
+            onClick={() => {
+              navigate("/signup");
+            }}
+          >
+            Sign Up
           </button>
         </form>
         <br />

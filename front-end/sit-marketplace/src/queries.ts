@@ -32,8 +32,8 @@ export const GET_POSTS = gql`
 `;
 
 export const GET_USER = gql`
-  query {
-    getUserById(_id: $_id) {
+  query ($id: String!) {
+    getUserById(_id: $id) {
       _id
       email
       firstname
@@ -106,13 +106,13 @@ export const ADD_POST = gql`
 
 export const ADD_USER = gql`
   mutation (
-    $_id: String!
+    $id: String!
     $email: String!
     $firstname: String!
     $lastname: String!
   ) {
     addUser(
-      _id: $_id
+      _id: $id
       email: $email
       firstname: $firstname
       lastname: $lastname

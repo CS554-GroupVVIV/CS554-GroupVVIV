@@ -10,6 +10,7 @@ import {
   sendPasswordResetEmail,
   EmailAuthProvider,
   reauthenticateWithCredential,
+  verifyBeforeUpdateEmail,
 } from "firebase/auth";
 
 async function doCreateUserWithEmailAndPassword(email, password, displayName) {
@@ -58,6 +59,25 @@ async function doSignOut() {
   await signOut(auth);
 }
 
+async function updateUserProfile(displayName, oldEmail, newEmail, password) {
+
+  let auth = getAuth();
+  let credential = EmailAuthProvider.credential(oldEmail, password);
+  console.log(credential)
+  await reauthenticateWithCredential(auth.currentUser, credential);
+  await verifyBeforeUpdateEmail(auth.currentUser, newEmail)
+    .then(function () {
+      alert("Email verification sent! Please click the provided link to complete the update process!");
+    })
+    .catch(function (error) {
+      alert(error);
+    });
+  await updateProfile(auth.currentUser, {
+    displayName: displayName,
+  });
+  await signOut(auth);
+}
+
 export {
   doCreateUserWithEmailAndPassword,
   doSocialSignIn,
@@ -65,4 +85,5 @@ export {
   doPasswordReset,
   doSignOut,
   doChangePassword,
+  updateUserProfile,
 };

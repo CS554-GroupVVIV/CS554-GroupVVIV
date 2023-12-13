@@ -44,11 +44,10 @@ export const typeDefs = `#graphql
   }
 
     type User{
-    _id : String,
+    _id : String!,
     email: String,
     firstname: String,
     lastname: String,
-    password: String
   }
 
     type Message{
@@ -68,9 +67,8 @@ export const typeDefs = `#graphql
         addPost(buyer_id: String!, item:String!, category:String!, price: Number!, condition:String!, description:String!):Post,
         editProduct(_id: ObjectID!, name:String, price: Number,date:DateTime,description:String,condition:String,seller_id:ObjectID!,buyer_id:ObjectID, image:base64,category:String,isSold:Boolean! ):Product,
         removeProduct(_id:ObjectID!):Product,
-        addUser(_id: String!, email: String!, firstname: String!, lastname: String!, password: String!): User,
-        editUser(_id: String!, email: String!, firstname: String!, lastname: String!, password: String!): User,
-        editPassword(_id: String!, prePassword: String!, newPassword: String!): User,
+        addUser(_id: String!, email: String!, firstname: String!, lastname: String!): User,
+        editUser(_id: String!, email: String!, firstname: String!, lastname: String!): User,
         addChat(particpant: [String!]!): Chat,
         addMessage(_id: ObjectID!, sender: ID!, time: DateTime!, message: String!): Message
     }

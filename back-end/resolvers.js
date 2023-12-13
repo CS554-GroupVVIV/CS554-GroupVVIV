@@ -5,7 +5,6 @@ import {
   users as userCollection,
   chats as chatCollection,
 } from "./config/mongoCollections.js";
-// import { v4 as uuid } from "uuid";
 import { ObjectId } from "mongodb";
 import { ObjectID, DateTime, Base64 } from "./typeDefs.js";
 import {
@@ -20,10 +19,9 @@ import {
   checkEmail,
   checkUserAndChatId,
   checkFirstNameAndLastName,
-  capitalizeName
+  capitalizeName,
 } from "./helper.js";
-import bcrypt from "bcryptjs";
-const { hash, compare } = bcrypt;
+
 
 export const resolvers = {
   ObjectID: ObjectID,
@@ -232,21 +230,22 @@ export const resolvers = {
 
     addUser: async (_, args) => {
       try {
-        let { _id, email, firstname, lastname, password } = args;
-        const saltRounds = 10;
+        let { _id, email, firstname, lastname } = args;
         // check ID not implement yet
-        email = checkEmail(email);
-        firstname = capitalizeName(checkFirstNameAndLastName(firstname, "First Name"));
-        lastname = capitalizeName(checkFirstNameAndLastName(lastname, "Last Name"));
+        // email = checkEmail(email);
+        firstname = capitalizeName(
+          checkFirstNameAndLastName(firstname, "First Name")
+        );
+        lastname = capitalizeName(
+          checkFirstNameAndLastName(lastname, "Last Name")
+        );
 
-        password = await bcrypt.hash(password, saltRounds);
         const usersData = await userCollection();
         const newUser = {
-          _id,
+          _id: _id.toString(),
           email,
           firstname,
           lastname,
-          password,
         };
         const insertedUser = await usersData.insertOne(newUser);
         if (!insertedUser) {
@@ -262,12 +261,16 @@ export const resolvers = {
 
     editUser: async (_, args) => {
       try {
-        let { _id, email, firstname, lastname, password } = args;
+        let { _id, email, firstname, lastname } = args;
+        console.log(args)
         // check ID not implement yet
-        email = checkEmail(email);
-        firstname = capitalizeName(checkFirstNameAndLastName(firstname, "First Name"));
-        lastname = capitalizeName(checkFirstNameAndLastName(lastname, "Last Name"));
-
+        // email = checkEmail(email);
+        firstname = capitalizeName(
+          checkFirstNameAndLastName(firstname, "First Name")
+        );
+        lastname = capitalizeName(
+          checkFirstNameAndLastName(lastname, "Last Name")
+        );
 
         const usersData = await userCollection();
         const updatedUserInfo = {
@@ -276,11 +279,8 @@ export const resolvers = {
           lastname,
         };
 
-        let preUserInfo = await usersData.findOne({ _id });
-        if (!(await bcrypt.compare(password, preUserInfo.password)))
-          throw "Password doesn't match the previous password";
         let updatedUser = await usersData.findOneAndUpdate(
-          { _id },
+          { _id: _id.toString() },
           { $set: updatedUserInfo },
           { returnDocument: "after" }
         );
@@ -292,34 +292,6 @@ export const resolvers = {
         return updatedUser;
       } catch (error) {
         throw new GraphQLError(error);
-      }
-    },
-
-    editPassword: async (_, args) => {
-      try {
-        let { _id, prePassword, newPassword } = args;
-        const usersData = await userCollection();
-        newPassword = await bcrypt.hash(newPassword, 10);
-        const updatedUserInfo = {
-          password: newPassword,
-        };
-
-        let preUserInfo = await usersData.findOne({ _id });
-        if (!(await bcrypt.compare(prePassword, preUserInfo.password)))
-          throw "Password doesn't match the previous password";
-        let updatedInfo = await usersData.findOneAndUpdate(
-          { _id },
-          { $set: updatedUserInfo },
-          { returnDocument: "after" }
-        );
-        if (!updatedInfo) {
-          throw new GraphQLError(`Could not Chage Password`, {
-            extensions: { code: "INTERNAL_SERVER_ERROR" },
-          });
-        }
-        return updatedInfo;
-      } catch (error) {
-        throw new GraphQLError(error.message);
       }
     },
 
