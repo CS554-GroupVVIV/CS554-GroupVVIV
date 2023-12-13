@@ -17,6 +17,7 @@ function UserProfile() {
   const [lastname, setLastname] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [editUser] = useMutation(EDIT_USER);
   const { loading, error, data } = useQuery(GET_USER, {
     variables: { id: currentUser.uid },
     fetchPolicy: "cache-and-network",
@@ -46,7 +47,8 @@ function UserProfile() {
 
   const handleEdit = async (e) => {
     e.preventDefault();
-    let { displayFirstName, displayLastName, email, password } = e.target.elements;
+    let { displayFirstName, displayLastName, email, password } =
+      e.target.elements;
     try {
       displayFirstName = validation.checkFirstNameAndLastName(
         displayFirstName.value,
@@ -57,24 +59,26 @@ function UserProfile() {
         "Last Name"
       );
       email = validation.checkEmail(email.value);
-      password = password.value
+      password = password.value;
       // email = email.value; (cancel to use stevens' email address)
-    } catch (error) {
-      alert(error);
-      return false;
-    }
 
-    try {
-      let user = await updateUserProfile(
+      editUser({
+        variables: {
+          id: currentUser.uid,
+          email: data.getUserById.email,
+          lastname: displayLastName,
+          firstname: displayFirstName,
+        },
+      });
+      await updateUserProfile(
         displayFirstName,
         currentUser.email,
         email,
         password
       );
-
-      console.log(user);
     } catch (error) {
       alert(error);
+      return false;
     }
   };
 

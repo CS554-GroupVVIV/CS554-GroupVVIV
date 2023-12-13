@@ -42,6 +42,14 @@ export default function Home() {
       {currentUser ? (
         <>
           <LogoutButton />
+          <button
+            className="userprofile"
+            onClick={() => {
+              navigate("/userprofile");
+            }}
+          >
+            User Profile
+          </button>
         </>
       ) : (
         <>
