@@ -271,11 +271,7 @@ export const resolvers = {
       try {
         let { _id, email, firstname, lastname } = args;
         // check ID not implement yet
-<<<<<<< HEAD
-        // email = checkEmail(email);
-=======
         email = checkEmail(email);
->>>>>>> 94e128f8f5f119946e595d2cdddd60247de61086
         firstname = capitalizeName(
           checkFirstNameAndLastName(firstname, "First Name")
         );
@@ -307,11 +303,7 @@ export const resolvers = {
         let { _id, email, firstname, lastname } = args;
         console.log(args)
         // check ID not implement yet
-<<<<<<< HEAD
-        // email = checkEmail(email);
-=======
         email = checkEmail(email);
->>>>>>> 94e128f8f5f119946e595d2cdddd60247de61086
         firstname = capitalizeName(
           checkFirstNameAndLastName(firstname, "First Name")
         );
