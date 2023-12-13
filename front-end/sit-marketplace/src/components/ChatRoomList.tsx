@@ -3,7 +3,7 @@ import io from "socket.io-client";
 
 import ChatRoom from "./ChatRoom";
 
-export default function RoomList() {
+export default function ChatRoomList() {
   const socketRef = useRef();
 
   useEffect(() => {

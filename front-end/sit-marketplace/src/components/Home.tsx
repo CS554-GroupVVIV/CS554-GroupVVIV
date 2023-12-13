@@ -10,7 +10,7 @@ import SearchProduct from "./SearchProduct";
 import LogoutButton from "./LogoutButton";
 import { AuthContext } from "../context/AuthContext";
 
-import ChatRooms from "./ChatRooms";
+import ChatRoomList from "./ChatRoomList";
 
 import { Grid } from "@mui/material";
 
@@ -118,9 +118,9 @@ export default function Home() {
           </div>
         </Grid>
         <Grid item>
-          <h2>Chat Rooms:</h2>
+          <h2>Chat Room List:</h2>
           <div>
-            {currentUser ? <ChatRooms /> : <h4>Please Login to chat</h4>}
+            {currentUser ? <ChatRoomList /> : <h4>Please Login to chat</h4>}
           </div>
         </Grid>
       </Grid>

@@ -8,7 +8,7 @@ import { GET_CHAT_BY_PARTICIPANTS, ADD_CHAT, ADD_MESSAGE } from "../queries";
 import { AuthContext } from "../context/AuthContext";
 
 import Chat from "./Chat";
-import RoomList from "./ChatRooms";
+import RoomList from "./ChatRoomList";
 // const socket = io("http://localhost:4001"); // Replace with your server URL
 
 export default function ChatRoom({ room }) {

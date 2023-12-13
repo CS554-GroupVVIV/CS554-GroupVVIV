@@ -37,10 +37,15 @@ export default function Chat({ chat, participants }) {
             key={index}
             style={{
               alignSelf: sender === currentUser.uid ? "flex-end" : "flex-start",
-              // backgroundColor: sender === currentUser.uid ? "blue" : "green",
             }}
           >
-            <p>
+            <p
+              style={{
+                padding: 10,
+                backgroundColor: sender === currentUser.uid ? "blue" : "green",
+                borderRadius: 50,
+              }}
+            >
               {participantDict[sender]}: {message}
             </p>
           </div>
