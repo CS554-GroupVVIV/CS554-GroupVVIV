@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - react
 
 env:
   APP_NAME_1: vviv-backend
