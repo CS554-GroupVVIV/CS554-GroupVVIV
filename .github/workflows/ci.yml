@@ -12,7 +12,7 @@ env:
   APP_NAME_2: vviv-frontend
   DOCKERHUB_REPO_2: aturret/vviv-frontend
 
-  APP_VERSION: latest
+  # APP_VERSION: latest
 
 concurrency: 
   group: CS554-GroupVVIV
