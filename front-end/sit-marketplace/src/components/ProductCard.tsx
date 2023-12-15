@@ -55,6 +55,13 @@ export default function ProductCard({ productData }) {
                       room: productData.seller_id,
                       user: currentUser.uid,
                     });
+
+                    // socket.emit("message", {
+                    //   room: productData.seller_id,
+                    //   sender: currentUser.uid,
+                    //   message: `Hi, I have questions regarding product: "${productData.name}"`,
+                    //   time: new Date().toISOString(),
+                    // });
                   }
                 }}
               >

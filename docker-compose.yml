@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  mongo:
+    image: mongo:6.0
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+
+  back-end:
+    build: ./back-end
+    restart: on-failure
+    ports:
+      - "4000:4000"
+      - "4001:4001"
+    volumes:
+      - "./back-end:/app"
+      - "/app/node_modules"
+    depends_on:
+      - mongo
+    links:
+      - mongo
+    
+  front-end:
+    build: ./front-end/sit-marketplace
+    ports:
+      - "5173:5173"
+    depends_on:
+      - back-end
+    volumes:
+      - "./front-end/sit-marketplace:/app"
+      - "/app/node_modules"
+    

@@ -69,6 +69,40 @@ export const GET_CHAT_BY_PARTICIPANTS = gql`
   }
 `;
 
+export const GET_POSTS_BY_SELLER = gql`
+  query ($_id: String!) {
+    getPostBySeller(_id: $_id) {
+      _id
+      buyer_id
+      seller_id
+      item
+      category
+      price
+      condition
+      date
+      description
+      isComplete
+    }
+  }
+`;
+
+export const GET_POSTS_BY_BUYER = gql`
+  query ($_id: String!) {
+    getPostByBuyer(_id: $_id) {
+      _id
+      buyer_id
+      seller_id
+      item
+      category
+      price
+      condition
+      date
+      description
+      isComplete
+    }
+  }
+`;
+
 export const ADD_PRODUCT = gql`
   mutation (
     $name: String!

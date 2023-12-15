@@ -1,6 +1,7 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { useMutation, useQuery } from "@apollo/client";
+import { AuthContext } from "../context/AuthContext.jsx";
 import { ADD_POST, GET_POSTS } from "../queries";
 
 // interface Post {
@@ -17,6 +18,7 @@ import { ADD_POST, GET_POSTS } from "../queries";
 // }
 
 export default function PostForm() {
+  let { currentUser } = useContext(AuthContext);
   const nameRef = useRef<HTMLInputElement | null>(null);
   const categoryRef = useRef<HTMLSelectElement | null>(null);
   //   const quantityRef = useRef<HTMLInputElement | null>(null);
@@ -39,6 +41,7 @@ export default function PostForm() {
   const [conditionError, setConditionError] = useState<boolean>(false);
   //   const [dateError, setDateError] = useState<boolean>(false);
   const [descriptionError, setdescriptionError] = useState<boolean>(false);
+  const { data, loading, error } = useQuery(GET_POSTS);
   const [addPost] = useMutation(ADD_POST, {
     update(cache, { data: { addPost } }) {
       const { posts }: any = cache.readQuery({
@@ -229,7 +232,7 @@ export default function PostForm() {
     addPost({
       variables: {
         //getAuth
-        buyer_id: "5f12ffae61c82e47b4b33a6a",
+        buyer_id: currentUser.uid,
         item: name,
         category: category,
         price: price,
