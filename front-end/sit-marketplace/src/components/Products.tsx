@@ -20,12 +20,19 @@ export default function Products() {
     fetchPolicy: "cache-and-network",
   });
 
-
-
   const [text, setText] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
 
-
+  useEffect(() => {
+    console.log("in the products useeffect");
+    console.log(data);
+    console.log(error);
+    if (!loading && !error && data.products) {
+      setProducts(data.products);
+    } else if (error) {
+      console.error(error);
+    }
+  }, [loading]);
 
   return (
     <div>
@@ -55,7 +62,7 @@ export default function Products() {
         <input type="submit" />
       </form>
 
-      {searchTerm && <SearchProduct searchTerm={searchTerm} />}
+      {/* {searchTerm && <SearchProduct searchTerm={searchTerm} />} */}
 
       <ProductForm />
 

@@ -1,19 +1,19 @@
 import { gql } from "@apollo/client";
 
 export const GET_PRODUCTS = gql`
-query Products {
-  products {
-    _id
-    buyer_id
-    category
-    condition
-    description
-    name
-    price
-    seller_id
-    status
+  query Products {
+    products {
+      _id
+      buyer_id
+      category
+      condition
+      description
+      name
+      price
+      seller_id
+      status
+    }
   }
-}
 `;
 
 export const GET_POSTS = gql`
@@ -409,5 +409,17 @@ export const REPOST_POST = gql`
       description
       status
     }
+  }
+`;
+
+export const ADD_FAVORITE_TO_USER = gql`
+  mutation Mutation($id: String!, $productId: String!) {
+    addProductToUserFavorite(_id: $id, productId: $productId)
+  }
+`;
+
+export const REMOVE_FAVORITE_FROM_USER = gql`
+  mutation Mutation($id: String!, $productId: String!) {
+    removeProductFromUserFavorite(_id: $id, productId: $productId)
   }
 `;

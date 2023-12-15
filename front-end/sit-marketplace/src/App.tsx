@@ -13,6 +13,7 @@ import PostDetail from "./components/PostDetail.tsx";
 import ProductForm from "./components/NewProduct.tsx";
 import UserProfile from "./components/UserProfile.tsx";
 import ResetPassword from "./components/ResetPassword.tsx";
+import Error from "./components/Error.tsx";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 function App() {
@@ -27,28 +28,26 @@ function App() {
   });
   return (
     <AuthProvider>
-      <header>
-
-      </header>
+      <header></header>
       <nav className="App-nav">
-          <ul>
-            <li>
-              <Link className="singlelink" to="/">
-                Home
-              </Link>
-            </li>
-            <li>
-              <Link className="singlelink" to="/products">
-                All the Products
-              </Link>
-            </li>
-            <li>
-              <Link className="singlelink" to="/posts">
-                All the Posts
-              </Link>
-            </li>
-          </ul>
-        </nav>
+        <ul>
+          <li>
+            <Link className="singlelink" to="/">
+              Home
+            </Link>
+          </li>
+          <li>
+            <Link className="singlelink" to="/products">
+              All the Products
+            </Link>
+          </li>
+          <li>
+            <Link className="singlelink" to="/posts">
+              All the Posts
+            </Link>
+          </li>
+        </ul>
+      </nav>
       <div className="App">
         <Routes>
           <Route path="/" element={<Home />} />
@@ -60,6 +59,7 @@ function App() {
           <Route path="/product/:id" element={<ProductDetail />} />
           <Route path="/post/:id" element={<PostDetail />} />
           <Route path="/newproduct" element={<ProductForm />} />
+          <Route path="/error" element={<Error />} />
           <Route
             path="/chatrooms"
             element={user ? <ChatRooms /> : <Navigate to={"/login"} />}
