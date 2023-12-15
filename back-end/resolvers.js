@@ -42,7 +42,7 @@ export const resolvers = {
             });
           }
           client.json.set(`allProducts`, "$", allProducts);
-          client.expire(`allProducts`, 60);
+          client.expire(`allProducts`, 3600);
         }
         return allProducts;
       } catch (error) {
@@ -62,7 +62,7 @@ export const resolvers = {
             });
           }
           client.json.set(`allPosts`, "$", allPosts);
-          client.expire(`allPosts`, 60);
+          client.expire(`allPosts`, 3600);
         }
         return allPosts;
       } catch (error) {
@@ -89,7 +89,6 @@ export const resolvers = {
             });
           }
           client.json.set(`searchProducts-${args.searchTerm}`, "$", productList);
-          client.expire(`searchProducts-${args.searchTerm}`, 60);
         }
         return productList;
       } catch (error) {
@@ -112,7 +111,6 @@ export const resolvers = {
             });
           }
           client.json.set(`searchProductsByName-${productName}`, "$", productsByName);
-          client.expire(`searchProductsByName-${productName}`, 60);
         }
         return productsByName;
       } catch (error) {
@@ -133,7 +131,6 @@ export const resolvers = {
             });
           }
           client.json.set(`getProductById-${id}`, "$", product);
-          client.expire(`getProductById-${id}`, 60);
         }
         return product;
       } catch (error) {
@@ -261,7 +258,7 @@ export const resolvers = {
   Mutation: {
     addProduct: async (_, args) => {
       try {
-        if (Object.keys(args).length !== 8) {
+        if (Object.keys(args).length !== 7) {
           throw new Error("all fields are required");
         }
         let name = checkName(args.name);
@@ -269,9 +266,9 @@ export const resolvers = {
         let date = new Date();
         let description = checkDescription(args.description);
         let condition = checkCondition(args.condition);
-        let seller_id = args.seller_id;
+        let seller_id = checkId(args.seller_id);
         let image = checkUrl(args.image);
-        let category = args.category;
+        let category = checkCategory(args.category);
         // ********need input check*************
         const products = await productCollection();
         const newProduct = {
@@ -282,12 +279,14 @@ export const resolvers = {
           description: description,
           condition: condition,
           seller_id: seller_id,
-          buyer_id: undefined,
+          buyer_id: "",
           image: image,
           category: category,
-          isSold: false,
+          status: "available",
         };
         let insertedProduct = await products.insertOne(newProduct);
+        client.json.del(`allProducts`);
+        client.json.set(`getProductById-${newProduct._id}`, "$", newProduct);
         if (!insertedProduct) {
           throw new GraphQLError(`Could not Add Author`, {
             extensions: { code: "INTERNAL_SERVER_ERROR" },
@@ -299,6 +298,68 @@ export const resolvers = {
       }
     },
 
+    editProduct: async (_, args) => {
+      try{
+        if (Object.keys(args).length !== 7) {
+          throw new Error("all fields are required");
+        }
+        let name = checkName(args.name);
+        let price = checkPrice(args.price);
+        let date = new Date();
+        let description = checkDescription(args.description);
+        let condition = checkCondition(args.condition);
+        let seller_id = checkId(args.seller_id);
+        let image = checkUrl(args.image);
+        let category = checkCategory(args.category);
+        // ********need input check*************
+        const products = await productCollection();
+        const updatedProduct = {
+          name: name,
+          price: price,
+          date: date,
+          description: description,
+          condition: condition,
+          seller_id: seller_id,
+          buyer_id: "",
+          image: image,
+          category: category,
+          status: "available",
+        };
+        let updated = await products.findOneAndUpdate(
+          { _id: args._id },
+          { $set: updatedProduct },
+          { returnDocument: "after" }
+        );
+        client.json.del(`allProducts`);
+        client.json.set(`getProductById-${args._id}`, "$", updated);
+        if (!updated) {
+          throw new GraphQLError(`Could not Edit Product`, {
+            extensions: { code: "INTERNAL_SERVER_ERROR" },
+          });
+        }
+        return updated;
+      }
+      catch(error){
+        throw new GraphQLError(error.message);
+      }
+    },
+    removeProduct: async (_, args) => {
+      try {
+        let id = checkId(args._id);
+        const products = await productCollection();
+        const deletedProduct = await products.findOneAndDelete({ _id: id });
+        client.json.del(`allProducts`);
+        client.json.del(`getProductById-${id}`);
+        if (!deletedProduct) {
+          throw new GraphQLError(`Could not Delete Product`, {
+            extensions: { code: "INTERNAL_SERVER_ERROR" },
+          });
+        }
+        return deletedProduct;
+      } catch (error) {
+        throw new GraphQLError(error.message);
+      }
+    },
     addPost: async (_, args) => {
       try {
         if (Object.keys(args).length !== 6) {
@@ -321,7 +382,7 @@ export const resolvers = {
           condition: condition,
           date: new Date(),
           description: description,
-          isComplete: false,
+          status: "available",
         };
         let insertedPost = await posts.insertOne(newPost);
         if (!insertedPost) {
@@ -329,12 +390,71 @@ export const resolvers = {
             extensions: { code: "INTERNAL_SERVER_ERROR" },
           });
         }
+        client.json.del(`allPosts`);
+        client.json.set(`getPostById-${newPost._id}`, "$", newPost);
         return newPost;
       } catch (error) {
         throw new GraphQLError(error.message);
       }
     },
-
+    editPost: async (_, args) => {
+      try {
+        if (Object.keys(args).length !== 7) {
+          throw new Error("all fields are required");
+        }
+        let buyer_id = checkId(args.buyer_id);
+        let item = checkItem(args.item);
+        let category = checkCategory(args.category);
+        let price = checkPrice(args.price);
+        let condition = checkCondition(args.condition);
+        let description = checkDescription(args.description);
+        let date = checkDate(args.date);
+        const posts = await postCollection();
+        const updatedPost = {
+          buyer_id: buyer_id,
+          seller_id: "",
+          item: item,
+          category: category,
+          price: price,
+          condition: condition,
+          date: date,
+          description: description,
+          status: "available",
+        };
+        let updated = await posts.findOneAndUpdate(
+          { _id: args._id },
+          { $set: updatedPost },
+          { returnDocument: "after" }
+        );
+        if (!updated) {
+          throw new GraphQLError(`Could not Edit Post`, {
+            extensions: { code: "INTERNAL_SERVER_ERROR" },
+          });
+        }
+        client.json.del(`allPosts`);
+        client.json.set(`getPostById-${args._id}`, "$", updated);
+        return updated;
+      } catch (error) {
+        throw new GraphQLError(error.message);
+      }
+    },
+    removePost: async (_, args) => {
+      try {
+        let id = checkId(args._id);
+        const posts = await postCollection();
+        const deletedPost = await posts.findOneAndDelete({ _id: id });
+        if (!deletedPost) {
+          throw new GraphQLError(`Could not Delete Post`, {
+            extensions: { code: "INTERNAL_SERVER_ERROR" },
+          });
+        }
+        client.json.del(`allPosts`);
+        client.json.del(`getPostById-${id}`);
+        return deletedPost;
+      } catch (error) {
+        throw new GraphQLError(error.message);
+      }
+    },
     addUser: async (_, args) => {
       try {
         let { _id, email, firstname, lastname } = args;
@@ -360,6 +480,8 @@ export const resolvers = {
             extensions: { code: "INTERNAL_SERVER_ERROR" },
           });
         }
+        client.json.set(`getUserById-${_id}`, "$", newUser);
+        client.json.del(`allUsers`);
         return newUser;
       } catch (error) {
         throw new GraphQLError(error);
