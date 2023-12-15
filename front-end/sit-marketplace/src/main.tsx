@@ -11,15 +11,25 @@ import {
   ApolloProvider,
 } from "@apollo/client";
 
-import fbconfig from "./firebase/FirebaseConfig";
+import 'dotenv';
+// import fbconfig from "./firebase/FirebaseConfig";
 import { initializeApp } from "firebase/app";
+
+const fbconfig = {
+  apiKey: process.env.FIREBASE_API_KEY,
+  authDomain: process.env.FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.FIREBASE_PROJECTID,
+  storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.FIREBASE_APP_ID,
+}
 
 const app = initializeApp(fbconfig);
 
 const client = new ApolloClient({
   cache: new InMemoryCache(),
   link: new HttpLink({
-    uri: "http://localhost:4000",
+    uri : process.env.APOLLO_URL || "http://localhost:4000",
   }),
 });
 
