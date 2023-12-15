@@ -3,11 +3,10 @@ import ProductCard from "./ProductCard";
 import { useQuery } from "@apollo/client";
 import { SEARCH_PRODUCTS_BY_ID } from "../queries";
 import { useNavigate, useParams } from "react-router-dom";
-import { AuthContext } from "../context/AuthContext.jsx";
+
 export default function ProductDetail() {
   const [loading, setLoading] = useState(true);
   const [product, setProduct] = useState(null); // Changed to null for initial state
-  const { currentUser } = useContext(AuthContext);
   const { _id, email, firstname, lastname } = currentUser;
   const navigate = useNavigate();
   const { id } = useParams();
@@ -28,10 +27,10 @@ export default function ProductDetail() {
     }
   }, [data, error]);
 
-  function handleFavorite() {
-    //get user id for current session
-    //mutate the favorite by current user id
-  }
+  // function handleFavorite() {
+  //   //get user id for current session
+  //   //mutate the favorite by current user id
+  // }
 
   if (loading) {
     return <h1>Loading...</h1>;
@@ -45,7 +44,6 @@ export default function ProductDetail() {
     <div>
       {product && <ProductCard productData={product} />}{" "}
       {/* Check for product existence */}
-      <button onClick={handleFavorite}>Favorite</button>
     </div>
   );
 }

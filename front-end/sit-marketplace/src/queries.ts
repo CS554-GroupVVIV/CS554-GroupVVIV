@@ -264,3 +264,15 @@ export const SEARCH_PRODUCTS_BY_ID = gql`
     }
   }
 `;
+
+export const ADD_FAVORITE_TO_USER = gql`
+  mutation Mutation($id: String!, $productId: String!) {
+    addProductToUserFavorite(_id: $id, productId: $productId)
+  }
+`;
+
+export const REMOVE_FAVORITE_FROM_USER = gql`
+  mutation Mutation($id: String!, $productId: String!) {
+    removeProductFromUserFavorite(_id: $id, productId: $productId)
+  }
+`;
