@@ -7,6 +7,7 @@ import {
   doPasswordReset,
   updateUserProfile,
 } from "../firebase/FirebaseFunction";
+import TransactionPost from "./TransactionPost.tsx";
 import * as validation from "../helper.tsx";
 
 function UserProfile() {
@@ -17,6 +18,8 @@ function UserProfile() {
   const [lastname, setLastname] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const [togglePost, setTogglePost] = useState<boolean>(false);
   const [editUser] = useMutation(EDIT_USER);
   const { loading, error, data } = useQuery(GET_USER, {
     variables: { id: currentUser.uid },
@@ -161,6 +164,15 @@ function UserProfile() {
         </button>
       </form>
       <br />
+      <button
+        onClick={() => {
+          setTogglePost(!togglePost);
+        }}
+      >
+        Transaction from Post
+      </button>
+
+      {togglePost ? <TransactionPost /> : null}
     </div>
   );
 }

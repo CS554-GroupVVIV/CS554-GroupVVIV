@@ -8,7 +8,6 @@ import ProductCard from "./ProductCard";
 type Product = {
   _id: string;
   name: string;
-};
 
 export default function SearchProduct({ searchTerm }) {
   const [products, setProducts] = useState([]);

@@ -22,7 +22,6 @@ import {
   capitalizeName,
 } from "./helper.js";
 
-
 export const resolvers = {
   ObjectID: ObjectID,
   DateTime: DateTime,
@@ -188,6 +187,36 @@ export const resolvers = {
         throw new GraphQLError(error.message);
       }
     },
+
+    getPostBySeller: async (_, args) => {
+      try {
+        const posts = await postCollection();
+        const sellerPosts = await posts.find({ seller_id: args._id }).toArray();
+        if (!sellerPosts) {
+          throw new GraphQLError("Post not found", {
+            extensions: { code: "NOT_FOUND" },
+          });
+        }
+        return sellerPosts;
+      } catch (error) {
+        throw new GraphQLError(error.message);
+      }
+    },
+
+    getPostByBuyer: async (_, args) => {
+      try {
+        const posts = await postCollection();
+        const buyerPosts = await posts.find({ buyer_id: args._id }).toArray();
+        if (!buyerPosts) {
+          throw new GraphQLError("Post not found", {
+            extensions: { code: "NOT_FOUND" },
+          });
+        }
+        return buyerPosts;
+      } catch (error) {
+        throw new GraphQLError(error.message);
+      }
+    },
   },
 
   Mutation: {
@@ -301,7 +330,7 @@ export const resolvers = {
     editUser: async (_, args) => {
       try {
         let { _id, email, firstname, lastname } = args;
-        console.log(args)
+        console.log(args);
         // check ID not implement yet
         email = checkEmail(email);
         firstname = capitalizeName(
