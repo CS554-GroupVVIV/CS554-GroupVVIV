@@ -21,6 +21,7 @@ import {
   checkUserAndChatId,
   checkFirstNameAndLastName,
   capitalizeName,
+  checkUrl
 } from "./helper.js";
 
 export const resolvers = {
@@ -263,13 +264,13 @@ export const resolvers = {
         if (Object.keys(args).length !== 8) {
           throw new Error("all fields are required");
         }
-        let name = args.name;
-        let price = args.price;
+        let name = checkName(args.name);
+        let price = checkPrice(args.price);
         let date = new Date();
-        let description = args.description;
-        let condition = args.condition;
+        let description = checkDescription(args.description);
+        let condition = checkCondition(args.condition);
         let seller_id = args.seller_id;
-        let image = args.image;
+        let image = checkUrl(args.image);
         let category = args.category;
         // ********need input check*************
         const products = await productCollection();
