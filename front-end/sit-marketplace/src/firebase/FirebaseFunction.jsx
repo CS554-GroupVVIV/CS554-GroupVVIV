@@ -67,7 +67,7 @@ async function updateUserProfile(displayName, oldEmail, newEmail, password) {
   await reauthenticateWithCredential(auth.currentUser, credential);
   await verifyBeforeUpdateEmail(auth.currentUser, newEmail)
     .then(function () {
-      alert("Email verification sent! Please click the provided link to complete the update process!");
+      alert("Email verification sent! Please click the provided link in the new email to complete the update process!");
     })
     .catch(function (error) {
       alert(error);

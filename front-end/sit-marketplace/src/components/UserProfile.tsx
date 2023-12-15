@@ -12,7 +12,10 @@ import * as validation from "../helper.tsx";
 
 function UserProfile() {
   let { currentUser } = useContext(AuthContext);
-  console.log(currentUser);
+  const { loading, error, data } = useQuery(GET_USER, {
+    variables: { id: currentUser ? currentUser.uid : "" },
+    fetchPolicy: "cache-and-network",
+  });
   const [userInfo, setUserInfo] = useState(null);
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
@@ -21,20 +24,15 @@ function UserProfile() {
 
   const [togglePost, setTogglePost] = useState<boolean>(false);
   const [editUser] = useMutation(EDIT_USER);
-  const { loading, error, data } = useQuery(GET_USER, {
-    variables: { id: currentUser.uid },
-    fetchPolicy: "cache-and-network",
-  });
 
   useEffect(() => {
-    if (!loading && !error && data.getUserById) {
+    if (!loading && !error && data && data.getUserById) {
       setUserInfo(data.getUserById);
       setFirstname(data.getUserById.firstname);
       setLastname(data.getUserById.lastname);
       setEmail(data.getUserById.email);
     }
-    console.log(userInfo);
-  }, [loading]);
+  }, [loading, error, data]);
 
   const passwordReset = (event) => {
     event.preventDefault();

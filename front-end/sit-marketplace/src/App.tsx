@@ -11,6 +11,7 @@ import PostForm from "./components/PostForm.tsx";
 import ProductDetail from "./components/ProductDetail.tsx";
 import ProductForm from "./components/NewProduct.tsx";
 import UserProfile from "./components/UserProfile.tsx";
+import ResetPassword from "./components/ResetPassword.tsx";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 function App() {
@@ -42,6 +43,10 @@ function App() {
           <Route
             path="/userprofile"
             element={user ? <UserProfile /> : <Navigate to={"/login"} />}
+          />
+          <Route
+            path="/resetpassword"
+            element={user ? <Home /> : <ResetPassword />}
           />
         </Routes>
       </div>

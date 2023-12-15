@@ -1,10 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
-import { AuthContext } from "../context/AuthContext";
-import { doSignInWithEmailAndPassword } from "../firebase/FirebaseFunction";
-import ResetPassword from "./ResetPassword.tsx";
-import { useMutation, useQuery } from "@apollo/client";
-import { EDIT_USER, GET_USER } from "../queries.ts";
+import React from "react";
 import {
   Avatar,
   Button,
@@ -20,55 +14,27 @@ import {
 } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { Navigate, useNavigate } from "react-router-dom";
+import {
+  doPasswordReset,
+} from "../firebase/FirebaseFunction";
 
-function Login() {
+function ResetPassword() {
   const navigate = useNavigate();
-  const { currentUser } = useContext(AuthContext);
-  const { loading, error, data } = useQuery(GET_USER, {
-    variables: { id: currentUser ? currentUser.uid : "" },
-    fetchPolicy: "cache-and-network",
-  });
-  const [emailInDOM, setEmailInDOM] = useState("");
-  const [editUser] = useMutation(EDIT_USER);
   const defaultTheme = createTheme();
 
-  const handleLogin = async (event) => {
+  const passwordReset = (event) => {
     event.preventDefault();
-    let { email, password } = event.target.elements;
-    setEmailInDOM(email.value);
-
-    try {
-      await doSignInWithEmailAndPassword(email.value, password.value);
-    } catch (error) {
+    let email = document.getElementById("email").value;
+    if (email) {
+      doPasswordReset(email);
+      alert("Password reset email was sent");
+    } else {
       alert(
-        "Invalid email or password. Please check your credentials and try again."
+        "Please enter an email address below before you click the forgot password link"
       );
     }
   };
-
-  useEffect(() => {
-    if (!loading && !error && currentUser) {
-      if (
-        data.getUserById &&
-        currentUser.email === emailInDOM &&
-        data.getUserById.email !== emailInDOM
-      ) {
-        editUser({
-          variables: {
-            id: currentUser.uid,
-            email: currentUser.email,
-            lastname: data.getUserById.lastname,
-            firstname: data.getUserById.firstname,
-          },
-        });
-        setEmailInDOM("");
-      }
-    }
-  }, [loading, error, currentUser, data, emailInDOM, editUser]);
-
-  if (!loading && !error && currentUser) {
-    return <Navigate to="/" />;
-  }
 
   return (
     <>
@@ -118,7 +84,7 @@ function Login() {
               <Box
                 component="form"
                 noValidate
-                onSubmit={handleLogin}
+                onSubmit={passwordReset}
                 sx={{ mt: 1 }}
               >
                 <TextField
@@ -131,23 +97,13 @@ function Login() {
                   autoComplete="email"
                   autoFocus
                 />
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
-                  name="password"
-                  label="Password"
-                  type="password"
-                  id="password"
-                  autoComplete="current-password"
-                />
                 <Button
                   type="submit"
                   fullWidth
                   variant="contained"
                   sx={{ mt: 3, mb: 2 }}
                 >
-                  Sign In
+                  Send
                 </Button>
                 <Grid container>
                   <Grid item xs>
@@ -155,13 +111,13 @@ function Login() {
                       href="#"
                       variant="body2"
                       onClick={() => {
-                        navigate("/resetpassword");
+                        navigate("/login");
                       }}
                     >
-                      Forgot password?
+                      Already remember password?
                     </Link>
                   </Grid>
-                  <Grid item>
+                  <Grid item sx={{ marginX: "1%" }}>
                     <Link
                       href="#"
                       variant="body2"
@@ -183,4 +139,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default ResetPassword;
