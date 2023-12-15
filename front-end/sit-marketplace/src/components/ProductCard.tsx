@@ -7,6 +7,8 @@ import { socketID, socket } from "./socket";
 
 import { Card, CardHeader, CardContent, Grid } from "@mui/material";
 
+import { Link } from "react-router-dom";
+
 export default function ProductCard({ productData }) {
   const navigate = useNavigate();
 
@@ -23,7 +25,9 @@ export default function ProductCard({ productData }) {
           borderRadius: "10%",
         }}
       >
-        <CardHeader title={productData && productData.name}></CardHeader>
+        <Link to={productData._id}>
+          <CardHeader title={productData && productData.name}></CardHeader>
+        </Link>
         <CardContent
           style={{
             display: "flex",

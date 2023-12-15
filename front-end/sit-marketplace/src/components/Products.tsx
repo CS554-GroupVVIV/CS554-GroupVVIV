@@ -26,8 +26,13 @@ export default function Products() {
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
+    console.log("in the products useeffect");
+    console.log(data);
+    console.log(error);
     if (!loading && !error && data.products) {
       setProducts(data.products);
+    } else if (error) {
+      console.error(error);
     }
   }, [loading]);
 
@@ -59,7 +64,7 @@ export default function Products() {
         <input type="submit" />
       </form>
 
-      {searchTerm && <SearchProduct searchTerm={searchTerm} />}
+      {/* {searchTerm && <SearchProduct searchTerm={searchTerm} />} */}
 
       <ProductForm />
 

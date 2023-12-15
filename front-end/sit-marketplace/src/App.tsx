@@ -11,6 +11,7 @@ import PostForm from "./components/PostForm.tsx";
 import ProductDetail from "./components/ProductDetail.tsx";
 import ProductForm from "./components/NewProduct.tsx";
 import UserProfile from "./components/UserProfile.tsx";
+import Error from "./components/Error.tsx";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 function App() {
@@ -33,8 +34,9 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/newpost" element={<PostForm />} />
-          <Route path="/product/:id" element={<ProductDetail />} />
+          <Route path="/products/:id" element={<ProductDetail />} />
           <Route path="/newproduct" element={<ProductForm />} />
+          <Route path="/error" element={<Error />} />
           <Route
             path="/chatrooms"
             element={user ? <ChatRooms /> : <Navigate to={"/login"} />}

@@ -52,6 +52,7 @@ export const typeDefs = `#graphql
     email: String,
     firstname: String,
     lastname: String,
+    Favorite:[String]
   }
 
     type Message{
@@ -75,6 +76,8 @@ export const typeDefs = `#graphql
         editUser(_id: String!, email: String!, firstname: String!, lastname: String!): User,
         addChat(participants: [String!]!): Chat,
         addMessage(_id: String!, sender: ID!, time: DateTime!, message: String!): Message
+        addProductToUserFavorite(_id:String!,productId:String!):[String]
+        removeProductFromUserFavorite(_id:String!,productId:String!):[String]
     }
 `;
 

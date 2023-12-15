@@ -103,7 +103,7 @@ export const resolvers = {
       try {
         let id = checkId(args._id);
         const products = await productCollection();
-        const product = await products.findOne({ _id: id.toString() });
+        const product = await products.findOne({ _id: new ObjectId(id) });
         if (!product) {
           throw new GraphQLError("product not found", {
             extensions: { code: "NOT_FOUND" },
@@ -408,6 +408,85 @@ export const resolvers = {
           });
         }
         return newMessage;
+      } catch (error) {
+        throw new GraphQLError(error.message);
+      }
+    },
+
+    addProductToUserFavorite: async (_, args) => {
+      let { _id, productId } = args;
+      try {
+        //find current user by id
+        const usersData = await userCollection();
+        let userToUpdate = await usersData.findOne({ _id: _id.toString() });
+        if (!userToUpdate) {
+          throw new GraphQLError(`USER NOT FOUND`, {
+            extensions: { code: "INTERNAL_SERVER_ERROR" },
+          });
+        }
+        //check if the productId already exists
+        let favorite = userToUpdate.favorite || [];
+        if (favorite && favorite.includes(productId)) {
+          throw new GraphQLError(`Areadly favorite this product`, {
+            extensions: { code: "INTERNAL_SERVER_ERROR" },
+          });
+        }
+
+        //add new product into favorite array and update
+        favorite.push(productId);
+        userToUpdate.favorite = favorite;
+        const updatedUser = await usersData.findOneAndUpdate(
+          { _id: _id.toString() },
+          { $set: { favorite: favorite } },
+          { new: true }
+        );
+
+        if (!updatedUser) {
+          throw new GraphQLError(`Could not Edit User`, {
+            extensions: { code: "INTERNAL_SERVER_ERROR" },
+          });
+        }
+
+        return updatedUser.favorite;
+      } catch (error) {
+        throw new GraphQLError(error.message);
+      }
+    },
+
+    removeProductFromUserFavorite: async (_, args) => {
+      let { _id, productId } = args;
+      try {
+        //find current user by id
+        const usersData = await userCollection();
+        const userToUpdate = await usersData.findOne({ _id: _id.toString() });
+        if (!userToUpdate) {
+          throw new GraphQLError(`USER NOT FOUND`, {
+            extensions: { code: "INTERNAL_SERVER_ERROR" },
+          });
+        }
+        //check if the productIdexists
+        let favorite = userToUpdate.favorite || [];
+        if (favorite && !favorite.includes(productId)) {
+          throw new GraphQLError(`Cannot found this product in favorite`, {
+            extensions: { code: "INTERNAL_SERVER_ERROR" },
+          });
+        }
+
+        //add new product into favorite array and update
+        favorite = favorite.filter((id) => id !== productId);
+        const updatedUser = await usersData.findOneAndUpdate(
+          { _id: _id.toString() },
+          { $set: { favorite: favorite } },
+          { new: true }
+        );
+
+        if (!updatedUser) {
+          throw new GraphQLError(`Could not Edit User`, {
+            extensions: { code: "INTERNAL_SERVER_ERROR" },
+          });
+        }
+
+        return updatedUser.favorite;
       } catch (error) {
         throw new GraphQLError(error.message);
       }
