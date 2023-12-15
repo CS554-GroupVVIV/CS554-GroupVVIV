@@ -64,7 +64,7 @@ jobs:
             APP_NAME=${{ env.APP_NAME1 }}
             APP_VERSION=${{ env.APP_VERSION }}
           tags: |
-            ${{ env.DOCKERHUB_REPO1 }}:latest
+            ${{ env.DOCKERHUB_REPO_1 }}:latest
       -
         name: Build and push12
         if: steps.check_message.outputs.skip == 'false'
@@ -78,4 +78,4 @@ jobs:
             APP_NAME=${{ env.APP_NAME2 }}
             APP_VERSION=${{ env.APP_VERSION }}
           tags: |
-            ${{ env.DOCKERHUB_REPO2 }}:latest
+            ${{ env.DOCKERHUB_REPO_2 }}:latest
