@@ -115,6 +115,22 @@ export const resolvers = {
       }
     },
 
+    getPostById: async (_, args) => {
+      try {
+        let id = checkId(args._id);
+        const posts = await postCollection();
+        const post = await posts.findOne({ _id: id.toString() });
+        if (!post) {
+          throw new GraphQLError("post not found", {
+            extensions: { code: "NOT_FOUND" },
+          });
+        }
+        return post;
+      } catch (error) {
+        throw new GraphQLError(error.message);
+      }
+    },
+
     getUserById: async (_, args) => {
       try {
         let id = checkUserAndChatId(args._id.toString());
@@ -282,7 +298,7 @@ export const resolvers = {
           condition: condition,
           date: new Date(),
           description: description,
-          isComplete: false,
+          status: "active",
         };
         let insertedPost = await posts.insertOne(newPost);
         if (!insertedPost) {
