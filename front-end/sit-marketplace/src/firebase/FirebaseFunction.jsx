@@ -18,7 +18,6 @@ async function doCreateUserWithEmailAndPassword(email, password, displayName) {
   let user;
   await createUserWithEmailAndPassword(auth, email, password).then(
     (userCredential) => {
-      console.l;
       user = userCredential.user;
     }
   );

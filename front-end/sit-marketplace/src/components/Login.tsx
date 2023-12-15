@@ -66,7 +66,7 @@ function Login() {
     }
   }, [loading, error, currentUser, data, emailInDOM, editUser]);
 
-  if (!loading && !error && currentUser) {
+  if (currentUser) {
     return <Navigate to="/" />;
   }
 

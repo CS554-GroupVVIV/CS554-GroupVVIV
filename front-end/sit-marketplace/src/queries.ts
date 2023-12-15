@@ -11,7 +11,7 @@ export const GET_PRODUCTS = gql`
       condition
       seller_id
       category
-      isSold
+      status
     }
   }
 `;
