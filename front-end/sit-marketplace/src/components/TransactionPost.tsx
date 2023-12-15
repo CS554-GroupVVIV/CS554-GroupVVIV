@@ -1,5 +1,6 @@
 import React, { useContext } from "react";
 import { useQuery } from "@apollo/client";
+import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext.jsx";
 import { GET_POSTS_BY_BUYER, GET_POSTS_BY_SELLER } from "../queries.js";
 
@@ -12,6 +13,7 @@ const TransactionPost = () => {
   } = useQuery(GET_POSTS_BY_SELLER, {
     variables: { _id: currentUser.uid },
   });
+  const navigate = useNavigate();
   console.log("I sold: ", postSeller);
 
   const {
@@ -26,10 +28,16 @@ const TransactionPost = () => {
   const PostCard = ({ post }) => {
     return (
       <div className="card w-96 bg-base-100 shadow-xl border-indigo-500/100">
-        <div className="card-body">
+        <div
+          className="card-body hover:bg-blue-500 cursor-pointer"
+          onClick={() => {
+            navigate(`/post/${post._id}`);
+          }}
+        >
           <p className="card-title">{post.item}</p>
           <p>price: {post.price}</p>
           <p>date: {post.date.split("T")[0]}</p>
+          <p>status: {post.status}</p>
           <div className="card-actions justify-end">
             <button className="btn btn-primary">Comment</button>
           </div>
@@ -46,7 +54,8 @@ const TransactionPost = () => {
     } else if (postBuyerLoading) {
       return <p>Loading</p>;
     } else if (postBuyerError) {
-      return <>{postBuyerError}</>;
+      console.log(postBuyerError);
+      return <>Something went wrong</>;
     }
   };
 
@@ -58,7 +67,8 @@ const TransactionPost = () => {
     } else if (postSellerLoading) {
       return <p>Loading</p>;
     } else if (postSellerError) {
-      return <>{postSellerError}</>;
+      console.log(postSellerError);
+      return <>Something went wrong</>;
     }
   };
 

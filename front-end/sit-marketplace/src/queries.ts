@@ -28,7 +28,7 @@ export const GET_POSTS = gql`
       condition
       date
       description
-      isComplete
+      status
     }
   }
 `;
@@ -81,7 +81,7 @@ export const GET_POSTS_BY_SELLER = gql`
       condition
       date
       description
-      isComplete
+      status
     }
   }
 `;
@@ -98,7 +98,7 @@ export const GET_POSTS_BY_BUYER = gql`
       condition
       date
       description
-      isComplete
+      status
     }
   }
 `;
@@ -160,7 +160,7 @@ export const ADD_POST = gql`
       condition
       date
       description
-      isComplete
+      status
     }
   }
 `;
@@ -261,6 +261,23 @@ export const SEARCH_PRODUCTS_BY_ID = gql`
       isSold
       name
       price
+    }
+  }
+`;
+
+export const SEARCH_POST_BY_ID = gql`
+  query Query($id: ObjectID!) {
+    getPostById(_id: $id) {
+      _id
+      buyer_id
+      seller_id
+      item
+      category
+      price
+      condition
+      date
+      description
+      status
     }
   }
 `;

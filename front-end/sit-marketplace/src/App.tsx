@@ -9,6 +9,7 @@ import ChatRooms from "./components/ChatRoomList.tsx";
 import { AuthProvider, AuthContext } from "./context/AuthContext.jsx";
 import PostForm from "./components/PostForm.tsx";
 import ProductDetail from "./components/ProductDetail.tsx";
+import PostDetail from "./components/PostDetail.tsx";
 import ProductForm from "./components/NewProduct.tsx";
 import UserProfile from "./components/UserProfile.tsx";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
@@ -34,6 +35,7 @@ function App() {
           <Route path="/signup" element={<SignUp />} />
           <Route path="/newpost" element={<PostForm />} />
           <Route path="/product/:id" element={<ProductDetail />} />
+          <Route path="/post/:id" element={<PostDetail />} />
           <Route path="/newproduct" element={<ProductForm />} />
           <Route
             path="/chatrooms"
