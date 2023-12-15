@@ -93,9 +93,9 @@ io.on("connection", (socket) => {
     console.log("User disconnected:", socket.id);
   });
 
-  socket.on("message", ({ room, sender, message }) => {
-    console.log(`${sender} sent "${message}" to room: ${room}`);
-    io.to(room).emit("message", { sender, message });
+  socket.on("message", ({ room, sender, message, time }) => {
+    console.log(`${sender} sent "${message}" to room: ${room} at ${time}`);
+    io.to(room).emit("message", { sender, message, time });
     // Place to write into mogodb
   });
 });

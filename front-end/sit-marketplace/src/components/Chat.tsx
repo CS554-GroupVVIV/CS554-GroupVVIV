@@ -32,24 +32,28 @@ export default function Chat({ chat, participants }) {
   if (!loading) {
     return (
       <div style={{ display: "flex", flexDirection: "column" }}>
-        {chat.map(({ sender, message }, index) => (
-          <div
-            key={index}
-            style={{
-              alignSelf: sender === currentUser.uid ? "flex-end" : "flex-start",
-            }}
-          >
-            <p
+        {chat &&
+          chat.map(({ sender, message, time }, index) => (
+            <div
+              key={index}
               style={{
-                padding: 10,
-                backgroundColor: sender === currentUser.uid ? "blue" : "green",
-                borderRadius: 50,
+                alignSelf:
+                  sender === currentUser.uid ? "flex-end" : "flex-start",
               }}
             >
-              {participantDict[sender]}: {message}
-            </p>
-          </div>
-        ))}
+              <p
+                style={{
+                  padding: 3,
+                  backgroundColor:
+                    sender === currentUser.uid ? "blue" : "green",
+                  borderRadius: 50,
+                }}
+              >
+                {participantDict[sender]}: {message}
+              </p>
+              <p>{new Date(time).toLocaleString()}</p>
+            </div>
+          ))}
       </div>
     );
   }

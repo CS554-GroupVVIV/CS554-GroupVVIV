@@ -6,7 +6,6 @@ import { useQuery } from "@apollo/client";
 import { GET_PRODUCTS, GET_POSTS } from "../queries";
 
 import ProductCard from "./ProductCard";
-import SearchProduct from "./SearchProduct";
 import LogoutButton from "./LogoutButton";
 import { AuthContext } from "../context/AuthContext";
 
@@ -126,7 +125,6 @@ export default function Home() {
           </div>
         </Grid>
         <Grid item>
-          <h2>Chat Room List:</h2>
           <div>
             {currentUser ? (
               <ChatRoomList uid={currentUser.uid} />

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 
 import { socketID, socket } from "./socket";
 
@@ -18,7 +18,6 @@ export default function ChatRoom({ room }) {
   });
 
   const [addChat] = useMutation(ADD_CHAT);
-  const [chatHistory, setChatHistory] = useState([]);
   useEffect(() => {
     if (!loading) {
       if (!data) {
@@ -40,21 +39,9 @@ export default function ChatRoom({ room }) {
         } catch (error) {
           console.error("Error adding chat:", error);
         }
-      } else {
-        // console.log("Chat Id: ", data.getChatByParticipants._id);
-
-        const messages = data.getChatByParticipants.messages;
-        // console.log(messages);
-        if (messages) {
-          setChatHistory(
-            messages.map((message) => {
-              return { sender: message.sender, message: message.message };
-            })
-          );
-        }
       }
     }
-  }, [loading, room]);
+  }, [loading, data, room]);
 
   const [chat, setChat] = useState([]);
   const [addMsg] = useMutation(ADD_MESSAGE);
@@ -62,7 +49,7 @@ export default function ChatRoom({ room }) {
     try {
       await addMsg({
         variables: {
-          chatId: msgData.chatId,
+          chatId: data.getChatByParticipants._id,
           sender: msgData.sender,
           message: msgData.message,
           time: msgData.time,
@@ -74,71 +61,73 @@ export default function ChatRoom({ room }) {
   };
 
   useEffect(() => {
-    socket.on("message", ({ sender, room, message }) => {
+    socket.on("message", ({ sender, message, time }) => {
       // console.log("The server has broadcast message data to all clients");
-
-      setChat([...chat, { sender, message }]);
+      setChat([...chat, { sender, message, time }]);
     });
 
     return () => {
       socket.off("message");
     };
-  }, [chat, room]);
+  }, [chat]);
 
   useEffect(() => {
     setChat([]);
   }, [room]);
 
-  const onMessageSubmit = (e) => {
-    e.preventDefault();
-    let msgEle = document.getElementById("message");
+  if (!loading) {
+    return (
+      <div>
+        <h3>Chat Room with {room}:</h3>
 
-    // console.log("Going to send the message event to the server");
-    socket.emit("message", {
-      room: room,
-      sender: currentUser.uid,
-      message: msgEle.value,
-    });
-
-    const curDateTime = new Date();
-    const msgData = {
-      chatId: data.getChatByParticipants._id,
-      sender: currentUser.uid,
-      time: curDateTime.toISOString(),
-      message: msgEle.value,
-    };
-    // console.log(msgData);
-    handleAddMsg(msgData);
-
-    msgEle.value = "";
-    msgEle.focus();
-  };
-
-  return (
-    <div>
-      <h3>Chat Room with {room}:</h3>
-
-      <h4 style={{ textAlign: "center" }}> --- History --- </h4>
-      <Chat chat={chatHistory} participants={[currentUser.uid, room]} />
-
-      <h4 style={{ textAlign: "center" }}> --- New --- </h4>
-      <Chat chat={chat} participants={[currentUser.uid, room]} />
-
-      <form
-        className="chatform"
-        autoComplete="false"
-        onSubmit={onMessageSubmit}
-      >
-        <input
-          name="message"
-          id="message"
-          variant="outlined"
-          label="Message"
-          autoFocus
+        <h4 style={{ textAlign: "center" }}> --- History --- </h4>
+        <Chat
+          chat={data && data.getChatByParticipants.messages}
+          participants={[currentUser.uid, room]}
         />
 
-        <button>Send Message</button>
-      </form>
-    </div>
-  );
+        <h4 style={{ textAlign: "center" }}> --- New --- </h4>
+        <Chat chat={chat} participants={[currentUser.uid, room]} />
+
+        <form
+          className="chatform"
+          autoComplete="false"
+          onSubmit={(e) => {
+            e.preventDefault();
+
+            let msgEle = document.getElementById("message");
+            const msgData = {
+              sender: currentUser.uid,
+              time: new Date().toISOString(),
+              message: msgEle.value,
+            };
+
+            socket.emit("message", {
+              room: room,
+              sender: msgData.sender,
+              message: msgData.message,
+              time: msgData.time,
+            });
+
+            // console.log(msgData);
+            handleAddMsg(msgData);
+
+            msgEle.value = "";
+            msgEle.focus();
+          }}
+        >
+          <input
+            name="message"
+            id="message"
+            variant="outlined"
+            label="Message"
+            autoFocus
+            autoComplete="false"
+          />
+
+          <button>Send</button>
+        </form>
+      </div>
+    );
+  }
 }
