@@ -21,7 +21,7 @@ import {
   checkUserAndChatId,
   checkFirstNameAndLastName,
   capitalizeName,
-  checkUrl
+  checkUrl,
 } from "./helper.js";
 
 export const resolvers = {
@@ -73,7 +73,10 @@ export const resolvers = {
     searchProducts: async (_, args) => {
       try {
         const products = await productCollection();
-        var productList = await client.json.get(`searchProducts-${args.searchTerm}`, "$");
+        var productList = await client.json.get(
+          `searchProducts-${args.searchTerm}`,
+          "$"
+        );
         if (!productList) {
           products.createIndex({
             name: "text",
@@ -88,7 +91,11 @@ export const resolvers = {
               extensions: { code: "NOT_FOUND" },
             });
           }
-          client.json.set(`searchProducts-${args.searchTerm}`, "$", productList);
+          client.json.set(
+            `searchProducts-${args.searchTerm}`,
+            "$",
+            productList
+          );
         }
         return productList;
       } catch (error) {
@@ -100,7 +107,10 @@ export const resolvers = {
       try {
         let productName = checkName(args.name);
         const products = await productCollection();
-        var productsByName = await client.json.get(`searchProductsByName-${productName}`, "$");
+        var productsByName = await client.json.get(
+          `searchProductsByName-${productName}`,
+          "$"
+        );
         if (!productsByName) {
           productsByName = await products
             .find({ name: { $regex: productName, $options: "i" } })
@@ -110,7 +120,11 @@ export const resolvers = {
               extensions: { code: "NOT_FOUND" },
             });
           }
-          client.json.set(`searchProductsByName-${productName}`, "$", productsByName);
+          client.json.set(
+            `searchProductsByName-${productName}`,
+            "$",
+            productsByName
+          );
         }
         return productsByName;
       } catch (error) {
@@ -122,7 +136,7 @@ export const resolvers = {
       try {
         let id = checkId(args._id);
         var product = await client.json.get(`getProductById-${id}`, "$");
-        if(!product){
+        if (!product) {
           const products = await productCollection();
           product = await products.findOne({ _id: id.toString() });
           if (!product) {
@@ -177,7 +191,7 @@ export const resolvers = {
       try {
         // console.log(args);
         // let ids = checkUserAndChatId();
-        const usersData = await userCollection();        
+        const usersData = await userCollection();
         const users = await usersData
           .find({ _id: { $in: args.ids } })
           .toArray();
@@ -233,8 +247,11 @@ export const resolvers = {
     getPostBySeller: async (_, args) => {
       try {
         const posts = await postCollection();
-        var sellerPosts = await client.json.get(`getPostBySeller-${args._id}`, "$");
-        if(!sellerPosts){
+        var sellerPosts = await client.json.get(
+          `getPostBySeller-${args._id}`,
+          "$"
+        );
+        if (!sellerPosts) {
           sellerPosts = await posts.find({ seller_id: args._id }).toArray();
           if (!sellerPosts) {
             throw new GraphQLError("Post not found", {
@@ -252,8 +269,11 @@ export const resolvers = {
 
     getPostByBuyer: async (_, args) => {
       try {
-        var buyerPosts = await client.json.get(`getPostByBuyer-${args._id}`, "$");
-        if(!buyerPosts){
+        var buyerPosts = await client.json.get(
+          `getPostByBuyer-${args._id}`,
+          "$"
+        );
+        if (!buyerPosts) {
           const posts = await postCollection();
           buyerPosts = await posts.find({ buyer_id: args._id }).toArray();
           if (!buyerPosts) {
@@ -315,7 +335,7 @@ export const resolvers = {
     },
 
     editProduct: async (_, args) => {
-      try{
+      try {
         if (Object.keys(args).length !== 7) {
           throw new Error("all fields are required");
         }
@@ -354,8 +374,7 @@ export const resolvers = {
           });
         }
         return updated;
-      }
-      catch(error){
+      } catch (error) {
         throw new GraphQLError(error.message);
       }
     },
