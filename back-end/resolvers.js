@@ -33,7 +33,7 @@ export const resolvers = {
     products: async (_, args) => {
       try {
         const products = await productCollection();
-        var allProducts = await client.json.get(`allBooks`, "$");
+        var allProducts = await client.json.get(`allProducts`, "$");
         if (!allProducts) {
           allProducts = await products.find({}).toArray();
           if (!allProducts) {
