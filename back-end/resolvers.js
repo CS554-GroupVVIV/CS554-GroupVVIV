@@ -155,12 +155,15 @@ export const resolvers = {
     getPostById: async (_, args) => {
       try {
         let id = checkId(args._id);
-        const posts = await postCollection();
-        const post = await posts.findOne({ _id: id.toString() });
+        var post = await client.json.get(`getPostById-${id}`, "$");
         if (!post) {
-          throw new GraphQLError("post not found", {
-            extensions: { code: "NOT_FOUND" },
-          });
+          const posts = await postCollection();
+          const post = await posts.findOne({ _id: id.toString() });
+          if (!post) {
+            throw new GraphQLError("post not found", {
+              extensions: { code: "NOT_FOUND" },
+            });
+          }
         }
         return post;
       } catch (error) {
