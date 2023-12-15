@@ -3,9 +3,13 @@ import { startStandaloneServer } from "@apollo/server/standalone";
 import app from "express";
 import { createServer } from "http";
 import { Server } from "socket.io"; //replaces (import socketIo from 'socket.io')
+import redis from 'redis';
 
 import { typeDefs } from "./typeDefs.js";
 import { resolvers } from "./resolvers.js";
+
+export const client = redis.createClient();
+client.connect().then(() => {});
 
 const server = new ApolloServer({
   typeDefs,

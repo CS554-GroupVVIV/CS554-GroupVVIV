@@ -5,6 +5,7 @@ import {
   users as userCollection,
   chats as chatCollection,
 } from "./config/mongoCollections.js";
+import { client } from "./server.js";
 import { ObjectId } from "mongodb";
 import { ObjectID, DateTime, Base64 } from "./typeDefs.js";
 import {
@@ -31,11 +32,16 @@ export const resolvers = {
     products: async (_, args) => {
       try {
         const products = await productCollection();
-        const allProducts = await products.find({}).toArray();
+        var allProducts = await client.json.get(`allBooks`, "$");
         if (!allProducts) {
-          throw new GraphQLError("Products not found", {
-            extensions: { code: "NOT_FOUND" },
-          });
+          allProducts = await products.find({}).toArray();
+          if (!allProducts) {
+            throw new GraphQLError("Internal Server Error", {
+              extensions: { code: "INTERNAL_SERVER_ERROR" },
+            });
+          }
+          client.json.set(`allProducts`, "$", allProducts);
+          client.expire(`allProducts`, 60);
         }
         return allProducts;
       } catch (error) {
@@ -46,11 +52,16 @@ export const resolvers = {
     posts: async () => {
       try {
         const posts = await postCollection();
-        const allPosts = await posts.find({}).toArray();
+        var allPosts = await client.json.get(`allPosts`, "$");
         if (!allPosts) {
-          throw new GraphQLError("Post not found", {
-            extensions: { code: "NOT_FOUND" },
-          });
+          allPosts = await posts.find({}).toArray();
+          if (!allPosts) {
+            throw new GraphQLError("Internal Server Error", {
+              extensions: { code: "INTERNAL_SERVER_ERROR" },
+            });
+          }
+          client.json.set(`allPosts`, "$", allPosts);
+          client.expire(`allPosts`, 60);
         }
         return allPosts;
       } catch (error) {
@@ -61,19 +72,23 @@ export const resolvers = {
     searchProducts: async (_, args) => {
       try {
         const products = await productCollection();
-        products.createIndex({
-          name: "text",
-          // description: "text",
-          // category: "text",
-        });
-
-        const productList = await products
-          .find({ $text: { $search: args.searchTerm } })
-          .toArray();
+        var productList = await client.json.get(`searchProducts-${args.searchTerm}`, "$");
         if (!productList) {
-          throw new GraphQLError("product not found", {
-            extensions: { code: "NOT_FOUND" },
+          products.createIndex({
+            name: "text",
+            // description: "text",
+            // category: "text",
           });
+          productList = await products
+            .find({ $text: { $search: args.searchTerm } })
+            .toArray();
+          if (!productList) {
+            throw new GraphQLError("product not found", {
+              extensions: { code: "NOT_FOUND" },
+            });
+          }
+          client.json.set(`searchProducts-${args.searchTerm}`, "$", productList);
+          client.expire(`searchProducts-${args.searchTerm}`, 60);
         }
         return productList;
       } catch (error) {
@@ -85,13 +100,18 @@ export const resolvers = {
       try {
         let productName = checkName(args.name);
         const products = await productCollection();
-        const productsByName = await products
-          .find({ name: { $regex: productName, $options: "i" } })
-          .toArray();
+        var productsByName = await client.json.get(`searchProductsByName-${productName}`, "$");
         if (!productsByName) {
-          throw new GraphQLError("product not found", {
-            extensions: { code: "NOT_FOUND" },
-          });
+          productsByName = await products
+            .find({ name: { $regex: productName, $options: "i" } })
+            .toArray();
+          if (!productsByName) {
+            throw new GraphQLError("product not found", {
+              extensions: { code: "NOT_FOUND" },
+            });
+          }
+          client.json.set(`searchProductsByName-${productName}`, "$", productsByName);
+          client.expire(`searchProductsByName-${productName}`, 60);
         }
         return productsByName;
       } catch (error) {
@@ -102,12 +122,17 @@ export const resolvers = {
     getProductById: async (_, args) => {
       try {
         let id = checkId(args._id);
-        const products = await productCollection();
-        const product = await products.findOne({ _id: id.toString() });
-        if (!product) {
-          throw new GraphQLError("product not found", {
-            extensions: { code: "NOT_FOUND" },
-          });
+        var product = await client.json.get(`getProductById-${id}`, "$");
+        if(!product){
+          const products = await productCollection();
+          product = await products.findOne({ _id: id.toString() });
+          if (!product) {
+            throw new GraphQLError("product not found", {
+              extensions: { code: "NOT_FOUND" },
+            });
+          }
+          client.json.set(`getProductById-${id}`, "$", product);
+          client.expire(`getProductById-${id}`, 60);
         }
         return product;
       } catch (error) {
@@ -119,11 +144,14 @@ export const resolvers = {
       try {
         let id = checkUserAndChatId(args._id.toString());
         const usersData = await userCollection();
-        const user = await usersData.findOne({ _id: id });
+        var user = await client.json.get(`getUserById-${id}`, "$");
         if (!user) {
-          throw new GraphQLError("User not found", {
-            extensions: { code: "NOT_FOUND" },
-          });
+          const user = await usersData.findOne({ _id: id });
+          if (!user) {
+            throw new GraphQLError("User not found", {
+              extensions: { code: "NOT_FOUND" },
+            });
+          }
         }
         return user;
       } catch (error) {
@@ -135,7 +163,7 @@ export const resolvers = {
       try {
         // console.log(args);
         // let ids = checkUserAndChatId();
-        const usersData = await userCollection();
+        const usersData = await userCollection();        
         const users = await usersData
           .find({ _id: { $in: args.ids } })
           .toArray();
@@ -191,11 +219,16 @@ export const resolvers = {
     getPostBySeller: async (_, args) => {
       try {
         const posts = await postCollection();
-        const sellerPosts = await posts.find({ seller_id: args._id }).toArray();
-        if (!sellerPosts) {
-          throw new GraphQLError("Post not found", {
-            extensions: { code: "NOT_FOUND" },
-          });
+        var sellerPosts = await client.json.get(`getPostBySeller-${args._id}`, "$");
+        if(!sellerPosts){
+          sellerPosts = await posts.find({ seller_id: args._id }).toArray();
+          if (!sellerPosts) {
+            throw new GraphQLError("Post not found", {
+              extensions: { code: "NOT_FOUND" },
+            });
+          }
+          client.json.set(`getPostBySeller-${args._id}`, "$", sellerPosts);
+          client.expire(`getPostBySeller-${args._id}`, 60);
         }
         return sellerPosts;
       } catch (error) {
@@ -205,12 +238,17 @@ export const resolvers = {
 
     getPostByBuyer: async (_, args) => {
       try {
-        const posts = await postCollection();
-        const buyerPosts = await posts.find({ buyer_id: args._id }).toArray();
-        if (!buyerPosts) {
-          throw new GraphQLError("Post not found", {
-            extensions: { code: "NOT_FOUND" },
-          });
+        var buyerPosts = await client.json.get(`getPostByBuyer-${args._id}`, "$");
+        if(!buyerPosts){
+          const posts = await postCollection();
+          buyerPosts = await posts.find({ buyer_id: args._id }).toArray();
+          if (!buyerPosts) {
+            throw new GraphQLError("Post not found", {
+              extensions: { code: "NOT_FOUND" },
+            });
+          }
+          client.json.set(`getPostByBuyer-${args._id}`, "$", buyerPosts);
+          client.expire(`getPostByBuyer-${args._id}`, 60);
         }
         return buyerPosts;
       } catch (error) {
