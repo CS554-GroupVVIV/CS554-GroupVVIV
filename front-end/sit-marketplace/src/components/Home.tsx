@@ -25,14 +25,10 @@ export default function Home() {
   const { loading, error, data } = useQuery(GET_PRODUCTS, {
     fetchPolicy: "cache-and-network",
   });
+  console.log(data);
 
-  const [firstTenProducts, setFirstTenProducts] = useState([]);
 
-  useEffect(() => {
-    if (!loading && !error && data.products) {
-      setFirstTenProducts(data.products.slice(0, 10));
-    }
-  }, [loading]);
+
   // console.log(currentUser);
   return (
     <div>
@@ -92,8 +88,8 @@ export default function Home() {
                 maxWidth: "60vw",
               }}
             >
-              {firstTenProducts &&
-                firstTenProducts.map((product: Product) => {
+              {data &&
+                data.products.map((product: Product) => {
                   return (
                     <ProductCard key={product._id} productData={product} />
                   );

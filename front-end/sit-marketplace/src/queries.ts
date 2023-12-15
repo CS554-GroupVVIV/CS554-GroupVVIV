@@ -1,19 +1,19 @@
 import { gql } from "@apollo/client";
 
 export const GET_PRODUCTS = gql`
-  query {
-    products {
-      _id
-      name
-      price
-      date
-      description
-      condition
-      seller_id
-      category
-      status
-    }
+query Products {
+  products {
+    _id
+    buyer_id
+    category
+    condition
+    description
+    name
+    price
+    seller_id
+    status
   }
+}
 `;
 
 export const GET_POSTS = gql`

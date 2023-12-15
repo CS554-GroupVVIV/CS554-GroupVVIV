@@ -20,16 +20,12 @@ export default function Products() {
     fetchPolicy: "cache-and-network",
   });
 
-  const [products, setProducts] = useState([]);
+
 
   const [text, setText] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
 
-  useEffect(() => {
-    if (!loading && !error && data.products) {
-      setProducts(data.products);
-    }
-  }, [loading]);
+
 
   return (
     <div>
@@ -71,8 +67,8 @@ export default function Products() {
       >
         New Product
       </button>
-      {products &&
-        products.map((product: Product) => {
+      {data.products &&
+        data.products.map((product: Product) => {
           return <ProductCard key={product._id} productData={product} />;
         })}
     </div>
