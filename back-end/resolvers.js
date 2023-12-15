@@ -321,7 +321,6 @@ export const resolvers = {
         }
         let name = checkName(args.name);
         let price = checkPrice(args.price);
-        let date = new Date();
         let description = checkDescription(args.description);
         let condition = checkCondition(args.condition);
         let seller_id = checkId(args.seller_id);
@@ -332,7 +331,6 @@ export const resolvers = {
         const updatedProduct = {
           name: name,
           price: price,
-          date: date,
           description: description,
           condition: condition,
           seller_id: seller_id,
@@ -424,7 +422,6 @@ export const resolvers = {
         let price = checkPrice(args.price);
         let condition = checkCondition(args.condition);
         let description = checkDescription(args.description);
-        let date = checkDate(args.date);
         const posts = await postCollection();
         const updatedPost = {
           buyer_id: buyer_id,
