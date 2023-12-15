@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:6.0
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+  
+  redis:
+    image: redis/redis-stack:latest
+    container_name: redis-stack
+    ports:
+      - 6379:6379
+      - 8001:8001
+    volumes:
+      - redis-data:/data
+
+  back-end:
+    image: aturret/vviv-backend:latest
+    restart: on-failure
+    ports:
+      - "4000:4000"
+      - "4001:4001"
+    depends_on:
+      - mongodb
+      - redis
+    environment:
+      - MONGODB_URL=mongodb://mongodb:27017/CS554-VVIV
+      - REDIS_URL=redis://redis:6379
+    
+  front-end:
+    image: aturret/vviv-frontend:latest
+    ports:
+      - "5173:5173"
+    depends_on:
+      - back-end
+    environment:
+      - APOLLO_URL=http://back-end:4000
+      - SOCKETIO_URL=http://back-end:4001
+
+volumes:
+  mongo-data:
+  redis-data:
+    
