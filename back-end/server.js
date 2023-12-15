@@ -8,7 +8,9 @@ import redis from "redis";
 import { typeDefs } from "./typeDefs.js";
 import { resolvers } from "./resolvers.js";
 
-export const client = redis.createClient();
+export const client = redis.createClient( {
+  url: process.env.REDIS_URL || 'redis://localhost:6379'
+});
 client.connect().then(() => {});
 
 const server = new ApolloServer({
