@@ -75,7 +75,9 @@ export const typeDefs = `#graphql
         addUser(_id: String!, email: String!, firstname: String!, lastname: String!): User,
         editUser(_id: String!, email: String!, firstname: String!, lastname: String!): User,
         addChat(participants: [String!]!): Chat,
-        addMessage(_id: String!, sender: ID!, time: DateTime!, message: String!): Message
+        addMessage(_id: String!, sender: ID!, time: DateTime!, message: String!): Message,
+        retrievePost(_id: String!, user_id:String!): Post,
+        repostPost(_id: String!, user_id:String!): Post
     }
 `;
 

@@ -10,34 +10,62 @@ type Post = {
   title: string;
 };
 
-export default function Products() {
-  //   const { loading, error, data } = useQuery(GET_POSTS, {
-  //     fetchPolicy: "cache-and-network",
-  //   });
+export default function Posts() {
+  const { data, loading, error } = useQuery(GET_POSTS, {
+    fetchPolicy: "cache-and-network",
+  });
   const navigate = useNavigate();
+  const [text, setText] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
 
-  const [posts, setPosts] = useState([]);
+  if (loading) {
+    return <p>Loading</p>;
+  } else if (error) {
+    return <p>Something went wrong</p>;
+  } else if (data) {
+    const posts = data.posts;
+    console.log(posts);
+    return (
+      <div>
+        <button
+          onClick={() => {
+            navigate("/");
+          }}
+        >
+          Home
+        </button>
 
-  //   useEffect(() => {
-  //     if (!loading && !error && data.posts) {
-  //       setPosts(data.posts);
-  //     }
-  //   }, [loading]);
+        <form
+          onSubmit={(event) => {
+            event.preventDefault();
+            setSearchTerm(text);
+            setText("");
+          }}
+        >
+          <label>
+            Search Product:
+            <input
+              type="text"
+              value={text}
+              onChange={(e) => setText(e.target.value)}
+            />
+          </label>
+          <input type="submit" />
+        </form>
 
-  return (
-    <div>
-      <h1>Posts:</h1>
-      <button
-        onClick={() => {
-          navigate("/newpost");
-        }}
-      >
-        New Post
-      </button>
-      {posts &&
-        posts.map((post: Post) => {
-          return <PostCard key={post._id} postData={post} />;
-        })}
-    </div>
-  );
+        <h1>Posts:</h1>
+        <button
+          onClick={() => {
+            navigate("/newpost");
+          }}
+        >
+          New Post
+        </button>
+        {posts &&
+          posts.map((post: Post) => {
+            return <PostCard key={post._id} postData={post} />;
+          })}
+      </div>
+    );
+  }
 }

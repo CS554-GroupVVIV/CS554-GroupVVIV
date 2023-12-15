@@ -281,3 +281,37 @@ export const SEARCH_POST_BY_ID = gql`
     }
   }
 `;
+
+export const RETRIEVE_POST = gql`
+  mutation ($id: String!, $user_id: String!) {
+    retrievePost(_id: $id, user_id: $user_id) {
+      _id
+      buyer_id
+      seller_id
+      item
+      category
+      price
+      condition
+      date
+      description
+      status
+    }
+  }
+`;
+
+export const REPOST_POST = gql`
+  mutation ($id: String!, $user_id: String!) {
+    repostPost(_id: $id, user_id: $user_id) {
+      _id
+      buyer_id
+      seller_id
+      item
+      category
+      price
+      condition
+      date
+      description
+      status
+    }
+  }
+`;

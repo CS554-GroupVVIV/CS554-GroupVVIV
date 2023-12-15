@@ -467,5 +467,74 @@ export const resolvers = {
         throw new GraphQLError(error.message);
       }
     },
+
+    retrievePost: async (_, args) => {
+      try {
+        const id = checkId(args._id);
+        const user_id = args.user_id;
+        if (!user_id) {
+          throw "Invalid User";
+        }
+        const posts = await postCollection();
+        let post = await posts.findOne({ _id: id.toString() });
+        if (!post) {
+          throw new GraphQLError("post not found", {
+            extensions: { code: "NOT_FOUND" },
+          });
+        }
+        if (post.buyer_id != user_id) {
+          throw "Invalid User";
+        }
+        if (post.status !== "active") {
+          throw "Cannot retrieve post";
+        }
+        const retrieve = await posts.updateOne(
+          { _id: id.toString() },
+          { $set: { status: "inactive" } }
+        );
+
+        if (retrieve.acknowledged != true) {
+          throw "Fail to retrieve post";
+        }
+        post = await posts.findOne({ _id: id.toString() });
+        return post;
+      } catch (error) {
+        throw new GraphQLError(error.message);
+      }
+    },
+
+    repostPost: async (_, args) => {
+      try {
+        const id = checkId(args._id);
+        const user_id = args.user_id;
+        if (!user_id) {
+          throw "Invalid User";
+        }
+        const posts = await postCollection();
+        let post = await posts.findOne({ _id: id.toString() });
+        if (!post) {
+          throw new GraphQLError("post not found", {
+            extensions: { code: "NOT_FOUND" },
+          });
+        }
+        if (post.buyer_id != user_id) {
+          throw "Invalid User";
+        }
+        if (post.status !== "inactive") {
+          throw "Cannot repost post";
+        }
+        const repost = await posts.updateOne(
+          { _id: id.toString() },
+          { $set: { status: "active", date: new Date() } }
+        );
+        if (repost.acknowledged != true) {
+          throw "Fail to repost";
+        }
+        post = await posts.findOne({ _id: id.toString() });
+        return post;
+      } catch (error) {
+        throw new GraphQLError(error.message);
+      }
+    },
   },
 };

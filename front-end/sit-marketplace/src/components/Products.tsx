@@ -64,6 +64,13 @@ export default function Products() {
       <ProductForm />
 
       <h1>Products:</h1>
+      <button
+        onClick={() => {
+          navigate("/newproduct");
+        }}
+      >
+        New Product
+      </button>
       {products &&
         products.map((product: Product) => {
           return <ProductCard key={product._id} productData={product} />;
