@@ -3,9 +3,13 @@ import { startStandaloneServer } from "@apollo/server/standalone";
 import app from "express";
 import { createServer } from "http";
 import { Server } from "socket.io"; //replaces (import socketIo from 'socket.io')
+import redis from "redis";
 
 import { typeDefs } from "./typeDefs.js";
 import { resolvers } from "./resolvers.js";
+
+export const client = redis.createClient();
+client.connect().then(() => {});
 
 const server = new ApolloServer({
   typeDefs,
@@ -15,7 +19,9 @@ const server = new ApolloServer({
 const httpServer = createServer(app);
 const io = new Server(httpServer, { cors: { origin: "*" } });
 
-const { url } = await startStandaloneServer(server);
+const { url } = await startStandaloneServer(server, {
+  listen: { port: process.env.APOLLO_PORT || 4000 },
+});
 
 console.log(`🚀 Server ready at ${url}`);
 
@@ -100,6 +106,6 @@ io.on("connection", (socket) => {
   });
 });
 
-httpServer.listen(4001, () => {
+httpServer.listen(process.env.SOCKETIO_PORT || 4001, () => {
   console.log(`🚀 Socket.io server listening on http://localhost:4001/`);
 });
