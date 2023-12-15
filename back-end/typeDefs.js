@@ -12,6 +12,7 @@ export const typeDefs = `#graphql
         searchProducts(searchTerm: String!): [Product],
         searchProductsByName(name: String!): [Product],
         getProductById(_id:ObjectID!):Product,
+        getPostById(_id:ObjectID!):Post,
         getUserById(_id: String!): User,
         getChatById(_id: String!): Chat,
         getChatByParticipants(participants: [String!]!): Chat,
@@ -44,7 +45,7 @@ export const typeDefs = `#graphql
       condition:String,
       date:DateTime!,
       description:String,
-      isComplete:Boolean!
+      status:String!
   }
 
     type User{
@@ -74,7 +75,9 @@ export const typeDefs = `#graphql
         addUser(_id: String!, email: String!, firstname: String!, lastname: String!): User,
         editUser(_id: String!, email: String!, firstname: String!, lastname: String!): User,
         addChat(participants: [String!]!): Chat,
-        addMessage(_id: String!, sender: ID!, time: DateTime!, message: String!): Message
+        addMessage(_id: String!, sender: ID!, time: DateTime!, message: String!): Message,
+        retrievePost(_id: String!, user_id:String!): Post,
+        repostPost(_id: String!, user_id:String!): Post
     }
 `;
 

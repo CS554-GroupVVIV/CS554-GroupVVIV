@@ -80,13 +80,13 @@ export default function ChatRoom({ room }) {
       <div>
         <h3>Chat Room with {room}:</h3>
 
-        <h4 style={{ textAlign: "center" }}> --- History --- </h4>
+        {/* <h4 style={{ textAlign: "center" }}> --- History --- </h4> */}
         <Chat
           chat={data && data.getChatByParticipants.messages}
           participants={[currentUser.uid, room]}
         />
 
-        <h4 style={{ textAlign: "center" }}> --- New --- </h4>
+        {/* <h4 style={{ textAlign: "center" }}> --- New --- </h4> */}
         <Chat chat={chat} participants={[currentUser.uid, room]} />
 
         <form

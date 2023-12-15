@@ -45,6 +45,9 @@ const checkPrice = (price) => {
   if (!price) {
     throw new Error("Must provide a price");
   }
+  if (typeof price !== "number") {
+    throw new Error("Price should be a number");
+  }
   price = parseFloat(price.toFixed(2));
 
   if (price < 0 || price > 100000) {
@@ -93,6 +96,21 @@ const checkDate = (date) => {
     throw new Error("Invalid Date");
   }
   return date;
+};
+
+export const checkUrl = (url) => {
+  if (!url) throw new Error("You must provide a URL to search for");
+  if (typeof url !== "string") throw new Error("URL must be a string");
+  if (url.trim().length === 0)
+    throw new Error("URL cannot be an empty string or just spaces");
+
+  const regex = new RegExp(
+    /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/
+  );
+  if (!regex.test(url))
+    throw new Error("You must provide a valid URL");
+
+  return url;
 };
 
 export const checkEmail = (email) => {
