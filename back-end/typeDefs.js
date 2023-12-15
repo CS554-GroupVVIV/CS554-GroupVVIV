@@ -69,9 +69,11 @@ export const typeDefs = `#graphql
 
     type Mutation {
         addProduct(name:String!, price: Number!,date:DateTime!,description:String!,condition:String!,seller_id:String!, image:base64!,category:String!):Product,
-        addPost(buyer_id: String!, item:String!, category:String!, price: Number!, condition:String!, description:String!):Post,
         editProduct(_id: ObjectID!, name:String, price: Number,date:DateTime,description:String,condition:String,seller_id:ObjectID!,buyer_id:ObjectID, image:base64,category:String,status:String ):Product,
         removeProduct(_id:ObjectID!):Product,
+        addPost(buyer_id: String!, item:String!, category:String!, price: Number!, condition:String!, description:String!):Post,
+        editPost(_id: ObjectID!, buyer_id: String!, item:String!, category:String!, price: Number!, condition:String!, description:String!, status:String!):Post,
+        removePost(_id:ObjectID!):Post,
         addUser(_id: String!, email: String!, firstname: String!, lastname: String!): User,
         editUser(_id: String!, email: String!, firstname: String!, lastname: String!): User,
         addChat(participants: [String!]!): Chat,
