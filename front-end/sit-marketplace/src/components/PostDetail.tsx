@@ -69,7 +69,6 @@ export default function PostDetail() {
           <p>Transaction Date: {post.date.split("T")[0]}</p>
           <p>Status: {post.status}</p>
           <div className="card-actions justify-end">
-            <button className="btn btn-primary">Comment</button>
             {post.buyer_id == currentUser.uid && post.status == "active" ? (
               <button
                 onClick={() => {
@@ -87,6 +86,26 @@ export default function PostDetail() {
                 }}
               >
                 Repost
+              </button>
+            ) : null}
+
+            {post.buyer_id == currentUser.uid && post.status == "complete" ? (
+              <button
+                onClick={() => {
+                  retrieve(post);
+                }}
+              >
+                Comment
+              </button>
+            ) : null}
+
+            {post.buyer_id != currentUser.uid ? (
+              <button
+                onClick={() => {
+                  repost(post);
+                }}
+              >
+                I want to sell
               </button>
             ) : null}
           </div>
