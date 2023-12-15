@@ -25,10 +25,10 @@ services:
       - "4000:4000"
       - "4001:4001"
     depends_on:
-      - mongo
+      - mongodb
       - redis
     environment:
-      - MONGODB_URL=mongodb://mongodb:27017/yourdbname
+      - MONGODB_URL=mongodb://mongodb:27017/CS554-VVIV
       - REDIS_URL=redis://redis:6379
     
   front-end:
