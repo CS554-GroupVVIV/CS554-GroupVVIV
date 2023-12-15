@@ -10,13 +10,13 @@ export default function ChatRoomList({ uid }) {
   useEffect(() => {
     socket.on("rooms", (data) => {
       setRooms(data);
-
-      for (const key in data) {
-        if (data[key] !== null) {
-          setCurRoom(key);
-        }
-      }
     });
+
+    for (const key in rooms) {
+      if (rooms[key] !== null) {
+        setCurRoom(key);
+      }
+    }
   }, [socket]);
 
   useEffect(() => {
