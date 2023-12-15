@@ -134,6 +134,52 @@ export const ADD_PRODUCT = gql`
   }
 `;
 
+export const EDIT_PRODUCT = gql`
+  mutation (
+    $id: String!
+    $name: String!
+    $price: Number!
+    $date: DateTime!
+    $description: String!
+    $condition: String!
+    $sellerId: String!
+    $image: Base64!
+    $category: String!
+  ) {
+    editProduct(
+      _id: $id
+      name: $name
+      price: $price
+      date: $date
+      description: $description
+      condition: $condition
+      seller_id: $sellerId
+      image: $image
+      category: $category
+    ) {
+      name
+      price
+      date
+      description
+      condition
+      category
+    }
+  }
+`;
+
+export const DELETE_PRODUCT = gql`
+  mutation ($id: String!) {
+    deleteProduct(_id: $id) {
+      name
+      price
+      date
+      description
+      condition
+      category
+    }
+  }
+`;
+
 export const ADD_POST = gql`
   mutation (
     $buyer_id: String!
@@ -151,6 +197,56 @@ export const ADD_POST = gql`
       condition: $condition
       description: $description
     ) {
+      _id
+      buyer_id
+      seller_id
+      item
+      category
+      price
+      condition
+      date
+      description
+      status
+    }
+  }
+`;
+
+export const EDIT_POST = gql`
+  mutation (
+    $id: String!
+    $buyer_id: String!
+    $item: String!
+    $category: String!
+    $price: Number!
+    $condition: String!
+    $description: String!
+  ) {
+    editPost(
+      _id: $id
+      buyer_id: $buyer_id
+      item: $item
+      category: $category
+      price: $price
+      condition: $condition
+      description: $description
+    ) {
+      _id
+      buyer_id
+      seller_id
+      item
+      category
+      price
+      condition
+      date
+      description
+      status
+    }
+  }
+`;
+
+export const DELETE_POST = gql`
+  mutation ($id: String!) {
+    deletePost(_id: $id) {
       _id
       buyer_id
       seller_id
