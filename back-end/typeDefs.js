@@ -9,20 +9,22 @@ export const typeDefs = `#graphql
     type Query {
         products: [Product],
         posts: [Post],
+        users: [User],
         searchProducts(searchTerm: String!): [Product],
         searchProductsByName(name: String!): [Product],
-        getProductById(_id:ObjectID!):Product,
-        getPostById(_id:ObjectID!):Post,
+        getProductById(_id:String!):Product,
+        getPostById(_id:String!):Post,
         getUserById(_id: String!): User,
         getChatById(_id: String!): Chat,
         getChatByParticipants(participants: [String!]!): Chat,
         getUsersByIds(ids: [String!]!): [User]
         getPostBySeller(_id:String!):[Post]
         getPostByBuyer(_id:String!):[Post]
+        getComment(user_id:String!, comment_id:String!): User
     }
     
     type Product {
-        _id: ObjectID!,
+        _id: String!,
         name: String!,
         price: Number!,
         date:DateTime!,
@@ -36,9 +38,9 @@ export const typeDefs = `#graphql
     }
 
     type Post {
-      _id: ObjectID!,
-      buyer_id: ObjectID!,
-      seller_id: ObjectID,
+      _id: String!,
+      buyer_id: String!,
+      seller_id: String,
       item: String!,
       category:String!,
       price: Number!,
@@ -48,11 +50,20 @@ export const typeDefs = `#graphql
       status:String!
   }
 
+    type Comment{
+      _id : String!,
+      rating: Int!,
+      comment_id: String!,
+      comment: String,
+    }
+
     type User{
     _id : String!,
-    email: String,
+    email: String!,
     firstname: String,
     lastname: String,
+    comments:[Comment]
+    rating: Number!
   }
 
     type Message{
@@ -62,24 +73,26 @@ export const typeDefs = `#graphql
   }
 
     type Chat{
-    _id : ObjectID!,
+    _id : String!,
     participants : [String],
     messages : [Message]
   }
 
     type Mutation {
         addProduct(name:String!, price: Number!,date:DateTime!,description:String!,condition:String!,seller_id:String!, image:base64!,category:String!):Product,
-        editProduct(_id: ObjectID!, name:String, price: Number,date:DateTime,description:String,condition:String,seller_id:ObjectID!,buyer_id:ObjectID, image:base64,category:String,status:String ):Product,
-        removeProduct(_id:ObjectID!):Product,
+        editProduct(_id: String!, name:String, price: Number,date:DateTime,description:String,condition:String,seller_id:String!,buyer_id:String, image:base64,category:String,status:String ):Product,
+        removeProduct(_id:String!):Product,
         addPost(buyer_id: String!, item:String!, category:String!, price: Number!, condition:String!, description:String!):Post,
-        editPost(_id: ObjectID!, buyer_id: String!, item:String!, category:String!, price: Number!, condition:String!, description:String!, status:String!):Post,
-        removePost(_id:ObjectID!):Post,
+        editPost(_id: String!, buyer_id: String!, item:String!, category:String!, price: Number!, condition:String!, description:String!, status:String!):Post,
+        removePost(_id:String!):Post,
         addUser(_id: String!, email: String!, firstname: String!, lastname: String!): User,
         editUser(_id: String!, email: String!, firstname: String!, lastname: String!): User,
         addChat(participants: [String!]!): Chat,
         addMessage(_id: String!, sender: ID!, time: DateTime!, message: String!): Message,
         retrievePost(_id: String!, user_id:String!): Post,
-        repostPost(_id: String!, user_id:String!): Post
+        repostPost(_id: String!, user_id:String!): Post,
+        addComment(user_id: String!, comment_id: String!, rating: Int!, comment: String): User
+        editComment(user_id: String!, comment_id: String!, rating: Int!, comment: String): User
     }
 `;
 
