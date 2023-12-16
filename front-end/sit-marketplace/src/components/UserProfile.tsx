@@ -11,8 +11,7 @@ import TransactionPost from "./TransactionPost.tsx";
 import TransactionProduct from "./TransactionProduct.tsx";
 import * as validation from "../helper.tsx";
 import { useApolloClient } from "@apollo/client";
-import { FetchPolicy } from "@apollo/client";
-import { Link } from "react-router-dom";
+import FavoriteProduct from "./FavoriteProduct.tsx";
 
 function UserProfile() {
   let { currentUser } = useContext(AuthContext);
@@ -44,24 +43,8 @@ function UserProfile() {
       setFirstname(data.getUserById.firstname);
       setLastname(data.getUserById.lastname);
       setEmail(data.getUserById.email);
-      console.log(data.getUserById.favorite || "no favorite");
-      if (data.getUserById.favorite && data.getUserById.favorite.length > 0) {
-        // client
-        //   .query({
-        //     query: GET_PRODUCTS_BY_IDS,
-        //     variables: { ids: data.getUserById.favorite },
-        //     fetchPolicy: "cache-and-network" as FetchPolicy,
-        //   })
-        //   .then((result) => {
-        //     console.log("in then");
-        //     console.log(result.data);
-        //     setFavorite(result.data.getProductsByIds);
-        //   })
-        //   .catch((err) => {
-        //     console.log(err);
-        //   });
-        console.log("in the if");
-      }
+      setFavorite(data.getUserById.favorite);
+      console.log("favorite", data.getUserById.favorite);
     }
   }, [loading, error, data]);
 
@@ -214,13 +197,7 @@ function UserProfile() {
       <div className="favorite-products-list">
         My Favorite Products
         {favorite &&
-          favorite.map((fav) => (
-            <Link to={baseUrl + fav._id}>
-              {fav.name}
-              <br />
-              {fav.price}
-            </Link>
-          ))}
+          favorite.map((fav) => <FavoriteProduct key={fav} favId={fav} />)}
       </div>
     </div>
   );
