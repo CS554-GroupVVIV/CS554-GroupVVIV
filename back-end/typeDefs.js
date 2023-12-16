@@ -14,6 +14,7 @@ export const typeDefs = `#graphql
         getProductById(_id:String!):Product,
         getProductsByIds(ids:[String!]!):[Product],
         getProductsByCategory(category:String!):[Product],
+        getProductsByPriceRange(low:Int,high:Int!):[Product],
         getPostById(_id:String!):Post,
         getUserById(_id: String!): User,
         getChatById(_id: String!): Chat,
