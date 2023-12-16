@@ -17,9 +17,11 @@ export const typeDefs = `#graphql
         getUserById(_id: String!): User,
         getChatById(_id: String!): Chat,
         getChatByParticipants(participants: [String!]!): Chat,
-        getUsersByIds(ids: [String!]!): [User]
-        getPostBySeller(_id:String!):[Post]
-        getPostByBuyer(_id:String!):[Post]
+        getUsersByIds(ids: [String!]!): [User],
+        getPostBySeller(_id: String!):[Post],
+        getPostByBuyer(_id: String!):[Post],
+        getProductBySeller(_id: String!):[Product],
+        getProductByBuyer(_id: String!):[Product]
         getComment(user_id:String!, comment_id:String!): User
     }
     
@@ -27,7 +29,7 @@ export const typeDefs = `#graphql
         _id: String!,
         name: String!,
         price: Number!,
-        date:DateTime!,
+        date: String!,
         description:String,
         condition:String,
         seller_id:String,
@@ -45,7 +47,7 @@ export const typeDefs = `#graphql
       category:String!,
       price: Number!,
       condition:String,
-      date:DateTime!,
+      date: String!,
       description:String,
       status:String!
   }
@@ -80,8 +82,8 @@ export const typeDefs = `#graphql
   }
 
     type Mutation {
-        addProduct(name:String!, price: Number!,date:DateTime!,description:String!,condition:String!,seller_id:String!, image:base64!,category:String!):Product,
-        editProduct(_id: String!, name:String, price: Number,date:DateTime,description:String,condition:String,seller_id:String!,buyer_id:String, image:base64,category:String,status:String ):Product,
+        addProduct(name:String!, price: Number!,description:String!,condition:String!,seller_id:String!, image:String!,category:String!):Product,
+        editProduct(_id: String!, name:String, price: Number,date:DateTime,description:String,condition:String,seller_id:ObjectID!,buyer_id:ObjectID, image:String,category:String,status:String ):Product,
         removeProduct(_id:String!):Product,
         addPost(buyer_id: String!, item:String!, category:String!, price: Number!, condition:String!, description:String!):Post,
         editPost(_id: String!, buyer_id: String!, item:String!, category:String!, price: Number!, condition:String!, description:String!, status:String!):Post,

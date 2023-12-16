@@ -16,6 +16,8 @@ export default function ProductCard({ productData }) {
   const navigate = useNavigate();
 
   const { currentUser } = useContext(AuthContext);
+  console.log("current user", currentUser.uid);
+  console.log("product data", productData);
 
   const [hasFavorited, setHasFavorited] = useState(false);
 
@@ -105,6 +107,7 @@ export default function ProductCard({ productData }) {
           >
             Chat with seller
           </button>
+          
           <button
             hidden={
               !currentUser || productData.seller_id === currentUser.uid

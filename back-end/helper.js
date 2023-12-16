@@ -12,6 +12,15 @@ const checkName = (str) => {
   return str;
 };
 
+export const checkString = (str) => {
+  if (str === undefined) throw new Error("Must provide a string");
+  if (typeof str !== "string") throw new Error("str must be a string");
+  if (str.trim().length == 0) throw new Error("should not be just space");
+  if (str.length < 1)
+    throw new Error("The string should have at least 1 character.");
+  return str;
+};
+
 const checkId = (str) => {
   if (!str) throw new Error("Must provide an id");
   if (typeof str !== "string") throw new Error("Id must be a string");

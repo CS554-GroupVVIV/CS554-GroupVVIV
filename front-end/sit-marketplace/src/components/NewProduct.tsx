@@ -1,14 +1,19 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useContext } from "react";
 import React from "react";
 // import { useRouter } from "next/navigation";
+import { useNavigate } from "react-router-dom";
+
 import { useMutation, useQuery } from "@apollo/client";
 import { ADD_PRODUCT, GET_PRODUCTS } from "../queries";
 import { uploadFileToS3 } from "../aws.tsx";
+import { AuthContext } from "../context/AuthContext";
 
 import moment, { Moment } from "moment";
 import axios from "axios";
 
 export default function SellForm() {
+  const { currentUser } = useContext(AuthContext);
+  let navigate = useNavigate();
   const nameRef = useRef<HTMLInputElement | null>(null);
   const priceRef = useRef<HTMLInputElement | null>(null);
   const conditionRef = useRef<HTMLSelectElement | null>(null);
@@ -35,6 +40,11 @@ export default function SellForm() {
       });
     },
   });
+  useEffect(() => {
+    if (!currentUser){
+       return navigate("/");
+    }
+ },[currentUser]);
 
   const helper = {
     checkName(): void {

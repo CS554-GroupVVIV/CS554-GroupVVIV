@@ -10,6 +10,7 @@ import { ObjectId } from "mongodb";
 import { ObjectID, DateTime } from "./typeDefs.js";
 import {
   checkId,
+  checkString,
   checkName,
   checkItem,
   checkCategory,
@@ -343,6 +344,56 @@ export const resolvers = {
         throw new GraphQLError(error.message);
       }
     },
+    getProductBySeller: async (_, args) => {
+      try {
+        const products = await productCollection();
+        var sellerProducts = await client.json.get(
+          `getProductBySeller-${args._id}`,
+          "$"
+        );
+        if (!sellerProducts) {
+          sellerProducts = await products
+            .find({ seller_id: args._id })
+            .toArray();
+          if (!sellerProducts) {
+            throw new GraphQLError("Product not found", {
+              extensions: { code: "NOT_FOUND" },
+            });
+          }
+          client.json.set(
+            `getProductBySeller-${args._id}`,
+            "$",
+            sellerProducts
+          );
+          client.expire(`getProductBySeller-${args._id}`, 60);
+        }
+        return sellerProducts;
+      } catch (error) {
+        throw new GraphQLError(error.message);
+      }
+    },
+    getProductByBuyer: async (_, args) => {
+      try {
+        var buyerProducts = await client.json.get(
+          `getProductByBuyer-${args._id}`,
+          "$"
+        );
+        if (!buyerProducts) {
+          const products = await productCollection();
+          buyerProducts = await products.find({ buyer_id: args._id }).toArray();
+          if (!buyerProducts) {
+            throw new GraphQLError("Product not found", {
+              extensions: { code: "NOT_FOUND" },
+            });
+          }
+          client.json.set(`getProductByBuyer-${args._id}`, "$", buyerProducts);
+          client.expire(`getProductByBuyer-${args._id}`, 60);
+        }
+        return buyerProducts;
+      } catch (error) {
+        throw new GraphQLError(error.message);
+      }
+    },
 
     getComment: async (_, args) => {
       try {
@@ -398,10 +449,18 @@ export const resolvers = {
         let date = new Date();
         let description = checkDescription(args.description);
         let condition = checkCondition(args.condition);
-        let seller_id = checkId(args.seller_id);
+        let seller_id = checkString(args.seller_id);
+        // check if the id is existed in the database
+        const usersData = await userCollection();
+        const user = await usersData.findOne({ _id: seller_id });
+        if (!user) {
+          throw new GraphQLError(`USER NOT FOUND`, {
+            extensions: { code: "INTERNAL_SERVER_ERROR" },
+          });
+        }
         let image = args.image;
-        if (image == "" || image == null) {
-          image = checkUrl(image)
+        if (!(image == "" || image == null)) {
+          image = checkUrl(image);
         }
         let category = checkCategory(args.category);
         // ********need input check*************
@@ -443,7 +502,7 @@ export const resolvers = {
         let price = checkPrice(args.price);
         let description = checkDescription(args.description);
         let condition = checkCondition(args.condition);
-        let seller_id = checkId(args.seller_id);
+        let seller_id = checkString(args.seller_id);
         let image = checkUrl(args.image);
         let category = checkCategory(args.category);
         // ********need input check*************
@@ -471,6 +530,7 @@ export const resolvers = {
             extensions: { code: "INTERNAL_SERVER_ERROR" },
           });
         }
+        updated.date = dateObjectToHTMLDate(updated.date);
         return updated;
       } catch (error) {
         throw new GraphQLError(error.message);
@@ -566,6 +626,7 @@ export const resolvers = {
         }
         client.json.del(`allPosts`);
         client.json.set(`getPostById-${args._id}`, "$", updated);
+        updated.date = dateObjectToHTMLDate(updated.date);
         return updated;
       } catch (error) {
         throw new GraphQLError(error.message);
@@ -783,6 +844,7 @@ export const resolvers = {
           throw "Fail to repost";
         }
         post = await posts.findOne({ _id: id.toString() });
+        post.date = dateObjectToHTMLDate(post.date);
         return post;
       } catch (error) {
         throw new GraphQLError(error.message);

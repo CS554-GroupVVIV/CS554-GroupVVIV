@@ -8,10 +8,12 @@ import {
   updateUserProfile,
 } from "../firebase/FirebaseFunction";
 import TransactionPost from "./TransactionPost.tsx";
+import TransactionProduct from "./TransactionProduct.tsx";
 import * as validation from "../helper.tsx";
 
 function UserProfile() {
   let { currentUser } = useContext(AuthContext);
+  console.log(currentUser);
   const { loading, error, data } = useQuery(GET_USER, {
     variables: { id: currentUser ? currentUser.uid : "" },
     fetchPolicy: "cache-and-network",
@@ -23,6 +25,7 @@ function UserProfile() {
   const [password, setPassword] = useState("");
 
   const [togglePost, setTogglePost] = useState<boolean>(false);
+  const [toogleProduct, setToggleProduct] = useState<boolean>(false);
   const [editUser] = useMutation(EDIT_USER);
 
   useEffect(() => {
@@ -171,6 +174,14 @@ function UserProfile() {
       </button>
 
       {togglePost ? <TransactionPost /> : null}
+      <button
+        onClick={() => {
+          setToggleProduct(!toogleProduct);
+        }}
+      >
+        Transaction from Product
+      </button>
+      {toogleProduct ? <TransactionProduct /> : null}
     </div>
   );
 }
