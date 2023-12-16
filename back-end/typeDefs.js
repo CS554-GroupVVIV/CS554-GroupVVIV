@@ -11,13 +11,14 @@ export const typeDefs = `#graphql
         searchProducts(searchTerm: String!): [Product],
         searchProductsByName(name: String!): [Product],
         getProductById(_id:String!):Product,
+        getProductsByIds(ids:[String!]!):[Product],
         getPostById(_id:String!):Post,
         getUserById(_id: String!): User,
         getChatById(_id: String!): Chat,
         getChatByParticipants(participants: [String!]!): Chat,
-        getUsersByIds(ids: [String!]!): [User]
-        getPostBySeller(_id:String!):[Post]
-        getPostByBuyer(_id:String!):[Post]
+        getUsersByIds(ids: [String!]!): [User],
+        getPostBySeller(_id:String!):[Post],
+        getPostByBuyer(_id:String!):[Post],
     }
     
     type Product {

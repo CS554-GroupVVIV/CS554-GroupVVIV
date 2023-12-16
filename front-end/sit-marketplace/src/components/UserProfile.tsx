@@ -2,16 +2,20 @@ import React, { useState, useContext, useEffect } from "react";
 import { Navigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext.jsx";
 import { useMutation, useQuery } from "@apollo/client";
-import { EDIT_USER, GET_USER } from "../queries.ts";
+import { EDIT_USER, GET_USER, GET_PRODUCTS_BY_IDS } from "../queries.ts";
 import {
   doPasswordReset,
   updateUserProfile,
 } from "../firebase/FirebaseFunction";
 import TransactionPost from "./TransactionPost.tsx";
 import * as validation from "../helper.tsx";
+import { useApolloClient } from "@apollo/client";
+import { FetchPolicy } from "@apollo/client";
+import { Link } from "react-router-dom";
 
 function UserProfile() {
   let { currentUser } = useContext(AuthContext);
+  const client = useApolloClient();
   const { loading, error, data } = useQuery(GET_USER, {
     variables: { id: currentUser ? currentUser.uid : "" },
     fetchPolicy: "cache-and-network",
@@ -21,16 +25,36 @@ function UserProfile() {
   const [lastname, setLastname] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [favorite, setFavorite] = useState([]);
+  const baseUrl = "http://localhost:5173/product/";
 
   const [togglePost, setTogglePost] = useState<boolean>(false);
   const [editUser] = useMutation(EDIT_USER);
 
   useEffect(() => {
+    console.log("in the effect");
+    console.log(data);
+
     if (!loading && !error && data && data.getUserById) {
       setUserInfo(data.getUserById);
       setFirstname(data.getUserById.firstname);
       setLastname(data.getUserById.lastname);
       setEmail(data.getUserById.email);
+      setFavorite(data.getUserById.favorite || []);
+
+      client
+        .query({
+          query: GET_PRODUCTS_BY_IDS,
+          variables: { ids: data.getUserById.favorite },
+          fetchPolicy: "cache-and-network" as FetchPolicy,
+        })
+        .then((result) => {
+          console.log(result.data);
+          setFavorite(result.data.getProductsByIds);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }
   }, [loading, error, data]);
 
@@ -171,6 +195,18 @@ function UserProfile() {
       </button>
 
       {togglePost ? <TransactionPost /> : null}
+
+      <div className="favorite-products-list">
+        My Favorite Products
+        {favorite &&
+          favorite.map((fav) => (
+            <Link to={baseUrl + fav._id}>
+              {fav.name}
+              <br />
+              {fav.price}
+            </Link>
+          ))}
+      </div>
     </div>
   );
 }

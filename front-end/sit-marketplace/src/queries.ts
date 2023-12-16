@@ -422,3 +422,13 @@ export const REMOVE_FAVORITE_FROM_USER = gql`
     removeProductFromUserFavorite(_id: $id, productId: $productId)
   }
 `;
+
+export const GET_PRODUCTS_BY_IDS = gql`
+  query Query($ids: [String!]!) {
+    getProductsByIds(ids: $ids) {
+      _id
+      name
+      price
+    }
+  }
+`;

@@ -154,6 +154,24 @@ export const resolvers = {
       }
     },
 
+    getProductsByIds: async (_, args) => {
+      try {
+        const productData = await productCollection();
+        const objectIds = args.ids.map((id) => new ObjectId(id));
+        const products = await productData
+          .find({ _id: { $in: objectIds } })
+          .toArray();
+        if (!products) {
+          throw new GraphQLError("product not found", {
+            extensions: { code: "NOT_FOUND" },
+          });
+        }
+        return products;
+      } catch (error) {
+        throw new GraphQLError(error.message);
+      }
+    },
+
     getPostById: async (_, args) => {
       try {
         let id = checkId(args._id);

@@ -20,6 +20,8 @@ export default function Products() {
     fetchPolicy: "cache-and-network",
   });
 
+  console.log(data);
+
   const [text, setText] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -74,7 +76,8 @@ export default function Products() {
       >
         New Product
       </button>
-      {data.products &&
+      {data &&
+        data.products &&
         data.products.map((product: Product) => {
           return <ProductCard key={product._id} productData={product} />;
         })}

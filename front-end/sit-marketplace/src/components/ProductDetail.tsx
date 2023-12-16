@@ -12,11 +12,6 @@ export default function ProductDetail() {
     fetchPolicy: "cache-and-network",
   });
 
-  // function handleFavorite() {
-  //   //get user id for current session
-  //   //mutate the favorite by current user id
-  // }
-
   if (loading) {
     return <h1>Loading...</h1>;
   }
