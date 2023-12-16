@@ -71,7 +71,6 @@ export const resolvers = {
         throw new GraphQLError(error.message);
       }
     },
-
     posts: async () => {
       try {
         const posts = await postCollection();
@@ -428,7 +427,6 @@ export const resolvers = {
         throw new GraphQLError(error.message);
       }
     },
-
     getComment: async (_, args) => {
       try {
         const users = await userCollection();
@@ -471,7 +469,6 @@ export const resolvers = {
       }
     },
   },
-
   Mutation: {
     addProduct: async (_, args) => {
       try {
