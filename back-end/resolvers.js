@@ -23,13 +23,8 @@ import {
   checkFirstNameAndLastName,
   capitalizeName,
   checkUrl,
-<<<<<<< HEAD
-  dateObjectToHTMLDate,
-  HTMLDateToDateObject,
-=======
   checkNotEmpty,
   checkRating,
->>>>>>> 5db2d29fe354b0ff909d1e59859b1e4b82af176b
 } from "./helper.js";
 
 export const resolvers = {
@@ -888,7 +883,6 @@ export const resolvers = {
       }
     },
 
-<<<<<<< HEAD
     addProductToUserFavorite: async (_, args) => {
       let { _id, productId } = args;
       try {
@@ -924,7 +918,10 @@ export const resolvers = {
         }
 
         return updatedUser.favorite;
-=======
+      } catch (error) {
+        throw new GraphQLError(error.message);
+      }
+    },
     addComment: async (_, args) => {
       try {
         const users = await userCollection();
@@ -967,13 +964,11 @@ export const resolvers = {
         }
         const user = await users.findOne({ _id: user_id });
         return user;
->>>>>>> 5db2d29fe354b0ff909d1e59859b1e4b82af176b
       } catch (error) {
         throw new GraphQLError(error.message);
       }
     },
 
-<<<<<<< HEAD
     removeProductFromUserFavorite: async (_, args) => {
       let { _id, productId } = args;
       try {
@@ -1008,7 +1003,10 @@ export const resolvers = {
         }
 
         return updatedUser.favorite;
-=======
+      } catch (error) {
+        throw new GraphQLError(error.message);
+      }
+    },
     editComment: async (_, args) => {
       try {
         const users = await userCollection();
@@ -1052,7 +1050,6 @@ export const resolvers = {
         }
         const user = await users.findOne({ _id: user_id });
         return user;
->>>>>>> 5db2d29fe354b0ff909d1e59859b1e4b82af176b
       } catch (error) {
         throw new GraphQLError(error.message);
       }
