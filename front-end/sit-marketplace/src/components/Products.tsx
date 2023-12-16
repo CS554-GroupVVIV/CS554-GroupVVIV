@@ -8,6 +8,7 @@ import ProductCard from "./ProductCard";
 
 import SearchProduct from "./SearchProduct";
 import { GET_PRODUCTS, GET_PRODUCTS_BY_CATEGORY } from "../queries";
+import { Link } from "@mui/material";
 
 type Product = {
   _id: string;
@@ -26,6 +27,10 @@ export default function Products() {
 
   const [text, setText] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
+
+  function handleBook() {
+    console.log("handle book");
+  }
 
   return (
     <div>
@@ -56,6 +61,16 @@ export default function Products() {
       </form>
 
       {searchTerm && <SearchProduct searchTerm={searchTerm} />}
+
+      <div className="ProductCategory">
+        <Link
+          onClick={() => {
+            handleBook;
+          }}
+        >
+          Book
+        </Link>
+      </div>
 
       <h1>Products:</h1>
       {currentUser ? (

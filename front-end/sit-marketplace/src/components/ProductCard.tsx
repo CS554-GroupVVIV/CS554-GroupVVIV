@@ -5,10 +5,7 @@ import { AuthContext } from "../context/AuthContext";
 
 import { socketID, socket } from "./socket";
 
-import { Card, CardHeader, CardContent, Grid } from "@mui/material";
-
-// import { Link } from "react-router-dom";
-import { Link } from "@mui/material";
+import { Card, CardHeader, CardContent, Grid, Link } from "@mui/material";
 
 import { ADD_FAVORITE_TO_USER, REMOVE_FAVORITE_FROM_USER } from "../queries";
 import { useMutation } from "@apollo/client";
