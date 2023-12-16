@@ -34,12 +34,22 @@ const checkItem = (str) => {
   return str;
 };
 
-const checkCategory = (str) => {
-  if (!str || str.trim() == "") {
+const checkCategory = (category) => {
+  if (!category || category.trim() == "") {
     throw new Error("Must provide a category");
   }
-  str = str.trim();
-  return str;
+  category = category.trim();
+  let categoryLower = category.toLowerCase();
+  if (
+    categoryLower != "books" &&
+    categoryLower != "other" &&
+    categoryLower != "electronics" &&
+    categoryLower != "clothing" &&
+    categoryLower != "furniture"
+  ) {
+    throw new Error("Invalid Category");
+  }
+  return category;
 };
 
 const checkPrice = (price) => {
@@ -69,7 +79,7 @@ const checkCondition = (condition) => {
     conditionLower != "gently used" &&
     conditionLower != "functional"
   ) {
-    throw new Error("Invalid Category");
+    throw new Error("Invalid Condition");
   }
   return condition;
 };

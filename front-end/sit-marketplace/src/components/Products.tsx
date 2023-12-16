@@ -23,17 +23,6 @@ export default function Products() {
   const [text, setText] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
 
-  useEffect(() => {
-    console.log("in the products useeffect");
-    console.log(data);
-    console.log(error);
-    if (!loading && !error && data.products) {
-      setProducts(data.products);
-    } else if (error) {
-      console.error(error);
-    }
-  }, [loading]);
-
   return (
     <div>
       <button
@@ -74,7 +63,7 @@ export default function Products() {
       >
         New Product
       </button>
-      {data.products &&
+      {data &&
         data.products.map((product: Product) => {
           return <ProductCard key={product._id} productData={product} />;
         })}

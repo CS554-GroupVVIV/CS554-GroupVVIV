@@ -308,7 +308,10 @@ export const resolvers = {
         let description = checkDescription(args.description);
         let condition = checkCondition(args.condition);
         let seller_id = checkId(args.seller_id);
-        let image = checkUrl(args.image);
+        let image = args.image;
+        if (image == "" || image == null) {
+          image = checkUrl(image)
+        }
         let category = checkCategory(args.category);
         // ********need input check*************
         const products = await productCollection();
@@ -320,7 +323,7 @@ export const resolvers = {
           description: description,
           condition: condition,
           seller_id: seller_id,
-          buyer_id: "",
+          buyer_id: null,
           image: image,
           category: category,
           status: "available",
@@ -329,7 +332,7 @@ export const resolvers = {
         client.json.del(`allProducts`);
         client.json.set(`getProductById-${newProduct._id}`, "$", newProduct);
         if (!insertedProduct) {
-          throw new GraphQLError(`Could not Add Author`, {
+          throw new GraphQLError(`Could not Add Product`, {
             extensions: { code: "INTERNAL_SERVER_ERROR" },
           });
         }

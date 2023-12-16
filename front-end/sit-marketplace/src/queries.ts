@@ -117,7 +117,6 @@ export const ADD_PRODUCT = gql`
     addProduct(
       name: $name
       price: $price
-      date: $date
       description: $description
       condition: $condition
       seller_id: $sellerId
