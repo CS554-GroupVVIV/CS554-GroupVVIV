@@ -66,6 +66,9 @@ export const resolvers = {
           client.json.set(`allProducts`, "$", allProducts);
           client.expire(`allProducts`, 3600);
         }
+        for (let i = 0; i < allProducts.length; i++) {
+          allProducts[i].date = dateObjectToHTMLDate(allProducts[i].date);
+        }
         return allProducts;
       } catch (error) {
         throw new GraphQLError(error.message);
@@ -84,6 +87,9 @@ export const resolvers = {
           }
           client.json.set(`allPosts`, "$", allPosts);
           client.expire(`allPosts`, 3600);
+        }
+        for (let i = 0; i < allPosts.length; i++) {
+          allPosts[i].date = dateObjectToHTMLDate(allPosts[i].date);
         }
         return allPosts;
       } catch (error) {
@@ -120,6 +126,9 @@ export const resolvers = {
             productList
           );
         }
+        for (let i = 0; i < productList.length; i++) {
+          productList[i].date = dateObjectToHTMLDate(productList[i].date);
+        }
         return productList;
       } catch (error) {
         throw new GraphQLError(error.message);
@@ -144,6 +153,9 @@ export const resolvers = {
             });
           }
           client.json.set(`searchPostsByItem-${postItem}`, "$", postsByItem);
+        }
+        for (let i = 0; i < postsByItem.length; i++) {
+          postsByItem[i].date = dateObjectToHTMLDate(postsByItem[i].date);
         }
         return postsByItem;
       } catch (error) {
@@ -174,6 +186,11 @@ export const resolvers = {
             productsByName
           );
         }
+        for (let i = 0; i < productsByName.length; i++) {
+          productsByName[i].date = dateObjectToHTMLDate(
+            productsByName[i].date
+          );
+        }
         return productsByName;
       } catch (error) {
         throw new GraphQLError(error.message);
@@ -194,6 +211,7 @@ export const resolvers = {
           }
           client.json.set(`getProductById-${id}`, "$", product);
         }
+        product.date = dateObjectToHTMLDate(product.date);
         return product;
       } catch (error) {
         throw new GraphQLError(error.message);
@@ -211,6 +229,9 @@ export const resolvers = {
           throw new GraphQLError("product not found", {
             extensions: { code: "NOT_FOUND" },
           });
+        }
+        for (let i = 0; i < products.length; i++) {
+          products[i].date = dateObjectToHTMLDate(products[i].date);
         }
         return products;
       } catch (error) {
@@ -231,6 +252,9 @@ export const resolvers = {
             extensions: { code: "NOT_FOUND" },
           });
         }
+        for (let i = 0; i < products.length; i++) {
+          products[i].date = dateObjectToHTMLDate(products[i].date);
+        }
         return products;
       } catch (error) {
         throw new GraphQLError(error.message);
@@ -250,6 +274,7 @@ export const resolvers = {
             });
           }
         }
+        post.date = dateObjectToHTMLDate(post.date);
         return post;
       } catch (error) {
         throw new GraphQLError(error.message);
@@ -262,13 +287,14 @@ export const resolvers = {
         const usersData = await userCollection();
         var user = await client.json.get(`getUserById-${id}`, "$");
         if (!user) {
-          const user = await usersData.findOne({ _id: id });
+          user = await usersData.findOne({ _id: id });
           if (!user) {
             throw new GraphQLError("User not found", {
               extensions: { code: "NOT_FOUND" },
             });
           }
         }
+        await client.json.set(`getUserById-${id}`, "$", user);
         return user;
       } catch (error) {
         throw new GraphQLError(error.message);
@@ -349,6 +375,9 @@ export const resolvers = {
           client.json.set(`getPostBySeller-${args._id}`, "$", sellerPosts);
           client.expire(`getPostBySeller-${args._id}`, 60);
         }
+        for (let i = 0; i < sellerPosts.length; i++) {
+          sellerPosts[i].date = dateObjectToHTMLDate(sellerPosts[i].date);
+        }
         return sellerPosts;
       } catch (error) {
         throw new GraphQLError(error.message);
@@ -371,6 +400,9 @@ export const resolvers = {
           }
           client.json.set(`getPostByBuyer-${args._id}`, "$", buyerPosts);
           client.expire(`getPostByBuyer-${args._id}`, 60);
+        }
+        for (let i = 0; i < buyerPosts.length; i++) {
+          buyerPosts[i].date = dateObjectToHTMLDate(buyerPosts[i].date);
         }
         return buyerPosts;
       } catch (error) {
@@ -400,6 +432,11 @@ export const resolvers = {
           );
           client.expire(`getProductBySeller-${args._id}`, 60);
         }
+        for (let i = 0; i < sellerProducts.length; i++) {
+          sellerProducts[i].date = dateObjectToHTMLDate(
+            sellerProducts[i].date
+          );
+        }
         return sellerProducts;
       } catch (error) {
         throw new GraphQLError(error.message);
@@ -421,6 +458,9 @@ export const resolvers = {
           }
           client.json.set(`getProductByBuyer-${args._id}`, "$", buyerProducts);
           client.expire(`getProductByBuyer-${args._id}`, 60);
+        }
+        for (let i = 0; i < buyerProducts.length; i++) {
+          buyerProducts[i].date = dateObjectToHTMLDate(buyerProducts[i].date);
         }
         return buyerProducts;
       } catch (error) {
@@ -579,6 +619,7 @@ export const resolvers = {
             extensions: { code: "INTERNAL_SERVER_ERROR" },
           });
         }
+        deletedProduct.date = dateObjectToHTMLDate(deletedProduct.date);
         return deletedProduct;
       } catch (error) {
         throw new GraphQLError(error.message);
@@ -675,6 +716,7 @@ export const resolvers = {
         }
         client.json.del(`allPosts`);
         client.json.del(`getPostById-${id}`);
+        deletedPost.date = dateObjectToHTMLDate(deletedPost.date);
         return deletedPost;
       } catch (error) {
         throw new GraphQLError(error.message);
@@ -773,6 +815,11 @@ export const resolvers = {
           }
           return newChat;
         }
+        for (let i = 0; i < chat.messages.length; i++) {
+          chat.messages[i].time = dateObjectToHTMLDate(
+            chat.messages[i].time
+          ).toString();
+        }
         return chat;
       } catch (error) {
         throw new GraphQLError(error.message);
@@ -805,6 +852,7 @@ export const resolvers = {
               extensions: { code: "INTERNAL_SERVER_ERROR" },
             });
           }
+          newMessage.time = dateObjectToHTMLDate(newMessage.time).toString();
           return newMessage;
         }
       } catch (error) {
@@ -841,6 +889,7 @@ export const resolvers = {
           throw "Fail to retrieve post";
         }
         post = await posts.findOne({ _id: id.toString() });
+        post.date = dateObjectToHTMLDate(post.date);
         return post;
       } catch (error) {
         throw new GraphQLError(error.message);
@@ -915,7 +964,6 @@ export const resolvers = {
             extensions: { code: "INTERNAL_SERVER_ERROR" },
           });
         }
-
         return updatedUser.favorite;
       } catch (error) {
         throw new GraphQLError(error.message);
