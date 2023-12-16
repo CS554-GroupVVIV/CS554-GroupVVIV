@@ -69,7 +69,7 @@ export const typeDefs = `#graphql
     lastname: String,
     comments:[Comment]
     rating: Number!
-    Favorite:[String]
+    favorite:[String]
   }
 
     type Message{
@@ -91,7 +91,7 @@ export const typeDefs = `#graphql
         addPost(buyer_id: String!, item:String!, category:String!, price: Number!, condition:String!, description:String!):Post,
         editPost(_id: String!, buyer_id: String!, item:String!, category:String!, price: Number!, condition:String!, description:String!, status:String!):Post,
         removePost(_id:String!):Post,
-        addUser(_id: String!, email: String!, firstname: String!, lastname: String!): User,
+        addUser(_id: String!, email: String!, firstname: String!, lastname: String!, favorite: String): User,
         editUser(_id: String!, email: String!, firstname: String!, lastname: String!): User,
         addChat(participants: [String!]!): Chat,
         addMessage(_id: String!, sender: ID!, time: DateTime!, message: String!): Message,

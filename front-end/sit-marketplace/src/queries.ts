@@ -39,6 +39,7 @@ export const GET_USER = gql`
       email
       firstname
       lastname
+      favorite
     }
   }
 `;
@@ -334,17 +335,20 @@ export const ADD_USER = gql`
     $email: String!
     $firstname: String!
     $lastname: String!
+    $favorite: String
   ) {
     addUser(
       _id: $id
       email: $email
       firstname: $firstname
       lastname: $lastname
+      favorite: $favorite
     ) {
       _id
       email
       firstname
       lastname
+      favorite
     }
   }
 `;

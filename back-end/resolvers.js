@@ -23,13 +23,10 @@ import {
   checkFirstNameAndLastName,
   capitalizeName,
   checkUrl,
-<<<<<<< HEAD
   dateObjectToHTMLDate,
   HTMLDateToDateObject,
-=======
   checkNotEmpty,
   checkRating,
->>>>>>> 5db2d29fe354b0ff909d1e59859b1e4b82af176b
 } from "./helper.js";
 
 export const resolvers = {
@@ -264,7 +261,7 @@ export const resolvers = {
       try {
         let id = checkUserAndChatId(args._id.toString());
         const usersData = await userCollection();
-        var user = await client.json.get(`getUserById-${id}`, "$");
+        let user = await client.json.get(`getUserById-${id}`, "$");
         if (!user) {
           const user = await usersData.findOne({ _id: id });
           if (!user) {
@@ -688,7 +685,7 @@ export const resolvers = {
     },
     addUser: async (_, args) => {
       try {
-        let { _id, email, firstname, lastname } = args;
+        let { _id, email, firstname, lastname, favorite } = args;
         // check ID not implement yet
         email = checkEmail(email);
         firstname = capitalizeName(
@@ -704,8 +701,10 @@ export const resolvers = {
           email,
           firstname,
           lastname,
+          favorite: favorite ? [favorite] : [],
         };
         const insertedUser = await usersData.insertOne(newUser);
+
         if (!insertedUser) {
           throw new GraphQLError(`Could not Add User`, {
             extensions: { code: "INTERNAL_SERVER_ERROR" },
@@ -888,174 +887,175 @@ export const resolvers = {
       }
     },
 
-<<<<<<< HEAD
-    addProductToUserFavorite: async (_, args) => {
-      let { _id, productId } = args;
-      try {
-        //find current user by id
-        const usersData = await userCollection();
-        let userToUpdate = await usersData.findOne({ _id: _id.toString() });
-        if (!userToUpdate) {
-          throw new GraphQLError(`USER NOT FOUND`, {
-            extensions: { code: "INTERNAL_SERVER_ERROR" },
-          });
-        }
-        //check if the productId already exists
-        let favorite = userToUpdate.favorite || [];
-        if (favorite && favorite.includes(productId)) {
-          throw new GraphQLError(`Areadly favorite this product`, {
-            extensions: { code: "INTERNAL_SERVER_ERROR" },
-          });
-        }
+    // <<<<<<< HEAD
+    //     addProductToUserFavorite: async (_, args) => {
+    //       let { _id, productId } = args;
+    //       try {
+    //         //find current user by id
+    //         const usersData = await userCollection();
+    //         let userToUpdate = await usersData.findOne({ _id: _id.toString() });
+    //         if (!userToUpdate) {
+    //           throw new GraphQLError(`USER NOT FOUND`, {
+    //             extensions: { code: "INTERNAL_SERVER_ERROR" },
+    //           });
+    //         }
+    //         //check if the productId already exists
+    //         let favorite = userToUpdate.favorite || [];
+    //         if (favorite && favorite.includes(productId)) {
+    //           throw new GraphQLError(`Areadly favorite this product`, {
+    //             extensions: { code: "INTERNAL_SERVER_ERROR" },
+    //           });
+    //         }
 
-        //add new product into favorite array and update
-        favorite.push(productId);
-        userToUpdate.favorite = favorite;
-        const updatedUser = await usersData.findOneAndUpdate(
-          { _id: _id.toString() },
-          { $set: { favorite: favorite } },
-          { new: true }
-        );
+    //         //add new product into favorite array and update
+    //         favorite.push(productId);
+    //         userToUpdate.favorite = favorite;
+    //         const updatedUser = await usersData.findOneAndUpdate(
+    //           { _id: _id.toString() },
+    //           { $set: { favorite: favorite } },
+    //           { new: true }
+    //         );
 
-        if (!updatedUser) {
-          throw new GraphQLError(`Could not Edit User`, {
-            extensions: { code: "INTERNAL_SERVER_ERROR" },
-          });
-        }
+    //         if (!updatedUser) {
+    //           throw new GraphQLError(`Could not Edit User`, {
+    //             extensions: { code: "INTERNAL_SERVER_ERROR" },
+    //           });
+    //         }
 
-        return updatedUser.favorite;
-=======
-    addComment: async (_, args) => {
-      try {
-        const users = await userCollection();
-        const user_id = checkNotEmpty(args.user_id);
-        const userA = await users.findOne({ _id: user_id });
-        if (!userA) {
-          throw "Invalid user";
-        }
-        const comment_id = checkNotEmpty(args.comment_id);
-        const userB = await users.findOne({ _id: comment_id });
-        if (!userB) {
-          throw "Invalid user";
-        }
-        const commentExist = await users.findOne({
-          _id: user_id,
-          "comment.user_id": comment_id,
-        });
-        if (commentExist) {
-          throw "Comment Already Exist";
-        }
-        const rating = checkRating(args.rating);
-        let commentText = "";
-        if (args.comment && args.comment.trim() !== "") {
-          commentText = checkNotEmpty(args.comment);
-        }
+    //         return updatedUser.favorite;
+    // =======
+    //     addComment: async (_, args) => {
+    //       try {
+    //         const users = await userCollection();
+    //         const user_id = checkNotEmpty(args.user_id);
+    //         const userA = await users.findOne({ _id: user_id });
+    //         if (!userA) {
+    //           throw "Invalid user";
+    //         }
+    //         const comment_id = checkNotEmpty(args.comment_id);
+    //         const userB = await users.findOne({ _id: comment_id });
+    //         if (!userB) {
+    //           throw "Invalid user";
+    //         }
+    //         const commentExist = await users.findOne({
+    //           _id: user_id,
+    //           "comment.user_id": comment_id,
+    //         });
+    //         if (commentExist) {
+    //           throw "Comment Already Exist";
+    //         }
+    //         const rating = checkRating(args.rating);
+    //         let commentText = "";
+    //         if (args.comment && args.comment.trim() !== "") {
+    //           commentText = checkNotEmpty(args.comment);
+    //         }
 
-        const comments = {
-          _id: new ObjectId(),
-          comment_id: comment_id,
-          rating: rating,
-          comment: commentText,
-        };
+    //         const comments = {
+    //           _id: new ObjectId(),
+    //           comment_id: comment_id,
+    //           rating: rating,
+    //           comment: commentText,
+    //         };
 
-        const insert = await users.updateOne(
-          { _id: user_id },
-          { $push: { comments } }
-        );
-        if (insert.acknowledged != true) {
-          throw "Cannot update comment";
-        }
-        const user = await users.findOne({ _id: user_id });
-        return user;
->>>>>>> 5db2d29fe354b0ff909d1e59859b1e4b82af176b
-      } catch (error) {
-        throw new GraphQLError(error.message);
-      }
-    },
+    //         const insert = await users.updateOne(
+    //           { _id: user_id },
+    //           { $push: { comments } }
+    //         );
+    //         if (insert.acknowledged != true) {
+    //           throw "Cannot update comment";
+    //         }
+    //         const user = await users.findOne({ _id: user_id });
+    //         return user;
+    // >>>>>>> 5db2d29fe354b0ff909d1e59859b1e4b82af176b
+    //       } catch (error) {
+    //         throw new GraphQLError(error.message);
+    //       }
+    //     },
 
-<<<<<<< HEAD
-    removeProductFromUserFavorite: async (_, args) => {
-      let { _id, productId } = args;
-      try {
-        //find current user by id
-        const usersData = await userCollection();
-        const userToUpdate = await usersData.findOne({ _id: _id.toString() });
-        if (!userToUpdate) {
-          throw new GraphQLError(`USER NOT FOUND`, {
-            extensions: { code: "INTERNAL_SERVER_ERROR" },
-          });
-        }
-        //check if the productIdexists
-        let favorite = userToUpdate.favorite || [];
-        if (favorite && !favorite.includes(productId)) {
-          throw new GraphQLError(`Cannot found this product in favorite`, {
-            extensions: { code: "INTERNAL_SERVER_ERROR" },
-          });
-        }
+    // <<<<<<< HEAD
+    //     removeProductFromUserFavorite: async (_, args) => {
+    //       let { _id, productId } = args;
+    //       try {
+    //         //find current user by id
+    //         const usersData = await userCollection();
+    //         const userToUpdate = await usersData.findOne({ _id: _id.toString() });
+    //         if (!userToUpdate) {
+    //           throw new GraphQLError(`USER NOT FOUND`, {
+    //             extensions: { code: "INTERNAL_SERVER_ERROR" },
+    //           });
+    //         }
+    //         //check if the productIdexists
+    //         let favorite = userToUpdate.favorite || [];
+    //         if (favorite && !favorite.includes(productId)) {
+    //           throw new GraphQLError(`Cannot found this product in favorite`, {
+    //             extensions: { code: "INTERNAL_SERVER_ERROR" },
+    //           });
+    //         }
 
-        //add new product into favorite array and update
-        favorite = favorite.filter((id) => id !== productId);
-        const updatedUser = await usersData.findOneAndUpdate(
-          { _id: _id.toString() },
-          { $set: { favorite: favorite } },
-          { new: true }
-        );
+    //         //add new product into favorite array and update
+    //         favorite = favorite.filter((id) => id !== productId);
+    //         const updatedUser = await usersData.findOneAndUpdate(
+    //           { _id: _id.toString() },
+    //           { $set: { favorite: favorite } },
+    //           { new: true }
+    //         );
 
-        if (!updatedUser) {
-          throw new GraphQLError(`Could not Edit User`, {
-            extensions: { code: "INTERNAL_SERVER_ERROR" },
-          });
-        }
+    //         if (!updatedUser) {
+    //           throw new GraphQLError(`Could not Edit User`, {
+    //             extensions: { code: "INTERNAL_SERVER_ERROR" },
+    //           });
+    //         }
 
-        return updatedUser.favorite;
-=======
-    editComment: async (_, args) => {
-      try {
-        const users = await userCollection();
-        const user_id = checkNotEmpty(args.user_id);
-        const userA = await users.findOne({ _id: user_id });
-        if (!userA) {
-          throw "Invalid user";
-        }
-        const comment_id = checkNotEmpty(args.comment_id);
-        const userB = await users.findOne({ _id: comment_id });
-        if (!userB) {
-          throw "Invalid user";
-        }
-        const commentExist = await users.findOne({
-          _id: user_id,
-          "comments.comment_id": comment_id,
-        });
-        //--------projection-------
-        if (!commentExist) {
-          throw "Comment Does not Exist";
-        }
-        const rating = checkRating(args.rating);
-        let commentText = "";
-        if (args.comment && args.comment.trim() !== "") {
-          commentText = checkNotEmpty(args.comment);
-        }
-        // -------no change made ----------
-        const comments = {
-          _id: new ObjectId(),
-          comment_id: comment_id,
-          rating: rating,
-          comment: commentText,
-        };
+    //         return updatedUser.favorite;
+    // =======
+    //     editComment: async (_, args) => {
+    //       try {
+    //         const users = await userCollection();
+    //         const user_id = checkNotEmpty(args.user_id);
+    //         const userA = await users.findOne({ _id: user_id });
+    //         if (!userA) {
+    //           throw "Invalid user";
+    //         }
+    //         const comment_id = checkNotEmpty(args.comment_id);
+    //         const userB = await users.findOne({ _id: comment_id });
+    //         if (!userB) {
+    //           throw "Invalid user";
+    //         }
+    //         const commentExist = await users.findOne({
+    //           _id: user_id,
+    //           "comments.comment_id": comment_id,
+    //         });
+    //         //--------projection-------
+    //         if (!commentExist) {
+    //           throw "Comment Does not Exist";
+    //         }
+    //         const rating = checkRating(args.rating);
+    //         let commentText = "";
+    //         if (args.comment && args.comment.trim() !== "") {
+    //           commentText = checkNotEmpty(args.comment);
+    //         }
+    //         // -------no change made ----------
+    //         const comments = {
+    //           _id: new ObjectId(),
+    //           comment_id: comment_id,
+    //           rating: rating,
+    //           comment: commentText,
+    //         };
 
-        const update = await users.updateOne(
-          { _id: user_id, "comments.comment_id": comment_id },
-          { $set: { "comments.$": comments } }
-        );
-        if (update.acknowledged != true) {
-          throw "Cannot update comments";
-        }
-        const user = await users.findOne({ _id: user_id });
-        return user;
->>>>>>> 5db2d29fe354b0ff909d1e59859b1e4b82af176b
-      } catch (error) {
-        throw new GraphQLError(error.message);
-      }
-    },
+    //         const update = await users.updateOne(
+    //           { _id: user_id, "comments.comment_id": comment_id },
+    //           { $set: { "comments.$": comments } }
+    //         );
+    //         if (update.acknowledged != true) {
+    //           throw "Cannot update comments";
+    //         }
+    //         const user = await users.findOne({ _id: user_id });
+    //         return user;
+    // >>>>>>> 5db2d29fe354b0ff909d1e59859b1e4b82af176b
+    //       } catch (error) {
+    //         throw new GraphQLError(error.message);
+    //       }
+    //     },
+    //   },
   },
 };

@@ -16,11 +16,9 @@ import { Link } from "react-router-dom";
 
 function UserProfile() {
   let { currentUser } = useContext(AuthContext);
-  console.log(currentUser);
   const client = useApolloClient();
   const { loading, error, data } = useQuery(GET_USER, {
-    variables: { id: currentUser ? currentUser.uid : "" },
-    fetchPolicy: "cache-and-network",
+    variables: { id: currentUser.uid }
   });
   const [userInfo, setUserInfo] = useState(null);
   const [firstname, setFirstname] = useState("");
@@ -35,9 +33,6 @@ function UserProfile() {
   const [editUser] = useMutation(EDIT_USER);
 
   useEffect(() => {
-    console.log("in the effect");
-    console.log(data);
-
     if (!loading && !error && data && data.getUserById) {
       setUserInfo(data.getUserById);
       setFirstname(data.getUserById.firstname);
@@ -45,19 +40,19 @@ function UserProfile() {
       setEmail(data.getUserById.email);
       setFavorite(data.getUserById.favorite || []);
 
-      client
-        .query({
-          query: GET_PRODUCTS_BY_IDS,
-          variables: { ids: data.getUserById.favorite },
-          fetchPolicy: "cache-and-network" as FetchPolicy,
-        })
-        .then((result) => {
-          console.log(result.data);
-          setFavorite(result.data.getProductsByIds);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      // client
+      //   .query({
+      //     query: GET_PRODUCTS_BY_IDS,
+      //     variables: { ids: data.getUserById.favorite },
+      //     fetchPolicy: "cache-and-network" as FetchPolicy,
+      //   })
+      //   .then((result) => {
+      //     console.log(result.data);
+      //     setFavorite(result.data.getProductsByIds);
+      //   })
+      //   .catch((err) => {
+      //     console.log(err);
+      //   });
     }
   }, [loading, error, data]);
 
@@ -109,6 +104,9 @@ function UserProfile() {
       return false;
     }
   };
+
+  if (loading) return "Loading...";
+  if (error) return "Error";
 
   return (
     <div className="card">

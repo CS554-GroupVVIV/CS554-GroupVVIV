@@ -16,7 +16,7 @@ export default function ProductCard({ productData }) {
   const navigate = useNavigate();
 
   const { currentUser } = useContext(AuthContext);
-  console.log("current user", currentUser.uid);
+  console.log("current user", currentUser ? currentUser.uid:"");
   console.log("product data", productData);
 
   const [hasFavorited, setHasFavorited] = useState(false);
