@@ -236,6 +236,31 @@ export const resolvers = {
       }
     },
 
+    getProductsByPriceRange: async (_, args) => {
+      try {
+        let { low, high } = args;
+        if (low) {
+          checkPrice(low);
+        } else {
+          low = 0;
+        }
+        checkPrice(high);
+
+        const productData = await productCollection();
+        const products = await productData
+          .find({ price: { $lte: high, $gte: low } })
+          .toArray();
+        if (!products) {
+          throw new GraphQLError("product not found", {
+            extensions: { code: "NOT_FOUND" },
+          });
+        }
+        return products;
+      } catch (error) {
+        throw new GraphQLError(error.message);
+      }
+    },
+
     getPostById: async (_, args) => {
       try {
         let id = checkId(args._id);
