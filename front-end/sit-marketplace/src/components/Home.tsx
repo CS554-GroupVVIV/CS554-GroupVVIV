@@ -14,6 +14,7 @@ import SearchProduct from "./SearchProduct";
 import SearchPost from "./SearchPost";
 
 import { Grid } from "@mui/material";
+import PostCard from "./PostCard";
 
 type Product = {
   _id: string;
@@ -24,10 +25,21 @@ export default function Home() {
   const navigate = useNavigate();
   const { currentUser } = useContext(AuthContext);
 
-  const { loading, error, data } = useQuery(GET_PRODUCTS, {
+  const {
+    loading: productLoading,
+    error: productError,
+    data: productData,
+  } = useQuery(GET_PRODUCTS, {
     fetchPolicy: "cache-and-network",
   });
-  // console.log(data);
+
+  const {
+    loading: postLoading,
+    error: postError,
+    data: postData,
+  } = useQuery(GET_POSTS, {
+    fetchPolicy: "cache-and-network",
+  });
 
   const [text, setText] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
@@ -112,8 +124,8 @@ export default function Home() {
                 maxWidth: "60vw",
               }}
             >
-              {data &&
-                data.products.map((product: Product) => {
+              {productData &&
+                productData.products.map((product: Product) => {
                   return (
                     <ProductCard key={product._id} productData={product} />
                   );
@@ -141,7 +153,12 @@ export default function Home() {
                 padding: "16px",
                 maxWidth: "60vw",
               }}
-            ></Grid>
+            >
+              {postData &&
+                postData.posts.map((post) => {
+                  return <PostCard key={post._id} postData={post} />;
+                })}
+            </Grid>
           </div>
         </Grid>
         <Grid item>

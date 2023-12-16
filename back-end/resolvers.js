@@ -319,7 +319,7 @@ export const resolvers = {
       try {
         let id = checkUserAndChatId(args._id.toString());
         const usersData = await userCollection();
-        var user = await client.json.get(`getUserById-${id}`, "$");
+        let user = await client.json.get(`getUserById-${id}`, "$");
         if (!user) {
           user = await usersData.findOne({ _id: id });
           if (!user) {
@@ -741,7 +741,7 @@ export const resolvers = {
     },
     addUser: async (_, args) => {
       try {
-        let { _id, email, firstname, lastname } = args;
+        let { _id, email, firstname, lastname, favorite } = args;
         // check ID not implement yet
         email = checkEmail(email);
         firstname = capitalizeName(
@@ -757,8 +757,10 @@ export const resolvers = {
           email,
           firstname,
           lastname,
+          favorite: favorite ? [favorite] : [],
         };
         const insertedUser = await usersData.insertOne(newUser);
+
         if (!insertedUser) {
           throw new GraphQLError(`Could not Add User`, {
             extensions: { code: "INTERNAL_SERVER_ERROR" },
@@ -960,14 +962,14 @@ export const resolvers = {
           });
         }
 
-        //add new product into favorite array and update
-        favorite.push(productId);
-        userToUpdate.favorite = favorite;
-        const updatedUser = await usersData.findOneAndUpdate(
-          { _id: _id.toString() },
-          { $set: { favorite: favorite } },
-          { new: true }
-        );
+    //         //add new product into favorite array and update
+    //         favorite.push(productId);
+    //         userToUpdate.favorite = favorite;
+    //         const updatedUser = await usersData.findOneAndUpdate(
+    //           { _id: _id.toString() },
+    //           { $set: { favorite: favorite } },
+    //           { new: true }
+    //         );
 
         if (!updatedUser) {
           throw new GraphQLError(`Could not Edit User`, {
@@ -1006,12 +1008,12 @@ export const resolvers = {
           commentText = checkNotEmpty(args.comment);
         }
 
-        const comments = {
-          _id: new ObjectId(),
-          comment_id: comment_id,
-          rating: rating,
-          comment: commentText,
-        };
+    //         const comments = {
+    //           _id: new ObjectId(),
+    //           comment_id: comment_id,
+    //           rating: rating,
+    //           comment: commentText,
+    //         };
 
         const insert = await users.updateOne(
           { _id: user_id },
@@ -1046,19 +1048,19 @@ export const resolvers = {
           });
         }
 
-        //add new product into favorite array and update
-        favorite = favorite.filter((id) => id !== productId);
-        const updatedUser = await usersData.findOneAndUpdate(
-          { _id: _id.toString() },
-          { $set: { favorite: favorite } },
-          { new: true }
-        );
+    //         //add new product into favorite array and update
+    //         favorite = favorite.filter((id) => id !== productId);
+    //         const updatedUser = await usersData.findOneAndUpdate(
+    //           { _id: _id.toString() },
+    //           { $set: { favorite: favorite } },
+    //           { new: true }
+    //         );
 
-        if (!updatedUser) {
-          throw new GraphQLError(`Could not Edit User`, {
-            extensions: { code: "INTERNAL_SERVER_ERROR" },
-          });
-        }
+    //         if (!updatedUser) {
+    //           throw new GraphQLError(`Could not Edit User`, {
+    //             extensions: { code: "INTERNAL_SERVER_ERROR" },
+    //           });
+    //         }
 
         return updatedUser.favorite;
       } catch (error) {
