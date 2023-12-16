@@ -118,8 +118,7 @@ export const checkUrl = (url) => {
   const regex = new RegExp(
     /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/
   );
-  if (!regex.test(url))
-    throw new Error("You must provide a valid URL");
+  if (!regex.test(url)) throw new Error("You must provide a valid URL");
 
   return url;
 };
@@ -166,6 +165,26 @@ export const capitalizeName = (name) => {
   return name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
 }; // reference from stackoverflow
 
+const checkNotEmpty = (str) => {
+  if (!str | (str.trim() === "")) {
+    throw "Input is empty";
+  }
+  return str.trim();
+};
+
+const checkRating = (rating) => {
+  if (!rating || typeof rating !== "number") {
+    throw "Rating not valid";
+  }
+  if (!Number.isInteger(rating)) {
+    throw "Rating not valid";
+  }
+  if (rating < 1 || rating > 5) {
+    throw "Rating not valid";
+  }
+  return rating;
+};
+
 export const dateObjectToHTMLDate = (date) => {
   const year = date.getFullYear();
   const month = (date.getMonth() + 1).toString().padStart(2, '0');
@@ -186,4 +205,6 @@ export {
   checkCondition,
   checkDescription,
   checkDate,
+  checkNotEmpty,
+  checkRating,
 };

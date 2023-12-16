@@ -29,6 +29,19 @@ export const checkEmail = (email: string) => {
   return email;
 };
 
+export const checkRating = (rating: number) => {
+  if (!rating || typeof rating !== "number") {
+    throw "Rating not valid";
+  }
+  if (!Number.isInteger(rating)) {
+    throw "Rating not valid";
+  }
+  if (rating < 1 || rating > 5) {
+    throw "Rating not valid";
+  }
+  return rating;
+};
+
 export const dateObjectToHTMLDate = (date: Date) => {
   const year = date.getFullYear();
   const month = (date.getMonth() + 1).toString().padStart(2, '0');

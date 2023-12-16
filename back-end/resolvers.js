@@ -22,14 +22,36 @@ import {
   checkFirstNameAndLastName,
   capitalizeName,
   checkUrl,
+<<<<<<< HEAD
   dateObjectToHTMLDate,
   HTMLDateToDateObject,
+=======
+  checkNotEmpty,
+  checkRating,
+>>>>>>> 5db2d29fe354b0ff909d1e59859b1e4b82af176b
 } from "./helper.js";
 
 export const resolvers = {
   ObjectID: ObjectID,
   DateTime: DateTime,
   // base64: Base64,
+
+  User: {
+    rating: async (parentValue) => {
+      const users = await userCollection();
+      const user = await users.findOne({
+        _id: parentValue._id,
+      });
+      const comments = user.comments;
+      let total = 0;
+      let count = 0;
+      comments.map((comment) => {
+        total += comment.rating;
+        count += 1;
+      });
+      return Number((total / count).toFixed(2));
+    },
+  },
 
   Query: {
     products: async (_, args) => {
@@ -184,10 +206,10 @@ export const resolvers = {
     getPostById: async (_, args) => {
       try {
         let id = checkId(args._id);
-        var post = await client.json.get(`getPostById-${id}`, "$");
+        let post = await client.json.get(`getPostById-${id}`, "$");
         if (!post) {
           const posts = await postCollection();
-          const post = await posts.findOne({ _id: id.toString() });
+          post = await posts.findOne({ _id: new ObjectId(id) });
           if (!post) {
             throw new GraphQLError("post not found", {
               extensions: { code: "NOT_FOUND" },
@@ -240,7 +262,7 @@ export const resolvers = {
 
     getChatById: async (_, args) => {
       try {
-        console.log(args);
+        // console.log(args);
         let id = checkUserAndChatId(args._id.toString());
         const chatData = await chatCollection();
         const chat = await chatData.findOne({ _id: id });
@@ -317,6 +339,48 @@ export const resolvers = {
           client.expire(`getPostByBuyer-${args._id}`, 60);
         }
         return buyerPosts;
+      } catch (error) {
+        throw new GraphQLError(error.message);
+      }
+    },
+
+    getComment: async (_, args) => {
+      try {
+        const users = await userCollection();
+        const user_id = checkNotEmpty(args.user_id);
+        const userA = await users.findOne({ _id: user_id });
+        if (!userA) {
+          throw "Invalid user";
+        }
+        const comment_id = checkNotEmpty(args.comment_id);
+        const userB = await users.findOne({ _id: comment_id });
+        if (!userB) {
+          throw "Invalid user";
+        }
+        console.log(user_id, comment_id);
+        const commentExist = await users
+          .find(
+            {
+              _id: user_id,
+              "comments.comment_id": comment_id,
+            }
+            // {
+            //   projection: {
+            //     comments: {
+            //       $elemMatch: {
+            //         "comment.user_id": comment_id,
+            //       },
+            //     },
+            //     firstname: 1,
+            //     lastname: 1,
+            //     email: 1,
+            //     comments: 1,
+            //   },
+            // }
+          )
+          .toArray();
+        console.log("commentExist", commentExist[0]);
+        return commentExist[0];
       } catch (error) {
         throw new GraphQLError(error.message);
       }
@@ -597,18 +661,27 @@ export const resolvers = {
       try {
         let { participants } = args;
         const chatData = await chatCollection();
-        const newChat = {
-          _id: new ObjectId(),
-          participants,
-          messages: [],
-        };
-        let insertedChat = await chatData.insertOne(newChat);
-        if (!insertedChat) {
-          throw new GraphQLError(`Could not Add chat`, {
-            extensions: { code: "INTERNAL_SERVER_ERROR" },
-          });
+
+        const chat = await chatData.findOne({
+          participants: { $all: participants },
+        });
+        console.log(chat);
+
+        if (!chat) {
+          const newChat = {
+            _id: new ObjectId(),
+            participants,
+            messages: [],
+          };
+          let insertedChat = await chatData.insertOne(newChat);
+          if (!insertedChat) {
+            throw new GraphQLError(`Could not Add chat`, {
+              extensions: { code: "INTERNAL_SERVER_ERROR" },
+            });
+          }
+          return newChat;
         }
-        return newChat;
+        return chat;
       } catch (error) {
         throw new GraphQLError(error.message);
       }
@@ -618,26 +691,30 @@ export const resolvers = {
       try {
         let { _id, sender, time, message } = args;
         const chatData = await chatCollection();
-        const newMessage = {
-          sender,
-          time,
-          message,
-        };
+        const chat = await chatData.findOne({ _id: _id });
 
-        let insertedMessage = await chatData.findOneAndUpdate(
-          { _id: new ObjectId(_id) },
-          {
-            $push: {
-              messages: newMessage,
-            },
+        if (chat) {
+          const newMessage = {
+            sender,
+            time,
+            message,
+          };
+
+          let insertedMessage = await chatData.findOneAndUpdate(
+            { _id: new ObjectId(_id) },
+            {
+              $push: {
+                messages: newMessage,
+              },
+            }
+          );
+          if (!insertedMessage) {
+            throw new GraphQLError(`Could not Add Message`, {
+              extensions: { code: "INTERNAL_SERVER_ERROR" },
+            });
           }
-        );
-        if (!insertedMessage) {
-          throw new GraphQLError(`Could not Add Message`, {
-            extensions: { code: "INTERNAL_SERVER_ERROR" },
-          });
+          return newMessage;
         }
-        return newMessage;
       } catch (error) {
         throw new GraphQLError(error.message);
       }
@@ -712,6 +789,7 @@ export const resolvers = {
       }
     },
 
+<<<<<<< HEAD
     addProductToUserFavorite: async (_, args) => {
       let { _id, productId } = args;
       try {
@@ -747,11 +825,56 @@ export const resolvers = {
         }
 
         return updatedUser.favorite;
+=======
+    addComment: async (_, args) => {
+      try {
+        const users = await userCollection();
+        const user_id = checkNotEmpty(args.user_id);
+        const userA = await users.findOne({ _id: user_id });
+        if (!userA) {
+          throw "Invalid user";
+        }
+        const comment_id = checkNotEmpty(args.comment_id);
+        const userB = await users.findOne({ _id: comment_id });
+        if (!userB) {
+          throw "Invalid user";
+        }
+        const commentExist = await users.findOne({
+          _id: user_id,
+          "comment.user_id": comment_id,
+        });
+        if (commentExist) {
+          throw "Comment Already Exist";
+        }
+        const rating = checkRating(args.rating);
+        let commentText = "";
+        if (args.comment && args.comment.trim() !== "") {
+          commentText = checkNotEmpty(args.comment);
+        }
+
+        const comments = {
+          _id: new ObjectId(),
+          comment_id: comment_id,
+          rating: rating,
+          comment: commentText,
+        };
+
+        const insert = await users.updateOne(
+          { _id: user_id },
+          { $push: { comments } }
+        );
+        if (insert.acknowledged != true) {
+          throw "Cannot update comment";
+        }
+        const user = await users.findOne({ _id: user_id });
+        return user;
+>>>>>>> 5db2d29fe354b0ff909d1e59859b1e4b82af176b
       } catch (error) {
         throw new GraphQLError(error.message);
       }
     },
 
+<<<<<<< HEAD
     removeProductFromUserFavorite: async (_, args) => {
       let { _id, productId } = args;
       try {
@@ -786,6 +909,51 @@ export const resolvers = {
         }
 
         return updatedUser.favorite;
+=======
+    editComment: async (_, args) => {
+      try {
+        const users = await userCollection();
+        const user_id = checkNotEmpty(args.user_id);
+        const userA = await users.findOne({ _id: user_id });
+        if (!userA) {
+          throw "Invalid user";
+        }
+        const comment_id = checkNotEmpty(args.comment_id);
+        const userB = await users.findOne({ _id: comment_id });
+        if (!userB) {
+          throw "Invalid user";
+        }
+        const commentExist = await users.findOne({
+          _id: user_id,
+          "comments.comment_id": comment_id,
+        });
+        //--------projection-------
+        if (!commentExist) {
+          throw "Comment Does not Exist";
+        }
+        const rating = checkRating(args.rating);
+        let commentText = "";
+        if (args.comment && args.comment.trim() !== "") {
+          commentText = checkNotEmpty(args.comment);
+        }
+        // -------no change made ----------
+        const comments = {
+          _id: new ObjectId(),
+          comment_id: comment_id,
+          rating: rating,
+          comment: commentText,
+        };
+
+        const update = await users.updateOne(
+          { _id: user_id, "comments.comment_id": comment_id },
+          { $set: { "comments.$": comments } }
+        );
+        if (update.acknowledged != true) {
+          throw "Cannot update comments";
+        }
+        const user = await users.findOne({ _id: user_id });
+        return user;
+>>>>>>> 5db2d29fe354b0ff909d1e59859b1e4b82af176b
       } catch (error) {
         throw new GraphQLError(error.message);
       }
