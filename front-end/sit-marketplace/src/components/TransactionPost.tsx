@@ -39,7 +39,15 @@ const TransactionPost = () => {
           <p>date: {post.date.split("T")[0]}</p>
           <p>status: {post.status}</p>
           <div className="card-actions justify-end">
-            <button className="btn btn-primary">Comment</button>
+            {post.status == "completed" ? (
+              <button className="btn btn-primary">Comment</button>
+            ) : null}
+            {post.status == "inactive" ? (
+              <button className="btn btn-primary">Repost</button>
+            ) : null}
+            {post.status == "active" ? (
+              <button className="btn btn-primary">Retrive</button>
+            ) : null}
           </div>
         </div>
       </div>
@@ -48,8 +56,8 @@ const TransactionPost = () => {
 
   const postPurchased = () => {
     if (postBuyer) {
-      return postBuyer.getPostByBuyer.map((post) => {
-        return <PostCard post={post} />;
+      return postBuyer.getPostByBuyer.map((post, index) => {
+        return <PostCard key={index} post={post} />;
       });
     } else if (postBuyerLoading) {
       return <p>Loading</p>;

@@ -28,3 +28,16 @@ export const checkEmail = (email) => {
     throw new Error(`You must provide a valid Stevens' email address`);
   return email;
 };
+
+export const checkRating = (rating: number) => {
+  if (!rating || typeof rating !== "number") {
+    throw "Rating not valid";
+  }
+  if (!Number.isInteger(rating)) {
+    throw "Rating not valid";
+  }
+  if (rating < 1 || rating > 5) {
+    throw "Rating not valid";
+  }
+  return rating;
+};

@@ -1,19 +1,19 @@
 import { gql } from "@apollo/client";
 
 export const GET_PRODUCTS = gql`
-query Products {
-  products {
-    _id
-    buyer_id
-    category
-    condition
-    description
-    name
-    price
-    seller_id
-    status
+  query Products {
+    products {
+      _id
+      buyer_id
+      category
+      condition
+      description
+      name
+      price
+      seller_id
+      status
+    }
   }
-}
 `;
 
 export const GET_POSTS = gql`
@@ -26,7 +26,6 @@ export const GET_POSTS = gql`
       category
       price
       condition
-      date
       description
       status
     }
@@ -99,6 +98,24 @@ export const GET_POSTS_BY_BUYER = gql`
       date
       description
       status
+    }
+  }
+`;
+
+export const GET_COMMENT = gql`
+  query ($user_id: String!, $comment_id: String!) {
+    getComment(user_id: $user_id, comment_id: $comment_id) {
+      _id
+      email
+      firstname
+      lastname
+      comments {
+        _id
+        rating
+        comment_id
+        comment
+      }
+      rating
     }
   }
 `;
@@ -346,7 +363,7 @@ export const SEARCH_PRODUCTS_BY_NAME = gql`
 `;
 
 export const SEARCH_PRODUCTS_BY_ID = gql`
-  query Query($id: ObjectID!) {
+  query Query($id: String!) {
     getProductById(_id: $id) {
       _id
       category
@@ -362,7 +379,7 @@ export const SEARCH_PRODUCTS_BY_ID = gql`
 `;
 
 export const SEARCH_POST_BY_ID = gql`
-  query Query($id: ObjectID!) {
+  query Query($id: String!) {
     getPostById(_id: $id) {
       _id
       buyer_id
@@ -371,7 +388,6 @@ export const SEARCH_POST_BY_ID = gql`
       category
       price
       condition
-      date
       description
       status
     }
@@ -408,6 +424,62 @@ export const REPOST_POST = gql`
       date
       description
       status
+    }
+  }
+`;
+
+export const ADD_COMMENT = gql`
+  mutation (
+    $user_id: String!
+    $comment_id: String!
+    $rating: Int!
+    $comment: String
+  ) {
+    addComment(
+      user_id: $user_id
+      comment_id: $comment_id
+      rating: $rating
+      comment: $comment
+    ) {
+      _id
+      email
+      firstname
+      lastname
+      comments {
+        _id
+        rating
+        comment_id
+        comment
+      }
+      rating
+    }
+  }
+`;
+
+export const EDIT_COMMENT = gql`
+  mutation (
+    $user_id: String!
+    $comment_id: String!
+    $rating: Int!
+    $comment: String
+  ) {
+    editComment(
+      user_id: $user_id
+      comment_id: $comment_id
+      rating: $rating
+      comment: $comment
+    ) {
+      _id
+      email
+      firstname
+      lastname
+      comments {
+        _id
+        rating
+        comment_id
+        comment
+      }
+      rating
     }
   }
 `;
