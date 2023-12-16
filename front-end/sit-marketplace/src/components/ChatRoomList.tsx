@@ -23,6 +23,15 @@ export default function ChatRoomList({ uid }) {
     }
   }, [socket]);
 
+  useEffect(() => {
+    if (curRoom) {
+      socket.emit("join room", {
+        room: curRoom,
+        user: uid,
+      });
+    }
+  }, [curRoom]);
+
   return (
     <div>
       <h2>Active Chat Room List:</h2>
@@ -42,7 +51,6 @@ export default function ChatRoomList({ uid }) {
                 </button>
                 <button
                   onClick={() => {
-                    setCurRoom(undefined);
                     if (curRoom !== room) {
                       socket.emit("join room", {
                         room: room,
@@ -50,6 +58,7 @@ export default function ChatRoomList({ uid }) {
                       });
                     }
                     socket.emit("leave");
+                    setCurRoom(undefined);
                   }}
                 >
                   Close
