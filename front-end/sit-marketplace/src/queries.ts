@@ -103,6 +103,42 @@ export const GET_POSTS_BY_BUYER = gql`
   }
 `;
 
+export const GET_PRODUCTS_BY_SELLER = gql`
+  query GetProductBySeller($id: String!) {
+    getProductBySeller(_id: $id) {
+      _id
+      buyer_id
+      category
+      condition
+      date
+      description
+      image
+      name
+      price
+      seller_id
+      status
+    }
+  }
+`;
+
+export const GET_PRODUCTS_BY_BUYER = gql`
+  query GetProductByBuyer($id: String!) {
+    getProductByBuyer(_id: $id) {
+      _id
+      buyer_id
+      category
+      condition
+      date
+      description
+      image
+      name
+      price
+      seller_id
+      status
+    }
+  }
+`;
+
 export const ADD_PRODUCT = gql`
   mutation (
     $name: String!
@@ -354,15 +390,18 @@ export const SEARCH_PRODUCTS_BY_NAME = gql`
 `;
 
 export const SEARCH_PRODUCTS_BY_ID = gql`
-  query Query($id: String!) {
+  query GetProductBySeller($id: String!) {
     getProductById(_id: $id) {
       _id
+      buyer_id
       category
       condition
+      date
       description
       image
       name
       price
+      seller_id
       status
     }
   }
