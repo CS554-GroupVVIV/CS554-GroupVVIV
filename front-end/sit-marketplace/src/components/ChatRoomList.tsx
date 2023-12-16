@@ -12,9 +12,9 @@ export default function ChatRoomList({ uid }) {
       setRooms(data);
     });
 
-    socket.on("join room", (data) => {
-      setCurRoom(data.room);
-    });
+    // socket.on("join room", (data) => {
+    //   if (curRoom !== data.room) setCurRoom(data.room);
+    // });
 
     for (const key in rooms) {
       if (rooms[key] !== null) {
