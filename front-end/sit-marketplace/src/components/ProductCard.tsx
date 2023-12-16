@@ -83,42 +83,41 @@ export default function ProductCard({ productData }) {
             <li>Description: {productData && productData.description}</li>
             <li>Condition: {productData && productData.condition}</li>
             <li>Category: {productData && productData.category}</li>
-
-            <li>
-              <button
-                onClick={() => {
-                  navigate(`/product/${productData._id}`);
-                }}
-              >
-                Detail
-              </button>
-            </li>
-            <li>
-              <button
-                hidden={currentUser ? false : true}
-                onClick={() => {
-                  if (currentUser.uid) {
-                    socket.emit("join room", {
-                      room: productData.seller_id,
-                      user: currentUser.uid,
-                    });
-
-                    // socket.emit("message", {
-                    //   room: productData.seller_id,
-                    //   sender: currentUser.uid,
-                    //   message: `Hi, I have questions regarding product: "${productData.name}"`,
-                    //   time: new Date().toISOString(),
-                    // });
-                  }
-                }}
-              >
-                Chat with seller
-              </button>
-              <button onClick={handleFavorite}>
-                {hasFavorited ? <p>Favorited</p> : <p>Favorite</p>}
-              </button>
-            </li>
           </ul>
+          <button
+            hidden={
+              !currentUser || productData.seller_id === currentUser.uid
+                ? true
+                : false
+            }
+            onClick={() => {
+              if (currentUser.uid) {
+                socket.emit("join room", {
+                  room: productData.seller_id,
+                  user: currentUser.uid,
+                });
+
+                // socket.emit("message", {
+                //   room: productData.seller_id,
+                //   sender: currentUser.uid,
+                //   message: `Hi, I have questions regarding product: "${productData.name}"`,
+                //   time: new Date().toISOString(),
+                // });
+              }
+            }}
+          >
+            Chat with seller
+          </button>
+          <button
+            hidden={
+              !currentUser || productData.seller_id === currentUser.uid
+                ? true
+                : false
+            }
+            onClick={handleFavorite}
+          >
+            {hasFavorited ? <p>Favorited</p> : <p>Favorite</p>}
+          </button>
         </CardContent>
       </Card>
     </Grid>

@@ -346,23 +346,22 @@ export const SEARCH_PRODUCTS_BY_NAME = gql`
 `;
 
 export const SEARCH_PRODUCTS_BY_ID = gql`
-  query Query($id: ObjectID!) {
+  query Query($id: String!) {
     getProductById(_id: $id) {
       _id
       category
       condition
-      date
       description
       image
-      isSold
       name
       price
+      status
     }
   }
 `;
 
 export const SEARCH_POST_BY_ID = gql`
-  query Query($id: ObjectID!) {
+  query Query($id: String!) {
     getPostById(_id: $id) {
       _id
       buyer_id

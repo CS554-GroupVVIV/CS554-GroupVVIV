@@ -11,8 +11,8 @@ export const typeDefs = `#graphql
         posts: [Post],
         searchProducts(searchTerm: String!): [Product],
         searchProductsByName(name: String!): [Product],
-        getProductById(_id:ObjectID!):Product,
-        getPostById(_id:ObjectID!):Post,
+        getProductById(_id:String!):Product,
+        getPostById(_id:String!):Post,
         getUserById(_id: String!): User,
         getChatById(_id: String!): Chat,
         getChatByParticipants(participants: [String!]!): Chat,
@@ -22,7 +22,7 @@ export const typeDefs = `#graphql
     }
     
     type Product {
-        _id: ObjectID!,
+        _id: String!,
         name: String!,
         price: Number!,
         date:DateTime!,
@@ -36,9 +36,9 @@ export const typeDefs = `#graphql
     }
 
     type Post {
-      _id: ObjectID!,
-      buyer_id: ObjectID!,
-      seller_id: ObjectID,
+      _id: String!,
+      buyer_id: String!,
+      seller_id: String,
       item: String!,
       category:String!,
       price: Number!,

@@ -138,7 +138,7 @@ export const resolvers = {
         var product = await client.json.get(`getProductById-${id}`, "$");
         if (!product) {
           const products = await productCollection();
-          product = await products.findOne({ _id: id.toString() });
+          product = await products.findOne({ _id: new ObjectId(id) });
           if (!product) {
             throw new GraphQLError("product not found", {
               extensions: { code: "NOT_FOUND" },

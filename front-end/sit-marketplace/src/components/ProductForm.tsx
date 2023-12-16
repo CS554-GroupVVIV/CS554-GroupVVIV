@@ -31,7 +31,6 @@ export default function AddProducts() {
           condition: "fair",
           image: "www.url.com",
           category: "furniture",
-          isSold: false,
         },
       });
     }
@@ -49,7 +48,6 @@ export default function AddProducts() {
         condition: "fair",
         image: "www.url.com",
         category: "furniture",
-        isSold: false,
       },
     });
   }
