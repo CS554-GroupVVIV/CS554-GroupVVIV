@@ -43,21 +43,24 @@ function UserProfile() {
       setFirstname(data.getUserById.firstname);
       setLastname(data.getUserById.lastname);
       setEmail(data.getUserById.email);
-      setFavorite(data.getUserById.favorite || []);
-      console.log(data.getUserById.favorite);
-      client
-        .query({
-          query: GET_PRODUCTS_BY_IDS,
-          variables: { ids: data.getUserById.favorite },
-          fetchPolicy: "cache-and-network" as FetchPolicy,
-        })
-        .then((result) => {
-          console.log(result.data);
-          setFavorite(result.data.getProductsByIds);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      // console.log(data.getUserById.favorite);
+      if (data.getUserById.favorite && data.getUserById.favorite.length > 0) {
+        client
+          .query({
+            query: GET_PRODUCTS_BY_IDS,
+            variables: { ids: data.getUserById.favorite },
+            fetchPolicy: "cache-and-network" as FetchPolicy,
+          })
+          .then((result) => {
+            console.log(result.data);
+            setFavorite(result.data.getProductsByIds);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+
+        setFavorite(data.getUserById.favorite || []);
+      }
     }
   }, [loading, error, data]);
 
