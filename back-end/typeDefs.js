@@ -4,7 +4,6 @@ export const typeDefs = `#graphql
     scalar ObjectID
     scalar Number
     scalar DateTime
-    scalar base64
 
     type Query {
         products: [Product],
@@ -30,7 +29,7 @@ export const typeDefs = `#graphql
         condition:String,
         seller_id:String,
         buyer_id:String,
-        image:base64,
+        image:String,
         category:String,
         status:String
     }
@@ -68,8 +67,8 @@ export const typeDefs = `#graphql
   }
 
     type Mutation {
-        addProduct(name:String!, price: Number!,date:DateTime!,description:String!,condition:String!,seller_id:String!, image:base64!,category:String!):Product,
-        editProduct(_id: ObjectID!, name:String, price: Number,date:DateTime,description:String,condition:String,seller_id:ObjectID!,buyer_id:ObjectID, image:base64,category:String,status:String ):Product,
+        addProduct(name:String!, price: Number!,date:DateTime!,description:String!,condition:String!,seller_id:String!, image:String!,category:String!):Product,
+        editProduct(_id: ObjectID!, name:String, price: Number,date:DateTime,description:String,condition:String,seller_id:ObjectID!,buyer_id:ObjectID, image:String,category:String,status:String ):Product,
         removeProduct(_id:ObjectID!):Product,
         addPost(buyer_id: String!, item:String!, category:String!, price: Number!, condition:String!, description:String!):Post,
         editPost(_id: ObjectID!, buyer_id: String!, item:String!, category:String!, price: Number!, condition:String!, description:String!, status:String!):Post,
@@ -118,19 +117,19 @@ export const DateTime = new GraphQLScalarType({
   },
 });
 
-export const Base64 = new GraphQLScalarType({
-  name: "Base64",
-  description: "Base64 custom scalar type",
-  serialize(value) {
-    return Buffer.from(value).toString("base64");
-  },
-  parseValue(value) {
-    return Buffer.from(value, "base64");
-  },
-  parseLiteral(ast) {
-    if (ast.kind === "StringValue") {
-      return Buffer.from(ast.value, "base64");
-    }
-    return null;
-  },
-});
+// export const Base64 = new GraphQLScalarType({
+//   name: "Base64",
+//   description: "Base64 custom scalar type",
+//   serialize(value) {
+//     return Buffer.from(value).toString("base64");
+//   },
+//   parseValue(value) {
+//     return Buffer.from(value, "base64");
+//   },
+//   parseLiteral(ast) {
+//     if (ast.kind === "StringValue") {
+//       return Buffer.from(ast.value, "base64");
+//     }
+//     return null;
+//   },
+// });
