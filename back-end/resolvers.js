@@ -57,7 +57,7 @@ export const resolvers = {
         const products = await productCollection();
         var allProducts = await client.json.get(`allProducts`, "$");
         if (!allProducts) {
-          allProducts = await products.find({}).toArray();          
+          allProducts = await products.find({}).toArray();
           if (!allProducts) {
             throw new GraphQLError("Internal Server Error", {
               extensions: { code: "INTERNAL_SERVER_ERROR" },
@@ -974,14 +974,14 @@ export const resolvers = {
           });
         }
 
-        //     //add new product into favorite array and update
-        //     favorite.push(productId);
-        //     userToUpdate.favorite = favorite;
-        //     const updatedUser = await usersData.findOneAndUpdate(
-        //       { _id: _id.toString() },
-        //       { $set: { favorite: favorite } },
-        //       { new: true }
-        //     );
+        //add new product into favorite array and update
+        favorite.push(productId);
+        userToUpdate.favorite = favorite;
+        const updatedUser = await usersData.findOneAndUpdate(
+          { _id: _id.toString() },
+          { $set: { favorite: favorite } },
+          { new: true }
+        );
 
         if (!updatedUser) {
           throw new GraphQLError(`Could not Edit User`, {
@@ -1059,19 +1059,19 @@ export const resolvers = {
           });
         }
 
-        //     //add new product into favorite array and update
-        //     favorite = favorite.filter((id) => id !== productId);
-        //     const updatedUser = await usersData.findOneAndUpdate(
-        //       { _id: _id.toString() },
-        //       { $set: { favorite: favorite } },
-        //       { new: true }
-        //     );
+        //add new product into favorite array and update
+        favorite = favorite.filter((id) => id !== productId);
+        const updatedUser = await usersData.findOneAndUpdate(
+          { _id: _id.toString() },
+          { $set: { favorite: favorite } },
+          { new: true }
+        );
 
-        //     if (!updatedUser) {
-        //       throw new GraphQLError(`Could not Edit User`, {
-        //         extensions: { code: "INTERNAL_SERVER_ERROR" },
-        //       });
-        //     }
+        if (!updatedUser) {
+          throw new GraphQLError(`Could not Edit User`, {
+            extensions: { code: "INTERNAL_SERVER_ERROR" },
+          });
+        }
 
         return updatedUser.favorite;
       } catch (error) {

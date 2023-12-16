@@ -69,7 +69,7 @@ export const typeDefs = `#graphql
     lastname: String,
     comments:[Comment]
     rating: Number!
-    Favorite:[String]
+    favorite:[String]
   }
 
     type Message{

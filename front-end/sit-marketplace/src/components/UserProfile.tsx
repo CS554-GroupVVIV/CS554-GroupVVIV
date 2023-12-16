@@ -39,11 +39,12 @@ function UserProfile() {
     console.log("data", data);
 
     if (!loading && !error && data && data.getUserById) {
+      console.log("in the if");
       setUserInfo(data.getUserById);
       setFirstname(data.getUserById.firstname);
       setLastname(data.getUserById.lastname);
       setEmail(data.getUserById.email);
-      // console.log(data.getUserById.favorite);
+      console.log(data.getUserById.favorite || "no favorite");
       if (data.getUserById.favorite && data.getUserById.favorite.length > 0) {
         client
           .query({
