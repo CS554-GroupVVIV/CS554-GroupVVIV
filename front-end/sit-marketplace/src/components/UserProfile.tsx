@@ -35,6 +35,7 @@ function UserProfile() {
   const client = useApolloClient();
   const { loading, error, data } = useQuery(GET_USER, {
     variables: { id: currentUser ? currentUser.uid : "" },
+    fetchPolicy: "cache-and-network",
   });
   console.log(data);
   const [userInfo, setUserInfo] = useState(null);
