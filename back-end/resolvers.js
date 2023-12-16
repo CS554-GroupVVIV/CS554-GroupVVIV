@@ -75,19 +75,21 @@ export const resolvers = {
     searchProducts: async (_, args) => {
       try {
         const products = await productCollection();
+        products.createIndex({
+          name: "text",
+          // description: "text",
+          // category: "text",
+        });
+
         var productList = await client.json.get(
           `searchProducts-${args.searchTerm}`,
           "$"
         );
         if (!productList) {
-          products.createIndex({
-            name: "text",
-            // description: "text",
-            // category: "text",
-          });
           productList = await products
             .find({ $text: { $search: args.searchTerm } })
             .toArray();
+
           if (!productList) {
             throw new GraphQLError("product not found", {
               extensions: { code: "NOT_FOUND" },
@@ -100,6 +102,31 @@ export const resolvers = {
           );
         }
         return productList;
+      } catch (error) {
+        throw new GraphQLError(error.message);
+      }
+    },
+
+    searchPosts: async (_, args) => {
+      try {
+        let postItem = checkName(args.searchTerm);
+        const posts = await postCollection();
+        var postsByItem = await client.json.get(
+          `searchPostsByItem-${postItem}`,
+          "$"
+        );
+        if (!postsByItem) {
+          postsByItem = await posts
+            .find({ item: { $regex: postItem, $options: "i" } })
+            .toArray();
+          if (!postsByItem) {
+            throw new GraphQLError("post not found", {
+              extensions: { code: "NOT_FOUND" },
+            });
+          }
+          client.json.set(`searchPostsByItem-${postItem}`, "$", postsByItem);
+        }
+        return postsByItem;
       } catch (error) {
         throw new GraphQLError(error.message);
       }

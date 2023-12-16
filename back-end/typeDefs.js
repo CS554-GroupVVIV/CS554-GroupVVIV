@@ -9,6 +9,7 @@ export const typeDefs = `#graphql
         products: [Product],
         posts: [Post],
         searchProducts(searchTerm: String!): [Product],
+        searchPosts(searchTerm: String!): [Post],
         searchProductsByName(name: String!): [Product],
         getProductById(_id:String!):Product,
         getPostById(_id:String!):Post,

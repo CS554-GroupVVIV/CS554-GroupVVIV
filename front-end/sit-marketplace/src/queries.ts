@@ -336,6 +336,15 @@ export const SEARCH_PRODUCTS = gql`
   }
 `;
 
+export const SEARCH_POSTS = gql`
+  query ($searchTerm: String!) {
+    searchPosts(searchTerm: $searchTerm) {
+      _id
+      item
+    }
+  }
+`;
+
 export const SEARCH_PRODUCTS_BY_NAME = gql`
   query ($name: String!) {
     searchProductsByName(name: $name) {
