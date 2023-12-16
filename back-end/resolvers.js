@@ -57,17 +57,17 @@ export const resolvers = {
         const products = await productCollection();
         var allProducts = await client.json.get(`allProducts`, "$");
         if (!allProducts) {
-          allProducts = await products.find({}).toArray();
+          allProducts = await products.find({}).toArray();          
           if (!allProducts) {
             throw new GraphQLError("Internal Server Error", {
               extensions: { code: "INTERNAL_SERVER_ERROR" },
             });
           }
+          for (let i = 0; i < allProducts.length; i++) {
+            allProducts[i].date = dateObjectToHTMLDate(allProducts[i].date);
+          }
           client.json.set(`allProducts`, "$", allProducts);
           client.expire(`allProducts`, 3600);
-        }
-        for (let i = 0; i < allProducts.length; i++) {
-          allProducts[i].date = dateObjectToHTMLDate(allProducts[i].date);
         }
         return allProducts;
       } catch (error) {
@@ -85,11 +85,11 @@ export const resolvers = {
               extensions: { code: "INTERNAL_SERVER_ERROR" },
             });
           }
+          for (let i = 0; i < allPosts.length; i++) {
+            allPosts[i].date = dateObjectToHTMLDate(allPosts[i].date);
+          }
           client.json.set(`allPosts`, "$", allPosts);
           client.expire(`allPosts`, 3600);
-        }
-        for (let i = 0; i < allPosts.length; i++) {
-          allPosts[i].date = dateObjectToHTMLDate(allPosts[i].date);
         }
         return allPosts;
       } catch (error) {
@@ -105,7 +105,6 @@ export const resolvers = {
           // description: "text",
           // category: "text",
         });
-
         var productList = await client.json.get(
           `searchProducts-${args.searchTerm}`,
           "$"
@@ -114,20 +113,19 @@ export const resolvers = {
           productList = await products
             .find({ $text: { $search: args.searchTerm } })
             .toArray();
-
           if (!productList) {
             throw new GraphQLError("product not found", {
               extensions: { code: "NOT_FOUND" },
             });
+          }
+          for (let i = 0; i < productList.length; i++) {
+            productList[i].date = dateObjectToHTMLDate(productList[i].date);
           }
           client.json.set(
             `searchProducts-${args.searchTerm}`,
             "$",
             productList
           );
-        }
-        for (let i = 0; i < productList.length; i++) {
-          productList[i].date = dateObjectToHTMLDate(productList[i].date);
         }
         return productList;
       } catch (error) {
@@ -152,10 +150,10 @@ export const resolvers = {
               extensions: { code: "NOT_FOUND" },
             });
           }
+          for (let i = 0; i < postsByItem.length; i++) {
+            postsByItem[i].date = dateObjectToHTMLDate(postsByItem[i].date);
+          }
           client.json.set(`searchPostsByItem-${postItem}`, "$", postsByItem);
-        }
-        for (let i = 0; i < postsByItem.length; i++) {
-          postsByItem[i].date = dateObjectToHTMLDate(postsByItem[i].date);
         }
         return postsByItem;
       } catch (error) {
@@ -180,14 +178,16 @@ export const resolvers = {
               extensions: { code: "NOT_FOUND" },
             });
           }
+          for (let i = 0; i < productsByName.length; i++) {
+            productsByName[i].date = dateObjectToHTMLDate(
+              productsByName[i].date
+            );
+          }
           client.json.set(
             `searchProductsByName-${productName}`,
             "$",
             productsByName
           );
-        }
-        for (let i = 0; i < productsByName.length; i++) {
-          productsByName[i].date = dateObjectToHTMLDate(productsByName[i].date);
         }
         return productsByName;
       } catch (error) {
@@ -207,9 +207,9 @@ export const resolvers = {
               extensions: { code: "NOT_FOUND" },
             });
           }
+          product.date = dateObjectToHTMLDate(product.date);
           client.json.set(`getProductById-${id}`, "$", product);
         }
-        product.date = dateObjectToHTMLDate(product.date);
         return product;
       } catch (error) {
         throw new GraphQLError(error.message);
@@ -271,8 +271,9 @@ export const resolvers = {
               extensions: { code: "NOT_FOUND" },
             });
           }
+          post.date = dateObjectToHTMLDate(post.date);
+          client.json.set(`getPostById-${id}`, "$", post);
         }
-        post.date = dateObjectToHTMLDate(post.date);
         return post;
       } catch (error) {
         throw new GraphQLError(error.message);
@@ -370,11 +371,11 @@ export const resolvers = {
               extensions: { code: "NOT_FOUND" },
             });
           }
+          for (let i = 0; i < sellerPosts.length; i++) {
+            sellerPosts[i].date = dateObjectToHTMLDate(sellerPosts[i].date);
+          }
           client.json.set(`getPostBySeller-${args._id}`, "$", sellerPosts);
           client.expire(`getPostBySeller-${args._id}`, 60);
-        }
-        for (let i = 0; i < sellerPosts.length; i++) {
-          sellerPosts[i].date = dateObjectToHTMLDate(sellerPosts[i].date);
         }
         return sellerPosts;
       } catch (error) {
@@ -396,11 +397,11 @@ export const resolvers = {
               extensions: { code: "NOT_FOUND" },
             });
           }
+          for (let i = 0; i < buyerPosts.length; i++) {
+            buyerPosts[i].date = dateObjectToHTMLDate(buyerPosts[i].date);
+          }
           client.json.set(`getPostByBuyer-${args._id}`, "$", buyerPosts);
           client.expire(`getPostByBuyer-${args._id}`, 60);
-        }
-        for (let i = 0; i < buyerPosts.length; i++) {
-          buyerPosts[i].date = dateObjectToHTMLDate(buyerPosts[i].date);
         }
         return buyerPosts;
       } catch (error) {
@@ -423,15 +424,17 @@ export const resolvers = {
               extensions: { code: "NOT_FOUND" },
             });
           }
+          for (let i = 0; i < sellerProducts.length; i++) {
+            sellerProducts[i].date = dateObjectToHTMLDate(
+              sellerProducts[i].date
+            );
+          }
           client.json.set(
             `getProductBySeller-${args._id}`,
             "$",
             sellerProducts
           );
           client.expire(`getProductBySeller-${args._id}`, 60);
-        }
-        for (let i = 0; i < sellerProducts.length; i++) {
-          sellerProducts[i].date = dateObjectToHTMLDate(sellerProducts[i].date);
         }
         return sellerProducts;
       } catch (error) {
@@ -452,11 +455,11 @@ export const resolvers = {
               extensions: { code: "NOT_FOUND" },
             });
           }
+          for (let i = 0; i < buyerProducts.length; i++) {
+            buyerProducts[i].date = dateObjectToHTMLDate(buyerProducts[i].date);
+          }
           client.json.set(`getProductByBuyer-${args._id}`, "$", buyerProducts);
           client.expire(`getProductByBuyer-${args._id}`, 60);
-        }
-        for (let i = 0; i < buyerProducts.length; i++) {
-          buyerProducts[i].date = dateObjectToHTMLDate(buyerProducts[i].date);
         }
         return buyerProducts;
       } catch (error) {
