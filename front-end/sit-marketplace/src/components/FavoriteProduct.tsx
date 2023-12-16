@@ -1,22 +1,8 @@
-import { useEffect, useState, useContext } from "react";
-import ProductCard from "./ProductCard";
 import { useQuery } from "@apollo/client";
 import { SEARCH_PRODUCTS_BY_ID } from "../queries";
 import { useNavigate, useParams } from "react-router-dom";
-// import { Link } from "react-router-dom";
-import {
-  Avatar,
-  Button,
-  CssBaseline,
-  TextField,
-  FormControlLabel,
-  Checkbox,
-  Link,
-  Grid,
-  Box,
-  Typography,
-  Container,
-} from "@mui/material";
+
+import { Link } from "@mui/material";
 
 export default function FavoriteProduct({ favId }) {
   const baseUrl = "/product/";

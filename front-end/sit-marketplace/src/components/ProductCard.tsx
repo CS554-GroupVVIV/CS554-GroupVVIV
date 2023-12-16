@@ -5,9 +5,7 @@ import { AuthContext } from "../context/AuthContext";
 
 import { socketID, socket } from "./socket";
 
-import { Card, CardHeader, CardContent, Grid } from "@mui/material";
-
-import { Link } from "react-router-dom";
+import { Card, CardHeader, CardContent, Grid, Link } from "@mui/material";
 
 import { ADD_FAVORITE_TO_USER, REMOVE_FAVORITE_FROM_USER } from "../queries";
 import { useMutation } from "@apollo/client";
@@ -19,7 +17,7 @@ export default function ProductCard({ productData }) {
 
   const [hasFavorited, setHasFavorited] = useState(false);
 
-  const baseUrl = "http://localhost:5173/product/";
+  const baseUrl = "/product/";
 
   const [removeFavorite, { removeData, removeLoading, removeError }] =
     useMutation(REMOVE_FAVORITE_FROM_USER);
@@ -65,7 +63,7 @@ export default function ProductCard({ productData }) {
           borderRadius: "10%",
         }}
       >
-        <Link to={baseUrl + productData._id}>
+        <Link onClick={() => navigate(baseUrl + productData._id)}>
           <CardHeader title={productData && productData.name}></CardHeader>
         </Link>
         <CardContent
