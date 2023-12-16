@@ -16,8 +16,6 @@ export default function ProductCard({ productData }) {
   const navigate = useNavigate();
 
   const { currentUser } = useContext(AuthContext);
-  // console.log("current user", currentUser.uid);
-  // console.log("product data", productData);
 
   const [hasFavorited, setHasFavorited] = useState(false);
 
@@ -92,12 +90,11 @@ export default function ProductCard({ productData }) {
               />
             ) : (
               <img
-              src={noImage}
-              alt="product image"
-              style={{ width: "100%", height: "100%" }}
-            />
-            )
-            }
+                src={noImage}
+                alt="product image"
+                style={{ width: "100%", height: "100%" }}
+              />
+            )}
           </div>
           <button
             hidden={

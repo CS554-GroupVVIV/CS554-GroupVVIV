@@ -21,6 +21,12 @@ const userList = [
     comments: [],
     rating: 0,
   },
+  {
+    _id: "7SKDog0fjKOeS1jeuq32a9vYPue2",
+    email: "dchen30@stevens.edu",
+    firstname: "Karol",
+    lastname: "Chen",
+  },
 ];
 const productList = [
   {
