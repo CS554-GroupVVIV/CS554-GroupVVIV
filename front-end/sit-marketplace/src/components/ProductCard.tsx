@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-
+import noImage from "../assets/noimage.jpg";
 import { AuthContext } from "../context/AuthContext";
 
 import { socketID, socket } from "./socket";
@@ -81,6 +81,22 @@ export default function ProductCard({ productData }) {
             <li>Condition: {productData && productData.condition}</li>
             <li>Category: {productData && productData.category}</li>
           </ul>
+          <div className="image">
+            {productData && productData.image ? (
+              <img
+                src={productData.image}
+                alt="product image"
+                style={{ width: "100%", height: "100%" }}
+              />
+            ) : (
+              <img
+              src={noImage}
+              alt="product image"
+              style={{ width: "100%", height: "100%" }}
+            />
+            )
+            }
+          </div>
           <button
             hidden={
               !currentUser || productData.seller_id === currentUser.uid

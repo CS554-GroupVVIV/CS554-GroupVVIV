@@ -97,7 +97,7 @@ export default function PostDetail() {
               <Comment data={post} />
             ) : null}
 
-            {post.buyer_id != currentUser.uid ? (
+            {post.status == "active" && post.buyer_id != currentUser.uid ? (
               <button>I want to sell</button>
             ) : null}
           </div>

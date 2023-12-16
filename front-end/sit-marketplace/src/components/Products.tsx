@@ -3,12 +3,11 @@ import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useQuery } from "@apollo/client";
-import { GET_PRODUCTS } from "../queries";
 import { AuthContext } from "../context/AuthContext";
 import ProductCard from "./ProductCard";
 
 import SearchProduct from "./SearchProduct";
-import { GET_PRODUCTS_BY_CATEGORY } from "../queries";
+import { GET_PRODUCTS, GET_PRODUCTS_BY_CATEGORY } from "../queries";
 
 type Product = {
   _id: string;
