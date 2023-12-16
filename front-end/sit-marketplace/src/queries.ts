@@ -440,3 +440,21 @@ export const GET_PRODUCTS_BY_IDS = gql`
     }
   }
 `;
+
+export const GET_PRODUCTS_BY_CATEGORY = gql`
+  query Query($category: String!) {
+    getProductsByCategory(category: $category) {
+      _id
+      buyer_id
+      category
+      condition
+      date
+      description
+      image
+      name
+      price
+      seller_id
+      status
+    }
+  }
+`;

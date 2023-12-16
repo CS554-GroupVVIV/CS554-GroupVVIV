@@ -199,6 +199,25 @@ export const resolvers = {
       }
     },
 
+    getProductsByCategory: async (_, args) => {
+      try {
+        //****************need input check*********************
+        let { category } = args;
+        const productData = await productCollection();
+        const products = await productData
+          .find({ category: category })
+          .toArray();
+        if (!products) {
+          throw new GraphQLError("product not found", {
+            extensions: { code: "NOT_FOUND" },
+          });
+        }
+        return products;
+      } catch (error) {
+        throw new GraphQLError(error.message);
+      }
+    },
+
     getPostById: async (_, args) => {
       try {
         let id = checkId(args._id);
@@ -355,7 +374,7 @@ export const resolvers = {
         let seller_id = checkId(args.seller_id);
         let image = args.image;
         if (image == "" || image == null) {
-          image = checkUrl(image)
+          image = checkUrl(image);
         }
         let category = checkCategory(args.category);
         // ********need input check*************

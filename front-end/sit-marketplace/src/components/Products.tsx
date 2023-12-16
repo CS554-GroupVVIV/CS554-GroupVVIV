@@ -8,6 +8,7 @@ import { GET_PRODUCTS } from "../queries";
 import ProductCard from "./ProductCard";
 
 import SearchProduct from "./SearchProduct";
+import { GET_PRODUCTS_BY_CATEGORY } from "../queries";
 
 type Product = {
   _id: string;

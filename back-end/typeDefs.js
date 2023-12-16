@@ -13,6 +13,7 @@ export const typeDefs = `#graphql
         searchProductsByName(name: String!): [Product],
         getProductById(_id:String!):Product,
         getProductsByIds(ids:[String!]!):[Product],
+        getProductsByCategory(category:String!):[Product],
         getPostById(_id:String!):Post,
         getUserById(_id: String!): User,
         getChatById(_id: String!): Chat,
