@@ -10,6 +10,8 @@ import LogoutButton from "./LogoutButton";
 import { AuthContext } from "../context/AuthContext";
 
 import ChatRoomList from "./ChatRoomList";
+import SearchProduct from "./SearchProduct";
+import SearchPost from "./SearchPost";
 
 import { Grid } from "@mui/material";
 
@@ -25,15 +27,14 @@ export default function Home() {
   const { loading, error, data } = useQuery(GET_PRODUCTS, {
     fetchPolicy: "cache-and-network",
   });
-  console.log(data);
+  // console.log(data);
 
-
+  const [text, setText] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
 
   // console.log(currentUser);
   return (
     <div>
-      <h1>Home</h1>
-
       {currentUser ? (
         <>
           <LogoutButton />
@@ -64,6 +65,29 @@ export default function Home() {
           </button>
         </>
       )}
+
+      <h1>Home</h1>
+
+      <form
+        onSubmit={(event) => {
+          event.preventDefault();
+          setSearchTerm(text);
+          setText("");
+        }}
+      >
+        <label>
+          Search:
+          <input
+            type="text"
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+          />
+        </label>
+        <input type="submit" />
+      </form>
+
+      {searchTerm && <SearchProduct searchTerm={searchTerm} />}
+      {searchTerm && <SearchPost searchTerm={searchTerm} />}
 
       <Grid container direction={"row"} spacing={2} marginTop={1}>
         <Grid item>
@@ -115,7 +139,7 @@ export default function Home() {
                 overflowX: "auto",
                 flexWrap: "nowrap",
                 padding: "16px",
-                maxWidth: "70vw",
+                maxWidth: "60vw",
               }}
             ></Grid>
           </div>

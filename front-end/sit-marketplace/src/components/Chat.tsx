@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useContext } from "react";
+import React, { useContext } from "react";
 
 import { AuthContext } from "../context/AuthContext";
 
@@ -8,26 +8,17 @@ import { GET_USERS_BY_IDS } from "../queries";
 export default function Chat({ chat, participants }) {
   const { currentUser } = useContext(AuthContext);
 
-  const [participantDict, setParticipantDict] = useState({});
-
   const { loading, error, data } = useQuery(GET_USERS_BY_IDS, {
     variables: { ids: participants },
     fetchPolicy: "cache-and-network",
   });
 
-  useEffect(() => {
-    if (!loading && !error) {
-      const users = data.getUsersByIds;
-      users &&
-        users.map((user) => {
-          // console.log(user._id, user.firstname);
-          setParticipantDict((prev) => ({
-            ...prev,
-            [user._id]: user.firstname,
-          }));
-        });
+  let participantDict = {};
+  if (data) {
+    for (const user of data.getUsersByIds) {
+      participantDict[user._id] = user.firstname;
     }
-  }, [loading]);
+  }
 
   if (!loading) {
     return (
@@ -49,7 +40,7 @@ export default function Chat({ chat, participants }) {
                   borderRadius: 50,
                 }}
               >
-                {participantDict[sender]}: {message}
+                {participantDict && participantDict[sender]}: {message}
               </p>
               <p>{new Date(time).toLocaleString()}</p>
             </div>

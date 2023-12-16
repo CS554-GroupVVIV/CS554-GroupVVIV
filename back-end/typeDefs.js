@@ -9,6 +9,7 @@ export const typeDefs = `#graphql
         products: [Product],
         posts: [Post],
         searchProducts(searchTerm: String!): [Product],
+        searchPosts(searchTerm: String!): [Post],
         searchProductsByName(name: String!): [Product],
         getProductById(_id:String!):Product,
         getProductsByIds(ids:[String!]!):[Product],
@@ -69,7 +70,7 @@ export const typeDefs = `#graphql
   }
 
     type Mutation {
-        addProduct(name:String!, price: Number!,date:DateTime!,description:String!,condition:String!,seller_id:String!, image:String!,category:String!):Product,
+        addProduct(name:String!, price: Number!,description:String!,condition:String!,seller_id:String!, image:String!,category:String!):Product,
         editProduct(_id: ObjectID!, name:String, price: Number,date:DateTime,description:String,condition:String,seller_id:ObjectID!,buyer_id:ObjectID, image:String,category:String,status:String ):Product,
         removeProduct(_id:ObjectID!):Product,
         addPost(buyer_id: String!, item:String!, category:String!, price: Number!, condition:String!, description:String!):Post,

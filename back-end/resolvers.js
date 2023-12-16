@@ -75,19 +75,21 @@ export const resolvers = {
     searchProducts: async (_, args) => {
       try {
         const products = await productCollection();
+        products.createIndex({
+          name: "text",
+          // description: "text",
+          // category: "text",
+        });
+
         var productList = await client.json.get(
           `searchProducts-${args.searchTerm}`,
           "$"
         );
         if (!productList) {
-          products.createIndex({
-            name: "text",
-            // description: "text",
-            // category: "text",
-          });
           productList = await products
             .find({ $text: { $search: args.searchTerm } })
             .toArray();
+
           if (!productList) {
             throw new GraphQLError("product not found", {
               extensions: { code: "NOT_FOUND" },
@@ -100,6 +102,31 @@ export const resolvers = {
           );
         }
         return productList;
+      } catch (error) {
+        throw new GraphQLError(error.message);
+      }
+    },
+
+    searchPosts: async (_, args) => {
+      try {
+        let postItem = checkName(args.searchTerm);
+        const posts = await postCollection();
+        var postsByItem = await client.json.get(
+          `searchPostsByItem-${postItem}`,
+          "$"
+        );
+        if (!postsByItem) {
+          postsByItem = await posts
+            .find({ item: { $regex: postItem, $options: "i" } })
+            .toArray();
+          if (!postsByItem) {
+            throw new GraphQLError("post not found", {
+              extensions: { code: "NOT_FOUND" },
+            });
+          }
+          client.json.set(`searchPostsByItem-${postItem}`, "$", postsByItem);
+        }
+        return postsByItem;
       } catch (error) {
         throw new GraphQLError(error.message);
       }
@@ -326,7 +353,10 @@ export const resolvers = {
         let description = checkDescription(args.description);
         let condition = checkCondition(args.condition);
         let seller_id = checkId(args.seller_id);
-        let image = checkUrl(args.image);
+        let image = args.image;
+        if (image == "" || image == null) {
+          image = checkUrl(image)
+        }
         let category = checkCategory(args.category);
         // ********need input check*************
         const products = await productCollection();
@@ -338,7 +368,7 @@ export const resolvers = {
           description: description,
           condition: condition,
           seller_id: seller_id,
-          buyer_id: "",
+          buyer_id: null,
           image: image,
           category: category,
           status: "available",
@@ -347,7 +377,7 @@ export const resolvers = {
         client.json.del(`allProducts`);
         client.json.set(`getProductById-${newProduct._id}`, "$", newProduct);
         if (!insertedProduct) {
-          throw new GraphQLError(`Could not Add Author`, {
+          throw new GraphQLError(`Could not Add Product`, {
             extensions: { code: "INTERNAL_SERVER_ERROR" },
           });
         }

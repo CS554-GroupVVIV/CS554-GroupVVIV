@@ -5,8 +5,9 @@ import { useNavigate } from "react-router-dom";
 import { useQuery } from "@apollo/client";
 import { GET_PRODUCTS } from "../queries";
 
-import ProductForm from "./ProductForm";
 import ProductCard from "./ProductCard";
+
+import SearchProduct from "./SearchProduct";
 
 type Product = {
   _id: string;
@@ -24,17 +25,6 @@ export default function Products() {
 
   const [text, setText] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
-
-  useEffect(() => {
-    console.log("in the products useeffect");
-    console.log(data);
-    console.log(error);
-    if (!loading && !error && data.products) {
-      setProducts(data.products);
-    } else if (error) {
-      console.error(error);
-    }
-  }, [loading]);
 
   return (
     <div>
@@ -64,9 +54,7 @@ export default function Products() {
         <input type="submit" />
       </form>
 
-      {/* {searchTerm && <SearchProduct searchTerm={searchTerm} />} */}
-
-      <ProductForm />
+      {searchTerm && <SearchProduct searchTerm={searchTerm} />}
 
       <h1>Products:</h1>
       <button
@@ -77,7 +65,6 @@ export default function Products() {
         New Product
       </button>
       {data &&
-        data.products &&
         data.products.map((product: Product) => {
           return <ProductCard key={product._id} productData={product} />;
         })}

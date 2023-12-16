@@ -117,7 +117,6 @@ export const ADD_PRODUCT = gql`
     addProduct(
       name: $name
       price: $price
-      date: $date
       description: $description
       condition: $condition
       seller_id: $sellerId
@@ -332,6 +331,15 @@ export const SEARCH_PRODUCTS = gql`
     searchProducts(searchTerm: $searchTerm) {
       _id
       name
+    }
+  }
+`;
+
+export const SEARCH_POSTS = gql`
+  query ($searchTerm: String!) {
+    searchPosts(searchTerm: $searchTerm) {
+      _id
+      item
     }
   }
 `;

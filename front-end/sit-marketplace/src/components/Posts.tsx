@@ -4,6 +4,7 @@ import { useQuery } from "@apollo/client";
 import { GET_POSTS } from "../queries";
 
 import PostCard from "./PostCard";
+import SearchPost from "./SearchPost";
 
 type Post = {
   _id: string;
@@ -21,10 +22,10 @@ export default function Posts() {
   if (loading) {
     return <p>Loading</p>;
   } else if (error) {
-    return <p>Something went wrong</p>;
+    return <p>Something went wrong {error}</p>;
   } else if (data) {
     const posts = data.posts;
-    console.log(posts);
+    // console.log(posts);
     return (
       <div>
         <button
@@ -43,7 +44,7 @@ export default function Posts() {
           }}
         >
           <label>
-            Search Product:
+            Search Post:
             <input
               type="text"
               value={text}
@@ -52,6 +53,8 @@ export default function Posts() {
           </label>
           <input type="submit" />
         </form>
+
+        {searchTerm && <SearchPost searchTerm={searchTerm} />}
 
         <h1>Posts:</h1>
         <button

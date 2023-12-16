@@ -18,30 +18,23 @@ export default function ChatRoom({ room }) {
   });
 
   const [addChat] = useMutation(ADD_CHAT);
-  useEffect(() => {
-    if (!loading) {
-      if (!data) {
-        const perfromAddChat = async (participants) => {
-          await addChat({
-            variables: {
-              participants: participants,
-            },
-            refetchQueries: [
-              {
-                query: GET_CHAT_BY_PARTICIPANTS,
-                variables: { participants: [currentUser.uid, room] },
-              },
-            ],
-          });
-        };
-        try {
-          perfromAddChat([currentUser.uid, room]);
-        } catch (error) {
-          console.error("Error adding chat:", error);
-        }
-      }
+  if (!data) {
+    try {
+      addChat({
+        variables: {
+          participants: [currentUser.uid, room],
+        },
+        refetchQueries: [
+          {
+            query: GET_CHAT_BY_PARTICIPANTS,
+            variables: { participants: [currentUser.uid, room] },
+          },
+        ],
+      });
+    } catch (error) {
+      console.error("Error adding chat:", error);
     }
-  }, [loading, data, room]);
+  }
 
   const [chat, setChat] = useState([]);
   const [addMsg] = useMutation(ADD_MESSAGE);
@@ -73,6 +66,13 @@ export default function ChatRoom({ room }) {
 
   useEffect(() => {
     setChat([]);
+
+    if (room) {
+      socket.emit("join room", {
+        room: room,
+        user: currentUser.uid,
+      });
+    }
   }, [room]);
 
   if (!loading) {
