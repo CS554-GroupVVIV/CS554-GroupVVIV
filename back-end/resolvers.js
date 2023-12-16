@@ -1019,11 +1019,25 @@ export const resolvers = {
         if (!userB) {
           throw "Invalid user";
         }
-        const commentExist = await users.findOne({
-          _id: user_id,
-          "comments.comment_id": comment_id,
-        });
-        //--------projection-------
+
+        // const commentExist = await users.findOne(
+        //   {
+        //     _id: user_id,
+        //     "comments.comment_id": comment_id,
+        //   },
+        //   { "comments.$": 1 }
+        // );
+        const commentExist = await users.findOne(
+          {
+            _id: user_id,
+          },
+          {
+            projection: {
+              comments: { $elemMatch: { comment_id: comment_id } },
+            },
+          }
+        );
+
         if (!commentExist) {
           throw "Comment Does not Exist";
         }
@@ -1032,13 +1046,20 @@ export const resolvers = {
         if (args.comment && args.comment.trim() !== "") {
           commentText = checkNotEmpty(args.comment);
         }
-        // -------no change made ----------
+        const prevComment = commentExist.comments[0];
         const comments = {
           _id: new ObjectId(),
           comment_id: comment_id,
           rating: rating,
           comment: commentText,
         };
+
+        if (
+          prevComment.rating === args.rating &&
+          prevComment.commentText === args.commentText
+        ) {
+          throw "No change made";
+        }
 
         const update = await users.updateOne(
           { _id: user_id, "comments.comment_id": comment_id },
