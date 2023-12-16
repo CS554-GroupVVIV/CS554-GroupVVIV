@@ -10,6 +10,7 @@ import { AuthContext } from "../context/AuthContext";
 
 import moment, { Moment } from "moment";
 import axios from "axios";
+import { Hls } from "@mui/icons-material";
 
 export default function SellForm() {
   const { currentUser } = useContext(AuthContext);
@@ -22,7 +23,7 @@ export default function SellForm() {
   const imageRef = useRef<HTMLInputElement | null>(null);
   const [name, setName] = useState<string>("");
   const [price, setPrice] = useState<number>(0);
-  const [contidion, setCondition] = useState<string>("");
+  const [condition, setCondition] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [nameError, setNameError] = useState<boolean>(false);
   const [priceError, setPriceError] = useState<boolean>(false);
@@ -31,15 +32,16 @@ export default function SellForm() {
   const [category, setCategory] = useState<string>("");
   const [categoryError, setCategoryError] = useState<boolean>(false);
   const [image, setImage] = useState<File | null>(null);
-  const [addProduct] = useMutation(ADD_PRODUCT, {
-    update(cache, { data: { addProduct } }) {
-      const { products } = cache.readQuery({ query: GET_PRODUCTS });
-      cache.writeQuery({
-        query: ADD_PRODUCT,
-        data: { products: [...products, addProduct] },
-      });
-    },
-  });
+  const [addProduct] = useMutation(ADD_PRODUCT);
+  // const [addProduct] = useMutation(ADD_PRODUCT, {
+  //   update(cache, { data: { addProduct } }) {
+  //     const { products } = cache.readQuery({ query: GET_PRODUCTS });
+  //     cache.writeQuery({
+  //       query: ADD_PRODUCT,
+  //       data: { products: [...products, addProduct] },
+  //     });
+  //   },
+  // });
   useEffect(() => {
     if (!currentUser){
        return navigate("/");
@@ -151,7 +153,7 @@ export default function SellForm() {
         setCategoryError(true);
         return;
       }
-      setCategory(category);
+      setCategory(categoryLower);
     },
 
     checkImage(): void {
@@ -161,9 +163,11 @@ export default function SellForm() {
         return;
       }
       if (image.size > 10000000) {
-        return;
+        console.log('image size',image.size);
+        return; 
       }
-      if (image.type.match(/^image\//)){
+      if (!image.type.match(/image.*/)) {
+        console.log('image type',image.type);
         return;
       }
       setImage(image);
@@ -182,6 +186,7 @@ export default function SellForm() {
     helper.checkDescription();
     helper.checkCategory();
 
+
     if (
       nameError ||
       priceError ||
@@ -199,16 +204,18 @@ export default function SellForm() {
       );
       return;
     }
+    helper.checkImage();
     let imageUrl = "";
     if (image instanceof File) {
-      helper.checkImage();
-      imageUrl = await uploadFileToS3(image);
+      console.log("image", image);
+      imageUrl = await uploadFileToS3(image, name);
     }
-    addProduct({
+    console.log("image url", imageUrl);
+    await addProduct({
       variables: {
         name: name,
         price: price,
-        condition: contidion,
+        condition: condition,
         description: description,
         category: category,
         sellerId: currentUser.uid,
@@ -283,7 +290,7 @@ export default function SellForm() {
               <option value="functional">Functional</option>
             </select>
             <label htmlFor="image">Image</label>
-            <input type="file" id="image" name="image" />
+            <input type="file" id="image" name="image" ref={imageRef}/>
             <button type="submit">Submit</button>
           </form>
         </div>
