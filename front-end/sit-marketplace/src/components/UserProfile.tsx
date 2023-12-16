@@ -46,20 +46,21 @@ function UserProfile() {
       setEmail(data.getUserById.email);
       console.log(data.getUserById.favorite || "no favorite");
       if (data.getUserById.favorite && data.getUserById.favorite.length > 0) {
-        client
-          .query({
-            query: GET_PRODUCTS_BY_IDS,
-            variables: { ids: data.getUserById.favorite },
-            fetchPolicy: "cache-and-network" as FetchPolicy,
-          })
-          .then((result) => {
-            console.log("in then");
-            console.log(result.data);
-            setFavorite(result.data.getProductsByIds);
-          })
-          .catch((err) => {
-            console.log(err);
-          });
+        // client
+        //   .query({
+        //     query: GET_PRODUCTS_BY_IDS,
+        //     variables: { ids: data.getUserById.favorite },
+        //     fetchPolicy: "cache-and-network" as FetchPolicy,
+        //   })
+        //   .then((result) => {
+        //     console.log("in then");
+        //     console.log(result.data);
+        //     setFavorite(result.data.getProductsByIds);
+        //   })
+        //   .catch((err) => {
+        //     console.log(err);
+        //   });
+        console.log("in the if");
       }
     }
   }, [loading, error, data]);
