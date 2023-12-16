@@ -7,7 +7,7 @@ import {
 } from "./config/mongoCollections.js";
 import { client } from "./server.js";
 import { ObjectId } from "mongodb";
-import { ObjectID, DateTime, Base64 } from "./typeDefs.js";
+import { ObjectID, DateTime } from "./typeDefs.js";
 import {
   checkId,
   checkName,
@@ -22,12 +22,14 @@ import {
   checkFirstNameAndLastName,
   capitalizeName,
   checkUrl,
+  dateObjectToHTMLDate,
+  HTMLDateToDateObject,
 } from "./helper.js";
 
 export const resolvers = {
   ObjectID: ObjectID,
   DateTime: DateTime,
-  base64: Base64,
+  // base64: Base64,
 
   Query: {
     products: async (_, args) => {
@@ -331,6 +333,7 @@ export const resolvers = {
             extensions: { code: "INTERNAL_SERVER_ERROR" },
           });
         }
+        newProduct.date = dateObjectToHTMLDate(newProduct.date);
         return newProduct;
       } catch (error) {
         throw new GraphQLError(error.message);
@@ -428,6 +431,7 @@ export const resolvers = {
         }
         client.json.del(`allPosts`);
         client.json.set(`getPostById-${newPost._id}`, "$", newPost);
+        newPost.date = dateObjectToHTMLDate(newPost.date);
         return newPost;
       } catch (error) {
         throw new GraphQLError(error.message);
