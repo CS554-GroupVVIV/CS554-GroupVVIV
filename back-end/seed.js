@@ -8,12 +8,18 @@ const userList = [
     email: "lfu7@stevens.edu",
     firstname: "Luoyi",
     lastname: "Fu",
+    favorite: [],
+    comments: [],
+    rating: 0,
   },
   {
     _id: "8C5bGSz1FRVbAQ47EDnDSvmKsqg2",
     email: "cwu34@stevens.edu",
     firstname: "Jason",
     lastname: "Wu",
+    favorite: [],
+    comments: [],
+    rating: 0,
   },
 ];
 const productList = [

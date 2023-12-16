@@ -36,18 +36,27 @@ export const resolvers = {
 
   User: {
     rating: async (parentValue) => {
-      const users = await userCollection();
-      const user = await users.findOne({
-        _id: parentValue._id,
-      });
-      const comments = user.comments;
-      let total = 0;
-      let count = 0;
-      comments.map((comment) => {
-        total += comment.rating;
-        count += 1;
-      });
-      return Number((total / count).toFixed(2));
+      try {
+        const users = await userCollection();
+        const user = await users.findOne({
+          _id: parentValue._id,
+        });
+        if (!user) {
+          throw new GraphQLError("User not found", {
+            extensions: { code: "NOT_FOUND" },
+          });
+        }
+        const comments = user.comments;
+        let total = 0;
+        let count = 0;
+        comments.map((comment) => {
+          total += comment.rating;
+          count += 1;
+        });
+        return Number((total / count).toFixed(2));
+      } catch (error) {
+        throw new GraphQLError(error.message);
+      }
     },
   },
 
@@ -57,10 +66,10 @@ export const resolvers = {
         const products = await productCollection();
         var allProducts = await client.json.get(`allProducts`, "$");
         if (!allProducts) {
-          allProducts = await products.find({}).toArray();          
+          allProducts = await products.find({}).toArray();
           if (!allProducts) {
-            throw new GraphQLError("Internal Server Error", {
-              extensions: { code: "INTERNAL_SERVER_ERROR" },
+            throw new GraphQLError("Product not found", {
+              extensions: { code: "NOT_FOUND" },
             });
           }
           for (let i = 0; i < allProducts.length; i++) {
@@ -81,8 +90,8 @@ export const resolvers = {
         if (!allPosts) {
           allPosts = await posts.find({}).toArray();
           if (!allPosts) {
-            throw new GraphQLError("Internal Server Error", {
-              extensions: { code: "INTERNAL_SERVER_ERROR" },
+            throw new GraphQLError("Post not found", {
+              extensions: { code: "NOT_FOUND" },
             });
           }
           for (let i = 0; i < allPosts.length; i++) {
@@ -198,7 +207,7 @@ export const resolvers = {
     getProductById: async (_, args) => {
       try {
         let id = checkId(args._id);
-        var product = await client.json.get(`getProductById-${id}`, "$");
+        let product = await client.json.get(`getProductById-${id}`, "$");
         if (!product) {
           const products = await productCollection();
           product = await products.findOne({ _id: new ObjectId(id) });
@@ -479,29 +488,12 @@ export const resolvers = {
         if (!userB) {
           throw "Invalid user";
         }
-        console.log(user_id, comment_id);
         const commentExist = await users
-          .find(
-            {
-              _id: user_id,
-              "comments.comment_id": comment_id,
-            }
-            // {
-            //   projection: {
-            //     comments: {
-            //       $elemMatch: {
-            //         "comment.user_id": comment_id,
-            //       },
-            //     },
-            //     firstname: 1,
-            //     lastname: 1,
-            //     email: 1,
-            //     comments: 1,
-            //   },
-            // }
-          )
+          .find({
+            _id: user_id,
+            "comments.comment_id": comment_id,
+          })
           .toArray();
-        console.log("commentExist", commentExist[0]);
         return commentExist[0];
       } catch (error) {
         throw new GraphQLError(error.message);
@@ -546,16 +538,16 @@ export const resolvers = {
           buyer_id: null,
           image: image,
           category: category,
-          status: "available",
+          status: "active",
         };
         let insertedProduct = await products.insertOne(newProduct);
-        client.json.del(`allProducts`);
-        client.json.set(`getProductById-${newProduct._id}`, "$", newProduct);
         if (!insertedProduct) {
           throw new GraphQLError(`Could not Add Product`, {
             extensions: { code: "INTERNAL_SERVER_ERROR" },
           });
         }
+        client.json.del(`allProducts`);
+        client.json.set(`getProductById-${newProduct._id}`, "$", newProduct);
         newProduct.date = dateObjectToHTMLDate(newProduct.date);
         return newProduct;
       } catch (error) {
@@ -586,7 +578,7 @@ export const resolvers = {
           buyer_id: "",
           image: image,
           category: category,
-          status: "available",
+          status: "active",
         };
         let updated = await products.findOneAndUpdate(
           { _id: args._id },
@@ -683,7 +675,7 @@ export const resolvers = {
           condition: condition,
           date: date,
           description: description,
-          status: "available",
+          status: "active",
         };
         let updated = await posts.findOneAndUpdate(
           { _id: args._id },
@@ -861,10 +853,7 @@ export const resolvers = {
     retrievePost: async (_, args) => {
       try {
         const id = checkId(args._id);
-        const user_id = args.user_id;
-        if (!user_id) {
-          throw "Invalid User";
-        }
+        const user_id = checkNotEmpty(args.user_id);
         const posts = await postCollection();
         let post = await posts.findOne({ _id: id.toString() });
         if (!post) {
@@ -897,10 +886,7 @@ export const resolvers = {
     repostPost: async (_, args) => {
       try {
         const id = checkId(args._id);
-        const user_id = args.user_id;
-        if (!user_id) {
-          throw "Invalid User";
-        }
+        const user_id = checkNotEmpty(args.user_id);
         const posts = await postCollection();
         let post = await posts.findOne({ _id: id.toString() });
         if (!post) {
@@ -937,7 +923,7 @@ export const resolvers = {
         let userToUpdate = await usersData.findOne({ _id: _id.toString() });
         if (!userToUpdate) {
           throw new GraphQLError(`USER NOT FOUND`, {
-            extensions: { code: "INTERNAL_SERVER_ERROR" },
+            extensions: { code: "NOT_FOUND" },
           });
         }
         //check if the productId already exists
@@ -967,6 +953,7 @@ export const resolvers = {
         throw new GraphQLError(error.message);
       }
     },
+
     addComment: async (_, args) => {
       try {
         const users = await userCollection();
@@ -1052,6 +1039,7 @@ export const resolvers = {
         throw new GraphQLError(error.message);
       }
     },
+
     editComment: async (_, args) => {
       try {
         const users = await userCollection();
