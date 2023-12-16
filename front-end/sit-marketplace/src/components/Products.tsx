@@ -22,7 +22,7 @@ export default function Products() {
     fetchPolicy: "cache-and-network",
   });
 
-  console.log(data);
+  console.log("product data", data);
 
   const [text, setText] = useState("");
   const [searchTerm, setSearchTerm] = useState("");

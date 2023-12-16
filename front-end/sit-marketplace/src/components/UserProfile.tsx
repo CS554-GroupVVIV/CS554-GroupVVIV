@@ -52,14 +52,13 @@ function UserProfile() {
             fetchPolicy: "cache-and-network" as FetchPolicy,
           })
           .then((result) => {
+            console.log("in then");
             console.log(result.data);
             setFavorite(result.data.getProductsByIds);
           })
           .catch((err) => {
             console.log(err);
           });
-
-        setFavorite(data.getUserById.favorite || []);
       }
     }
   }, [loading, error, data]);
