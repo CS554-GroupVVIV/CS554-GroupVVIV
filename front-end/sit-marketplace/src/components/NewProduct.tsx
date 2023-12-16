@@ -181,7 +181,6 @@ export default function SellForm() {
     helper.checkCondition();
     helper.checkDescription();
     helper.checkCategory();
-    helper.checkImage();
 
     if (
       nameError ||
@@ -202,15 +201,17 @@ export default function SellForm() {
     }
     let imageUrl = "";
     if (image instanceof File) {
+      helper.checkImage();
       imageUrl = await uploadFileToS3(image);
     }
     addProduct({
       variables: {
-        title: name,
+        name: name,
         price: price,
         condition: contidion,
         description: description,
         category: category,
+        sellerId: currentUser.uid,
         image: imageUrl,
       },
     });

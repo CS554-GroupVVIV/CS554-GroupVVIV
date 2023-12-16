@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-
+import noImage from "../assets/noimage.jpg";
 import { AuthContext } from "../context/AuthContext";
 
 import { socketID, socket } from "./socket";
@@ -16,8 +16,6 @@ export default function ProductCard({ productData }) {
   const navigate = useNavigate();
 
   const { currentUser } = useContext(AuthContext);
-  console.log("current user", currentUser ? currentUser.uid:"");
-  console.log("product data", productData);
 
   const [hasFavorited, setHasFavorited] = useState(false);
 
@@ -83,6 +81,21 @@ export default function ProductCard({ productData }) {
             <li>Condition: {productData && productData.condition}</li>
             <li>Category: {productData && productData.category}</li>
           </ul>
+          <div className="image">
+            {productData && productData.image ? (
+              <img
+                src={productData.image}
+                alt="product image"
+                style={{ width: "100%", height: "100%" }}
+              />
+            ) : (
+              <img
+                src={noImage}
+                alt="product image"
+                style={{ width: "100%", height: "100%" }}
+              />
+            )}
+          </div>
           <button
             hidden={
               !currentUser || productData.seller_id === currentUser.uid
@@ -107,7 +120,7 @@ export default function ProductCard({ productData }) {
           >
             Chat with seller
           </button>
-          
+
           <button
             hidden={
               !currentUser || productData.seller_id === currentUser.uid

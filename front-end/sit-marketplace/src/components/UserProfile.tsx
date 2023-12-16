@@ -34,6 +34,7 @@ function UserProfile() {
 
   useEffect(() => {
     if (!loading && !error && data && data.getUserById) {
+      console.log("in the if");
       setUserInfo(data.getUserById);
       setFirstname(data.getUserById.firstname);
       setLastname(data.getUserById.lastname);

@@ -18,36 +18,43 @@ export default function ChatRoom({ room }) {
   });
 
   const [addChat] = useMutation(ADD_CHAT);
-  if (!data) {
-    try {
-      addChat({
-        variables: {
-          participants: [currentUser.uid, room],
-        },
-        refetchQueries: [
-          {
-            query: GET_CHAT_BY_PARTICIPANTS,
-            variables: { participants: [currentUser.uid, room] },
-          },
-        ],
-      });
-    } catch (error) {
-      console.error("Error adding chat:", error);
+
+  useEffect(() => {
+    if (!loading) {
+      if (!data) {
+        try {
+          addChat({
+            variables: {
+              participants: [currentUser.uid, room],
+            },
+            refetchQueries: [
+              {
+                query: GET_CHAT_BY_PARTICIPANTS,
+                variables: { participants: [currentUser.uid, room] },
+              },
+            ],
+          });
+        } catch (error) {
+          console.error("Error adding chat:", error);
+        }
+      }
     }
-  }
+  }, [loading]);
 
   const [chat, setChat] = useState([]);
   const [addMsg] = useMutation(ADD_MESSAGE);
   const handleAddMsg = async (msgData) => {
     try {
+      console.log("adding...", msgData);
       await addMsg({
         variables: {
-          chatId: data.getChatByParticipants._id,
+          chatId: msgData.chatId,
           sender: msgData.sender,
           message: msgData.message,
           time: msgData.time,
         },
       });
+      console.log("added");
     } catch (error) {
       console.error("Error adding user:", error);
     }
@@ -100,6 +107,7 @@ export default function ChatRoom({ room }) {
               sender: currentUser.uid,
               time: new Date().toISOString(),
               message: msgEle.value,
+              chatId: data.getChatByParticipants._id,
             };
 
             socket.emit("message", {

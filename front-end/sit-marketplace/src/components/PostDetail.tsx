@@ -56,9 +56,7 @@ export default function PostDetail() {
   } else if (error) {
     return <h1>Error loading post</h1>;
   } else {
-    console.log(data);
     const post = data.getPostById;
-    console.log(currentUser, post.buyer_id);
     return (
       <div className="card w-96 bg-base-100 shadow-xl border-indigo-500/100">
         <div className="card-body">
@@ -68,7 +66,7 @@ export default function PostDetail() {
           <p>Seller Id: {post.seller_id}</p>
           <p>Category: {post.category}</p>
           <p>Price: {post.price}</p>
-          {/* <p>Transaction Date: {post.date.split("T")[0]}</p> */}
+          <p>Transaction Date: {post.date.split("T")[0]}</p>
           <p>Status: {post.status}</p>
           <div className="card-actions justify-end">
             {post.buyer_id == currentUser.uid && post.status == "active" ? (
@@ -80,7 +78,6 @@ export default function PostDetail() {
                 Retrieve Post
               </button>
             ) : null}
-
             {post.buyer_id == currentUser.uid && post.status == "inactive" ? (
               <button
                 onClick={() => {
@@ -90,15 +87,13 @@ export default function PostDetail() {
                 Repost
               </button>
             ) : null}
-
             {post.status == "completed" &&
             (post.buyer_id == currentUser.uid ||
               post.seller_id == currentUser.uid) ? (
               <Comment data={post} />
             ) : null}
-
-            {post.buyer_id != currentUser.uid ? (
-              <button>I want to sell</button>
+            {post.status == "active" && post.buyer_id != currentUser.uid ? (
+              <button>Chat with buyer</button>
             ) : null}
           </div>
         </div>

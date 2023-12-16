@@ -3,12 +3,11 @@ import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useQuery } from "@apollo/client";
-import { GET_PRODUCTS } from "../queries";
 import { AuthContext } from "../context/AuthContext";
 import ProductCard from "./ProductCard";
 
 import SearchProduct from "./SearchProduct";
-import { GET_PRODUCTS_BY_CATEGORY } from "../queries";
+import { GET_PRODUCTS, GET_PRODUCTS_BY_CATEGORY } from "../queries";
 
 type Product = {
   _id: string;
@@ -23,7 +22,7 @@ export default function Products() {
     fetchPolicy: "cache-and-network",
   });
 
-  console.log(data);
+  console.log("product data", data);
 
   const [text, setText] = useState("");
   const [searchTerm, setSearchTerm] = useState("");

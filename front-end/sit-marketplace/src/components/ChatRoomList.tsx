@@ -12,9 +12,9 @@ export default function ChatRoomList({ uid }) {
       setRooms(data);
     });
 
-    socket.on("join room", (data) => {
-      setCurRoom(data.room);
-    });
+    // socket.on("join room", (data) => {
+    //   if (curRoom !== data.room) setCurRoom(data.room);
+    // });
 
     for (const key in rooms) {
       if (rooms[key] !== null) {
@@ -22,6 +22,15 @@ export default function ChatRoomList({ uid }) {
       }
     }
   }, [socket]);
+
+  useEffect(() => {
+    if (curRoom) {
+      socket.emit("join room", {
+        room: curRoom,
+        user: uid,
+      });
+    }
+  }, [curRoom]);
 
   return (
     <div>
@@ -42,7 +51,6 @@ export default function ChatRoomList({ uid }) {
                 </button>
                 <button
                   onClick={() => {
-                    setCurRoom(undefined);
                     if (curRoom !== room) {
                       socket.emit("join room", {
                         room: room,
@@ -50,6 +58,7 @@ export default function ChatRoomList({ uid }) {
                       });
                     }
                     socket.emit("leave");
+                    setCurRoom(undefined);
                   }}
                 >
                   Close
