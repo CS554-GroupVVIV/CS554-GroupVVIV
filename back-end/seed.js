@@ -15,6 +15,12 @@ const userList = [
     firstname: "Jason",
     lastname: "Wu",
   },
+  {
+    _id: "7SKDog0fjKOeS1jeuq32a9vYPue2",
+    email: "dchen30@stevens.edu",
+    firstname: "Karol",
+    lastname: "Chen",
+  },
 ];
 const productList = [
   {

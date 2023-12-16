@@ -36,7 +36,7 @@ function UserProfile() {
 
   useEffect(() => {
     console.log("in the effect");
-    console.log(data);
+    console.log("data", data);
 
     if (!loading && !error && data && data.getUserById) {
       setUserInfo(data.getUserById);
@@ -44,7 +44,7 @@ function UserProfile() {
       setLastname(data.getUserById.lastname);
       setEmail(data.getUserById.email);
       setFavorite(data.getUserById.favorite || []);
-
+      console.log(data.getUserById.favorite);
       client
         .query({
           query: GET_PRODUCTS_BY_IDS,
