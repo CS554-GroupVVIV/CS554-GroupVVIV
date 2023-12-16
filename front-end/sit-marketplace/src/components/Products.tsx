@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 
 import { useNavigate } from "react-router-dom";
 
 import { useQuery } from "@apollo/client";
 import { GET_PRODUCTS } from "../queries";
-
+import { AuthContext } from "../context/AuthContext";
 import ProductCard from "./ProductCard";
 
 import SearchProduct from "./SearchProduct";
@@ -17,6 +17,7 @@ type Product = {
 
 export default function Products() {
   const navigate = useNavigate();
+  const { currentUser } = useContext(AuthContext);
 
   const { loading, error, data } = useQuery(GET_PRODUCTS, {
     fetchPolicy: "cache-and-network",
@@ -58,13 +59,18 @@ export default function Products() {
       {searchTerm && <SearchProduct searchTerm={searchTerm} />}
 
       <h1>Products:</h1>
-      <button
-        onClick={() => {
-          navigate("/newproduct");
-        }}
-      >
-        New Product
-      </button>
+      {currentUser ? (
+        <button
+          onClick={() => {
+            navigate("/newproduct");
+          }}
+        >
+          New Product
+        </button>
+      ) : (
+        <></>
+      )}
+
       {data &&
         data.products.map((product: Product) => {
           return <ProductCard key={product._id} productData={product} />;

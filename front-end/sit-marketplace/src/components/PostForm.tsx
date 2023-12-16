@@ -62,6 +62,12 @@ export default function PostForm() {
     },
   });
 
+  useEffect(() => {
+    if (!currentUser) {
+      return navigate("/");
+    }
+  }, [currentUser]);
+
   const helper = {
     checkName(): void {
       setNameError(false);

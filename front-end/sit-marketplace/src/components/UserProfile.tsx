@@ -8,6 +8,7 @@ import {
   updateUserProfile,
 } from "../firebase/FirebaseFunction";
 import TransactionPost from "./TransactionPost.tsx";
+import TransactionProduct from "./TransactionProduct.tsx";
 import * as validation from "../helper.tsx";
 import { useApolloClient } from "@apollo/client";
 import { FetchPolicy } from "@apollo/client";
@@ -15,6 +16,7 @@ import { Link } from "react-router-dom";
 
 function UserProfile() {
   let { currentUser } = useContext(AuthContext);
+  console.log(currentUser);
   const client = useApolloClient();
   const { loading, error, data } = useQuery(GET_USER, {
     variables: { id: currentUser ? currentUser.uid : "" },
@@ -29,6 +31,7 @@ function UserProfile() {
   const baseUrl = "http://localhost:5173/product/";
 
   const [togglePost, setTogglePost] = useState<boolean>(false);
+  const [toogleProduct, setToggleProduct] = useState<boolean>(false);
   const [editUser] = useMutation(EDIT_USER);
 
   useEffect(() => {
@@ -195,6 +198,14 @@ function UserProfile() {
       </button>
 
       {togglePost ? <TransactionPost /> : null}
+      <button
+        onClick={() => {
+          setToggleProduct(!toogleProduct);
+        }}
+      >
+        Transaction from Product
+      </button>
+      {toogleProduct ? <TransactionProduct /> : null}
 
       <div className="favorite-products-list">
         My Favorite Products

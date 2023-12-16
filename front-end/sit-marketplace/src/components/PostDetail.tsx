@@ -8,6 +8,7 @@ import {
 } from "../queries";
 import { ObjectId } from "mongodb";
 import { AuthContext } from "../context/AuthContext.jsx";
+import Comment from "./Comment.js";
 import { useNavigate, useParams } from "react-router-dom";
 
 export default function PostDetail() {
@@ -53,8 +54,9 @@ export default function PostDetail() {
   if (loading) {
     return <h1>Loading...</h1>;
   } else if (error) {
-    return <h1>Error loading product</h1>;
+    return <h1>Error loading post</h1>;
   } else {
+    console.log(data);
     const post = data.getPostById;
     console.log(currentUser, post.buyer_id);
     return (
@@ -66,7 +68,7 @@ export default function PostDetail() {
           <p>Seller Id: {post.seller_id}</p>
           <p>Category: {post.category}</p>
           <p>Price: {post.price}</p>
-          <p>Transaction Date: {post.date.split("T")[0]}</p>
+          {/* <p>Transaction Date: {post.date.split("T")[0]}</p> */}
           <p>Status: {post.status}</p>
           <div className="card-actions justify-end">
             {post.buyer_id == currentUser.uid && post.status == "active" ? (
@@ -89,24 +91,14 @@ export default function PostDetail() {
               </button>
             ) : null}
 
-            {post.buyer_id == currentUser.uid && post.status == "complete" ? (
-              <button
-                onClick={() => {
-                  retrieve(post);
-                }}
-              >
-                Comment
-              </button>
+            {post.status == "completed" &&
+            (post.buyer_id == currentUser.uid ||
+              post.seller_id == currentUser.uid) ? (
+              <Comment data={post} />
             ) : null}
 
             {post.buyer_id != currentUser.uid ? (
-              <button
-                onClick={() => {
-                  repost(post);
-                }}
-              >
-                I want to sell
-              </button>
+              <button>I want to sell</button>
             ) : null}
           </div>
         </div>
