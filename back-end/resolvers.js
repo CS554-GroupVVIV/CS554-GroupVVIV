@@ -230,7 +230,7 @@ export const resolvers = {
 
     getChatById: async (_, args) => {
       try {
-        console.log(args);
+        // console.log(args);
         let id = checkUserAndChatId(args._id.toString());
         const chatData = await chatCollection();
         const chat = await chatData.findOne({ _id: id });
@@ -624,18 +624,27 @@ export const resolvers = {
       try {
         let { participants } = args;
         const chatData = await chatCollection();
-        const newChat = {
-          _id: new ObjectId(),
-          participants,
-          messages: [],
-        };
-        let insertedChat = await chatData.insertOne(newChat);
-        if (!insertedChat) {
-          throw new GraphQLError(`Could not Add chat`, {
-            extensions: { code: "INTERNAL_SERVER_ERROR" },
-          });
+
+        const chat = await chatData.findOne({
+          participants: { $all: participants },
+        });
+        console.log(chat);
+
+        if (!chat) {
+          const newChat = {
+            _id: new ObjectId(),
+            participants,
+            messages: [],
+          };
+          let insertedChat = await chatData.insertOne(newChat);
+          if (!insertedChat) {
+            throw new GraphQLError(`Could not Add chat`, {
+              extensions: { code: "INTERNAL_SERVER_ERROR" },
+            });
+          }
+          return newChat;
         }
-        return newChat;
+        return chat;
       } catch (error) {
         throw new GraphQLError(error.message);
       }
@@ -645,26 +654,30 @@ export const resolvers = {
       try {
         let { _id, sender, time, message } = args;
         const chatData = await chatCollection();
-        const newMessage = {
-          sender,
-          time,
-          message,
-        };
+        const chat = await chatData.findOne({ _id: _id });
 
-        let insertedMessage = await chatData.findOneAndUpdate(
-          { _id: new ObjectId(_id) },
-          {
-            $push: {
-              messages: newMessage,
-            },
+        if (chat) {
+          const newMessage = {
+            sender,
+            time,
+            message,
+          };
+
+          let insertedMessage = await chatData.findOneAndUpdate(
+            { _id: new ObjectId(_id) },
+            {
+              $push: {
+                messages: newMessage,
+              },
+            }
+          );
+          if (!insertedMessage) {
+            throw new GraphQLError(`Could not Add Message`, {
+              extensions: { code: "INTERNAL_SERVER_ERROR" },
+            });
           }
-        );
-        if (!insertedMessage) {
-          throw new GraphQLError(`Could not Add Message`, {
-            extensions: { code: "INTERNAL_SERVER_ERROR" },
-          });
+          return newMessage;
         }
-        return newMessage;
       } catch (error) {
         throw new GraphQLError(error.message);
       }

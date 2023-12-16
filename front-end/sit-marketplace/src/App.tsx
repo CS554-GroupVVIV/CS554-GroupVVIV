@@ -5,7 +5,6 @@ import Products from "./components/Products.tsx";
 import Posts from "./components/Posts.tsx";
 import Login from "./components/Login.tsx";
 import SignUp from "./components/Signup.tsx";
-import ChatRooms from "./components/ChatRoomList.tsx";
 import { AuthProvider, AuthContext } from "./context/AuthContext.jsx";
 import PostForm from "./components/PostForm.tsx";
 import ProductDetail from "./components/ProductDetail.tsx";
@@ -27,28 +26,26 @@ function App() {
   });
   return (
     <AuthProvider>
-      <header>
-
-      </header>
+      <header></header>
       <nav className="App-nav">
-          <ul>
-            <li>
-              <Link className="singlelink" to="/">
-                Home
-              </Link>
-            </li>
-            <li>
-              <Link className="singlelink" to="/products">
-                All the Products
-              </Link>
-            </li>
-            <li>
-              <Link className="singlelink" to="/posts">
-                All the Posts
-              </Link>
-            </li>
-          </ul>
-        </nav>
+        <ul>
+          <li>
+            <Link className="singlelink" to="/">
+              Home
+            </Link>
+          </li>
+          <li>
+            <Link className="singlelink" to="/products">
+              All the Products
+            </Link>
+          </li>
+          <li>
+            <Link className="singlelink" to="/posts">
+              All the Posts
+            </Link>
+          </li>
+        </ul>
+      </nav>
       <div className="App">
         <Routes>
           <Route path="/" element={<Home />} />
