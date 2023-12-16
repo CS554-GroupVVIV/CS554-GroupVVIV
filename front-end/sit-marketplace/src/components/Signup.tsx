@@ -1,20 +1,37 @@
 import React, { useContext, useState } from "react";
-import { Navigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { doCreateUserWithEmailAndPassword } from "../firebase/FirebaseFunction";
 import { AuthContext } from "../context/AuthContext";
 import { useMutation } from "@apollo/client";
 import { ADD_USER } from "../queries";
 import * as validation from "../helper.tsx";
+import {
+  Avatar,
+  Button,
+  CssBaseline,
+  TextField,
+  FormControlLabel,
+  Checkbox,
+  Link,
+  Paper,
+  Grid,
+  Box,
+  Typography,
+  Alert,
+} from "@mui/material";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 function SignUp() {
   let { currentUser } = useContext(AuthContext);
+  const navigate = useNavigate();
   const [addUser] = useMutation(ADD_USER);
-
+  const defaultTheme = createTheme();
   const [pwMatch, setPwMatch] = useState("");
 
   const handleSignUp = async (e) => {
     e.preventDefault();
-    let { displayFirstName, displayLastName, email, passwordOne, passwordTwo } =
+    let { firstname, lastname, email, passwordOne, passwordTwo } =
       e.target.elements;
     if (passwordOne.value !== passwordTwo.value) {
       setPwMatch("Passwords do not match");
@@ -22,12 +39,12 @@ function SignUp() {
     }
 
     try {
-      displayFirstName = validation.checkFirstNameAndLastName(
-        displayFirstName.value,
+      firstname = validation.checkFirstNameAndLastName(
+        firstname.value,
         "First Name"
       );
-      displayLastName = validation.checkFirstNameAndLastName(
-        displayLastName.value,
+      lastname = validation.checkFirstNameAndLastName(
+        lastname.value,
         "Last Name"
       );
       email = validation.checkEmail(email.value);
@@ -41,15 +58,15 @@ function SignUp() {
       let user = await doCreateUserWithEmailAndPassword(
         email,
         passwordOne.value,
-        displayFirstName
+        firstname
       );
 
       addUser({
         variables: {
           id: user.uid.toString(),
           email: user.email,
-          lastname: displayLastName,
-          firstname: displayFirstName,
+          lastname: lastname,
+          firstname: firstname,
         },
       });
     } catch (error) {
@@ -62,91 +79,143 @@ function SignUp() {
   }
 
   return (
-    <div className="card">
-      <h1>Sign up</h1>
-      <form onSubmit={handleSignUp}>
-        <div className="form-group">
-          <label>
-            First Name:
-            <br />
-            <input
-              className="form-control"
-              required
-              name="displayFirstName"
-              type="text"
-              placeholder="First Name"
-              autoFocus={true}
-            />
-          </label>
-        </div>
-        <div className="form-group">
-          <label>
-            Last Name:
-            <br />
-            <input
-              className="form-control"
-              required
-              name="displayLastName"
-              type="text"
-              placeholder="Last Name"
-              autoFocus={true}
-            />
-          </label>
-        </div>
-        <div className="form-group">
-          <label>
-            Email:
-            <br />
-            <input
-              className="form-control"
-              required
-              name="email"
-              type="email"
-              placeholder="Email"
-            />
-          </label>
-        </div>
-        <div className="form-group">
-          <label>
-            Password:
-            <br />
-            <input
-              className="form-control"
-              id="passwordOne"
-              name="passwordOne"
-              type="password"
-              placeholder="Password"
-              autoComplete="off"
-              required
-            />
-          </label>
-        </div>
-        <div className="form-group">
-          <label>
-            Confirm Password:
-            <br />
-            <input
-              className="form-control"
-              name="passwordTwo"
-              type="password"
-              placeholder="Confirm Password"
-              autoComplete="off"
-              required
-            />
-          </label>
-        </div>
-        {pwMatch && <h4 className="error">{pwMatch}</h4>}
-        <button
-          className="button"
-          id="submitButton"
-          name="submitButton"
-          type="submit"
-        >
-          Sign Up
-        </button>
-      </form>
-      <br />
-    </div>
+    <>
+      <ThemeProvider theme={defaultTheme}>
+        <Grid container component="main" sx={{ height: "100vh" }}>
+          <CssBaseline />
+          <Grid
+            item
+            xs={false}
+            sm={4}
+            md={7}
+            sx={{
+              backgroundImage: "url(https://shorturl.at/jqtJM)",
+              backgroundRepeat: "no-repeat",
+              backgroundColor: (t) =>
+                t.palette.mode === "light"
+                  ? t.palette.grey[50]
+                  : t.palette.grey[900],
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+            }}
+          />
+          <Grid
+            item
+            xs={12}
+            sm={8}
+            md={5}
+            component={Paper}
+            elevation={6}
+            square
+          >
+            <Box
+              sx={{
+                my: 8,
+                mx: 4,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+              }}
+            >
+              <Avatar sx={{ m: 1, bgcolor: "white" }}>
+                <LockOutlinedIcon style={{ color: "blue" }} />
+              </Avatar>
+              <Typography component="h1" variant="h5">
+                Sign Up
+              </Typography>
+              <Box
+                component="form"
+                noValidate
+                onSubmit={handleSignUp}
+                sx={{ mt: 1 }}
+              >
+                <TextField
+                  margin="normal"
+                  required
+                  fullWidth
+                  id="firstname"
+                  label="First Name"
+                  name="firstname"
+                  autoComplete="firstname"
+                  autoFocus
+                />
+                <TextField
+                  margin="normal"
+                  required
+                  fullWidth
+                  id="lastname"
+                  label="Last Name"
+                  name="lastname"
+                  autoComplete="lastname"
+                />
+                <TextField
+                  margin="normal"
+                  required
+                  fullWidth
+                  id="email"
+                  label="Email Address"
+                  name="email"
+                  autoComplete="email"
+                />
+                <TextField
+                  margin="normal"
+                  required
+                  fullWidth
+                  name="passwordOne"
+                  label="Password"
+                  type="password"
+                  id="passwordOne"
+                  autoComplete="password"
+                />
+                <TextField
+                  margin="normal"
+                  required
+                  fullWidth
+                  name="passwordTwo"
+                  label="Confirm Password"
+                  type="password"
+                  id="passwordTwo"
+                  autoComplete="current-password"
+                />
+                {pwMatch && <Alert severity="error">{pwMatch}</Alert>}
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  sx={{ mt: 3, mb: 2 }}
+                >
+                  Sign Up
+                </Button>
+                <Grid container>
+                  <Grid item xs>
+                    <Link
+                      href="#"
+                      variant="body2"
+                      onClick={() => {
+                        navigate("/resetpassword");
+                      }}
+                    >
+                      Forgot password?
+                    </Link>
+                  </Grid>
+                  <Grid item>
+                    <Link
+                      href="#"
+                      variant="body2"
+                      onClick={() => {
+                        navigate("/login");
+                      }}
+                    >
+                      {"Have an account? Sign In"}
+                    </Link>
+                  </Grid>
+                </Grid>
+              </Box>
+            </Box>
+          </Grid>
+        </Grid>
+      </ThemeProvider>
+    </>
   );
 }
 

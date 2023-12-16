@@ -7,7 +7,7 @@ import Login from "./components/Login.tsx";
 import SignUp from "./components/Signup.tsx";
 import SearchProduct from "./components/SearchProduct.tsx";
 import ChatRooms from "./components/ChatRoomList.tsx";
-import { AuthProvider, AuthContext } from "./context/AuthContext.jsx";
+import { AuthProvider } from "./context/AuthContext.jsx";
 import PostForm from "./components/PostForm.tsx";
 import ProductDetail from "./components/ProductDetail.tsx";
 import PostDetail from "./components/PostDetail.tsx";
@@ -19,6 +19,10 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 function App() {
   const [user, setUser] = useState(null);
+  const handleToggle = () => {
+    dispatch(toggleTheme());
+  };
+
   onAuthStateChanged(getAuth(), (user) => {
     if (user) {
       const uid = user.uid;
@@ -27,6 +31,7 @@ function App() {
       setUser(null);
     }
   });
+
   return (
     <AuthProvider>
       <header></header>

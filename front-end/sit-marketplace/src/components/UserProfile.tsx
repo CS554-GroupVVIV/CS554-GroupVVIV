@@ -12,14 +12,30 @@ import TransactionProduct from "./TransactionProduct.tsx";
 import * as validation from "../helper.tsx";
 import { useApolloClient } from "@apollo/client";
 import { FetchPolicy } from "@apollo/client";
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
+import {
+  Avatar,
+  Button,
+  CssBaseline,
+  TextField,
+  FormControlLabel,
+  Checkbox,
+  Link,
+  Grid,
+  Box,
+  Typography,
+  Container,
+} from "@mui/material";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 function UserProfile() {
   let { currentUser } = useContext(AuthContext);
   const client = useApolloClient();
   const { loading, error, data } = useQuery(GET_USER, {
-    variables: { id: currentUser.uid }
+    variables: { id: currentUser ? currentUser.uid : "" },
   });
+  console.log(data);
   const [userInfo, setUserInfo] = useState(null);
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
@@ -87,7 +103,6 @@ function UserProfile() {
       );
       email = validation.checkEmail(email.value);
       password = password.value;
-      // email = email.value; (cancel to use stevens' email address)
 
       editUser({
         variables: {
@@ -113,6 +128,74 @@ function UserProfile() {
   if (error) return "Error";
 
   return (
+    //   <ThemeProvider theme={defaultTheme}>
+    //   <Container component="main" maxWidth="xs">
+    //     <CssBaseline />
+    //     <Box
+    //       sx={{
+    //         marginTop: 8,
+    //         display: 'flex',
+    //         flexDirection: 'column',
+    //         alignItems: 'center',
+    //       }}
+    //     >
+    //       <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+    //         <LockOutlinedIcon />
+    //       </Avatar>
+    //       <Typography component="h1" variant="h5">
+    //         Sign in
+    //       </Typography>
+    //       <Box component="form" onSubmit={handleEdit} noValidate sx={{ mt: 1 }}>
+    //         <TextField
+    //           margin="normal"
+    //           required
+    //           fullWidth
+    //           id="email"
+    //           label="Email Address"
+    //           name="email"
+    //           autoComplete="email"
+    //           autoFocus
+    //         />
+    //         <TextField
+    //           margin="normal"
+    //           required
+    //           fullWidth
+    //           name="password"
+    //           label="Password"
+    //           type="password"
+    //           id="password"
+    //           autoComplete="current-password"
+    //         />
+    //         <FormControlLabel
+    //           control={<Checkbox value="remember" color="primary" />}
+    //           label="Remember me"
+    //         />
+    //         <Button
+    //           type="submit"
+    //           fullWidth
+    //           variant="contained"
+    //           sx={{ mt: 3, mb: 2 }}
+    //         >
+    //           Sign In
+    //         </Button>
+    //         <Grid container>
+    //           <Grid item xs>
+    //             <Link href="#" variant="body2">
+    //               Forgot password?
+    //             </Link>
+    //           </Grid>
+    //           <Grid item>
+    //             <Link href="#" variant="body2">
+    //               {"Don't have an account? Sign Up"}
+    //             </Link>
+    //           </Grid>
+    //         </Grid>
+    //       </Box>
+    //     </Box>
+    //     {/* <Copyright sx={{ mt: 8, mb: 4 }} /> */}
+    //   </Container>
+    // </ThemeProvider>
+
     <div className="card">
       <h1>User Profile</h1>
       <form onSubmit={handleEdit}>
@@ -126,7 +209,7 @@ function UserProfile() {
               name="displayFirstName"
               type="text"
               placeholder="First Name"
-              value={firstname}
+              value={data ? data.getUserById.firstname : ""}
               onChange={(e) => setFirstname(e.target.value)}
             />
           </label>
@@ -141,7 +224,7 @@ function UserProfile() {
               name="displayLastName"
               type="text"
               placeholder="Last Name"
-              value={lastname}
+              value={data ? data.getUserById.lastname : ""}
               onChange={(e) => setLastname(e.target.value)}
             />
           </label>
@@ -156,7 +239,7 @@ function UserProfile() {
               name="email"
               type="email"
               placeholder="Email"
-              value={email}
+              value={data ? data.getUserById.email : ""}
               onChange={(e) => setEmail(e.target.value)}
             />
           </label>
@@ -171,7 +254,7 @@ function UserProfile() {
               name="password"
               type="password"
               placeholder="Password"
-              value={password}
+              // value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
           </label>

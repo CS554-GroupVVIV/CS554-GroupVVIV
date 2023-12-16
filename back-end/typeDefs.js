@@ -67,7 +67,6 @@ export const typeDefs = `#graphql
     email: String!,
     firstname: String,
     lastname: String,
-    favorite:[String]
     comments:[Comment]
     rating: Number!
     favorite:[String]
@@ -86,7 +85,7 @@ export const typeDefs = `#graphql
   }
 
     type Mutation {
-        addProduct(name:String!, price: Number!,description:String!,condition:String!,seller_id:String!, image:String,category:String!):Product,
+        addProduct(name:String!, price: Number!,description:String!,condition:String!,seller_id:String!, image:String!,category:String!):Product,
         editProduct(_id: String!, name:String, price: Number,date:DateTime,description:String,condition:String,seller_id:ObjectID!,buyer_id:ObjectID, image:String,category:String,status:String ):Product,
         removeProduct(_id:String!):Product,
         addPost(buyer_id: String!, item:String!, category:String!, price: Number!, condition:String!, description:String!):Post,
