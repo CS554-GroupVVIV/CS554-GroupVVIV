@@ -16,16 +16,18 @@ export const typeDefs = `#graphql
         getUserById(_id: String!): User,
         getChatById(_id: String!): Chat,
         getChatByParticipants(participants: [String!]!): Chat,
-        getUsersByIds(ids: [String!]!): [User]
-        getPostBySeller(_id:String!):[Post]
-        getPostByBuyer(_id:String!):[Post]
+        getUsersByIds(ids: [String!]!): [User],
+        getPostBySeller(_id: String!):[Post],
+        getPostByBuyer(_id: String!):[Post],
+        getProductBySeller(_id: String!):[Product],
+        getProductByBuyer(_id: String!):[Product]
     }
     
     type Product {
         _id: String!,
         name: String!,
         price: Number!,
-        date:DateTime!,
+        date: String!,
         description:String,
         condition:String,
         seller_id:String,
@@ -43,7 +45,7 @@ export const typeDefs = `#graphql
       category:String!,
       price: Number!,
       condition:String,
-      date:DateTime!,
+      date: String!,
       description:String,
       status:String!
   }
@@ -70,7 +72,7 @@ export const typeDefs = `#graphql
 
     type Mutation {
         addProduct(name:String!, price: Number!,description:String!,condition:String!,seller_id:String!, image:String!,category:String!):Product,
-        editProduct(_id: ObjectID!, name:String, price: Number,date:DateTime,description:String,condition:String,seller_id:ObjectID!,buyer_id:ObjectID, image:String,category:String,status:String ):Product,
+        editProduct(_id: ObjectID!, name:String, price: Number,date:String,description:String,condition:String,seller_id:ObjectID!,buyer_id:ObjectID, image:String,category:String,status:String ):Product,
         removeProduct(_id:ObjectID!):Product,
         addPost(buyer_id: String!, item:String!, category:String!, price: Number!, condition:String!, description:String!):Post,
         editPost(_id: ObjectID!, buyer_id: String!, item:String!, category:String!, price: Number!, condition:String!, description:String!, status:String!):Post,
