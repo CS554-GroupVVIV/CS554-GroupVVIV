@@ -8,7 +8,7 @@ AWS.config.update({
 
 const s3 = new AWS.S3();
 
-export const uploadFileToS3 = async (file) => {
+export const uploadFileToS3 = async (file: File) => {
     const params = {
         Bucket: process.env.VITE_AWS_S3_BUCKET_NAME,
         Key: file.name,

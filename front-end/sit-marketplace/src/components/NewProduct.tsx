@@ -2,6 +2,8 @@ import { useState, useRef, useEffect } from "react";
 import React from "react";
 // import { useRouter } from "next/navigation";
 import { useMutation, useQuery } from "@apollo/client";
+import { ADD_PRODUCT, GET_PRODUCTS } from "../queries";
+import { uploadFileToS3 } from "../aws.tsx";
 
 import moment, { Moment } from "moment";
 import axios from "axios";
@@ -24,6 +26,15 @@ export default function SellForm() {
   const [category, setCategory] = useState<string>("");
   const [categoryError, setCategoryError] = useState<boolean>(false);
   const [image, setImage] = useState<File | null>(null);
+  const [addProduct] = useMutation(ADD_PRODUCT, {
+    update(cache, { data: { addProduct } }) {
+      const { products } = cache.readQuery({ query: GET_PRODUCTS });
+      cache.writeQuery({
+        query: ADD_PRODUCT,
+        data: { products: [...products, addProduct] },
+      });
+    },
+  });
 
   const helper = {
     checkName(): void {
@@ -119,7 +130,7 @@ export default function SellForm() {
         return;
       }
       category = category.trim();
-      let categoryLower: string = category.toLowerCase();
+      const categoryLower = category.toLowerCase();
       if (
         categoryLower != "electronics" &&
         categoryLower != "clothing" &&
@@ -134,16 +145,19 @@ export default function SellForm() {
     },
 
     checkImage(): void {
-        setImage(null);
-        let image: File | undefined = imageRef.current?.files?.[0];
-        if (!image) {
-            return;
-        }
-        if (image.size > 10000000) {
-            return;
-        }
-        setImage(image);
-        }
+      setImage(null);
+      const image: File | undefined = imageRef.current?.files?.[0];
+      if (!image) {
+        return;
+      }
+      if (image.size > 10000000) {
+        return;
+      }
+      if (image.type.match(/^image\//)){
+        return;
+      }
+      setImage(image);
+    },
   };
 
   // const router = useRouter();
@@ -166,20 +180,30 @@ export default function SellForm() {
       descriptionError ||
       categoryError
     ) {
-      console.log("error", nameError, priceError, conditionError, descriptionError, categoryError);
+      console.log(
+        "error",
+        nameError,
+        priceError,
+        conditionError,
+        descriptionError,
+        categoryError
+      );
       return;
     }
-
-    const formData = new FormData();
-    formData.append("title", name);
-    formData.append("price", price.toString());
-    formData.append("condition", contidion);
-    formData.append("description", description);
-    formData.append("category", category);
-    if(image) {
-        formData.append("image", image);
+    let imageUrl = "";
+    if (image instanceof File) {
+      imageUrl = await uploadFileToS3(image);
     }
-
+    addProduct({
+      variables: {
+        title: name,
+        price: price,
+        condition: contidion,
+        description: description,
+        category: category,
+        image: imageUrl,
+      },
+    });
   };
 
   return (
