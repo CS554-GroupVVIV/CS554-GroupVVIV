@@ -162,7 +162,7 @@ export const GET_COMMENT = gql`
 export const ADD_PRODUCT = gql`
   mutation (
     $name: String!
-    $price: Number!
+    $price: Float!
     $description: String!
     $condition: String!
     $sellerId: String!
@@ -192,7 +192,7 @@ export const EDIT_PRODUCT = gql`
   mutation (
     $id: String!
     $name: String!
-    $price: Number!
+    $price: Float!
     $date: String!
     $description: String!
     $condition: String!
@@ -239,7 +239,7 @@ export const ADD_POST = gql`
     $buyer_id: String!
     $item: String!
     $category: String!
-    $price: Number!
+    $price: Float!
     $condition: String!
     $description: String!
   ) {
@@ -271,7 +271,7 @@ export const EDIT_POST = gql`
     $buyer_id: String!
     $item: String!
     $category: String!
-    $price: Number!
+    $price: Float!
     $condition: String!
     $description: String!
   ) {

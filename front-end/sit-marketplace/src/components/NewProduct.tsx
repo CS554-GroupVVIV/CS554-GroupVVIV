@@ -8,9 +8,21 @@ import { ADD_PRODUCT, GET_PRODUCTS } from "../queries";
 import { uploadFileToS3 } from "../aws.tsx";
 import { AuthContext } from "../context/AuthContext";
 
-import moment, { Moment } from "moment";
-import axios from "axios";
-import { Hls } from "@mui/icons-material";
+import Button from "@mui/material/Button";
+import CssBaseline from "@mui/material/CssBaseline";
+import TextField from "@mui/material/TextField";
+import Grid from "@mui/material/Grid";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import Container from "@mui/material/Container";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
+import InputLabel from "@mui/material/InputLabel";
+import FormControl from "@mui/material/FormControl";
+import Stack from "@mui/material/Stack";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import { styled } from "@mui/material/styles";
 
 export default function SellForm() {
   const { currentUser } = useContext(AuthContext);
@@ -32,6 +44,10 @@ export default function SellForm() {
   const [category, setCategory] = useState<string>("");
   const [categoryError, setCategoryError] = useState<boolean>(false);
   const [image, setImage] = useState<File | null>(null);
+  const [imageError, setImageError] = useState<boolean>(false);
+
+  const defaultTheme = createTheme();
+
   const [addProduct] = useMutation(ADD_PRODUCT, {
     onError: (e) => {
       alert(e);
@@ -156,7 +172,7 @@ export default function SellForm() {
         categoryLower != "electronics" &&
         categoryLower != "clothing" &&
         categoryLower != "furniture" &&
-        categoryLower != "books" &&
+        categoryLower != "book" &&
         categoryLower != "stationery" &&
         categoryLower != "other"
       ) {
@@ -166,62 +182,76 @@ export default function SellForm() {
       setCategory(categoryLower);
     },
 
-    checkImage(): void {
-      setImage(null);
-      
-      setImage(image);
-      
-    },
-  };
-
-  // const router = useRouter();
-  const uploadImage = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const image: File | undefined = e.target.files?.[0];
-      if (!image) {
+    checkImage(e: React.ChangeEvent<HTMLInputElement>): void {
+      setImageError(false);
+      const image: File | undefined = e.target.files?.[0];
+      if (!image || !(image instanceof File)) {
+        setImageError(true);
         return;
       }
       if (image.size > 10000000) {
+        setImageError(true);
         console.log("image size", image.size);
         return;
       }
       if (!image.type.match(/image.*/)) {
+        setImageError(true);
         console.log("image type", image.type);
         return;
       }
-    setImage(image);
+      setImage(image);
+    },
   };
+
+  // const router = useRouter();
+  // const uploadImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const image: File | undefined = e.target.files?.[0];
+  //   if (!image) {
+  //     return;
+  //   }
+  //   if (image.size > 10000000) {
+  //     console.log("image size", image.size);
+  //     return;
+  //   }
+  //   if (!image.type.match(/image.*/)) {
+  //     console.log("image type", image.type);
+  //     return;
+  //   }
+  //   setImage(image);
+  // };
 
   const submit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("submit");
     helper.checkName();
     helper.checkPrice();
     helper.checkCondition();
     helper.checkDescription();
     helper.checkCategory();
-
+    if (image == null) {
+      setImageError(true);
+      return;
+    }
     if (
       nameError ||
       priceError ||
       conditionError ||
       descriptionError ||
-      categoryError
+      categoryError ||
+      imageError
     ) {
-      console.log(
-        "error",
-        nameError,
-        priceError,
-        conditionError,
-        descriptionError,
-        categoryError
-      );
+      // console.log(
+      //   "error",
+      //   nameError,
+      //   priceError,
+      //   conditionError,
+      //   descriptionError,
+      //   categoryError
+      // );
       return;
     }
-    let imageUrl = "";
-    if (image instanceof File) {
-      imageUrl = await uploadFileToS3(image, name);
-    }
-    
+
+    let imageUrl = await uploadFileToS3(image, name);
+
     await addProduct({
       variables: {
         name: name,
@@ -235,106 +265,316 @@ export default function SellForm() {
     });
   };
 
+  // return (
+  //   <div>
+  //     <h2>Upload Item</h2>
+  //     <div className="main">
+  //       <div className="description">
+  //         <p>
+  //           Please fill out the form below to upload an item to the marketplace.
+  //           Please ensure that all fields are filled out correctly.
+  //         </p>
+  //       </div>
+  //       <div className="form">
+  //         <form onSubmit={submit} encType="multipart/form-data">
+  //           <label htmlFor="title">Title</label>
+  //           <input
+  //             type="text"
+  //             id="title"
+  //             name="title"
+  //             ref={nameRef}
+  //             onBlur={helper.checkName}
+  //           />
+  //           <label htmlFor="category">Category</label>
+  //           <select
+  //             name="category"
+  //             id="category"
+  //             ref={categoryRef}
+  //             onBlur={helper.checkCategory}
+  //             defaultValue={""}
+  //           >
+  //             <option disabled></option>
+  //             <option>Book</option>
+  //             <option>Clothing</option>
+  //             <option>Electronics</option>
+  //             <option>Furniture</option>
+  //             <option>Stationary</option>
+  //             <option>Other</option>
+  //           </select>
+  //           <label htmlFor="description">Description</label>
+  //           <textarea
+  //             id="description"
+  //             name="description"
+  //             rows={3}
+  //             maxLength={100}
+  //             ref={descriptionRef}
+  //             onBlur={helper.checkDescription}
+  //             defaultValue={""}
+  //           />
+  //           <label htmlFor="image">Image</label>
+  //           <input
+  //             type="file"
+  //             id="image"
+  //             name="image"
+  //             ref={imageRef}
+  //             onBlur={helper.checkImage}
+  //           />
+  //           <label htmlFor="price">Price</label>
+  //           <input
+  //             type="number"
+  //             step="0.01"
+  //             id="price"
+  //             name="price"
+  //             ref={priceRef}
+  //             onBlur={helper.checkPrice}
+  //           />
+  //           <label htmlFor="category">Category</label>
+  //           <select
+  //             name="category"
+  //             id="category"
+  //             ref={categoryRef}
+  //             onBlur={helper.checkCategory}
+  //             defaultValue={""}
+  //           >
+  //             <option disabled></option>
+  //             <option value="electronics">Electronics</option>
+  //             <option value="clothing">Clothing</option>
+  //             <option value="furniture">Furniture</option>
+  //             <option value="books">Books</option>
+  //             <option value="stationery">Stationery</option>
+  //             <option value="other">Other</option>
+  //           </select>
+  //           <label htmlFor="condition">Condition</label>
+  //           <select
+  //             name="condition"
+  //             id="condition"
+  //             ref={conditionRef}
+  //             onBlur={helper.checkCondition}
+  //             defaultValue={""}
+  //           >
+  //             <option disabled></option>
+  //             <option value="brand new">Brand New</option>
+  //             <option value="like new">Like New</option>
+  //             <option value="gently used">Gently Used</option>
+  //             <option value="functional">Functional</option>
+  //           </select>
+  //           <label htmlFor="image">Image</label>
+  //           <input type="file" id="image" name="image" ref={imageRef} onChange={uploadImage}/>
+  //           <button type="submit">Submit</button>
+  //         </form>
+  //       </div>
+  //     </div>
+  //   </div>
+  // );
+
+  const VisuallyHiddenInput = styled("input")({
+    clip: "rect(0 0 0 0)",
+    clipPath: "inset(50%)",
+    height: 1,
+    overflow: "hidden",
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    whiteSpace: "nowrap",
+    width: 1,
+  });
+
   return (
-    <div>
-      <h2>Upload Item</h2>
-      <div className="main">
-        <div className="description">
-          <p>
+    <ThemeProvider theme={defaultTheme}>
+      <Container component="main" maxWidth="sm">
+        <CssBaseline />
+        <Box
+          sx={{
+            marginTop: 8,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          <Typography component="h1" variant="h5">
+            New Product
+          </Typography>
+          <Typography component="span" variant="body1">
             Please fill out the form below to upload an item to the marketplace.
             Please ensure that all fields are filled out correctly.
-          </p>
-        </div>
-        <div className="form">
-          <form onSubmit={submit} encType="multipart/form-data">
-            <label htmlFor="title">Title</label>
-            <input
-              type="text"
-              id="title"
-              name="title"
-              ref={nameRef}
-              onBlur={helper.checkName}
-            />
-            <label htmlFor="category">Category</label>
-            <select
-              name="category"
-              id="category"
-              ref={categoryRef}
-              onBlur={helper.checkCategory}
-              defaultValue={""}
-            >
-              <option disabled></option>
-              <option>Book</option>
-              <option>Clothing</option>
-              <option>Electronics</option>
-              <option>Furniture</option>
-              <option>Stationary</option>
-              <option>Other</option>
-            </select>
-            <label htmlFor="description">Description</label>
-            <textarea
-              id="description"
-              name="description"
-              rows={3}
-              maxLength={100}
-              ref={descriptionRef}
-              onBlur={helper.checkDescription}
-              defaultValue={""}
-            />
-            <label htmlFor="image">Image</label>
-            <input
-              type="file"
-              id="image"
-              name="image"
-              ref={imageRef}
-              onBlur={helper.checkImage}
-            />
-            <label htmlFor="price">Price</label>
-            <input
-              type="number"
-              step="0.01"
-              id="price"
-              name="price"
-              ref={priceRef}
-              onBlur={helper.checkPrice}
-            />
-            <label htmlFor="category">Category</label>
-            <select
-              name="category"
-              id="category"
-              ref={categoryRef}
-              onBlur={helper.checkCategory}
-              defaultValue={""}
-            >
-              <option disabled></option>
-              <option value="electronics">Electronics</option>
-              <option value="clothing">Clothing</option>
-              <option value="furniture">Furniture</option>
-              <option value="books">Books</option>
-              <option value="stationery">Stationery</option>
-              <option value="other">Other</option>
-            </select>
-            <label htmlFor="condition">Condition</label>
-            <select
-              name="condition"
-              id="condition"
-              ref={conditionRef}
-              onBlur={helper.checkCondition}
-              defaultValue={""}
-            >
-              <option disabled></option>
-              <option value="brand new">Brand New</option>
-              <option value="like new">Like New</option>
-              <option value="gently used">Gently Used</option>
-              <option value="functional">Functional</option>
+          </Typography>
 
-            </select>
-            <label htmlFor="image">Image</label>
-            <input type="file" id="image" name="image" ref={imageRef} onChange={uploadImage}/>
-            <button type="submit">Submit</button>
-          </form>
-        </div>
-      </div>
-    </div>
+          <Box component="form" noValidate onSubmit={submit} sx={{ mt: 3 }}>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <TextField
+                  name="title"
+                  required
+                  fullWidth
+                  id="title"
+                  label="Item Name"
+                  inputRef={nameRef}
+                  onBlur={helper.checkName}
+                />
+                {nameError && (
+                  <Typography
+                    component="span"
+                    variant="body2"
+                    style={{ color: "red" }}
+                  >
+                    * Item name should be within range 1-20 characters and only
+                    contain letters, numbers and spaces
+                  </Typography>
+                )}
+              </Grid>
+              <Grid item xs={12}>
+                <div>
+                  <FormControl sx={{ minWidth: 200 }} required>
+                    <InputLabel id="demo-simple-select-helper-label">
+                      Category
+                    </InputLabel>
+                    <Select
+                      inputRef={categoryRef}
+                      defaultValue={""}
+                      label="Category"
+                      onBlur={helper.checkCategory}
+                    >
+                      <MenuItem value={"Book"}>Book</MenuItem>
+                      <MenuItem value={"Clothing"}>Clothing</MenuItem>
+                      <MenuItem value={"Electronics"}>Electronics</MenuItem>
+                      <MenuItem value={"Furniture"}>Furniture</MenuItem>
+                      <MenuItem value={"Stationary"}>Stationary</MenuItem>
+                      <MenuItem value={"Other"}>Other</MenuItem>
+                    </Select>
+                  </FormControl>
+                </div>
+                {categoryError && (
+                  <Typography
+                    component="span"
+                    variant="body2"
+                    style={{ color: "red" }}
+                  >
+                    * Please select from provided categories
+                  </Typography>
+                )}
+              </Grid>
+              <Grid item xs={12}>
+                <div>
+                  {/* <label htmlFor="image">
+                    <Button
+                      component="label"
+                      variant="contained"
+                      startIcon={<CloudUploadIcon />}
+                    >
+                      Upload Image *
+                    </Button>
+                  </label> */}
+                  <input
+                    name="image"
+                    id="image"
+                    type="file"
+                    // inputRef={imageRef}
+                    onChange={(e) => {
+                      helper.checkImage(e);
+                    }}
+                    // style={{ opacity: 0, zIndex: -1 }}
+                  />
+                </div>
+                {imageError && (
+                  <Typography
+                    component="span"
+                    variant="body2"
+                    style={{ color: "red" }}
+                  >
+                    * Please upload an image with size &lt; 10MB and the correct
+                    file type.
+                  </Typography>
+                )}
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  id="price"
+                  label="Price"
+                  name="price"
+                  type="number"
+                  inputRef={priceRef}
+                  onBlur={helper.checkPrice}
+                />
+                {priceError && (
+                  <Typography
+                    component="span"
+                    variant="body2"
+                    style={{ color: "red" }}
+                  >
+                    * Price should be in range from 0 to 100000 and have at most
+                    2 demical places.
+                  </Typography>
+                )}
+              </Grid>
+              <Grid item xs={12}>
+                <div>
+                  <FormControl sx={{ minWidth: 200 }} required>
+                    <InputLabel id="demo-simple-select-helper-label">
+                      Condition
+                    </InputLabel>
+                    <Select
+                      inputRef={conditionRef}
+                      defaultValue={""}
+                      label="Condition"
+                      onBlur={helper.checkCondition}
+                    >
+                      <MenuItem value={"Brand New"}>Brand New</MenuItem>
+                      <MenuItem value={"Like New"}>Like New</MenuItem>
+                      <MenuItem value={"Gently Used"}>Gently Used</MenuItem>
+                      <MenuItem value={"Functional"}>Functional</MenuItem>
+                    </Select>
+                  </FormControl>
+                </div>
+                {conditionError && (
+                  <Typography
+                    component="span"
+                    variant="body2"
+                    style={{ color: "red" }}
+                  >
+                    * Please select from provided options
+                  </Typography>
+                )}
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  id="about"
+                  label="Descriptional Preference (100 letters max)"
+                  name="about"
+                  defaultValue={""}
+                  inputRef={descriptionRef}
+                  onBlur={helper.checkDescription}
+                />
+                {descriptionError && (
+                  <Typography
+                    component="span"
+                    variant="body2"
+                    style={{ color: "red" }}
+                  >
+                    * Description should have 100 letters at most
+                  </Typography>
+                )}
+              </Grid>
+            </Grid>
+            <br />
+            <Stack spacing={2} direction="row">
+              <Button
+                type="button"
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+                onClick={() => navigate("/posts")}
+              >
+                Cancel
+              </Button>
+              <Button type="submit" variant="contained" sx={{ mt: 3, mb: 2 }}>
+                Save
+              </Button>
+            </Stack>
+          </Box>
+        </Box>
+      </Container>
+    </ThemeProvider>
   );
 }
