@@ -947,12 +947,12 @@ export const resolvers = {
           { $set: { favorite: favorite } },
           { new: true }
         );
-
         if (!updatedUser) {
           throw new GraphQLError(`Could not Edit User`, {
             extensions: { code: "INTERNAL_SERVER_ERROR" },
           });
         }
+        client.set(`getUserById-${_id}`, "$", updatedUser);
         return updatedUser.favorite;
       } catch (error) {
         throw new GraphQLError(error.message);
@@ -1038,7 +1038,7 @@ export const resolvers = {
             extensions: { code: "INTERNAL_SERVER_ERROR" },
           });
         }
-
+        client.set(`getUserById-${_id}`, "$", updatedUser);
         return updatedUser.favorite;
       } catch (error) {
         throw new GraphQLError(error.message);
