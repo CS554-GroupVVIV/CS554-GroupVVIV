@@ -57,10 +57,12 @@ export default function PostDetail() {
     return <h1>Error loading post</h1>;
   } else {
     const post = data.getPostById;
+    console.log(post);
     return (
       <div className="card w-96 bg-base-100 shadow-xl border-indigo-500/100">
         <div className="card-body">
           <p className="card-title">Detail of Post</p>
+
           <p>Item: {post.item}</p>
           <p>Buyer Id: {post.buyer_id}</p>
           <p>Seller Id: {post.seller_id}</p>
