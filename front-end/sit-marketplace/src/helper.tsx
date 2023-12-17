@@ -44,11 +44,20 @@ export const checkRating = (rating: number) => {
 
 export const dateObjectToHTMLDate = (date: Date) => {
   const year = date.getFullYear();
-  const month = (date.getMonth() + 1).toString().padStart(2, '0');
-  const day = date.getDate().toString().padStart(2, '0');
+  const month = (date.getMonth() + 1).toString().padStart(2, "0");
+  const day = date.getDate().toString().padStart(2, "0");
   return `${year}-${month}-${day}`;
-}
+};
 
 export const HTMLDateToDateObject = (date: string) => {
   return new Date(date);
-}
+};
+
+export const checkPassword = (password) => {
+  password = password.toString().trim();
+  if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@.#$!%*?&^])[A-Za-z\d@.#$!%*?&]{6,}$/.test(password))
+    throw new Error(
+      "At least one uppercase letter, one lowercase, one special symbol, one number and more than 6 characters"
+    );
+  return password;
+};

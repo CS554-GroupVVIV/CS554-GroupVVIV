@@ -61,6 +61,7 @@ export default function PostDetail() {
       <div className="card w-96 bg-base-100 shadow-xl border-indigo-500/100">
         <div className="card-body">
           <p className="card-title">Detail of Post</p>
+
           <p>Item: {post.item}</p>
           <p>Buyer Id: {post.buyer_id}</p>
           {post.status == "completed" &&

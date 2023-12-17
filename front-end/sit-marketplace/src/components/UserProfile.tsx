@@ -38,7 +38,6 @@ function UserProfile() {
     variables: { id: currentUser ? currentUser.uid : "" },
     fetchPolicy: "cache-and-network",
   });
-  console.log(data);
   const [userInfo, setUserInfo] = useState(null);
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");

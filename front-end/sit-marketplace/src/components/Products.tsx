@@ -17,6 +17,7 @@ type Product = {
 
 export default function Products() {
   const navigate = useNavigate();
+  const [curCategory, setCurCategory] = useState("All");
   const { currentUser } = useContext(AuthContext);
   const category_list = [
     "All",
@@ -38,12 +39,10 @@ export default function Products() {
       : { fetchPolicy: "cache-and-network" }
   );
 
+  console.log("product data", data);
+
   const [text, setText] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
-
-  // function handleBook() {
-  //   console.log("handle book");
-  // }
 
   if (data) {
     // console.log(data);

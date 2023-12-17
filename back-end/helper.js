@@ -161,10 +161,9 @@ const checkEmail = (email) => {
 
 const checkFirstNameAndLastName = (str, valStr) => {
   if (str === undefined) throw new Error(`${valStr} must provide a string`);
-  console.log(str);
   if (typeof str !== "string") throw new Error(`${valStr} must be a string`);
-  if (str.trim().length == 0)
-    throw new Error(`${valStr} should not be just space`);
+  str = str.trim();
+  if (str.length === 0) throw new Error(`${valStr} should not be just space`);
   if (str.length < 1)
     throw new Error(`${valStr} should have at least 1 character.`);
   let pattern = new RegExp(/^(?=.{1,50}$)[a-z]+(?:['_.\s][a-z]+)*$/i);
