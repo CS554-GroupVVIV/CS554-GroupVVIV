@@ -148,6 +148,7 @@ export default function SellForm() {
         categoryLower != "clothing" &&
         categoryLower != "furniture" &&
         categoryLower != "books" &&
+        categoryLower != "stationery" &&
         categoryLower != "other"
       ) {
         setCategoryError(true);
@@ -158,7 +159,15 @@ export default function SellForm() {
 
     checkImage(): void {
       setImage(null);
-      const image: File | undefined = imageRef.current?.files?.[0];
+      
+      setImage(image);
+      
+    },
+  };
+
+  // const router = useRouter();
+  const uploadImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const image: File | undefined = e.target.files?.[0];
       if (!image) {
         return;
       }
@@ -170,22 +179,17 @@ export default function SellForm() {
         console.log('image type',image.type);
         return;
       }
-      setImage(image);
-    },
+    setImage(image);
   };
-
-  // const router = useRouter();
 
   const submit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log("submit");
-
     helper.checkName();
     helper.checkPrice();
     helper.checkCondition();
     helper.checkDescription();
     helper.checkCategory();
-
 
     if (
       nameError ||
@@ -204,13 +208,11 @@ export default function SellForm() {
       );
       return;
     }
-    helper.checkImage();
     let imageUrl = "";
     if (image instanceof File) {
-      console.log("image", image);
       imageUrl = await uploadFileToS3(image, name);
     }
-    console.log("image url", imageUrl);
+    
     await addProduct({
       variables: {
         name: name,
@@ -257,6 +259,7 @@ export default function SellForm() {
             <label htmlFor="price">Price</label>
             <input
               type="number"
+              step="0.01"
               id="price"
               name="price"
               ref={priceRef}
@@ -270,10 +273,12 @@ export default function SellForm() {
               onBlur={helper.checkCategory}
               defaultValue={""}
             >
+              <option disabled></option>
               <option value="electronics">Electronics</option>
               <option value="clothing">Clothing</option>
               <option value="furniture">Furniture</option>
               <option value="books">Books</option>
+              <option value="stationery">Stationery</option>
               <option value="other">Other</option>
             </select>
             <label htmlFor="condition">Condition</label>
@@ -284,13 +289,15 @@ export default function SellForm() {
               onBlur={helper.checkCondition}
               defaultValue={""}
             >
+              <option disabled></option>
               <option value="brand new">Brand New</option>
               <option value="like new">Like New</option>
               <option value="gently used">Gently Used</option>
               <option value="functional">Functional</option>
+
             </select>
             <label htmlFor="image">Image</label>
-            <input type="file" id="image" name="image" ref={imageRef}/>
+            <input type="file" id="image" name="image" ref={imageRef} onChange={uploadImage}/>
             <button type="submit">Submit</button>
           </form>
         </div>
