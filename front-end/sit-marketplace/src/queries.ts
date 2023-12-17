@@ -24,6 +24,7 @@ export const GET_POSTS = gql`
       seller_id
       item
       category
+      date
       price
       condition
       description
@@ -436,6 +437,7 @@ export const SEARCH_POST_BY_ID = gql`
       item
       category
       price
+      date
       condition
       description
       status

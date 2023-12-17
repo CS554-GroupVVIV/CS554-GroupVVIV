@@ -32,7 +32,7 @@ export default function FavoriteProduct({ favId }) {
       <Link onClick={() => navigate(baseUrl + favId)}>
         {productData.getProductById.name}
       </Link>
-      <p>{productData.getProductById.price}</p>
+      {/* <p>{productData.getProductById.price}</p> */}
     </div>
   );
 }

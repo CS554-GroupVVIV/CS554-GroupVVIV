@@ -319,7 +319,7 @@ export const resolvers = {
       try {
         let id = checkUserAndChatId(args._id.toString());
         const usersData = await userCollection();
-        let user = await client.json.get(`getUserById-${id}`, "$");
+        var user = await client.json.get(`getUserById-${id}`, "$");
         if (!user) {
           user = await usersData.findOne({ _id: id });
           if (!user) {
@@ -647,7 +647,7 @@ export const resolvers = {
         if (Object.keys(args).length !== 6) {
           throw new Error("all fields are required");
         }
-        let buyer_id = checkId(args.buyer_id);
+        let buyer_id = checkNotEmpty(args.buyer_id);
         let item = checkItem(args.item);
         let category = checkCategory(args.category);
         let price = checkPrice(args.price);
@@ -655,9 +655,9 @@ export const resolvers = {
         let description = checkDescription(args.description);
         const posts = await postCollection();
         const newPost = {
-          _id: new ObjectId().toString(),
+          _id: new ObjectId(),
           buyer_id: buyer_id,
-          seller_id: "",
+          seller_id: null,
           item: item,
           category: category,
           price: price,
@@ -741,7 +741,7 @@ export const resolvers = {
     },
     addUser: async (_, args) => {
       try {
-        let { _id, email, firstname, lastname, favorite } = args;
+        let { _id, email, firstname, lastname } = args;
         // check ID not implement yet
         email = checkEmail(email);
         firstname = capitalizeName(
@@ -757,10 +757,8 @@ export const resolvers = {
           email,
           firstname,
           lastname,
-          favorite: favorite ? [favorite] : [],
         };
         const insertedUser = await usersData.insertOne(newUser);
-
         if (!insertedUser) {
           throw new GraphQLError(`Could not Add User`, {
             extensions: { code: "INTERNAL_SERVER_ERROR" },
@@ -883,7 +881,7 @@ export const resolvers = {
         const id = checkId(args._id);
         const user_id = checkNotEmpty(args.user_id);
         const posts = await postCollection();
-        let post = await posts.findOne({ _id: id.toString() });
+        let post = await posts.findOne({ _id: new ObjectId(id) });
         if (!post) {
           throw new GraphQLError("post not found", {
             extensions: { code: "NOT_FOUND" },
@@ -896,14 +894,14 @@ export const resolvers = {
           throw "Cannot retrieve post";
         }
         const retrieve = await posts.updateOne(
-          { _id: id.toString() },
+          { _id: new ObjectId(id) },
           { $set: { status: "inactive" } }
         );
 
         if (retrieve.acknowledged != true) {
           throw "Fail to retrieve post";
         }
-        post = await posts.findOne({ _id: id.toString() });
+        post = await posts.findOne({ _id: new ObjectId(id) });
         post.date = dateObjectToHTMLDate(post.date);
         return post;
       } catch (error) {
@@ -916,7 +914,7 @@ export const resolvers = {
         const id = checkId(args._id);
         const user_id = checkNotEmpty(args.user_id);
         const posts = await postCollection();
-        let post = await posts.findOne({ _id: id.toString() });
+        let post = await posts.findOne({ _id: new ObjectId(id) });
         if (!post) {
           throw new GraphQLError("post not found", {
             extensions: { code: "NOT_FOUND" },
@@ -929,13 +927,13 @@ export const resolvers = {
           throw "Cannot repost post";
         }
         const repost = await posts.updateOne(
-          { _id: id.toString() },
+          { _id: new ObjectId(id) },
           { $set: { status: "active", date: new Date() } }
         );
         if (repost.acknowledged != true) {
           throw "Fail to repost";
         }
-        post = await posts.findOne({ _id: id.toString() });
+        post = await posts.findOne({ _id: new ObjectId(id) });
         post.date = dateObjectToHTMLDate(post.date);
         return post;
       } catch (error) {
@@ -962,14 +960,14 @@ export const resolvers = {
           });
         }
 
-    //         //add new product into favorite array and update
-    //         favorite.push(productId);
-    //         userToUpdate.favorite = favorite;
-    //         const updatedUser = await usersData.findOneAndUpdate(
-    //           { _id: _id.toString() },
-    //           { $set: { favorite: favorite } },
-    //           { new: true }
-    //         );
+        //add new product into favorite array and update
+        favorite.push(productId);
+        userToUpdate.favorite = favorite;
+        const updatedUser = await usersData.findOneAndUpdate(
+          { _id: _id.toString() },
+          { $set: { favorite: favorite } },
+          { new: true }
+        );
 
         if (!updatedUser) {
           throw new GraphQLError(`Could not Edit User`, {
@@ -1008,12 +1006,12 @@ export const resolvers = {
           commentText = checkNotEmpty(args.comment);
         }
 
-    //         const comments = {
-    //           _id: new ObjectId(),
-    //           comment_id: comment_id,
-    //           rating: rating,
-    //           comment: commentText,
-    //         };
+        const comments = {
+          _id: new ObjectId(),
+          comment_id: comment_id,
+          rating: rating,
+          comment: commentText,
+        };
 
         const insert = await users.updateOne(
           { _id: user_id },
@@ -1048,19 +1046,19 @@ export const resolvers = {
           });
         }
 
-    //         //add new product into favorite array and update
-    //         favorite = favorite.filter((id) => id !== productId);
-    //         const updatedUser = await usersData.findOneAndUpdate(
-    //           { _id: _id.toString() },
-    //           { $set: { favorite: favorite } },
-    //           { new: true }
-    //         );
+        //add new product into favorite array and update
+        favorite = favorite.filter((id) => id !== productId);
+        const updatedUser = await usersData.findOneAndUpdate(
+          { _id: _id.toString() },
+          { $set: { favorite: favorite } },
+          { new: true }
+        );
 
-    //         if (!updatedUser) {
-    //           throw new GraphQLError(`Could not Edit User`, {
-    //             extensions: { code: "INTERNAL_SERVER_ERROR" },
-    //           });
-    //         }
+        if (!updatedUser) {
+          throw new GraphQLError(`Could not Edit User`, {
+            extensions: { code: "INTERNAL_SERVER_ERROR" },
+          });
+        }
 
         return updatedUser.favorite;
       } catch (error) {

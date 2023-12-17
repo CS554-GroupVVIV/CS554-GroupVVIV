@@ -12,6 +12,7 @@ import { AuthContext } from "../context/AuthContext";
 import ChatRoomList from "./ChatRoomList";
 import SearchProduct from "./SearchProduct";
 import SearchPost from "./SearchPost";
+import ChatRoomListButton from "./ChatRoomListButton";
 
 import { Grid } from "@mui/material";
 import PostCard from "./PostCard";
@@ -58,6 +59,8 @@ export default function Home() {
           >
             User Profile
           </button>
+
+          <ChatRoomListButton />
         </>
       ) : (
         <>
@@ -80,28 +83,30 @@ export default function Home() {
 
       <h1>Home</h1>
 
-      <form
-        onSubmit={(event) => {
-          event.preventDefault();
-          setSearchTerm(text);
-          setText("");
-        }}
-      >
-        <label>
-          Search:
-          <input
-            type="text"
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-          />
-        </label>
-        <input type="submit" />
-      </form>
+      <div style={{ display: "flex", justifyContent: "center" }}>
+        <form
+          onSubmit={(event) => {
+            event.preventDefault();
+            setSearchTerm(text);
+            setText("");
+          }}
+        >
+          <label>
+            Search:
+            <input
+              type="text"
+              value={text}
+              onChange={(e) => setText(e.target.value)}
+            />
+          </label>
+          <input type="submit" />
+        </form>
 
-      {searchTerm && <SearchProduct searchTerm={searchTerm} />}
-      {searchTerm && <SearchPost searchTerm={searchTerm} />}
+        {searchTerm && <SearchProduct searchTerm={searchTerm} />}
+        {searchTerm && <SearchPost searchTerm={searchTerm} />}
+      </div>
 
-      <Grid container direction={"row"} spacing={2} marginTop={1}>
+      <Grid container sx={{ display: "flex", justifyContent: "center" }}>
         <Grid item>
           <div style={{ textAlign: "center" }}>
             <h2>First 10 Products:</h2>
@@ -121,7 +126,7 @@ export default function Home() {
                 overflowX: "auto",
                 flexWrap: "nowrap",
                 padding: "16px",
-                maxWidth: "60vw",
+                maxWidth: "80vw",
               }}
             >
               {productData &&
@@ -132,7 +137,8 @@ export default function Home() {
                 })}
             </Grid>
           </div>
-
+        </Grid>
+        <Grid item>
           <div style={{ textAlign: "center" }}>
             <h2>First 10 Posts:</h2>
             <button
@@ -151,7 +157,7 @@ export default function Home() {
                 overflowX: "auto",
                 flexWrap: "nowrap",
                 padding: "16px",
-                maxWidth: "60vw",
+                maxWidth: "80vw",
               }}
             >
               {postData &&
@@ -159,15 +165,6 @@ export default function Home() {
                   return <PostCard key={post._id} postData={post} />;
                 })}
             </Grid>
-          </div>
-        </Grid>
-        <Grid item>
-          <div>
-            {currentUser ? (
-              <ChatRoomList uid={currentUser.uid} />
-            ) : (
-              <h4>Please Login to chat</h4>
-            )}
           </div>
         </Grid>
       </Grid>

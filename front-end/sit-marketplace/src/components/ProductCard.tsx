@@ -9,6 +9,8 @@ import { Card, CardHeader, CardContent, Grid, Link } from "@mui/material";
 
 import { ADD_FAVORITE_TO_USER, REMOVE_FAVORITE_FROM_USER } from "../queries";
 import { useMutation } from "@apollo/client";
+import { useQuery } from "@apollo/client";
+import { GET_USER } from "../queries";
 
 export default function ProductCard({ productData }) {
   const navigate = useNavigate();
@@ -16,6 +18,11 @@ export default function ProductCard({ productData }) {
   const { currentUser } = useContext(AuthContext);
 
   const [hasFavorited, setHasFavorited] = useState(false);
+
+  const { data: userData } = useQuery(GET_USER, {
+    variables: { id: currentUser ? currentUser.uid : "" },
+    fetchPolicy: "cache-and-network",
+  });
 
   const baseUrl = "/product/";
 
@@ -25,9 +32,16 @@ export default function ProductCard({ productData }) {
   const [addFavorite, { addData, addLoading, addError }] =
     useMutation(ADD_FAVORITE_TO_USER);
 
+  useEffect(() => {
+    if (userData?.getUserById?.favorite?.includes(productData._id)) {
+      setHasFavorited(true);
+    }
+  }, [userData]);
+
   function handleFavorite() {
     console.log("user id", currentUser.uid);
     console.log("product id", productData._id);
+
     try {
       if (!currentUser || !currentUser.uid) {
         alert("You need to login to favorite this product!");
