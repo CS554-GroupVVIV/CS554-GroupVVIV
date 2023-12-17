@@ -13,7 +13,6 @@ export const typeDefs = `#graphql
         searchPosts(searchTerm: String!): [Post],
         searchProductsByName(name: String!): [Product],
         getProductById(_id:String!):Product,
-        getProductsByIds(ids:[String!]!):[Product],
         getProductsByCategory(category:String!):[Product],
         getProductsByPriceRange(low:Int,high:Int!):[Product],
         getPostById(_id:String!):Post,
