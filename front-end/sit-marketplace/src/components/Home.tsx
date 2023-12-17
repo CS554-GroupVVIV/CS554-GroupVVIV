@@ -9,10 +9,8 @@ import ProductCard from "./ProductCard";
 import LogoutButton from "./LogoutButton";
 import { AuthContext } from "../context/AuthContext";
 
-import ChatRoomList from "./ChatRoomList";
 import SearchProduct from "./SearchProduct";
 import SearchPost from "./SearchPost";
-import ChatRoomListButton from "./ChatRoomListButton";
 
 import { Grid } from "@mui/material";
 import PostCard from "./PostCard";
@@ -59,8 +57,6 @@ export default function Home() {
           >
             User Profile
           </button>
-
-          <ChatRoomListButton />
         </>
       ) : (
         <>
@@ -80,8 +76,6 @@ export default function Home() {
           </button>
         </>
       )}
-
-      <h1>Home</h1>
 
       <div style={{ display: "flex", justifyContent: "center" }}>
         <form

@@ -14,7 +14,6 @@ export default function PostCard({ postData }) {
       <Card
         sx={{ width: 300, height: "100%" }}
         style={{
-          backgroundColor: "snow",
           borderRadius: "10%",
         }}
       >
