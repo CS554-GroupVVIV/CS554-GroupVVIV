@@ -621,7 +621,7 @@ export const resolvers = {
         if (Object.keys(args).length !== 6) {
           throw new Error("all fields are required");
         }
-        let buyer_id = checkId(args.buyer_id);
+        let buyer_id = checkNotEmpty(args.buyer_id);
         let item = checkItem(args.item);
         let category = checkCategory(args.category);
         let price = checkPrice(args.price);
@@ -629,9 +629,9 @@ export const resolvers = {
         let description = checkDescription(args.description);
         const posts = await postCollection();
         const newPost = {
-          _id: new ObjectId().toString(),
+          _id: new ObjectId(),
           buyer_id: buyer_id,
-          seller_id: "",
+          seller_id: null,
           item: item,
           category: category,
           price: price,
@@ -855,7 +855,7 @@ export const resolvers = {
         const id = checkId(args._id);
         const user_id = checkNotEmpty(args.user_id);
         const posts = await postCollection();
-        let post = await posts.findOne({ _id: id.toString() });
+        let post = await posts.findOne({ _id: new ObjectId(id) });
         if (!post) {
           throw new GraphQLError("post not found", {
             extensions: { code: "NOT_FOUND" },
@@ -868,14 +868,14 @@ export const resolvers = {
           throw "Cannot retrieve post";
         }
         const retrieve = await posts.updateOne(
-          { _id: id.toString() },
+          { _id: new ObjectId(id) },
           { $set: { status: "inactive" } }
         );
 
         if (retrieve.acknowledged != true) {
           throw "Fail to retrieve post";
         }
-        post = await posts.findOne({ _id: id.toString() });
+        post = await posts.findOne({ _id: new ObjectId(id) });
         post.date = dateObjectToHTMLDate(post.date);
         return post;
       } catch (error) {
@@ -888,7 +888,7 @@ export const resolvers = {
         const id = checkId(args._id);
         const user_id = checkNotEmpty(args.user_id);
         const posts = await postCollection();
-        let post = await posts.findOne({ _id: id.toString() });
+        let post = await posts.findOne({ _id: new ObjectId(id) });
         if (!post) {
           throw new GraphQLError("post not found", {
             extensions: { code: "NOT_FOUND" },
@@ -901,13 +901,13 @@ export const resolvers = {
           throw "Cannot repost post";
         }
         const repost = await posts.updateOne(
-          { _id: id.toString() },
+          { _id: new ObjectId(id) },
           { $set: { status: "active", date: new Date() } }
         );
         if (repost.acknowledged != true) {
           throw "Fail to repost";
         }
-        post = await posts.findOne({ _id: id.toString() });
+        post = await posts.findOne({ _id: new ObjectId(id) });
         post.date = dateObjectToHTMLDate(post.date);
         return post;
       } catch (error) {
