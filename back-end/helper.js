@@ -54,7 +54,8 @@ const checkCategory = (category) => {
     categoryLower != "other" &&
     categoryLower != "electronics" &&
     categoryLower != "clothing" &&
-    categoryLower != "furniture"
+    categoryLower != "furniture" &&
+    categoryLower != "stationery"
   ) {
     throw new Error("Invalid Category");
   }
