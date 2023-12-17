@@ -18,77 +18,117 @@ type Product = {
 export default function Products() {
   const navigate = useNavigate();
   const { currentUser } = useContext(AuthContext);
+  const category_list = [
+    "All",
+    "Book",
+    "Electronics",
+    "Clothing",
+    "Furniture",
+    "Stationary",
+    "Other",
+  ];
 
-  const { loading, error, data } = useQuery(GET_PRODUCTS, {
-    fetchPolicy: "cache-and-network",
-  });
-
-  console.log("product data", data);
+  const { loading, error, data } = useQuery(
+    curCategory === "All" ? GET_PRODUCTS : GET_PRODUCTS_BY_CATEGORY,
+    curCategory !== "All"
+      ? {
+          variables: { category: curCategory },
+          fetchPolicy: "cache-and-network",
+        }
+      : { fetchPolicy: "cache-and-network" }
+  );
 
   const [text, setText] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
 
-  function handleBook() {
-    console.log("handle book");
-  }
+  // function handleBook() {
+  //   console.log("handle book");
+  // }
 
-  return (
-    <div>
-      <button
-        onClick={() => {
-          navigate("/");
-        }}
-      >
-        Home
-      </button>
-
-      <form
-        onSubmit={(event) => {
-          event.preventDefault();
-          setSearchTerm(text);
-          setText("");
-        }}
-      >
-        <label>
-          Search Product:
-          <input
-            type="text"
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-          />
-        </label>
-        <input type="submit" />
-      </form>
-
-      {searchTerm && <SearchProduct searchTerm={searchTerm} />}
-
-      <div className="ProductCategory">
-        <Link
-          onClick={() => {
-            handleBook;
-          }}
-        >
-          Book
-        </Link>
-      </div>
-
-      <h1>Products:</h1>
-      {currentUser ? (
+  if (data) {
+    // console.log(data);
+    return (
+      <div>
         <button
           onClick={() => {
-            navigate("/newproduct");
+            navigate("/");
           }}
         >
-          New Product
+          Home
         </button>
-      ) : (
-        <></>
-      )}
 
-      {data &&
-        data.products.map((product: Product) => {
-          return <ProductCard key={product._id} productData={product} />;
-        })}
-    </div>
-  );
+        <form
+          onSubmit={(event) => {
+            event.preventDefault();
+            setSearchTerm(text);
+            setText("");
+          }}
+        >
+          <label>
+            Search Product:
+            <input
+              type="text"
+              value={text}
+              onChange={(e) => setText(e.target.value)}
+            />
+          </label>
+          <input type="submit" />
+        </form>
+
+        {searchTerm && <SearchProduct searchTerm={searchTerm} />}
+
+        <ul className="ProductCategory">
+          {category_list.map((category) => (
+            <li key={category}>
+              <Link
+                onClick={() => {
+                  setCurCategory(category);
+                }}
+              >
+                {category}
+              </Link>
+            </li>
+          ))}
+        </ul>
+
+        <h1>Products:</h1>
+        {currentUser ? (
+          <button
+            onClick={() => {
+              navigate("/newproduct");
+            }}
+          >
+            New Product
+          </button>
+        ) : (
+          <button
+            onClick={() => {
+              navigate("/login");
+            }}
+          >
+            New Product
+          </button>
+        )}
+
+        {data && curCategory === "All" && data.products.length > 0
+          ? data.products.map((product: Product) => {
+              return <ProductCard key={product._id} productData={product} />;
+            })
+          : null}
+        {data && curCategory === "All" && data.products.length == 0 ? (
+          <p>No result found</p>
+        ) : null}
+        {data && curCategory != "All" && data.getProductsByCategory.length > 0
+          ? data.getProductsByCategory.map((product: Product) => {
+              return <ProductCard key={product._id} productData={product} />;
+            })
+          : null}
+        {data &&
+        curCategory != "All" &&
+        data.getProductsByCategory.length == 0 ? (
+          <p>No result found</p>
+        ) : null}
+      </div>
+    );
+  }
 }

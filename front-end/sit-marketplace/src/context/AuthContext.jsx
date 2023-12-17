@@ -12,6 +12,25 @@ export const AuthProvider = ({ children }) => {
       setCurrentUser(user);
       console.log("onAuthStateChanged", user);
       setLoadingUser(false);
+<<<<<<< Updated upstream
+=======
+
+      if (isMounted && user) {
+        const signOutTimer = setTimeout(() => {
+          signOut(auth)
+            .then(() => {
+              setCurrentUser(null);
+            })
+            .catch((error) => {
+              console.error("Error during sign out:", error);
+            });
+        }, 10 * 10 * 1000); // 10 mins automatically sign out
+
+        return () => {
+          clearTimeout(signOutTimer);
+        };
+      }
+>>>>>>> Stashed changes
     });
     return () => {
       if (myListener) myListener();

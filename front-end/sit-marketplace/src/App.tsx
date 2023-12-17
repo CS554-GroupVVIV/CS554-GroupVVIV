@@ -10,6 +10,7 @@ import ChatRooms from "./components/ChatRoomList.tsx";
 import { AuthProvider } from "./context/AuthContext.jsx";
 import PostForm from "./components/PostForm.tsx";
 import ProductDetail from "./components/ProductDetail.tsx";
+import ProductDetailCard from "./components/ProductDetailCard.tsx";
 import PostDetail from "./components/PostDetail.tsx";
 import ProductForm from "./components/NewProduct.tsx";
 import UserProfile from "./components/UserProfile.tsx";
@@ -62,7 +63,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/newpost" element={<PostForm />} />
-          <Route path="/product/:id" element={<ProductDetail />} />
+          <Route path="/product/:id" element={<ProductDetailCard />} />
           <Route path="/post/:id" element={<PostDetail />} />
           <Route path="/newproduct" element={<ProductForm />} />
           <Route path="/error" element={<Error />} />

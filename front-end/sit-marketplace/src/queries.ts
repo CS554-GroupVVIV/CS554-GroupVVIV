@@ -7,6 +7,7 @@ export const GET_PRODUCTS = gql`
       buyer_id
       category
       condition
+      date
       description
       name
       price
@@ -165,7 +166,7 @@ export const ADD_PRODUCT = gql`
     $description: String!
     $condition: String!
     $sellerId: String!
-    $image: String
+    $image: String!
     $category: String!
   ) {
     addProduct(
@@ -383,20 +384,36 @@ export const EDIT_USER = gql`
   }
 `;
 
-export const SEARCH_PRODUCTS = gql`
-  query ($searchTerm: String!) {
-    searchProducts(searchTerm: $searchTerm) {
-      _id
-      name
-    }
-  }
-`;
+// export const SEARCH_PRODUCTS = gql`
+//   query ($searchTerm: String!) {
+//     searchProducts(searchTerm: $searchTerm) {
+//       _id
+//       buyer_id
+//       category
+//       condition
+//       date
+//       description
+//       name
+//       price
+//       seller_id
+//       status
+//     }
+//   }
+// `;
 
 export const SEARCH_POSTS = gql`
   query ($searchTerm: String!) {
     searchPosts(searchTerm: $searchTerm) {
       _id
+      buyer_id
+      seller_id
       item
+      category
+      date
+      price
+      condition
+      description
+      status
     }
   }
 `;
@@ -405,7 +422,15 @@ export const SEARCH_PRODUCTS_BY_NAME = gql`
   query ($name: String!) {
     searchProductsByName(name: $name) {
       _id
+      buyer_id
+      category
+      condition
+      date
+      description
       name
+      price
+      seller_id
+      status
     }
   }
 `;

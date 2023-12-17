@@ -87,11 +87,11 @@ export default function ProductCard({ productData }) {
           }}
         >
           <ul>
-            <li>Price: {productData && productData.price}</li>
-            <li>Date: {productData && productData.date}</li>
+            <li>Category: {productData && productData.category}</li>
             <li>Description: {productData && productData.description}</li>
             <li>Condition: {productData && productData.condition}</li>
-            <li>Category: {productData && productData.category}</li>
+            <li>Price: {productData && productData.price}</li>
+            <li>Date: {productData && productData.date}</li>
           </ul>
           <div className="image">
             {productData && productData.image ? (
@@ -133,7 +133,7 @@ export default function ProductCard({ productData }) {
             Chat with seller
           </button>
 
-          <button
+          {/* <button
             hidden={
               !currentUser || productData.seller_id === currentUser.uid
                 ? true
@@ -142,7 +142,7 @@ export default function ProductCard({ productData }) {
             onClick={handleFavorite}
           >
             {hasFavorited ? <p>Favorited</p> : <p>Favorite</p>}
-          </button>
+          </button> */}
         </CardContent>
       </Card>
     </Grid>
