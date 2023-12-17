@@ -4,6 +4,20 @@ import { useMutation, useQuery } from "@apollo/client";
 import { AuthContext } from "../context/AuthContext.jsx";
 import { ADD_POST, GET_POSTS } from "../queries";
 
+import Button from "@mui/material/Button";
+import CssBaseline from "@mui/material/CssBaseline";
+import TextField from "@mui/material/TextField";
+import Grid from "@mui/material/Grid";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import Container from "@mui/material/Container";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
+import InputLabel from "@mui/material/InputLabel";
+import FormControl from "@mui/material/FormControl";
+import Stack from "@mui/material/Stack";
+
 // interface Post {
 //   _id: string;
 //   buyer_id: string;
@@ -34,6 +48,9 @@ export default function PostForm() {
   const [priceError, setPriceError] = useState<boolean>(false);
   const [conditionError, setConditionError] = useState<boolean>(false);
   const [descriptionError, setdescriptionError] = useState<boolean>(false);
+
+  const defaultTheme = createTheme();
+
   const { data, loading, error } = useQuery(GET_POSTS);
   const [addPost] = useMutation(ADD_POST, {
     update(cache, { data: { addPost } }) {
@@ -55,11 +72,11 @@ export default function PostForm() {
     },
   });
 
-  // useEffect(() => {
-  //   if (!currentUser) {
-  //     return navigate("/login");
-  //   }
-  // }, [currentUser]);
+  useEffect(() => {
+    if (!currentUser) {
+      return navigate("/login");
+    }
+  }, [currentUser]);
 
   const helper = {
     checkName(): void {
@@ -203,233 +220,170 @@ export default function PostForm() {
   };
 
   return (
-    <form onSubmit={submit}>
-      <div className="space-y-12">
-        <div className="border-b border-gray-900/10 pb-12">
-          <h2 className="text-base font-semibold leading-7 text-gray-900">
-            Request Form
-          </h2>
-          <p className="mt-1 text-sm leading-6 text-gray-600">
+    <ThemeProvider theme={defaultTheme}>
+      <Container component="main" maxWidth="sm">
+        <CssBaseline />
+        <Box
+          sx={{
+            marginTop: 8,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          <Typography component="h1" variant="h5">
+            New Post
+          </Typography>
+          <Typography component="span" variant="body1">
             We're excited to help you find the perfect item you're looking for!
             Please fill out the form with as much detail as possible. Your
             responses will not only help with the matching process but also
             increase the likelihood of finding your ideal item.
-          </p>
+          </Typography>
 
-          <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-            <div className="sm:col-span-4">
-              <label
-                htmlFor="item"
-                className="block text-sm font-medium leading-6 text-gray-900"
-              >
-                Item Name
-              </label>
-              <div className="mt-2">
-                <input
-                  id="item"
+          <Box component="form" noValidate onSubmit={submit} sx={{ mt: 3 }}>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <TextField
                   name="item"
-                  type="text"
-                  ref={nameRef}
-                  minLength={1}
-                  maxLength={20}
+                  required
+                  fullWidth
+                  id="item"
+                  label="Item Name"
+                  inputRef={nameRef}
                   onBlur={helper.checkName}
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
-              </div>
-              {nameError && (
-                <p>
-                  Item name should be within range 1-20 characters and only
-                  contain letters, numbers and spaces
-                </p>
-              )}
-            </div>
-
-            <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-              <div className="sm:col-span-4">
-                <label
-                  htmlFor="category"
-                  className="block text-sm font-medium leading-6 text-gray-900"
-                >
-                  Category
-                </label>
-                <div className="mt-2">
-                  <select
-                    id="category"
-                    name="category"
-                    ref={categoryRef}
-                    defaultValue={""}
-                    onBlur={helper.checkCategory}
-                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                {nameError && (
+                  <Typography
+                    component="span"
+                    variant="body2"
+                    style={{ color: "red" }}
                   >
-                    <option disabled></option>
-                    <option>Book</option>
-                    <option>Clothing</option>
-                    <option>Electronics</option>
-                    <option>Furniture</option>
-                    <option>Stationary</option>
-                    <option>Other</option>
-                  </select>
-                </div>
-                {categoryError && <p>Please select from provided categories</p>}
-              </div>
-
-              {/* <div className="sm:col-span-4">
-              <label
-                htmlFor="quantity"
-                className="block text-sm font-medium leading-6 text-gray-900"
-              >
-                Quantity
-              </label>
-              <div className="mt-2">
-                <input
-                  id="quantity"
-                  name="quantity"
-                  type="number"
-                  ref={quantityRef}
-                  onBlur={helper.checkQuantity}
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                />
-              </div>
-              {quantityError && (
-                <p>Quantity should be an integer in range from 1 to 999</p>
-              )}
-            </div> */}
-
-              <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-                <div className="sm:col-span-4">
-                  <label
-                    htmlFor="price"
-                    className="block text-sm font-medium leading-6 text-gray-900"
-                  >
-                    Price
-                  </label>
-                  <div className="mt-2">
-                    <input
-                      id="price"
-                      name="price"
-                      type="number"
-                      ref={priceRef}
-                      onBlur={helper.checkPrice}
-                      className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                    />
-                  </div>
-                  {priceError && (
-                    <p>
-                      Price should be in range from 0 to 100000 and have at most
-                      2 demical places.
-                    </p>
-                  )}
-                </div>
-
-                {/* <div className="sm:col-span-4">
-                <label
-                  htmlFor="total"
-                  className="block text-sm font-medium leading-6 text-gray-900"
-                >
-                  Total Amount
-                </label>
-                <div className="mt-2">
-                  <input
-                    id="total"
-                    name="total"
-                    type="number"
-                    disabled
-                    value={total}
-                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                  />
-                </div>
-              </div> */}
-
-                <div className="sm:col-span-3">
-                  <label
-                    htmlFor="condition"
-                    className="block text-sm font-medium leading-6 text-gray-900"
-                  >
-                    Condition
-                  </label>
-                  <div className="mt-2">
-                    <select
-                      id="condition"
-                      name="condition"
+                    * Item name should be within range 1-20 characters and only
+                    contain letters, numbers and spaces
+                  </Typography>
+                )}
+              </Grid>
+              <Grid item xs={12}>
+                <div>
+                  <FormControl sx={{ minWidth: 200 }} required>
+                    <InputLabel id="demo-simple-select-helper-label">
+                      Category
+                    </InputLabel>
+                    <Select
+                      inputRef={categoryRef}
                       defaultValue={""}
-                      ref={conditionRef}
-                      onBlur={helper.checkCondition}
-                      className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
+                      label="Category"
+                      onBlur={helper.checkCategory}
                     >
-                      <option disabled></option>
-                      <option>Brand New</option>
-                      <option>Like New</option>
-                      <option>Gently Used</option>
-                      <option>Functional</option>
-                    </select>
-                  </div>
-                  {conditionError && <p>Please select from provided options</p>}
+                      <MenuItem value={"Book"}>Book</MenuItem>
+                      <MenuItem value={"Clothing"}>Clothing</MenuItem>
+                      <MenuItem value={"Electronics"}>Electronics</MenuItem>
+                      <MenuItem value={"Furniture"}>Furniture</MenuItem>
+                      <MenuItem value={"Stationary"}>Stationary</MenuItem>
+                      <MenuItem value={"Other"}>Other</MenuItem>
+                    </Select>
+                  </FormControl>
                 </div>
-
-                {/* <div className="col-span-full">
-                  <label
-                    htmlFor="date"
-                    className="block text-sm font-medium leading-6 text-gray-900"
+                {categoryError && (
+                  <Typography
+                    component="span"
+                    variant="body2"
+                    style={{ color: "red" }}
                   >
-                    Need it before
-                  </label>
-                  <div className="mt-2">
-                    <input
-                      type="date"
-                      name="date"
-                      id="date"
-                      ref={dateRef}
-                      onBlur={helper.checkDate}
-                      className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                    />
-                  </div>
-                  {dateError && <p>Date should be no earlier than today </p>}
-                </div> */}
-
-                <div className="col-span-full">
-                  <label
-                    htmlFor="about"
-                    className="block text-sm font-medium leading-6 text-gray-900"
+                    * Please select from provided categories
+                  </Typography>
+                )}
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  id="price"
+                  label="Price"
+                  name="price"
+                  type="number"
+                  inputRef={priceRef}
+                  onBlur={helper.checkPrice}
+                />
+                {priceError && (
+                  <Typography
+                    component="span"
+                    variant="body2"
+                    style={{ color: "red" }}
                   >
-                    descriptional Preference(100 letters max)
-                  </label>
-                  <div className="mt-2">
-                    <textarea
-                      id="about"
-                      name="about"
-                      rows={3}
-                      maxLength={100}
-                      ref={descriptionRef}
-                      onBlur={helper.checkdescription}
-                      className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    * Price should be in range from 0 to 100000 and have at most
+                    2 demical places.
+                  </Typography>
+                )}
+              </Grid>
+              <Grid item xs={12}>
+                <div>
+                  <FormControl sx={{ minWidth: 200 }} required>
+                    <InputLabel id="demo-simple-select-helper-label">
+                      Condition
+                    </InputLabel>
+                    <Select
+                      inputRef={conditionRef}
                       defaultValue={""}
-                    />
-                  </div>
-                  {descriptionError && (
-                    <p>Description should have 100 letters at most</p>
-                  )}
+                      label="Condition"
+                      onBlur={helper.checkCondition}
+                    >
+                      <MenuItem value={"Brand New"}>Brand New</MenuItem>
+                      <MenuItem value={"Like New"}>Like New</MenuItem>
+                      <MenuItem value={"Gently Used"}>Gently Used</MenuItem>
+                      <MenuItem value={"Functional"}>Functional</MenuItem>
+                    </Select>
+                  </FormControl>
                 </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="mt-6 flex items-center justify-end gap-x-6">
-          <button
-            type="button"
-            className="text-sm font-semibold leading-6 text-gray-900"
-          >
-            Cancel
-          </button>
-          <button
-            type="submit"
-            className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-          >
-            Save
-          </button>
-        </div>
-      </div>
-      {/* </div> */}
-    </form>
+                {conditionError && (
+                  <Typography
+                    component="span"
+                    variant="body2"
+                    style={{ color: "red" }}
+                  >
+                    * Please select from provided options
+                  </Typography>
+                )}
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  id="about"
+                  label="Descriptional Preference (100 letters max)"
+                  name="about"
+                  defaultValue={""}
+                  inputRef={descriptionRef}
+                  onBlur={helper.checkdescription}
+                />
+                {descriptionError && (
+                  <Typography
+                    component="span"
+                    variant="body2"
+                    style={{ color: "red" }}
+                  >
+                    * Description should have 100 letters at most
+                  </Typography>
+                )}
+              </Grid>
+            </Grid>
+            <br />
+            <Stack spacing={2} direction="row">
+              <Button
+                type="button"
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+                onClick={() => navigate("/posts")}
+              >
+                Cancel
+              </Button>
+              <Button type="submit" variant="contained" sx={{ mt: 3, mb: 2 }}>
+                Save
+              </Button>
+            </Stack>
+          </Box>
+        </Box>
+      </Container>
+    </ThemeProvider>
   );
 }
