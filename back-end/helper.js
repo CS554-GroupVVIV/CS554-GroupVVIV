@@ -150,17 +150,16 @@ export const checkUserAndChatId = (id) => {
   if (!id) throw "You must provide an id to search for";
   if (typeof id !== "string" && typeof id !== "object")
     throw "Id must be a string or ObjectId";
-  if (id.trim().length === 0)
-    throw "id cannot be an empty string or just spaces";
-  return id.trim();
+  id = id.trim();
+  if (id.length === 0) throw "id cannot be an empty string or just spaces";
+  return id;
 };
 
 export const checkFirstNameAndLastName = (str, valStr) => {
   if (str === undefined) throw new Error(`${valStr} must provide a string`);
-  console.log(str);
   if (typeof str !== "string") throw new Error(`${valStr} must be a string`);
-  if (str.trim().length == 0)
-    throw new Error(`${valStr} should not be just space`);
+  str = str.trim();
+  if (str.length === 0) throw new Error(`${valStr} should not be just space`);
   if (str.length < 1)
     throw new Error(`${valStr} should have at least 1 character.`);
   let pattern = new RegExp(/^(?=.{1,50}$)[a-z]+(?:['_.\s][a-z]+)*$/i);
@@ -178,7 +177,7 @@ const checkNotEmpty = (str) => {
   if (!str | (str.trim() === "")) {
     throw "Input is empty";
   }
-  return str.trim();
+  return str;
 };
 
 const checkRating = (rating) => {
@@ -197,14 +196,14 @@ const checkRating = (rating) => {
 export const dateObjectToHTMLDate = (date) => {
   // date is a Date() object
   const year = date.getFullYear();
-  const month = (date.getMonth() + 1).toString().padStart(2, '0');
-  const day = date.getDate().toString().padStart(2, '0');
+  const month = (date.getMonth() + 1).toString().padStart(2, "0");
+  const day = date.getDate().toString().padStart(2, "0");
   return `${year}-${month}-${day}`;
-}
+};
 
 export const HTMLDateToDateObject = (date) => {
   return new Date(date);
-}
+};
 
 export {
   checkId,

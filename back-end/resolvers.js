@@ -741,7 +741,7 @@ export const resolvers = {
     },
     addUser: async (_, args) => {
       try {
-        let { _id, email, firstname, lastname } = args;
+        let { _id, email, firstname, lastname, favorite } = args;
         // check ID not implement yet
         email = checkEmail(email);
         firstname = capitalizeName(
@@ -757,6 +757,7 @@ export const resolvers = {
           email,
           firstname,
           lastname,
+          favorite: favorite ? [favorite] : []
         };
         const insertedUser = await usersData.insertOne(newUser);
         if (!insertedUser) {
