@@ -3,6 +3,7 @@ import ProductCard from "./ProductCard";
 import { useQuery } from "@apollo/client";
 import { SEARCH_PRODUCTS_BY_ID } from "../queries";
 import { useNavigate, useParams } from "react-router-dom";
+import ProductDetailCard from "./ProductDetailCard";
 
 export default function ProductDetail() {
   const { id } = useParams();
@@ -22,7 +23,7 @@ export default function ProductDetail() {
 
   return (
     <div>
-      {<ProductCard productData={data.getProductById} />}
+      {<ProductDetailCard productData={data.getProductById} />}
       {/* Check for product existence */}
     </div>
   );

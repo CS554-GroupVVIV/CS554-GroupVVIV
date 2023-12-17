@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom";
 import { useQuery } from "@apollo/client";
 import { AuthContext } from "../context/AuthContext";
 import ProductCard from "./ProductCard";
-import ProductDetailCard from "./ProductDetailCard";
 
 import SearchProduct from "./SearchProduct";
 import { GET_PRODUCTS, GET_PRODUCTS_BY_CATEGORY } from "../queries";
@@ -88,7 +87,7 @@ export default function Products() {
 
       {data &&
         data.products.map((product: Product) => {
-          return <ProductDetailCard key={product._id} productData={product} />;
+          return <ProductCard key={product._id} productData={product} />;
         })}
     </div>
   );
