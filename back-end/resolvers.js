@@ -104,42 +104,42 @@ export const resolvers = {
       }
     },
 
-    searchProducts: async (_, args) => {
-      try {
-        const products = await productCollection();
-        products.createIndex({
-          name: "text",
-          // description: "text",
-          // category: "text",
-        });
-        var productList = await client.json.get(
-          `searchProducts-${args.searchTerm}`,
-          "$"
-        );
-        if (!productList) {
-          productList = await products
-            .find({ $text: { $search: args.searchTerm } })
-            .toArray();
-          if (!productList) {
-            throw new GraphQLError("product not found", {
-              extensions: { code: "NOT_FOUND" },
-            });
-          }
-          for (let i = 0; i < productList.length; i++) {
-            productList[i].date = dateObjectToHTMLDate(productList[i].date);
-          }
-          client.json.set(
-            `searchProducts-${args.searchTerm}`,
-            "$",
-            productList
-          );
-          client.expire(`searchProducts-${args.searchTerm}`, 60);
-        }
-        return productList;
-      } catch (error) {
-        throw new GraphQLError(error.message);
-      }
-    },
+    // searchProducts: async (_, args) => {
+    //   try {
+    //     const products = await productCollection();
+    //     products.createIndex({
+    //       name: "text",
+    //       // description: "text",
+    //       // category: "text",
+    //     });
+    //     var productList = await client.json.get(
+    //       `searchProducts-${args.searchTerm}`,
+    //       "$"
+    //     );
+    //     if (!productList) {
+    //       productList = await products
+    //         .find({ $text: { $search: args.searchTerm } })
+    //         .toArray();
+    //       if (!productList) {
+    //         throw new GraphQLError("product not found", {
+    //           extensions: { code: "NOT_FOUND" },
+    //         });
+    //       }
+    //       for (let i = 0; i < productList.length; i++) {
+    //         productList[i].date = dateObjectToHTMLDate(productList[i].date);
+    //       }
+    //       client.json.set(
+    //         `searchProducts-${args.searchTerm}`,
+    //         "$",
+    //         productList
+    //       );
+    //       client.expire(`searchProducts-${args.searchTerm}`, 60);
+    //     }
+    //     return productList;
+    //   } catch (error) {
+    //     throw new GraphQLError(error.message);
+    //   }
+    // },
 
     searchPosts: async (_, args) => {
       try {

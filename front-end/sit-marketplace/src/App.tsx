@@ -215,7 +215,7 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<SignUp />} />
             <Route path="/newpost" element={<PostForm />} />
-            <Route path="/product/:id" element={<ProductDetail />} />
+            <Route path="/product/:id" element={<ProductDetailCard />} />
             <Route path="/post/:id" element={<PostDetail />} />
             <Route path="/newproduct" element={<ProductForm />} />
             <Route path="/error" element={<Error />} />
