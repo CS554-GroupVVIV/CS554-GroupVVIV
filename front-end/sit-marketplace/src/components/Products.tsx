@@ -17,20 +17,31 @@ type Product = {
 
 export default function Products() {
   const navigate = useNavigate();
+  const [curCategory, setCurCategory] = useState("All");
   const { currentUser } = useContext(AuthContext);
+  const category_list = [
+    "All",
+    "Book",
+    "Electronics",
+    "Clothing",
+    "Furniture",
+    "Stationary",
+  ];
 
-  const { loading, error, data } = useQuery(GET_PRODUCTS, {
-    fetchPolicy: "cache-and-network",
-  });
+  const { loading, error, data } = useQuery(
+    curCategory === "All" ? GET_PRODUCTS : GET_PRODUCTS_BY_CATEGORY,
+    curCategory !== "All"
+      ? {
+          variables: { category: curCategory },
+          fetchPolicy: "cache-and-network",
+        }
+      : { fetchPolicy: "cache-and-network" }
+  );
 
   console.log("product data", data);
 
   const [text, setText] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
-
-  function handleBook() {
-    console.log("handle book");
-  }
 
   return (
     <div>
@@ -62,15 +73,19 @@ export default function Products() {
 
       {searchTerm && <SearchProduct searchTerm={searchTerm} />}
 
-      <div className="ProductCategory">
-        <Link
-          onClick={() => {
-            handleBook;
-          }}
-        >
-          Book
-        </Link>
-      </div>
+      <ul className="ProductCategory">
+        {category_list.map((category) => (
+          <li key={category}>
+            <Link
+              onClick={() => {
+                setCurCategory(category);
+              }}
+            >
+              {category}
+            </Link>
+          </li>
+        ))}
+      </ul>
 
       <h1>Products:</h1>
       {currentUser ? (
@@ -85,10 +100,14 @@ export default function Products() {
         <></>
       )}
 
-      {data &&
-        data.products.map((product: Product) => {
-          return <ProductCard key={product._id} productData={product} />;
-        })}
+      {data && curCategory === "All"
+        ? data.products?.map((product: Product) => {
+            return <ProductCard key={product._id} productData={product} />;
+          })
+        : data &&
+          data.getProductsByCategory?.map((product: Product) => {
+            return <ProductCard key={product._id} productData={product} />;
+          })}
     </div>
   );
 }
