@@ -38,6 +38,7 @@ export default function Chat({ chat, participants }) {
                   backgroundColor:
                     sender === currentUser.uid ? "blue" : "green",
                   borderRadius: 50,
+                  color: "white",
                 }}
               >
                 {participantDict && participantDict[sender]}: {message}

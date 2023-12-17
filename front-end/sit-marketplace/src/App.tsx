@@ -19,7 +19,8 @@ import ResetPassword from "./components/ResetPassword.tsx";
 import Error from "./components/Error.tsx";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
-import ChatRoomListButton from "./components/ChatRoomListButton";
+import ChatRoomList from "./components/ChatRoomList";
+import { socketID, socket } from "./components/socket";
 
 // redux and theme
 import { useSelector, useDispatch } from "react-redux";
@@ -37,6 +38,12 @@ import {
   Switch,
   Typography,
   Link,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+  Button,
 } from "@mui/material";
 
 function App() {
@@ -58,7 +65,6 @@ function App() {
   // redux
   // get theme from store
   const theme = useSelector((state) => state.theme);
-  console.log(theme.darkmode);
 
   // initialize dispatch variable
   const dispatch = useDispatch();
@@ -89,6 +95,22 @@ function App() {
       </div>
     );
   };
+
+  const [open, setOpen] = useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  useEffect(() => {
+    socket.on("join room", () => {
+      setOpen(true);
+    });
+  }, [socket]);
 
   return (
     <ThemeProvider theme={theme.darkmode ? darkMode : lightMode}>
@@ -151,12 +173,39 @@ function App() {
                 Posts
               </Link>
 
-              {/* <ChatRoomListButton /> */}
+              {user ? (
+                <Link
+                  color="inherit"
+                  component="button"
+                  onClick={handleClickOpen}
+                  sx={{
+                    marginLeft: 5,
+                    textDecoration: "none",
+                  }}
+                >
+                  Chat Rooms
+                </Link>
+              ) : (
+                <></>
+              )}
 
               <ToggleSwitch />
             </Toolbar>
           </Container>
         </AppBar>
+
+        <Dialog
+          open={open}
+          keepMounted
+          onClose={handleClose}
+          aria-describedby="alert-dialog-slide-description"
+        >
+          <DialogTitle>{"Chat Rooms"}</DialogTitle>
+          <DialogContent>
+            <ChatRoomList uid={user && user.uid} />
+          </DialogContent>
+          <DialogActions></DialogActions>
+        </Dialog>
 
         <div className="App">
           <Routes>
