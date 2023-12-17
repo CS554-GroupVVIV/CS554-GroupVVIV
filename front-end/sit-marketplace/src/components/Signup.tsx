@@ -49,6 +49,7 @@ function SignUp() {
       );
       email = validation.checkEmail(email.value);
       // email = email.value (Cancel to use Steven's email address)
+      passwordOne = validation.checkPassword(passwordOne.value)
     } catch (error) {
       alert(error);
       return false;
@@ -57,7 +58,7 @@ function SignUp() {
     try {
       let user = await doCreateUserWithEmailAndPassword(
         email,
-        passwordOne.value,
+        passwordOne,
         firstname
       );
 
