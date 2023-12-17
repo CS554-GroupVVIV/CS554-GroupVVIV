@@ -9,6 +9,7 @@ import {
 } from "../firebase/FirebaseFunction";
 import TransactionPost from "./TransactionPost.tsx";
 import TransactionProduct from "./TransactionProduct.tsx";
+import Favorite from "./Favorite.tsx";
 import * as validation from "../helper.tsx";
 import { useApolloClient } from "@apollo/client";
 import { FetchPolicy } from "@apollo/client";
@@ -37,7 +38,6 @@ function UserProfile() {
     variables: { id: currentUser ? currentUser.uid : "" },
     fetchPolicy: "cache-and-network",
   });
-  console.log(data);
   const [userInfo, setUserInfo] = useState(null);
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
@@ -45,9 +45,10 @@ function UserProfile() {
   const [password, setPassword] = useState("");
   const [favorite, setFavorite] = useState([]);
   const baseUrl = "http://localhost:5173/product/";
-
+  const [toggleEdit, setToggleEdit] = useState<boolean>(false);
   const [togglePost, setTogglePost] = useState<boolean>(false);
   const [toogleProduct, setToggleProduct] = useState<boolean>(false);
+  const [toogleFavorite, setToggleFavorite] = useState<boolean>(false);
   const [editUser] = useMutation(EDIT_USER);
 
   useEffect(() => {
@@ -181,84 +182,101 @@ function UserProfile() {
     //     {/* <Copyright sx={{ mt: 8, mb: 4 }} /> */}
     //   </Container>
     // </ThemeProvider>
-
-    <div className="card">
-      <h1>User Profile</h1>
-      <form onSubmit={handleEdit}>
-        <div className="form-group">
-          <label>
-            First Name:
-            <br />
-            <input
-              className="form-control"
-              required
-              name="displayFirstName"
-              type="text"
-              placeholder="First Name"
-              value={data ? data.getUserById.firstname : ""}
-              onChange={(e) => setFirstname(e.target.value)}
-            />
-          </label>
-        </div>
-        <div className="form-group">
-          <label>
-            Last Name:
-            <br />
-            <input
-              className="form-control"
-              required
-              name="displayLastName"
-              type="text"
-              placeholder="Last Name"
-              value={data ? data.getUserById.lastname : ""}
-              onChange={(e) => setLastname(e.target.value)}
-            />
-          </label>
-        </div>
-        <div className="form-group">
-          <label>
-            Email:
-            <br />
-            <input
-              className="form-control"
-              required
-              name="email"
-              type="email"
-              placeholder="Email"
-              value={data ? data.getUserById.email : ""}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </label>
-        </div>
-        <div className="form-group">
-          <label>
-            Verified Password:
-            <br />
-            <input
-              className="form-control"
-              required
-              name="password"
-              type="password"
-              placeholder="Password"
-              // value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </label>
-        </div>
-        <br />
+    <div>
+      <div className="card">
+        <h1>User Profile</h1>
         <button
-          className="button"
-          id="submitButton"
-          name="submitButton"
-          type="submit"
+          onClick={() => {
+            setToggleEdit(!toggleEdit);
+          }}
         >
-          Update
+          Edit Profile
         </button>
+        {toggleEdit ? (
+          <form onSubmit={handleEdit}>
+            <div className="form-group">
+              <label>
+                First Name:
+                <br />
+                <input
+                  className="form-control"
+                  required
+                  name="displayFirstName"
+                  type="text"
+                  placeholder="First Name"
+                  value={data ? data.getUserById.firstname : ""}
+                  onChange={(e) => setFirstname(e.target.value)}
+                />
+              </label>
+            </div>
+            <div className="form-group">
+              <label>
+                Last Name:
+                <br />
+                <input
+                  className="form-control"
+                  required
+                  name="displayLastName"
+                  type="text"
+                  placeholder="Last Name"
+                  value={data ? data.getUserById.lastname : ""}
+                  onChange={(e) => setLastname(e.target.value)}
+                />
+              </label>
+            </div>
+            <div className="form-group">
+              <label>
+                Email:
+                <br />
+                <input
+                  disabled
+                  className="form-control"
+                  required
+                  name="email"
+                  type="email"
+                  placeholder="Email"
+                  value={data ? data.getUserById.email : ""}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </label>
+            </div>
+            <div className="form-group">
+              <label>
+                Verified Password:
+                <br />
+                <input
+                  className="form-control"
+                  required
+                  name="password"
+                  type="password"
+                  placeholder="Password"
+                  // value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </label>
+            </div>
+            <br />
+            <button
+              className="button"
+              id="submitButton"
+              name="submitButton"
+              type="submit"
+            >
+              Update
+            </button>
 
-        <button className="forgotPassword" onClick={passwordReset}>
-          Reset Password
-        </button>
-      </form>
+            <button className="forgotPassword" onClick={passwordReset}>
+              Reset Password
+            </button>
+          </form>
+        ) : (
+          <div className="form-group">
+            <p>First Name: {data.getUserById.firstname}</p>
+            <p>Last Name: {data.getUserById.lastname}</p>
+            <p>Email: {data.getUserById.email}</p>
+          </div>
+        )}
+      </div>
       <br />
       <button
         onClick={() => {
@@ -267,7 +285,7 @@ function UserProfile() {
       >
         Transaction from Post
       </button>
-
+      <br />
       {togglePost ? <TransactionPost /> : null}
       <button
         onClick={() => {
@@ -277,12 +295,15 @@ function UserProfile() {
         Transaction from Product
       </button>
       {toogleProduct ? <TransactionProduct /> : null}
-
-      <div className="favorite-products-list">
+      <br />
+      <button
+        onClick={() => {
+          setToggleFavorite(!toogleFavorite);
+        }}
+      >
         My Favorite Products
-        {favorite &&
-          favorite.map((fav) => <FavoriteProduct key={fav} favId={fav} />)}
-      </div>
+      </button>
+      {toogleFavorite ? <Favorite favorite={favorite} /> : null}
     </div>
   );
 }

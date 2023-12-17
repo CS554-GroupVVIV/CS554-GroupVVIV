@@ -15,6 +15,10 @@ import "dotenv";
 // import fbconfig from "./firebase/FirebaseConfig";
 import { initializeApp } from "firebase/app";
 
+// redux
+import store from "./redux/store.ts";
+import { Provider } from "react-redux";
+
 const fbconfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
   authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
@@ -34,9 +38,11 @@ const client = new ApolloClient({
 });
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-    <ApolloProvider client={client}>
+  <ApolloProvider client={client}>
+    <Provider store={store}>
       <BrowserRouter>
         <App />
       </BrowserRouter>
-    </ApolloProvider>
+    </Provider>
+  </ApolloProvider>
 );

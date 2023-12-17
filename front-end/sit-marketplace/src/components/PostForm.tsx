@@ -18,28 +18,21 @@ import { ADD_POST, GET_POSTS } from "../queries";
 // }
 
 export default function PostForm() {
-  let { currentUser } = useContext(AuthContext);
+  const { currentUser } = useContext(AuthContext);
   const nameRef = useRef<HTMLInputElement | null>(null);
   const categoryRef = useRef<HTMLSelectElement | null>(null);
-  //   const quantityRef = useRef<HTMLInputElement | null>(null);
   const priceRef = useRef<HTMLInputElement | null>(null);
   const conditionRef = useRef<HTMLSelectElement | null>(null);
-  //   const dateRef = useRef<HTMLInputElement | null>(null);
   const descriptionRef = useRef<HTMLTextAreaElement | null>(null);
   const [name, setName] = useState<string>("");
   const [category, setCategory] = useState<string>("");
-  //   const [quantity, setQuantity] = useState<number>(0);
   const [price, setPrice] = useState<number>(0);
-  //   const [total, setTotal] = useState<number>(0);
   const [contidion, setCondition] = useState<string>("");
-  // const [date, setDate] = useState<Moment>();
   const [description, setdescription] = useState<string>("");
   const [nameError, setNameError] = useState<boolean>(false);
   const [categoryError, setCategoryError] = useState<boolean>(false);
   const [priceError, setPriceError] = useState<boolean>(false);
-  //   const [quantityError, setQuantityError] = useState<boolean>(false);
   const [conditionError, setConditionError] = useState<boolean>(false);
-  //   const [dateError, setDateError] = useState<boolean>(false);
   const [descriptionError, setdescriptionError] = useState<boolean>(false);
   const { data, loading, error } = useQuery(GET_POSTS);
   const [addPost] = useMutation(ADD_POST, {
@@ -62,11 +55,11 @@ export default function PostForm() {
     },
   });
 
-  useEffect(() => {
-    if (!currentUser) {
-      return navigate("/");
-    }
-  }, [currentUser]);
+  // useEffect(() => {
+  //   if (!currentUser) {
+  //     return navigate("/login");
+  //   }
+  // }, [currentUser]);
 
   const helper = {
     checkName(): void {
@@ -98,30 +91,21 @@ export default function PostForm() {
         return;
       }
       input = input.trim();
+      let categoryLower = input.toLowerCase();
+      if (
+        categoryLower != "book" &&
+        categoryLower != "other" &&
+        categoryLower != "electronics" &&
+        categoryLower != "clothing" &&
+        categoryLower != "furniture" &&
+        categoryLower != "stationary"
+      ) {
+        setCategoryError(true);
+        return;
+      }
       setCategory(input);
       return;
     },
-
-    // checkQuantity(): void {
-    //   setQuantityError(false);
-    //   setQuantity(0);
-    //   let input: string | undefined | number = quantityRef.current?.value;
-    //   if (!input || input.trim() == "") {
-    //     setQuantityError(true);
-    //     return;
-    //   }
-    //   input = input.trim();
-    //   let num: number = parseInt(input);
-    //   if (Number.isNaN(num) || num < 1 || num > 999) {
-    //     setQuantityError(true);
-    //     return;
-    //   }
-    //   if (quantityRef.current) {
-    //     quantityRef.current.value = input;
-    //   }
-    //   setQuantity(num);
-    //   return;
-    // },
 
     checkPrice(): void {
       setPriceError(false);
@@ -170,27 +154,6 @@ export default function PostForm() {
       setCondition(condition);
     },
 
-    // checkDate(): void {
-    //   setDateError(false);
-    //   let date: string | undefined = dateRef.current?.value;
-    //   if (!date || date.trim() == "") {
-    //     setDateError(true);
-    //     return;
-    //   }
-    //   date = date.trim();
-    //   let dateFormatted: Moment = moment(date, "YYYY-MM-DD");
-    //   if (!dateFormatted.isValid()) {
-    //     setDateError(true);
-    //     return;
-    //   }
-    //   let today: object = moment().startOf("day");
-    //   if (dateFormatted < today) {
-    //     setDateError(true);
-    //     return;
-    //   }
-    //   setDate(dateFormatted);
-    // },
-
     checkdescription(): void {
       setdescriptionError(false);
       let description: string | undefined = descriptionRef.current?.value;
@@ -209,35 +172,26 @@ export default function PostForm() {
     },
   };
 
-  //   useEffect(() => {
-  //     setTotal(price * quantity);
-  //   }, [price, quantity]);
-
   const navigate = useNavigate();
 
   const submit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     helper.checkName();
     helper.checkCategory();
-    // helper.checkQuantity();
     helper.checkPrice();
     helper.checkCondition();
-    // helper.checkDate();
     helper.checkdescription();
     if (
       nameError ||
       categoryError ||
-      //   quantityError ||
       priceError ||
       conditionError ||
-      //   dateError ||
       descriptionError
     ) {
       return;
     }
     addPost({
       variables: {
-        //getAuth
         buyer_id: currentUser.uid,
         item: name,
         category: category,
@@ -308,9 +262,12 @@ export default function PostForm() {
                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                   >
                     <option disabled></option>
-                    <option>Books</option>
-                    <option>Cloth</option>
-                    <option>Electronic devices</option>
+                    <option>Book</option>
+                    <option>Clothing</option>
+                    <option>Electronics</option>
+                    <option>Furniture</option>
+                    <option>Stationary</option>
+                    <option>Other</option>
                   </select>
                 </div>
                 {categoryError && <p>Please select from provided categories</p>}

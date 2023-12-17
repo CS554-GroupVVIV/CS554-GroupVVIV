@@ -32,7 +32,15 @@ export default function SellForm() {
   const [category, setCategory] = useState<string>("");
   const [categoryError, setCategoryError] = useState<boolean>(false);
   const [image, setImage] = useState<File | null>(null);
-  const [addProduct] = useMutation(ADD_PRODUCT);
+  const [addProduct] = useMutation(ADD_PRODUCT, {
+    onError: (e) => {
+      alert(e);
+    },
+    onCompleted: () => {
+      alert("Sucess");
+      navigate("/products");
+    },
+  });
   // const [addProduct] = useMutation(ADD_PRODUCT, {
   //   update(cache, { data: { addProduct } }) {
   //     const { products } = cache.readQuery({ query: GET_PRODUCTS });
@@ -42,11 +50,12 @@ export default function SellForm() {
   //     });
   //   },
   // });
-  useEffect(() => {
-    if (!currentUser){
-       return navigate("/");
-    }
- },[currentUser]);
+
+  // useEffect(() => {
+  //   if (!currentUser) {
+  //     return navigate("/ogin");
+  //   }
+  // }, [currentUser]);
 
   const helper = {
     checkName(): void {
@@ -148,6 +157,7 @@ export default function SellForm() {
         categoryLower != "clothing" &&
         categoryLower != "furniture" &&
         categoryLower != "books" &&
+        categoryLower != "stationery" &&
         categoryLower != "other"
       ) {
         setCategoryError(true);
@@ -158,34 +168,37 @@ export default function SellForm() {
 
     checkImage(): void {
       setImage(null);
-      const image: File | undefined = imageRef.current?.files?.[0];
-      if (!image) {
-        return;
-      }
-      if (image.size > 10000000) {
-        console.log('image size',image.size);
-        return; 
-      }
-      if (!image.type.match(/image.*/)) {
-        console.log('image type',image.type);
-        return;
-      }
+      
       setImage(image);
+      
     },
   };
 
   // const router = useRouter();
+  const uploadImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const image: File | undefined = e.target.files?.[0];
+      if (!image) {
+        return;
+      }
+      if (image.size > 10000000) {
+        console.log("image size", image.size);
+        return;
+      }
+      if (!image.type.match(/image.*/)) {
+        console.log("image type", image.type);
+        return;
+      }
+    setImage(image);
+  };
 
   const submit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log("submit");
-
     helper.checkName();
     helper.checkPrice();
     helper.checkCondition();
     helper.checkDescription();
     helper.checkCategory();
-
 
     if (
       nameError ||
@@ -204,13 +217,11 @@ export default function SellForm() {
       );
       return;
     }
-    helper.checkImage();
     let imageUrl = "";
     if (image instanceof File) {
-      console.log("image", image);
       imageUrl = await uploadFileToS3(image, name);
     }
-    console.log("image url", imageUrl);
+    
     await addProduct({
       variables: {
         name: name,
@@ -244,6 +255,22 @@ export default function SellForm() {
               ref={nameRef}
               onBlur={helper.checkName}
             />
+            <label htmlFor="category">Category</label>
+            <select
+              name="category"
+              id="category"
+              ref={categoryRef}
+              onBlur={helper.checkCategory}
+              defaultValue={""}
+            >
+              <option disabled></option>
+              <option>Book</option>
+              <option>Clothing</option>
+              <option>Electronics</option>
+              <option>Furniture</option>
+              <option>Stationary</option>
+              <option>Other</option>
+            </select>
             <label htmlFor="description">Description</label>
             <textarea
               id="description"
@@ -254,9 +281,18 @@ export default function SellForm() {
               onBlur={helper.checkDescription}
               defaultValue={""}
             />
+            <label htmlFor="image">Image</label>
+            <input
+              type="file"
+              id="image"
+              name="image"
+              ref={imageRef}
+              onBlur={helper.checkImage}
+            />
             <label htmlFor="price">Price</label>
             <input
               type="number"
+              step="0.01"
               id="price"
               name="price"
               ref={priceRef}
@@ -270,10 +306,12 @@ export default function SellForm() {
               onBlur={helper.checkCategory}
               defaultValue={""}
             >
+              <option disabled></option>
               <option value="electronics">Electronics</option>
               <option value="clothing">Clothing</option>
               <option value="furniture">Furniture</option>
               <option value="books">Books</option>
+              <option value="stationery">Stationery</option>
               <option value="other">Other</option>
             </select>
             <label htmlFor="condition">Condition</label>
@@ -284,13 +322,15 @@ export default function SellForm() {
               onBlur={helper.checkCondition}
               defaultValue={""}
             >
+              <option disabled></option>
               <option value="brand new">Brand New</option>
               <option value="like new">Like New</option>
               <option value="gently used">Gently Used</option>
               <option value="functional">Functional</option>
+
             </select>
             <label htmlFor="image">Image</label>
-            <input type="file" id="image" name="image" ref={imageRef}/>
+            <input type="file" id="image" name="image" ref={imageRef} onChange={uploadImage}/>
             <button type="submit">Submit</button>
           </form>
         </div>

@@ -34,8 +34,6 @@ export default function ChatRoomList({ uid }) {
 
   return (
     <div>
-      <h2>Active Chat Room List:</h2>
-
       {rooms && Object.keys(rooms).length > 0 ? (
         <ul>
           {Object.keys(rooms).map((room, i) => {
