@@ -159,32 +159,11 @@ export const GET_COMMENT = gql`
 `;
 
 export const ADD_PRODUCT = gql`
-  mutation (
-    $name: String!
-    $price: Number!
-    $description: String!
-    $condition: String!
-    $sellerId: String!
-    $image: String
-    $category: String!
-  ) {
-    addProduct(
-      name: $name
-      price: $price
-      description: $description
-      condition: $condition
-      seller_id: $sellerId
-      image: $image
-      category: $category
-    ) {
-      name
-      price
-      date
-      description
-      condition
-      category
-    }
+mutation Mutation($name: String!, $price: Number!, $description: String!, $condition: String!, $sellerId: String!, $image: String!, $category: String!) {
+  addProduct(name: $name, price: $price, description: $description, condition: $condition, seller_id: $sellerId, image: $image, category: $category) {
+    _id
   }
+}
 `;
 
 export const EDIT_PRODUCT = gql`
@@ -192,11 +171,11 @@ export const EDIT_PRODUCT = gql`
     $id: String!
     $name: String!
     $price: Number!
-    $date: DateTime!
+    $date: String!
     $description: String!
     $condition: String!
     $sellerId: String!
-    $image: Base64!
+    $image: String!
     $category: String!
   ) {
     editProduct(

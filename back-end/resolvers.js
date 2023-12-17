@@ -135,6 +135,7 @@ export const resolvers = {
             "$",
             productList
           );
+          client.expire(`searchProducts-${args.searchTerm}`, 60);
         }
         return productList;
       } catch (error) {

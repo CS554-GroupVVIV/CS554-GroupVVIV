@@ -54,7 +54,8 @@ const checkCategory = (category) => {
     categoryLower != "other" &&
     categoryLower != "electronics" &&
     categoryLower != "clothing" &&
-    categoryLower != "furniture"
+    categoryLower != "furniture" &&
+    categoryLower != "stationery"
   ) {
     throw new Error("Invalid Category");
   }
@@ -195,6 +196,8 @@ const checkRating = (rating) => {
 
 export const dateObjectToHTMLDate = (date) => {
   // date is a Date() object
+  if (!date) throw new Error("You must provide a date");
+  if (typeof date !== Date) throw new Error("Date must be a Date() object");
   const year = date.getFullYear();
   const month = (date.getMonth() + 1).toString().padStart(2, "0");
   const day = date.getDate().toString().padStart(2, "0");
