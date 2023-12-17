@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 
 export const AuthContext = React.createContext();
 
@@ -7,13 +7,24 @@ export const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
   const [loadingUser, setLoadingUser] = useState(true);
   const auth = getAuth();
+
+  // useEffect(() => {
+  //   let myListener = onAuthStateChanged(auth, (user) => {
+  //     setCurrentUser(user);
+  //     console.log("onAuthStateChanged", user);
+  //     setLoadingUser(false);
+  //   });
+  //   return () => {
+  //     if (myListener) myListener();
+  //   };
+  // }, []);
+
   useEffect(() => {
-    let myListener = onAuthStateChanged(auth, (user) => {
+    let isMounted = true;
+
+    const myListener = onAuthStateChanged(auth, (user) => {
       setCurrentUser(user);
-      console.log("onAuthStateChanged", user);
       setLoadingUser(false);
-<<<<<<< Updated upstream
-=======
 
       if (isMounted && user) {
         const signOutTimer = setTimeout(() => {
@@ -30,12 +41,13 @@ export const AuthProvider = ({ children }) => {
           clearTimeout(signOutTimer);
         };
       }
->>>>>>> Stashed changes
     });
+
     return () => {
+      isMounted = false;
       if (myListener) myListener();
     };
-  }, []);
+  }, [auth]);
 
   if (loadingUser) {
     return (

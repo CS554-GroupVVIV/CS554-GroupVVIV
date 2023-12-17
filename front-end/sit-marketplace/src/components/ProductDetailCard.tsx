@@ -134,7 +134,7 @@ export default function ProductDetailCard() {
                   //   retrieve(product);
                   // }}
                   >
-                    Retrieve Post
+                    Retrieve Product
                   </button>
                 ) : null}
                 {productData.seller_id == currentUser.uid &&
