@@ -17,7 +17,7 @@ type Product = {
 
 export default function Products() {
   const navigate = useNavigate();
-  const [curCategory, setCurCategory] = useState("all");
+  const [curCategory, setCurCategory] = useState("All");
   const { currentUser } = useContext(AuthContext);
   const category_list = [
     "All",
