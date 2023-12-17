@@ -1,15 +1,12 @@
 import { GraphQLScalarType, Kind } from "graphql";
 import { ObjectId } from "mongodb";
 export const typeDefs = `#graphql
-    scalar ObjectID
-    scalar Number
     scalar DateTime
 
     type Query {
         products: [Product],
         posts: [Post],
         users: [User],
-        searchProducts(searchTerm: String!): [Product],
         searchPosts(searchTerm: String!): [Post],
         searchProductsByName(name: String!): [Product],
         getProductById(_id:String!):Product,
@@ -30,15 +27,15 @@ export const typeDefs = `#graphql
     type Product {
         _id: String!,
         name: String!,
-        price: Number!,
+        price: Float!,
         date: String!,
         description:String,
-        condition:String,
-        seller_id:String,
+        condition:String!,
+        seller_id:String!,
         buyer_id:String,
-        image:String,
-        category:String,
-        status:String
+        image:String!,
+        category:String!,
+        status:String!
     }
 
     type Post {
@@ -47,8 +44,8 @@ export const typeDefs = `#graphql
       seller_id: String,
       item: String!,
       category:String!,
-      price: Number!,
-      condition:String,
+      price: Float!,
+      condition:String!,
       date: String!,
       description:String,
       status:String!
@@ -64,31 +61,31 @@ export const typeDefs = `#graphql
     type User{
     _id : String!,
     email: String!,
-    firstname: String,
-    lastname: String,
-    comments:[Comment]
-    rating: Number!
-    favorite: [String]
+    firstname: String!,
+    lastname: String!,
+    comments:[Comment]!
+    rating: Float!
+    favorite: [String]!
   }
 
     type Message{
     sender : String!,
-    time : DateTime,
-    message : String
+    time : DateTime!,
+    message : String!
   }
 
     type Chat{
     _id : String!,
-    participants : [String],
-    messages : [Message]
+    participants : [String!]!,
+    messages : [Message!]!
   }
 
     type Mutation {
-        addProduct(name:String!, price: Number!,description:String!,condition:String!,seller_id:String!, image:String!,category:String!):Product,
-        editProduct(_id: String!, name:String, price: Number,date:DateTime,description:String,condition:String,seller_id:ObjectID!,buyer_id:ObjectID, image:String,category:String,status:String ):Product,
+        addProduct(name:String!, price: Float!,description:String!,condition:String!,seller_id:String!, image:String!,category:String!):Product,
+        editProduct(_id: String!, name:String, price: Float,date:DateTime,description:String,condition:String,seller_id:String!,buyer_id:String, image:String,category:String,status:String ):Product,
         removeProduct(_id:String!):Product,
-        addPost(buyer_id: String!, item:String!, category:String!, price: Number!, condition:String!, description:String!):Post,
-        editPost(_id: String!, buyer_id: String!, item:String!, category:String!, price: Number!, condition:String!, description:String!, status:String!):Post,
+        addPost(buyer_id: String!, item:String!, category:String!, price: Float!, condition:String!, description:String):Post,
+        editPost(_id: String!, buyer_id: String!, item:String!, category:String!, price: Float!, condition:String!, description:String!, status:String!):Post,
         removePost(_id:String!):Post,
         addUser(_id: String!, email: String!, firstname: String!, lastname: String!, favorite: String): User,
         editUser(_id: String!, email: String!, firstname: String!, lastname: String!): User,
@@ -103,22 +100,22 @@ export const typeDefs = `#graphql
     }
 `;
 
-export const ObjectID = new GraphQLScalarType({
-  name: "ObjectID",
-  description: "MongoDB ObjectID scalar type",
-  serialize(value) {
-    return value.toString();
-  },
-  parseValue(value) {
-    return new ObjectId(value);
-  },
-  parseLiteral(ast) {
-    if (ast.kind === "StringValue") {
-      return new ObjectId(ast.value);
-    }
-    return null;
-  },
-});
+// export const ObjectID = new GraphQLScalarType({
+//   name: "ObjectID",
+//   description: "MongoDB ObjectID scalar type",
+//   serialize(value) {
+//     return value.toString();
+//   },
+//   parseValue(value) {
+//     return new ObjectId(value);
+//   },
+//   parseLiteral(ast) {
+//     if (ast.kind === "StringValue") {
+//       return new ObjectId(ast.value);
+//     }
+//     return null;
+//   },
+// });
 
 export const DateTime = new GraphQLScalarType({
   // MM/DD/YYYY LOCALTIME

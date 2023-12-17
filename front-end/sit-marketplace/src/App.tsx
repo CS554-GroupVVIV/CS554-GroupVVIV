@@ -11,6 +11,7 @@ import ChatRooms from "./components/ChatRoomList.tsx";
 import { AuthProvider } from "./context/AuthContext.jsx";
 import PostForm from "./components/PostForm.tsx";
 import ProductDetail from "./components/ProductDetail.tsx";
+import ProductDetailCard from "./components/ProductDetailCard.tsx";
 import PostDetail from "./components/PostDetail.tsx";
 import ProductForm from "./components/NewProduct.tsx";
 import UserProfile from "./components/UserProfile.tsx";

@@ -57,7 +57,6 @@ export default function PostDetail() {
     return <h1>Error loading post</h1>;
   } else {
     const post = data.getPostById;
-    console.log(post);
     return (
       <div className="card w-96 bg-base-100 shadow-xl border-indigo-500/100">
         <div className="card-body">
@@ -65,39 +64,52 @@ export default function PostDetail() {
 
           <p>Item: {post.item}</p>
           <p>Buyer Id: {post.buyer_id}</p>
-          <p>Seller Id: {post.seller_id}</p>
+          {post.status == "completed" &&
+          currentUser &&
+          (currentUser.uid == post.seller_id ||
+            currentUser.uid == post.buyer_id) ? (
+            <p>Seller Id: {post.seller_id}</p>
+          ) : null}
           <p>Category: {post.category}</p>
           <p>Price: {post.price}</p>
           <p>Transaction Date: {post.date.split("T")[0]}</p>
           <p>Status: {post.status}</p>
-          <div className="card-actions justify-end">
-            {post.buyer_id == currentUser.uid && post.status == "active" ? (
-              <button
-                onClick={() => {
-                  retrieve(post);
-                }}
-              >
-                Retrieve Post
+          {currentUser ? (
+            <div className="card-actions justify-end">
+              {post.buyer_id == currentUser.uid && post.status == "active" ? (
+                <button
+                  onClick={() => {
+                    retrieve(post);
+                  }}
+                >
+                  Retrieve Post
+                </button>
+              ) : null}
+              {post.buyer_id == currentUser.uid && post.status == "inactive" ? (
+                <button
+                  onClick={() => {
+                    repost(post);
+                  }}
+                >
+                  Repost
+                </button>
+              ) : null}
+              {post.status == "completed" &&
+              (post.buyer_id == currentUser.uid ||
+                post.seller_id == currentUser.uid) ? (
+                <Comment data={post} />
+              ) : null}
+              {post.status == "active" && post.buyer_id != currentUser.uid ? (
+                <button>Chat with buyer</button>
+              ) : null}
+            </div>
+          ) : (
+            <div>
+              <button onClick={() => navigate("/login")}>
+                Log In to konw more
               </button>
-            ) : null}
-            {post.buyer_id == currentUser.uid && post.status == "inactive" ? (
-              <button
-                onClick={() => {
-                  repost(post);
-                }}
-              >
-                Repost
-              </button>
-            ) : null}
-            {post.status == "completed" &&
-            (post.buyer_id == currentUser.uid ||
-              post.seller_id == currentUser.uid) ? (
-              <Comment data={post} />
-            ) : null}
-            {post.status == "active" && post.buyer_id != currentUser.uid ? (
-              <button>Chat with buyer</button>
-            ) : null}
-          </div>
+            </div>
+          )}
         </div>
       </div>
     );

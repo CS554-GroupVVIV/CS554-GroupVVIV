@@ -32,7 +32,15 @@ export default function SellForm() {
   const [category, setCategory] = useState<string>("");
   const [categoryError, setCategoryError] = useState<boolean>(false);
   const [image, setImage] = useState<File | null>(null);
-  const [addProduct] = useMutation(ADD_PRODUCT);
+  const [addProduct] = useMutation(ADD_PRODUCT, {
+    onError: (e) => {
+      alert(e);
+    },
+    onCompleted: () => {
+      alert("Sucess");
+      navigate("/products");
+    },
+  });
   // const [addProduct] = useMutation(ADD_PRODUCT, {
   //   update(cache, { data: { addProduct } }) {
   //     const { products } = cache.readQuery({ query: GET_PRODUCTS });
@@ -42,11 +50,12 @@ export default function SellForm() {
   //     });
   //   },
   // });
-  useEffect(() => {
-    if (!currentUser){
-       return navigate("/");
-    }
- },[currentUser]);
+
+  // useEffect(() => {
+  //   if (!currentUser) {
+  //     return navigate("/ogin");
+  //   }
+  // }, [currentUser]);
 
   const helper = {
     checkName(): void {
@@ -172,11 +181,11 @@ export default function SellForm() {
         return;
       }
       if (image.size > 10000000) {
-        console.log('image size',image.size);
-        return; 
+        console.log("image size", image.size);
+        return;
       }
       if (!image.type.match(/image.*/)) {
-        console.log('image type',image.type);
+        console.log("image type", image.type);
         return;
       }
     setImage(image);
@@ -246,6 +255,22 @@ export default function SellForm() {
               ref={nameRef}
               onBlur={helper.checkName}
             />
+            <label htmlFor="category">Category</label>
+            <select
+              name="category"
+              id="category"
+              ref={categoryRef}
+              onBlur={helper.checkCategory}
+              defaultValue={""}
+            >
+              <option disabled></option>
+              <option>Book</option>
+              <option>Clothing</option>
+              <option>Electronics</option>
+              <option>Furniture</option>
+              <option>Stationary</option>
+              <option>Other</option>
+            </select>
             <label htmlFor="description">Description</label>
             <textarea
               id="description"
@@ -255,6 +280,14 @@ export default function SellForm() {
               ref={descriptionRef}
               onBlur={helper.checkDescription}
               defaultValue={""}
+            />
+            <label htmlFor="image">Image</label>
+            <input
+              type="file"
+              id="image"
+              name="image"
+              ref={imageRef}
+              onBlur={helper.checkImage}
             />
             <label htmlFor="price">Price</label>
             <input
