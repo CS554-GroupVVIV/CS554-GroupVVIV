@@ -62,7 +62,7 @@ export default function Posts() {
     const posts = data.posts;
     // console.log(posts);
     return (
-      <div style={{ marginTop: "5%" }}>
+      <div style={{ marginTop: 70 }}>
         <div style={{ display: "flex", justifyContent: "center" }}>
           <Typography
             variant="h4"
@@ -77,7 +77,6 @@ export default function Posts() {
           <Grid container justifyContent="flex-end">
             {currentUser ? (
               <Button
-                size="large"
                 variant="contained"
                 color="inherit"
                 onClick={() => {

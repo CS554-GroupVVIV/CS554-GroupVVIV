@@ -58,7 +58,7 @@ export default function Products() {
   if (data) {
     // console.log(data);
     return (
-      <div style={{ marginTop: "5%" }}>
+      <div style={{ marginTop: 70 }}>
         <div style={{ display: "flex", justifyContent: "center" }}>
           <Typography
             variant="h4"
@@ -73,7 +73,6 @@ export default function Products() {
           <Grid container justifyContent="flex-end">
             {currentUser ? (
               <Button
-                size="large"
                 variant="contained"
                 color="inherit"
                 onClick={() => {

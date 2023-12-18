@@ -45,7 +45,7 @@ export default function Home() {
 
   // console.log(currentUser);
   return (
-    <div style={{ marginTop: "5%" }}>
+    <div style={{ marginTop: 50 }}>
       <Grid
         container
         spacing={5}
