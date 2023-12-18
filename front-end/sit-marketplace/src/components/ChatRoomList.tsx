@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { socketID, socket } from "./socket";
 
-import { Grid, MenuList, MenuItem } from "@mui/material";
+import { Grid, MenuList, MenuItem, Button } from "@mui/material";
 
 import { useQuery } from "@apollo/client";
 import { GET_USERS_BY_IDS } from "../queries";
@@ -29,15 +29,18 @@ export default function ChatRoomList({ uid }) {
       setRooms(data);
     });
 
-    // socket.on("join room", (data) => {
-    //   if (curRoom !== data.room) setCurRoom(data.room);
-    // });
+    socket.on("join room", (data) => {
+      setCurRoom(data.room);
+    });
 
+    let cur = undefined;
     for (const key in rooms) {
-      if (rooms[key] !== null) {
-        setCurRoom(key);
+      if (rooms[key]) {
+        cur = key;
+        break;
       }
     }
+    setCurRoom(cur);
   }, [socket]);
 
   useEffect(() => {
@@ -49,57 +52,67 @@ export default function ChatRoomList({ uid }) {
     }
   }, [curRoom]);
 
-  // <button
-  //   onClick={() => {
-  //     if (curRoom !== room) {
-  //       socket.emit("join room", {
-  //         room: room,
-  //         user: uid,
-  //       });
-  //     }
-  //     socket.emit("leave");
-  //     setCurRoom(undefined);
-  //   }}
-  // >
-  //   Close
-  // </button>;
-
   return (
-    <Grid
-      container
-      spacing={5}
-      sx={{
-        height: "100%",
-        width: "auto",
-        overflowY: "hidden",
-      }}
-      // sx={{ overflowY: "hidden" }}
-      direction="row"
-    >
-      <Grid item>
-        <MenuList>
-          {rooms && Object.keys(rooms).length > 0 ? (
-            Object.keys(rooms).map((room, i) => {
-              return (
-                <MenuItem
-                  key={i}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    curRoom === room ? setCurRoom(undefined) : setCurRoom(room);
-                  }}
-                >
-                  {participantDict && participantDict[room]}
-                </MenuItem>
-              );
-            })
-          ) : (
-            <p>Nothing here...</p>
-          )}
-        </MenuList>
+    <>
+      <div style={{ display: "flex", justifyContent: "right" }}>
+        {curRoom && (
+          <Button
+            size="small"
+            variant="contained"
+            color="inherit"
+            onClick={() => {
+              socket.emit("leave");
+              setCurRoom(undefined);
+            }}
+          >
+            Close connection with {participantDict && participantDict[curRoom]}
+          </Button>
+        )}
+      </div>
+
+      <Grid
+        container
+        spacing={3}
+        sx={{
+          height: "100%",
+          width: "auto",
+          overflowY: "hidden",
+        }}
+        // sx={{ overflowY: "hidden" }}
+        direction="row"
+      >
+        <Grid item>
+          <MenuList>
+            {rooms && Object.keys(rooms).length > 0 ? (
+              Object.keys(rooms).map((room, i) => {
+                return (
+                  <MenuItem
+                    key={i}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      curRoom === room
+                        ? setCurRoom(undefined)
+                        : setCurRoom(room);
+                    }}
+                    sx={
+                      curRoom === room
+                        ? { fontWeight: "bold", marginBottom: 1, border: 2 }
+                        : { fontWeight: "bold", marginBottom: 1 }
+                    }
+                  >
+                    {participantDict && participantDict[room]}
+                  </MenuItem>
+                );
+              })
+            ) : (
+              <p>Nothing here...</p>
+            )}
+          </MenuList>
+        </Grid>
+        <Grid item xs sx={{ width: 500 }}>
+          {curRoom && <ChatRoom room={curRoom} />}
+        </Grid>
       </Grid>
-      <Grid item xs sx={{ width: 500 }}>
-        {curRoom && <ChatRoom room={curRoom} />}
-      </Grid>
-    </Grid>
+    </>
   );
 }

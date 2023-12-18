@@ -244,7 +244,16 @@ function App() {
         </AppBar>
 
         <Dialog open={open} keepMounted onClose={handleClose}>
-          <DialogTitle>{"Chat Rooms"}</DialogTitle>
+          <DialogTitle>
+            <Typography
+              variant="h5"
+              sx={{
+                fontWeight: "bold",
+              }}
+            >
+              Chat Rooms
+            </Typography>
+          </DialogTitle>
           <DialogContent>
             <ChatRoomList uid={user && user.uid} />
           </DialogContent>
