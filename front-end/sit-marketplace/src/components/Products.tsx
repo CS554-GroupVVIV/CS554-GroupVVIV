@@ -77,17 +77,19 @@ export default function Products() {
         {searchTerm && <SearchProduct searchTerm={searchTerm} />}
 
         <Tabs
+          value={1}
           variant="scrollable"
           scrollButtons="auto"
           aria-label="scrollable auto tabs example"
         >
           {category_list.map((category) => (
             <Link
+              key={category}
               onClick={() => {
                 setCurCategory(category);
               }}
             >
-              <Tab label={category} />
+              <Tab label={category} key={category} />
             </Link>
           ))}
         </Tabs>
