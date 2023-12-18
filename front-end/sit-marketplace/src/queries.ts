@@ -382,7 +382,6 @@ export const EDIT_USER = gql`
       lastname
     }
   }
-}
 `;
 
 
