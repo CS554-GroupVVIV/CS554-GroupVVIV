@@ -46,7 +46,7 @@ export default function ProductCard({ productData }) {
       refetchQueries: [
         {
           query: GET_USER,
-          variables: { _id: currentUser.uid },
+          variables: { _id: currentUser ? currentUser.uid : "" },
         },
       ],
     });
@@ -57,7 +57,7 @@ export default function ProductCard({ productData }) {
       refetchQueries: [
         {
           query: GET_USER,
-          variables: { _id: currentUser.uid },
+          variables: { _id: currentUser ? currentUser.uid : "" },
         },
       ],
     }
