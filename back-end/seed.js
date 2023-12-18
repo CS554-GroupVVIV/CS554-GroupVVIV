@@ -39,7 +39,7 @@ const productList = [
     seller_id: "mRdeR8wDRzLVEbeer5PpbJY6TDE3",
     buyer_id: null,
     image: "7ENPNeTB3qkgvrS+W9aXTg==",
-    category: "other",
+    category: "Other",
     status: "active",
   },
   {
@@ -163,7 +163,7 @@ const postList = [
     buyer_id: "8C5bGSz1FRVbAQ47EDnDSvmKsqg2",
     seller_id: "mRdeR8wDRzLVEbeer5PpbJY6TDE3",
     item: "Phone",
-    category: "Electronic device",
+    category: "Electronics",
     price: 10,
     condition: "Brand New",
     date: new Date("2023-12-01"),

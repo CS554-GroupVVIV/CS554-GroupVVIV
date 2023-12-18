@@ -7,6 +7,7 @@ export const GET_PRODUCTS = gql`
       buyer_id
       category
       condition
+      date
       description
       name
       price
@@ -40,7 +41,6 @@ export const GET_USER = gql`
       email
       firstname
       lastname
-      favorite
     }
   }
 `;
@@ -161,11 +161,11 @@ export const GET_COMMENT = gql`
 export const ADD_PRODUCT = gql`
   mutation (
     $name: String!
-    $price: Number!
+    $price: Float!
     $description: String!
     $condition: String!
     $sellerId: String!
-    $image: String
+    $image: String!
     $category: String!
   ) {
     addProduct(
@@ -191,12 +191,12 @@ export const EDIT_PRODUCT = gql`
   mutation (
     $id: String!
     $name: String!
-    $price: Number!
-    $date: DateTime!
+    $price: Float!
+    $date: String!
     $description: String!
     $condition: String!
     $sellerId: String!
-    $image: Base64!
+    $image: String!
     $category: String!
   ) {
     editProduct(
@@ -238,7 +238,7 @@ export const ADD_POST = gql`
     $buyer_id: String!
     $item: String!
     $category: String!
-    $price: Number!
+    $price: Float!
     $condition: String!
     $description: String!
   ) {
@@ -270,7 +270,7 @@ export const EDIT_POST = gql`
     $buyer_id: String!
     $item: String!
     $category: String!
-    $price: Number!
+    $price: Float!
     $condition: String!
     $description: String!
   ) {
@@ -376,27 +376,43 @@ export const EDIT_USER = gql`
       lastname: $lastname
     ) {
       _id
-      email
       firstname
       lastname
+      email
     }
   }
 `;
 
-export const SEARCH_PRODUCTS = gql`
-  query ($searchTerm: String!) {
-    searchProducts(searchTerm: $searchTerm) {
-      _id
-      name
-    }
-  }
-`;
+// export const SEARCH_PRODUCTS = gql`
+//   query ($searchTerm: String!) {
+//     searchProducts(searchTerm: $searchTerm) {
+//       _id
+//       buyer_id
+//       category
+//       condition
+//       date
+//       description
+//       name
+//       price
+//       seller_id
+//       status
+//     }
+//   }
+// `;
 
 export const SEARCH_POSTS = gql`
   query ($searchTerm: String!) {
     searchPosts(searchTerm: $searchTerm) {
       _id
+      buyer_id
+      seller_id
       item
+      category
+      date
+      price
+      condition
+      description
+      status
     }
   }
 `;
@@ -405,7 +421,15 @@ export const SEARCH_PRODUCTS_BY_NAME = gql`
   query ($name: String!) {
     searchProductsByName(name: $name) {
       _id
+      buyer_id
+      category
+      condition
+      date
+      description
       name
+      price
+      seller_id
+      status
     }
   }
 `;

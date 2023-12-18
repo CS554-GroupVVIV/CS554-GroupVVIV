@@ -1,34 +1,37 @@
 import { ObjectId } from "mongodb";
 import moment from "moment";
 
-const checkName = (str) => {
-  if (str === undefined) throw new Error("Must provide a string");
-  if (typeof str !== "string") throw new Error("str must be a string");
-  if (str.trim().length == 0) throw new Error("should not be just space");
-  if (str.length < 1)
-    throw new Error("The string should have at least 1 character.");
-  //   let pattern = new RegExp("^[A-Za-z]+$");
-  //   if (!pattern.test(str)) throw new Error("Name should only contain letters.");
-  return str;
-};
+// const checkName = (str) => {
+//   if (str === undefined) throw new Error("Must provide a string");
+//   if (typeof str !== "string") throw new Error("str must be a string");
+//   if (str.trim().length == 0) throw new Error("should not be just space");
+//   str = str.trim();
+//   // if (str.length < 1)
+//   //   throw new Error("The string should have at least 1 character.");
+//   //   let pattern = new RegExp("^[A-Za-z]+$");
+//   //   if (!pattern.test(str)) throw new Error("Name should only contain letters.");
+//   return str;
+// };
 
-export const checkString = (str) => {
+const checkString = (str) => {
   if (str === undefined) throw new Error("Must provide a string");
   if (typeof str !== "string") throw new Error("str must be a string");
   if (str.trim().length == 0) throw new Error("should not be just space");
-  if (str.length < 1)
-    throw new Error("The string should have at least 1 character.");
+  // if (str.length < 1)
+  //   throw new Error("The string should have at least 1 character.");
+  str = str.trim();
   return str;
 };
 
 const checkId = (str) => {
   if (!str) throw new Error("Must provide an id");
   if (typeof str !== "string") throw new Error("Id must be a string");
+  str = str.trim();
   if (!ObjectId.isValid(str)) throw new Error("Invalid id");
   return str;
 };
 
-const checkItem = (str) => {
+const checkName = (str) => {
   if (!str || str.trim() == "") {
     throw new Error("Must provide an item name");
   }
@@ -50,11 +53,12 @@ const checkCategory = (category) => {
   category = category.trim();
   let categoryLower = category.toLowerCase();
   if (
-    categoryLower != "books" &&
+    categoryLower != "book" &&
     categoryLower != "other" &&
     categoryLower != "electronics" &&
     categoryLower != "clothing" &&
-    categoryLower != "furniture"
+    categoryLower != "furniture" &&
+    categoryLower != "stationary"
   ) {
     throw new Error("Invalid Category");
   }
@@ -106,24 +110,24 @@ const checkDescription = (description) => {
   }
 };
 
-const checkDate = (date) => {
-  if (!date || date.trim() == "") {
-    throw new Error("Must provide a date");
-  }
-  date = date.trim();
-  console.log("date", date);
-  if (!moment(date).isValid()) {
-    throw new Error("Invalid Date");
-  }
-  return date;
-};
+// const checkDate = (date) => {
+//   if (!date || date.trim() == "") {
+//     throw new Error("Must provide a date");
+//   }
+//   date = date.trim();
+//   console.log("date", date);
+//   if (!moment(date).isValid()) {
+//     throw new Error("Invalid Date");
+//   }
+//   return date;
+// };
 
-export const checkUrl = (url) => {
+const checkUrl = (url) => {
   if (!url) throw new Error("You must provide a URL to search for");
   if (typeof url !== "string") throw new Error("URL must be a string");
   if (url.trim().length === 0)
     throw new Error("URL cannot be an empty string or just spaces");
-
+  url = url.trim();
   const regex = new RegExp(
     /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/
   );
@@ -132,30 +136,30 @@ export const checkUrl = (url) => {
   return url;
 };
 
-export const checkEmail = (email) => {
+const checkEmail = (email) => {
   const regex = new RegExp(
     /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@(stevens.edu)$/i
   );
   email = email.trim().toLowerCase();
-  if (!email) throw "You must provide a user email to search for";
-  if (typeof email !== "string") throw "User email must be a string";
+  if (!email) throw new Error("You must provide a user email to search for");
+  if (typeof email !== "string") throw new Error("User email must be a string");
   if (email.length === 0)
-    throw "User email cannot be an empty string or just spaces";
+    throw new Error("User email cannot be an empty string or just spaces");
   if (!regex.test(email))
-    throw `You must provide a valid Stevens' email address`;
+    throw new Error(`You must provide a valid Stevens' email address`);
   return email;
 };
 
-export const checkUserAndChatId = (id) => {
-  if (!id) throw "You must provide an id to search for";
-  if (typeof id !== "string" && typeof id !== "object")
-    throw "Id must be a string or ObjectId";
-  id = id.trim();
-  if (id.length === 0) throw "id cannot be an empty string or just spaces";
-  return id;
-};
+// export const checkUserAndChatId = (id) => {
+//   if (!id) throw "You must provide an id to search for";
+//   if (typeof id !== "string" && typeof id !== "object")
+//     throw "Id must be a string or ObjectId";
+//   id = id.trim();
+//   if (id.length === 0) throw "id cannot be an empty string or just spaces";
+//   return id;
+// };
 
-export const checkFirstNameAndLastName = (str, valStr) => {
+const checkFirstNameAndLastName = (str, valStr) => {
   if (str === undefined) throw new Error(`${valStr} must provide a string`);
   if (typeof str !== "string") throw new Error(`${valStr} must be a string`);
   str = str.trim();
@@ -169,51 +173,63 @@ export const checkFirstNameAndLastName = (str, valStr) => {
   return str;
 };
 
-export const capitalizeName = (name) => {
+const capitalizeName = (name) => {
+  name = checkString(name);
   return name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
 }; // reference from stackoverflow
 
-const checkNotEmpty = (str) => {
-  if (!str | (str.trim() === "")) {
-    throw "Input is empty";
-  }
-  return str;
-};
+// const checkNotEmpty = (str) => {
+//   if (!str | (str.trim() === "")) {
+//     throw "Input is empty";
+//   }
+//   return str;
+// };
 
 const checkRating = (rating) => {
   if (!rating || typeof rating !== "number") {
-    throw "Rating not valid";
+    throw new Error("Rating not valid");
   }
   if (!Number.isInteger(rating)) {
-    throw "Rating not valid";
+    throw new Error("Rating not valid");
   }
   if (rating < 1 || rating > 5) {
-    throw "Rating not valid";
+    throw new Error("Rating not valid");
   }
   return rating;
 };
 
-export const dateObjectToHTMLDate = (date) => {
+const dateObjectToHTMLDate = (date) => {
   // date is a Date() object
+  if (!date || !(date instanceof Date)) {
+    throw new Error("Invalid Date Format");
+  }
   const year = date.getFullYear();
   const month = (date.getMonth() + 1).toString().padStart(2, "0");
   const day = date.getDate().toString().padStart(2, "0");
   return `${year}-${month}-${day}`;
 };
 
-export const HTMLDateToDateObject = (date) => {
-  return new Date(date);
-};
+// const HTMLDateToDateObject = (date) => {
+//   date = checkString(date);
+//   return new Date(date);
+// };
 
 export {
+  checkString,
   checkId,
   checkName,
-  checkItem,
+  // checkItem,
   checkCategory,
   checkPrice,
   checkCondition,
   checkDescription,
-  checkDate,
-  checkNotEmpty,
+  // checkDate,
+  // checkNotEmpty,
   checkRating,
+  checkUrl,
+  checkEmail,
+  checkFirstNameAndLastName,
+  capitalizeName,
+  dateObjectToHTMLDate,
+  // HTMLDateToDateObject,
 };

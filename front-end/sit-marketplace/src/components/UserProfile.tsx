@@ -5,6 +5,7 @@ import {  useQuery } from "@apollo/client";
 import {  GET_USER, GET_PRODUCTS_BY_IDS } from "../queries.ts";
 import TransactionPost from "./TransactionPost.tsx";
 import TransactionProduct from "./TransactionProduct.tsx";
+import Favorite from "./Favorite.tsx";
 import * as validation from "../helper.tsx";
 import { useApolloClient } from "@apollo/client";
 import { FetchPolicy } from "@apollo/client";
@@ -36,7 +37,7 @@ function UserProfile() {
   });
   const [favorite, setFavorite] = useState([]);
   const baseUrl = "http://localhost:5173/product/";
-
+  const [toggleEdit, setToggleEdit] = useState<boolean>(false);
   const [togglePost, setTogglePost] = useState<boolean>(false);
   const [toogleProduct, setToggleProduct] = useState<boolean>(false);
   const [toogleUpdateUser, setToggleUpdateUser] = useState<boolean>(false);
@@ -146,7 +147,7 @@ function UserProfile() {
       >
         Transaction from Post
       </button>
-
+      <br />
       {togglePost ? <TransactionPost /> : null}
       <button
         onClick={() => {
@@ -156,12 +157,15 @@ function UserProfile() {
         Transaction from Product
       </button>
       {toogleProduct ? <TransactionProduct /> : null}
-
-      <div className="favorite-products-list">
+      <br />
+      <button
+        onClick={() => {
+          setToggleFavorite(!toogleFavorite);
+        }}
+      >
         My Favorite Products
-        {favorite &&
-          favorite.map((fav) => <FavoriteProduct key={fav} favId={fav} />)}
-      </div>
+      </button>
+      {toogleFavorite ? <Favorite favorite={favorite} /> : null}
     </div>
   );
 }

@@ -3,6 +3,7 @@ import { useQuery } from "@apollo/client";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext.jsx";
 import { GET_PRODUCTS_BY_BUYER, GET_PRODUCTS_BY_SELLER } from "../queries.js";
+import ProductCard from "./ProductCard.js";
 
 const TransactionProduct = () => {
   const { currentUser } = useContext(AuthContext);
@@ -25,31 +26,31 @@ const TransactionProduct = () => {
   });
   console.log("I bought these: ", productBuyer);
 
-  const ProductCard = ({ product }) => {
-    return (
-      <div className="card w-96 bg-base-100 shadow-xl border-indigo-500/100" key={product._id}>
-        <div
-          className="card-body hover:bg-blue-500 cursor-pointer"
-          onClick={() => {
-            navigate(`/product/${product._id}`);
-          }}
-        >
-          <p className="card-title">{product.name}</p>
-          <p>price: {product.price}</p>
-          <p>date: {product.date.split("T")[0]}</p>
-          <p>status: {product.status}</p>
-          <div className="card-actions justify-end">
-            <button className="btn btn-primary">Comment</button>
-          </div>
-        </div>
-      </div>
-    );
-  };
+  // const ProductCard = ({ product }) => {
+  //   return (
+  //     <div className="card w-96 bg-base-100 shadow-xl border-indigo-500/100" key={product._id}>
+  //       <div
+  //         className="card-body hover:bg-blue-500 cursor-pointer"
+  //         onClick={() => {
+  //           navigate(`/product/${product._id}`);
+  //         }}
+  //       >
+  //         <p className="card-title">{product.name}</p>
+  //         <p>price: {product.price}</p>
+  //         <p>date: {product.date.split("T")[0]}</p>
+  //         <p>status: {product.status}</p>
+  //         <div className="card-actions justify-end">
+  //           <button className="btn btn-primary">Comment</button>
+  //         </div>
+  //       </div>
+  //     </div>
+  //   );
+  // };
 
   const productPurchased = () => {
     if (productBuyer) {
-      return productBuyer.getProductByBuyer.map((product) => {
-        return <ProductCard product={product} />;
+      return productBuyer.getProductByBuyer.map((product, index) => {
+        return <ProductCard key={index} productData={product} />;
       });
     } else if (productBuyerLoading) {
       return <p>Loading</p>;
@@ -61,8 +62,8 @@ const TransactionProduct = () => {
 
   const productSold = () => {
     if (productSeller) {
-      return productSeller.getProductBySeller.map((product) => {
-        return <ProductCard product={product} />;
+      return productSeller.getProductBySeller.map((product, index) => {
+        return <ProductCard key={index} productData={product} />;
       });
     } else if (productSellerLoading) {
       return <p>Loading</p>;

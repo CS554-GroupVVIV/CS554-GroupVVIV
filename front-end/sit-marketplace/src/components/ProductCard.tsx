@@ -5,7 +5,15 @@ import { AuthContext } from "../context/AuthContext";
 
 import { socketID, socket } from "./socket";
 
-import { Card, CardHeader, CardContent, Grid, Link } from "@mui/material";
+import {
+  Card,
+  CardHeader,
+  CardMedia,
+  CardContent,
+  Grid,
+  Link,
+  Button,
+} from "@mui/material";
 
 import { ADD_FAVORITE_TO_USER, REMOVE_FAVORITE_FROM_USER } from "../queries";
 import { useMutation } from "@apollo/client";
@@ -73,42 +81,35 @@ export default function ProductCard({ productData }) {
       <Card
         sx={{ width: 300, height: "100%" }}
         style={{
-          backgroundColor: "snow",
+          // backgroundColor: "snow",
           borderRadius: "10%",
         }}
       >
         <Link onClick={() => navigate(baseUrl + productData._id)}>
           <CardHeader title={productData && productData.name}></CardHeader>
         </Link>
-        <CardContent
-          style={{
-            display: "flex",
-            justifyContent: "center",
-          }}
-        >
-          <ul>
-            <li>Price: {productData && productData.price}</li>
-            <li>Date: {productData && productData.date}</li>
-            <li>Description: {productData && productData.description}</li>
-            <li>Condition: {productData && productData.condition}</li>
-            <li>Category: {productData && productData.category}</li>
-          </ul>
-          <div className="image">
-            {productData && productData.image ? (
-              <img
-                src={productData.image}
-                alt="product image"
-                style={{ width: "100%", height: "100%" }}
-              />
-            ) : (
-              <img
-                src={noImage}
-                alt="product image"
-                style={{ width: "100%", height: "100%" }}
-              />
-            )}
-          </div>
-          <button
+
+        <div style={{ display: "flex", justifyContent: "center" }}>
+          <CardMedia
+            component="img"
+            image={
+              productData && productData.image ? productData.image : noImage
+            }
+            title="thumbnail"
+            sx={{
+              width: "auto",
+              height: 300,
+            }}
+          />
+        </div>
+
+        <CardContent>
+          <p>Price: {productData && productData.price}</p>
+          <p>Condition: {productData && productData.condition}</p>
+
+          <Link
+            color="inherit"
+            component="button"
             hidden={
               !currentUser || productData.seller_id === currentUser.uid
                 ? true
@@ -131,9 +132,13 @@ export default function ProductCard({ productData }) {
             }}
           >
             Chat with seller
-          </button>
+          </Link>
 
-          <button
+          <br></br>
+
+          <Link
+            color="inherit"
+            component="button"
             hidden={
               !currentUser || productData.seller_id === currentUser.uid
                 ? true
@@ -142,7 +147,7 @@ export default function ProductCard({ productData }) {
             onClick={handleFavorite}
           >
             {hasFavorited ? <p>Favorited</p> : <p>Favorite</p>}
-          </button>
+          </Link>
         </CardContent>
       </Card>
     </Grid>

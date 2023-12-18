@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 
 import { useQuery } from "@apollo/client";
-import { SEARCH_PRODUCTS, SEARCH_PRODUCTS_BY_NAME } from "../queries";
+import { SEARCH_PRODUCTS_BY_NAME } from "../queries";
 
 import ProductCard from "./ProductCard";
 
@@ -20,10 +20,13 @@ export default function SearchProduct({ searchTerm }) {
     return (
       <div>
         <h2>Product Search Results for {searchTerm}:</h2>
-        {data &&
+        {data.length == 0 ? (
+          <p>No Result Found</p>
+        ) : (
           data.searchProductsByName.map((product: Product) => {
             return <ProductCard key={product._id} productData={product} />;
-          })}
+          })
+        )}
       </div>
     );
   }
