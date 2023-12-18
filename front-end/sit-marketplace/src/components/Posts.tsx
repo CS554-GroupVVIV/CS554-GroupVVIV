@@ -63,35 +63,35 @@ export default function Posts() {
     // console.log(posts);
     return (
       <div style={{ marginTop: "5%" }}>
-        <Typography
-          variant="h4"
-          sx={{
-            // fontFamily: "monospace",
-            fontWeight: "bold",
-            marginTop: 10,
-          }}
-        >
-          <div style={{ display: "flex", justifyContent: "center" }}>
+        <div style={{ display: "flex", justifyContent: "center" }}>
+          <Typography
+            variant="h4"
+            margin={1}
+            sx={{
+              // fontFamily: "monospace",
+              fontWeight: "bold",
+            }}
+          >
             Posts
-            <Grid container justifyContent="flex-end">
-              {currentUser ? (
-                <Button
-                  size="large"
-                  variant="contained"
-                  color="inherit"
-                  onClick={() => {
-                    navigate("/newpost");
-                  }}
-                  sx={{ marginRight: 2 }}
-                >
-                  Add New Post
-                </Button>
-              ) : (
-                <></>
-              )}
-            </Grid>
-          </div>
-        </Typography>
+          </Typography>
+          <Grid container justifyContent="flex-end">
+            {currentUser ? (
+              <Button
+                size="large"
+                variant="contained"
+                color="inherit"
+                onClick={() => {
+                  navigate("/newpost");
+                }}
+                sx={{ marginRight: 2 }}
+              >
+                Add New Post
+              </Button>
+            ) : (
+              <></>
+            )}
+          </Grid>
+        </div>
 
         <Tabs
           value={value}

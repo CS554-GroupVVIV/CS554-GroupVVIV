@@ -53,15 +53,18 @@ export default function Home() {
         sx={{ display: "flex", justifyContent: "center" }}
       >
         <Grid item>
-          <div style={{ textAlign: "center" }}>
+          <div style={{ display: "flex", justifyContent: "center" }}>
             <Typography
               variant="h4"
               sx={{
                 // fontFamily: "monospace",
                 fontWeight: "bold",
+                minWidth: "50%",
               }}
             >
-              First 10 Products
+              First 10 Products:
+            </Typography>
+            <Grid container justifyContent="flex-end">
               <Button
                 size="large"
                 variant="contained"
@@ -69,12 +72,12 @@ export default function Home() {
                 onClick={() => {
                   navigate("/products");
                 }}
-                sx={{ marginLeft: 5 }}
               >
                 More
               </Button>
-            </Typography>
+            </Grid>
           </div>
+
           <div style={{ display: "flex", justifyContent: "center" }}>
             <Grid
               container
@@ -83,7 +86,7 @@ export default function Home() {
                 overflowX: "auto",
                 flexWrap: "nowrap",
                 padding: "16px",
-                maxWidth: "80vw",
+                maxWidth: "75vw",
               }}
             >
               {productData &&
@@ -97,15 +100,18 @@ export default function Home() {
         </Grid>
 
         <Grid item>
-          <div style={{ textAlign: "center" }}>
+          <div style={{ display: "flex", justifyContent: "center" }}>
             <Typography
               variant="h4"
               sx={{
                 // fontFamily: "monospace",
                 fontWeight: "bold",
+                minWidth: "50%",
               }}
             >
-              First 10 Posts
+              First 10 Posts:
+            </Typography>
+            <Grid container justifyContent="flex-end">
               <Button
                 size="large"
                 variant="contained"
@@ -113,12 +119,12 @@ export default function Home() {
                 onClick={() => {
                   navigate("/posts");
                 }}
-                sx={{ marginLeft: 5 }}
               >
                 More
               </Button>
-            </Typography>
+            </Grid>
           </div>
+
           <div style={{ display: "flex", justifyContent: "center" }}>
             <Grid
               container
@@ -127,7 +133,7 @@ export default function Home() {
                 overflowX: "auto",
                 flexWrap: "nowrap",
                 padding: "16px",
-                maxWidth: "80vw",
+                maxWidth: "75vw",
               }}
             >
               {postData &&
