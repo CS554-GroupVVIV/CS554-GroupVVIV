@@ -349,6 +349,8 @@ export const ADD_USER = gql`
       firstname
       lastname
       favorite
+      rating
+      comments
     }
   }
 `;
