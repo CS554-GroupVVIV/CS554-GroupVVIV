@@ -2,8 +2,9 @@ import React, { useState, useEffect, useRef, useContext } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import noImage from "../assets/noimage.jpg";
 import { AuthContext } from "../context/AuthContext";
-
+import EditProduct from "./EditProduct.tsx";
 import { socketID, socket } from "./socket";
+import Comment from "./Comment.tsx";
 
 import { Card, CardHeader, CardContent, Grid, Link } from "@mui/material";
 
@@ -12,6 +13,7 @@ import {
   REMOVE_FAVORITE_FROM_USER,
   SEARCH_PRODUCTS_BY_ID,
   GET_USER,
+  ADD_POSSIBLE_BUYER,
 } from "../queries";
 import { useMutation } from "@apollo/client";
 import { useQuery } from "@apollo/client";
@@ -34,11 +36,16 @@ export default function ProductDetailCard() {
 
   const baseUrl = "/product/";
 
+  const [addPossibleBuyer] = useMutation(ADD_POSSIBLE_BUYER);
+
   const [removeFavorite, { removeData, removeLoading, removeError }] =
     useMutation(REMOVE_FAVORITE_FROM_USER);
 
   const [addFavorite, { addData, addLoading, addError }] =
     useMutation(ADD_FAVORITE_TO_USER);
+
+  const [showEditForm , setShowEditForm] = useState(false);
+
 
   useEffect(() => {
     console.log(data, userData);
@@ -79,15 +86,19 @@ export default function ProductDetailCard() {
     //   console.log(removeError);
     // }
   }
-
   if (data) {
     const productData = data.getProductById;
     return (
       <div className="card w-96 bg-base-100 shadow-xl border-indigo-500/100">
         <div className="card-body">
           <p className="card-title">Detail of Product</p>
-
-          <p>Item: {productData.name}</p>
+          {productData.status !== "completed" &&
+          currentUser &&
+          currentUser.uid == productData.seller_id && ! showEditForm ? (
+            <button onClick={() => setShowEditForm(true)}>Edit</button>
+            ) : null}
+            {showEditForm ? <EditProduct productData={productData} /> : null}
+            <p>Item: {productData.name}</p>
           <p>Seller Id: {productData.seller_id}</p>
           {productData.status == "completed" &&
           currentUser &&
@@ -162,11 +173,16 @@ export default function ProductDetailCard() {
                     }
                     onClick={() => {
                       if (currentUser.uid) {
+                        addPossibleBuyer({
+                          variables: {
+                            id: data.getProductById._id,
+                            buyerId: userData.getUserById._id,
+                          },
+                        });
                         socket.emit("join room", {
                           room: productData.seller_id,
                           user: currentUser.uid,
                         });
-
                         // socket.emit("message", {
                         //   room: productData.seller_id,
                         //   sender: currentUser.uid,

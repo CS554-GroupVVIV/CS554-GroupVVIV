@@ -159,32 +159,21 @@ export const GET_COMMENT = gql`
 `;
 
 export const ADD_PRODUCT = gql`
-  mutation (
-    $name: String!
-    $price: Float!
-    $description: String!
-    $condition: String!
-    $sellerId: String!
-    $image: String!
-    $category: String!
-  ) {
-    addProduct(
-      name: $name
-      price: $price
-      description: $description
-      condition: $condition
-      seller_id: $sellerId
-      image: $image
-      category: $category
-    ) {
-      name
-      price
-      date
-      description
-      condition
-      category
-    }
+mutation Mutation($name: String!, $price: Float!, $description: String!, $condition: String!, $sellerId: String!, $image: String!, $category: String!) {
+  addProduct(name: $name, price: $price, description: $description, condition: $condition, seller_id: $sellerId, image: $image, category: $category) {
+    _id
+    buyer_id
+    category
+    condition
+    date
+    description
+    image
+    name
+    price
+    seller_id
+    status
   }
+}
 `;
 
 export const EDIT_PRODUCT = gql`
@@ -198,6 +187,7 @@ export const EDIT_PRODUCT = gql`
     $sellerId: String!
     $image: String!
     $category: String!
+    $buyerId: String
   ) {
     editProduct(
       _id: $id
@@ -207,15 +197,26 @@ export const EDIT_PRODUCT = gql`
       description: $description
       condition: $condition
       seller_id: $sellerId
+      buyer_id: $buyerId
       image: $image
       category: $category
     ) {
-      name
-      price
+      _id
+      buyer_id
+      category
+      condition
       date
       description
-      condition
-      category
+      image
+      name
+      possible_buyers {
+        _id
+        firstname
+        lastname
+      }
+      price
+      seller_id
+      status
     }
   }
 `;
@@ -376,9 +377,52 @@ export const EDIT_USER = gql`
       lastname: $lastname
     ) {
       _id
+      email
       firstname
       lastname
-      email
+    }
+  }
+}
+`;
+
+
+export const ADD_POSSIBLE_BUYER = gql`
+mutation Mutation($id: String!, $buyerId: String!) {
+  addPossibleBuyer(_id: $id, buyer_id: $buyerId) {
+    _id
+    buyer_id
+    category
+    condition
+    date
+    description
+    image
+    name
+    price
+    seller_id
+    status
+    possible_buyers {
+      _id
+      firstname
+      lastname
+    }
+  }
+}
+`;
+
+export const ADD_POSSIBLE_SELLER = gql`
+  mutation Mutation($id: String!, $sellerId: String!) {
+    addPossibleSeller(_id: $id, seller_id: $sellerId) {
+      _id
+      buyer_id
+      category
+      condition
+      date
+      description
+      item
+      possible_sellers
+      price
+      seller_id
+      status
     }
   }
 `;
@@ -435,7 +479,7 @@ export const SEARCH_PRODUCTS_BY_NAME = gql`
 `;
 
 export const SEARCH_PRODUCTS_BY_ID = gql`
-  query GetProductBySeller($id: String!) {
+  query GetProductById($id: String!) {
     getProductById(_id: $id) {
       _id
       buyer_id
@@ -445,6 +489,11 @@ export const SEARCH_PRODUCTS_BY_ID = gql`
       description
       image
       name
+      possible_buyers {
+        _id
+        firstname
+        lastname
+      }
       price
       seller_id
       status
@@ -453,17 +502,22 @@ export const SEARCH_PRODUCTS_BY_ID = gql`
 `;
 
 export const SEARCH_POST_BY_ID = gql`
-  query Query($id: String!) {
+  query GetProductById($id: String!) {
     getPostById(_id: $id) {
       _id
       buyer_id
-      seller_id
-      item
       category
-      price
-      date
       condition
+      date
       description
+      item
+      possible_sellers {
+        _id
+        firstname
+        lastname
+      }
+      price
+      seller_id
       status
     }
   }
