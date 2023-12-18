@@ -15,7 +15,7 @@ import {
   Button,
 } from "@mui/material";
 
-import { ADD_FAVORITE_TO_USER, REMOVE_FAVORITE_FROM_USER } from "../queries";
+import { ADD_FAVORITE_TO_USER, REMOVE_FAVORITE_FROM_USER, ADD_POSSIBLE_BUYER } from "../queries";
 import { useMutation } from "@apollo/client";
 import { useQuery } from "@apollo/client";
 import { GET_USER } from "../queries";
@@ -33,6 +33,8 @@ export default function ProductCard({ productData }) {
   });
 
   const baseUrl = "/product/";
+
+  const [addPossibleBuyer] = useMutation(ADD_POSSIBLE_BUYER);
 
   const [removeFavorite, { removeData, removeLoading, removeError }] =
     useMutation(REMOVE_FAVORITE_FROM_USER);
@@ -93,7 +95,7 @@ export default function ProductCard({ productData }) {
           <CardMedia
             component="img"
             image={
-              productData && productData.image ? productData.image : noImage
+              productData.image ? productData.image : noImage
             }
             title="thumbnail"
             sx={{
@@ -117,6 +119,12 @@ export default function ProductCard({ productData }) {
             }
             onClick={() => {
               if (currentUser.uid) {
+                addPossibleBuyer({
+                  variables: {
+                    id: productData.seller_id,
+                    buyerId: currentUser.uid,
+                  },
+                });
                 socket.emit("join room", {
                   room: productData.seller_id,
                   user: currentUser.uid,

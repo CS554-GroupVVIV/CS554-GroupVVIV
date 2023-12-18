@@ -61,3 +61,98 @@ export const checkPassword = (password) => {
     );
   return password;
 };
+
+export const checkName = (name: string) => {
+  if (!name || name.trim() === "") {
+    throw new Error("Name cannot be empty.");
+  }
+  name = name.trim();
+  if (name.length < 1 || name.length > 20) {
+    throw new Error("Name must be between 1 and 20 characters.");
+  }
+  const alphanumericRegex = /^[a-zA-Z0-9 ]+$/;
+  if (!alphanumericRegex.test(name)) {
+    throw new Error("Name must only contain alphanumeric characters.");
+  }
+  return name;
+};
+
+export const checkPrice = (price: String) => {
+  if (!price || price.trim() === "") {
+    throw new Error("Price cannot be empty.");
+  }
+  price = price.trim();
+  const value = parseFloat(price);
+  if (Number.isNaN(value)) {
+    throw new Error("Price must be a valid number.");
+  }
+  if (value < 0 || value > 100000) {
+    throw new Error("Price must be between 0 and 100000.");
+  }
+  return value;
+};
+
+export const checkString = (str:String) => {
+  if (str === undefined) throw new Error("Must provide a string");
+  if (typeof str !== "string") throw new Error("str must be a string");
+  if (str.trim().length == 0) throw new Error("should not be just space");
+  str = str.trim();
+  return str;
+};
+
+export const checkStatus = (status: String) =>{
+  status = checkString(status);
+  if(status.toLowerCase() != "active" && status.toLowerCase() != "inactive" && status.toLowerCase() != "completed"){
+    throw new Error("Invalid Status. It must be active, inactive or completed");
+  }
+  return status;
+}
+
+export const checkCondition = (condition: String) => {
+  if (!condition || condition.trim() == "") {
+    throw new Error("Must provide a condition");
+  }
+  condition = condition.trim();
+  let conditionLower = condition.toLowerCase();
+  if (
+    conditionLower != "brand new" &&
+    conditionLower != "like new" &&
+    conditionLower != "gently used" &&
+    conditionLower != "functional"
+  ) {
+    throw new Error("Invalid Condition");
+  }
+  return condition;
+};
+
+export const checkDescription = (description:String) => {
+  if (description && description.trim() != "") {
+    description = description.trim();
+    if (description.length > 100) {
+      throw new Error("Description should have length of 100 at most");
+    } else {
+      return description;
+    }
+  } else {
+    return "";
+  }
+};
+
+export const checkCategory = (category:String) => {
+  if (!category || category.trim() == "") {
+    throw new Error("Must provide a category");
+  }
+  category = category.trim();
+  let categoryLower = category.toLowerCase();
+  if (
+    categoryLower != "book" &&
+    categoryLower != "other" &&
+    categoryLower != "electronics" &&
+    categoryLower != "clothing" &&
+    categoryLower != "furniture" &&
+    categoryLower != "stationary"
+  ) {
+    throw new Error("Invalid Category");
+  }
+  return category;
+};

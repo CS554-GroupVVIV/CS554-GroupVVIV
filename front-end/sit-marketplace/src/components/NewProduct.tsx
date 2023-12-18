@@ -1,7 +1,6 @@
 import { useState, useRef, useEffect, useContext } from "react";
 import React from "react";
-// import { useRouter } from "next/navigation";
-import { useNavigate } from "react-router-dom";
+import { useNavigate,redirect } from "react-router-dom";
 
 import { useMutation, useQuery } from "@apollo/client";
 import { ADD_PRODUCT, GET_PRODUCTS } from "../queries";
@@ -168,62 +167,60 @@ export default function SellForm() {
 
     checkImage(): void {
       setImage(null);
-      
+
       setImage(image);
-      
     },
   };
 
   // const router = useRouter();
   const uploadImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     const image: File | undefined = e.target.files?.[0];
-      if (!image) {
-        return;
-      }
-      if (image.size > 10000000) {
-        console.log("image size", image.size);
-        return;
-      }
-      if (!image.type.match(/image.*/)) {
-        console.log("image type", image.type);
-        return;
-      }
+    if (!image) {
+      return;
+    }
+    if (image.size > 10000000) {
+      console.log("image size", image.size);
+      return;
+    }
+    if (!image.type.match(/image.*/)) {
+      console.log("image type", image.type);
+      return;
+    }
     setImage(image);
   };
 
   const submit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    console.log("submit");
-    helper.checkName();
-    helper.checkPrice();
-    helper.checkCondition();
-    helper.checkDescription();
-    helper.checkCategory();
+    try {
+      e.preventDefault();
+      console.log("submit");
+      helper.checkName();
+      helper.checkPrice();
+      helper.checkCondition();
+      helper.checkDescription();
+      helper.checkCategory();
 
-    if (
-      nameError ||
-      priceError ||
-      conditionError ||
-      descriptionError ||
-      categoryError
-    ) {
-      console.log(
-        "error",
-        nameError,
-        priceError,
-        conditionError,
-        descriptionError,
+      if (
+        nameError ||
+        priceError ||
+        conditionError ||
+        descriptionError ||
         categoryError
-      );
-      return;
-    }
-    let imageUrl = "";
-    if (image instanceof File) {
-      imageUrl = await uploadFileToS3(image, name);
-    }
-    
-    await addProduct({
-      variables: {
+      ) {
+        console.log(
+          "error",
+          nameError,
+          priceError,
+          conditionError,
+          descriptionError,
+          categoryError
+        );
+        return;
+      }
+      let imageUrl = "";
+      if (image instanceof File) {
+        imageUrl = await uploadFileToS3(image, name);
+      }
+      const variables = {
         name: name,
         price: price,
         condition: condition,
@@ -231,8 +228,17 @@ export default function SellForm() {
         category: category,
         sellerId: currentUser.uid,
         image: imageUrl,
-      },
-    });
+      }
+      console.log('variables',variables);
+      const productData = await addProduct({
+        variables: variables,
+      });
+      console.log('productdata',productData);
+      // redirect to the new product page in React Router
+      redirect(`/product/${productData.data.addProduct._id}`)
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -247,30 +253,14 @@ export default function SellForm() {
         </div>
         <div className="form">
           <form onSubmit={submit} encType="multipart/form-data">
-            <label htmlFor="title">Title</label>
+            <label htmlFor="name">Name</label>
             <input
               type="text"
-              id="title"
-              name="title"
+              id="name"
+              name="name"
               ref={nameRef}
               onBlur={helper.checkName}
             />
-            <label htmlFor="category">Category</label>
-            <select
-              name="category"
-              id="category"
-              ref={categoryRef}
-              onBlur={helper.checkCategory}
-              defaultValue={""}
-            >
-              <option disabled></option>
-              <option>Book</option>
-              <option>Clothing</option>
-              <option>Electronics</option>
-              <option>Furniture</option>
-              <option>Stationary</option>
-              <option>Other</option>
-            </select>
             <label htmlFor="description">Description</label>
             <textarea
               id="description"
@@ -280,14 +270,6 @@ export default function SellForm() {
               ref={descriptionRef}
               onBlur={helper.checkDescription}
               defaultValue={""}
-            />
-            <label htmlFor="image">Image</label>
-            <input
-              type="file"
-              id="image"
-              name="image"
-              ref={imageRef}
-              onBlur={helper.checkImage}
             />
             <label htmlFor="price">Price</label>
             <input
@@ -327,10 +309,15 @@ export default function SellForm() {
               <option value="like new">Like New</option>
               <option value="gently used">Gently Used</option>
               <option value="functional">Functional</option>
-
             </select>
             <label htmlFor="image">Image</label>
-            <input type="file" id="image" name="image" ref={imageRef} onChange={uploadImage}/>
+            <input
+              type="file"
+              id="image"
+              name="image"
+              ref={imageRef}
+              onChange={uploadImage}
+            />
             <button type="submit">Submit</button>
           </form>
         </div>

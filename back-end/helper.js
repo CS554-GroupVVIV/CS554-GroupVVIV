@@ -209,6 +209,14 @@ const dateObjectToHTMLDate = (date) => {
   return `${year}-${month}-${day}`;
 };
 
+const checkStatus = (status) =>{
+  status = checkString(status);
+  if(status.toLowerCase() != "active" && status.toLowerCase() != "inactive" && status.toLowerCase() != "completed"){
+    throw new Error("Invalid Status");
+  }
+  return status;
+}
+
 // const HTMLDateToDateObject = (date) => {
 //   date = checkString(date);
 //   return new Date(date);
@@ -231,5 +239,6 @@ export {
   checkFirstNameAndLastName,
   capitalizeName,
   dateObjectToHTMLDate,
+  checkStatus
   // HTMLDateToDateObject,
 };
