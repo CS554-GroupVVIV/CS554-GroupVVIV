@@ -7,9 +7,7 @@ const LogoutButton = () => {
     <Link
       color="inherit"
       component="button"
-      onClick={() => {
-        doSignOut;
-      }}
+      onClick={doSignOut}
       sx={{
         marginLeft: 5,
         textDecoration: "none",
