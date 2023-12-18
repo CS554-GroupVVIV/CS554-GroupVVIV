@@ -1,108 +1,234 @@
-import React, { useState, useContext, useEffect } from "react";
-import { Navigate } from "react-router-dom";
-import { AuthContext } from "../context/AuthContext.jsx";
+import { useState, useContext } from "react";
 import { useQuery } from "@apollo/client";
-import { GET_USER, GET_PRODUCTS_BY_IDS } from "../queries.ts";
-import TransactionPost from "./TransactionPost.tsx";
-import TransactionProduct from "./TransactionProduct.tsx";
-import Favorite from "./Favorite.tsx";
-import * as validation from "../helper.tsx";
-import { useApolloClient } from "@apollo/client";
-import { FetchPolicy } from "@apollo/client";
-// import { Link } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext.jsx";
 import {
-  Avatar,
+  GET_USER,
+  GET_PRODUCTS_BY_BUYER,
+  GET_PRODUCTS_BY_SELLER,
+  GET_POSTS_BY_SELLER,
+  GET_POSTS_BY_BUYER,
+} from "../queries";
+import UserInfo from "./UserInfo";
+import TransactionHolder from "./TransactionHolder.js";
+import FavoriteHolder from "./FavoriteHolder.js";
+import { styled, createTheme, ThemeProvider } from "@mui/material/styles";
+import MuiDrawer from "@mui/material/Drawer";
+import {
   Button,
   CssBaseline,
-  TextField,
-  FormControlLabel,
-  Checkbox,
-  Link,
-  Grid,
   Box,
+  Grid,
+  Tab,
   Typography,
-  Container,
+  Tabs,
+  CardHeader,
+  Card,
+  CardActions,
+  CardContent,
 } from "@mui/material";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import FavoriteProduct from "./FavoriteProduct.tsx";
-import UserInfo from "./UserInfo.tsx";
 
-function UserProfile() {
+const drawerWidth = 300;
+
+const Drawer = styled(MuiDrawer, {
+  shouldForwardProp: (prop) => prop !== "open",
+})(({ theme, open }) => ({
+  "& .MuiDrawer-paper": {
+    position: "relative",
+    whiteSpace: "nowrap",
+    width: drawerWidth,
+    transition: theme.transitions.create("width", {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+    boxSizing: "border-box",
+  },
+}));
+
+// TODO remove, this demo shouldn't need to reset the theme.
+const defaultTheme = createTheme();
+
+export default function Dashboard() {
   let { currentUser } = useContext(AuthContext);
-  const client = useApolloClient();
+
+  const [value, setValue] = useState(0);
+  const [toogleUpdateUser, setToggleUpdateUser] = useState<boolean>(false);
+
   const { loading, error, data } = useQuery(GET_USER, {
     variables: { id: currentUser ? currentUser.uid : "" },
     fetchPolicy: "cache-and-network",
   });
-  const [favorite, setFavorite] = useState([]);
-  const baseUrl = "http://localhost:5173/product/";
-  const [toggleEdit, setToggleEdit] = useState<boolean>(false);
-  const [togglePost, setTogglePost] = useState<boolean>(false);
-  const [toogleProduct, setToggleProduct] = useState<boolean>(false);
-  const [toogleFavorite, setToggleFavorite] = useState<boolean>(false);
 
-  const [toogleUpdateUser, setToggleUpdateUser] = useState<boolean>(false);
+  const {
+    data: productSeller,
+    loading: productSellerLoading,
+    error: productSellerError,
+  } = useQuery(GET_PRODUCTS_BY_SELLER, {
+    variables: { id: currentUser ? currentUser.uid : "" },
+  });
 
-  useEffect(() => {
-    if (!loading && !error && data && data.getUserById) {
-      console.log("in the if");
-      setFavorite(data.getUserById.favorite);
-      console.log("favorite", data.getUserById.favorite);
-    }
-  }, [loading, error, data]);
+  const {
+    data: productBuyer,
+    loading: productBuyerLoading,
+    error: productBuyerError,
+  } = useQuery(GET_PRODUCTS_BY_BUYER, {
+    variables: { id: currentUser ? currentUser.uid : "" },
+  });
 
-  if (loading) return "Loading...";
-  if (error) return "Error";
+  const {
+    data: postSeller,
+    loading: postSellerLoading,
+    error: postSellerError,
+  } = useQuery(GET_POSTS_BY_SELLER, {
+    variables: { _id: currentUser ? currentUser.uid : "" },
+  });
 
-  return (
-    <div className="card">
-      <h1>User Profile</h1>
-      {toogleUpdateUser ? (
-        <UserInfo data={data} />
-      ) : (
-        <div className="form-group">
-          <p>First Name: {data.getUserById.firstname}</p>
-          <p>Last Name: {data.getUserById.lastname}</p>
-          <p>Email: {data.getUserById.email}</p>
-        </div>
-      )}
-      <button
-        onClick={() => {
-          setToggleUpdateUser(!toogleUpdateUser);
-        }}
+  const {
+    data: postBuyer,
+    loading: postBuyerLoading,
+    error: postBuyerError,
+  } = useQuery(GET_POSTS_BY_BUYER, {
+    variables: { _id: currentUser ? currentUser.uid : "" },
+  });
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
+
+  function CustomTabPanel(props) {
+    const { children, value, index, ...other } = props;
+    return (
+      <div
+        role="tabpanel"
+        hidden={value !== index}
+        id={`simple-tabpanel-${index}`}
+        aria-labelledby={`simple-tab-${index}`}
+        {...other}
       >
-        Edit User Info
-      </button>
-      <br />
-      <button
-        onClick={() => {
-          setTogglePost(!togglePost);
-        }}
-      >
-        Transaction from Post
-      </button>
-      <br />
-      {togglePost ? <TransactionPost /> : null}
-      <button
-        onClick={() => {
-          setToggleProduct(!toogleProduct);
-        }}
-      >
-        Transaction from Product
-      </button>
-      {toogleProduct ? <TransactionProduct /> : null}
-      <br />
-      <button
-        onClick={() => {
-          setToggleFavorite(!toogleFavorite);
-        }}
-      >
-        My Favorite Products
-      </button>
-      {toogleFavorite ? <Favorite favorite={favorite} /> : null}
-    </div>
-  );
+        {value === index && (
+          <Box sx={{ p: 3 }}>
+            <Box>{children}</Box>
+          </Box>
+        )}
+      </div>
+    );
+  }
+
+  if (loading) {
+    return <p>Loading</p>;
+  } else if (error) {
+    <p>Error</p>;
+  } else if (data)
+    return (
+      <Box sx={{ mt: 8, display: "flex" }}>
+        <CssBaseline />
+        <Drawer variant="permanent" open={true}>
+          <Grid sx={{ mx: 1 }}>
+            <Card variant="outlined" style={{ border: "none" }}>
+              <CardHeader
+                title={`${"User Profile"}`}
+                titleTypographyProps={{ align: "center" }}
+                subheaderTypographyProps={{
+                  align: "center",
+                }}
+              />
+              <CardContent>
+                {toogleUpdateUser ? (
+                  <UserInfo data={data} />
+                ) : (
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <Typography component="p" variant="subtitle2">
+                      Id: {data.getUserById._id}
+                    </Typography>
+                    <Typography component="p" variant="subtitle2">
+                      Name:{" "}
+                      {data.getUserById.firstname +
+                        " " +
+                        data.getUserById.lastname}
+                    </Typography>
+                    <Typography component="p" variant="subtitle2">
+                      Email: {data.getUserById.email}
+                    </Typography>
+                    <Typography component="p" variant="subtitle2">
+                      Rating: {data.getUserById.rating.toFixed(2)} from{" "}
+                      {data.getUserById.comments.length} users
+                    </Typography>
+                  </Box>
+                )}
+              </CardContent>
+              <CardActions>
+                <Button
+                  fullWidth
+                  variant="outlined"
+                  onClick={() => {
+                    setToggleUpdateUser(!toogleUpdateUser);
+                  }}
+                >
+                  {toogleUpdateUser ? "Cancel" : "Edit Profile"}
+                </Button>
+              </CardActions>
+            </Card>
+          </Grid>
+        </Drawer>
+        <Box
+          component="main"
+          sx={{
+            backgroundColor: (theme) =>
+              theme.palette.mode === "light"
+                ? theme.palette.grey[100]
+                : theme.palette.grey[900],
+            flexGrow: 1,
+            height: "100vh",
+            overflow: "auto",
+          }}
+        >
+          <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+            <Tabs
+              value={value}
+              onChange={handleChange}
+              aria-label="basic tabs example"
+            >
+              <Tab label="Product" />
+              <Tab label="Post" />
+              <Tab label="Favorite" />
+            </Tabs>
+          </Box>
+
+          <CustomTabPanel value={value} index={0}>
+            {productBuyer && productSeller ? (
+              <TransactionHolder
+                type="product"
+                purchaseData={productBuyer.getProductByBuyer}
+                soldData={productSeller.getProductBySeller}
+              />
+            ) : productBuyerLoading && productSellerLoading ? (
+              <p>Loading</p>
+            ) : (
+              <p>Error</p>
+            )}
+          </CustomTabPanel>
+          <CustomTabPanel value={value} index={1}>
+            {postBuyer && postSeller ? (
+              <TransactionHolder
+                type="post"
+                purchaseData={postBuyer.getPostByBuyer}
+                soldData={postSeller.getPostBySeller}
+              />
+            ) : postBuyerLoading && postSellerLoading ? (
+              <p>Loading</p>
+            ) : (
+              <p>Error</p>
+            )}
+          </CustomTabPanel>
+          <CustomTabPanel value={value} index={2}>
+            <FavoriteHolder favorite={data.getUserById.favorite} />
+          </CustomTabPanel>
+        </Box>
+      </Box>
+    );
 }
-
-export default UserProfile;

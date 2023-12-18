@@ -862,7 +862,6 @@ export const resolvers = {
           lastname,
           favorite: favorite ? [favorite] : [],
           comments: [],
-          rating: 0,
         };
         const insertedUser = await usersData.insertOne(newUser);
         if (!insertedUser) {

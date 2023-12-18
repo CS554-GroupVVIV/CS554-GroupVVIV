@@ -19,6 +19,7 @@ import {
   ADD_FAVORITE_TO_USER,
   REMOVE_FAVORITE_FROM_USER,
   ADD_POSSIBLE_BUYER,
+  GET_USERS_BY_IDS,
 } from "../queries";
 import { useMutation } from "@apollo/client";
 import { useQuery } from "@apollo/client";
@@ -41,10 +42,26 @@ export default function ProductCard({ productData }) {
   const [addPossibleBuyer] = useMutation(ADD_POSSIBLE_BUYER);
 
   const [removeFavorite, { removeData, removeLoading, removeError }] =
-    useMutation(REMOVE_FAVORITE_FROM_USER);
+    useMutation(REMOVE_FAVORITE_FROM_USER, {
+      refetchQueries: [
+        {
+          query: GET_USER,
+          variables: { _id: currentUser.uid },
+        },
+      ],
+    });
 
-  const [addFavorite, { addData, addLoading, addError }] =
-    useMutation(ADD_FAVORITE_TO_USER);
+  const [addFavorite, { addData, addLoading, addError }] = useMutation(
+    ADD_FAVORITE_TO_USER,
+    {
+      refetchQueries: [
+        {
+          query: GET_USER,
+          variables: { _id: currentUser.uid },
+        },
+      ],
+    }
+  );
 
   useEffect(() => {
     if (userData?.getUserById?.favorite?.includes(productData._id)) {

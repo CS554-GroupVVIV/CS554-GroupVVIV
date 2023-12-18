@@ -14,8 +14,8 @@ import {
 } from "@mui/material";
 
 const TransactionHolder = ({ type, purchaseData, soldData }) => {
-  const [purchasedStatus, setPurchasedStatus] = useState("active");
-  const [soldStatus, setSoldStatus] = useState("active");
+  const [purchasedStatus, setPurchasedStatus] = useState("completed");
+  const [soldStatus, setSoldStatus] = useState("completed");
 
   const [purchaseActive, setPurchaseActive] = useState([]);
   const [purchaseInactive, setPurchaseInactive] = useState([]);
