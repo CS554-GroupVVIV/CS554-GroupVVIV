@@ -1,3 +1,3 @@
-export default function Error() {
-  return <div>Error</div>;
+export default function Error({ messgae }) {
+  return <div>Error:{message}</div>;
 }

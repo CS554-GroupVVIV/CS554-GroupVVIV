@@ -8,7 +8,7 @@ import ProductCard from "./ProductCard";
 
 import SearchProduct from "./SearchProduct";
 import { GET_PRODUCTS, GET_PRODUCTS_BY_CATEGORY } from "../queries";
-import { Link } from "@mui/material";
+import { Link, Tabs, Tab } from "@mui/material";
 
 type Product = {
   _id: string;
@@ -76,19 +76,21 @@ export default function Products() {
 
         {searchTerm && <SearchProduct searchTerm={searchTerm} />}
 
-        <ul className="ProductCategory">
+        <Tabs
+          variant="scrollable"
+          scrollButtons="auto"
+          aria-label="scrollable auto tabs example"
+        >
           {category_list.map((category) => (
-            <li key={category}>
-              <Link
-                onClick={() => {
-                  setCurCategory(category);
-                }}
-              >
-                {category}
-              </Link>
-            </li>
+            <Link
+              onClick={() => {
+                setCurCategory(category);
+              }}
+            >
+              <Tab label={category} />
+            </Link>
           ))}
-        </ul>
+        </Tabs>
 
         <h1>Products:</h1>
         {currentUser ? (
