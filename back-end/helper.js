@@ -80,6 +80,15 @@ const checkPrice = (price) => {
   return price;
 };
 
+const checkPriceMinMax = (min, max) => {
+  checkPrice(min);
+  checkPrice(max);
+  if (min < 0 || max < 0)
+    throw new Error("Values must be greater than or equal to 0");
+  if (max <= min) throw new Error("Max must be greater than min");
+  return min, max;
+};
+
 const checkCondition = (condition) => {
   if (!condition || condition.trim() == "") {
     throw new Error("Must provide a condition");
@@ -209,13 +218,17 @@ const dateObjectToHTMLDate = (date) => {
   return `${year}-${month}-${day}`;
 };
 
-const checkStatus = (status) =>{
+const checkStatus = (status) => {
   status = checkString(status);
-  if(status.toLowerCase() != "active" && status.toLowerCase() != "inactive" && status.toLowerCase() != "completed"){
+  if (
+    status.toLowerCase() != "active" &&
+    status.toLowerCase() != "inactive" &&
+    status.toLowerCase() != "completed"
+  ) {
     throw new Error("Invalid Status");
   }
   return status;
-}
+};
 
 // const HTMLDateToDateObject = (date) => {
 //   date = checkString(date);
@@ -229,6 +242,7 @@ export {
   // checkItem,
   checkCategory,
   checkPrice,
+  checkPriceMinMax,
   checkCondition,
   checkDescription,
   // checkDate,
@@ -239,6 +253,7 @@ export {
   checkFirstNameAndLastName,
   capitalizeName,
   dateObjectToHTMLDate,
-  checkStatus
+  checkStatus,
+
   // HTMLDateToDateObject,
 };

@@ -14,6 +14,7 @@ import {
   checkName,
   checkCategory,
   checkPrice,
+  checkPriceMinMax,
   checkCondition,
   // checkDate,
   checkDescription,
@@ -306,12 +307,10 @@ export const resolvers = {
     getProductsByPriceRange: async (_, args) => {
       try {
         let { low, high } = args;
-        if (low) {
-          checkPrice(low);
-        } else {
+        if (!low) {
           low = 0;
         }
-        checkPrice(high);
+        checkPriceMinMax(low, high);
 
         const productData = await productCollection();
         const products = await productData
