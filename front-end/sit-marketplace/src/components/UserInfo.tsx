@@ -107,6 +107,7 @@ function UserInfo({ data }) {
             Email:
             <br />
             <input
+              disabled
               className="form-control"
               required
               name="email"

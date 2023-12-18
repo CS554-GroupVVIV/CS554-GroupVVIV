@@ -46,6 +46,7 @@ import {
   DialogActions,
   Button,
 } from "@mui/material";
+import Temp from "./components/temp.tsx";
 
 function App() {
   const navigate = useNavigate();
@@ -273,6 +274,7 @@ function App() {
               path="/resetpassword"
               element={user ? <Home /> : <ResetPassword />}
             />
+            <Route path="/test" element={<Temp />} />
           </Routes>
         </div>
       </AuthProvider>

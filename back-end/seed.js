@@ -138,7 +138,7 @@ const postList = [
     date: new Date(),
     description: "textbook",
     status: "active",
-    possible_buyers: [],
+    possible_sellers: [],
   },
   {
     _id: new ObjectId(),
@@ -151,7 +151,7 @@ const postList = [
     date: new Date(),
     description: "black pen",
     status: "inactive",
-    possible_buyers: [],
+    possible_sellers: [],
   },
   {
     _id: new ObjectId(),
@@ -164,7 +164,7 @@ const postList = [
     date: new Date("2023-12-07"),
     description: "textbook",
     status: "completed",
-    possible_buyers: [],
+    possible_sellers: [],
   },
   {
     _id: new ObjectId(),
@@ -177,7 +177,7 @@ const postList = [
     date: new Date("2023-12-01"),
     description: "",
     status: "completed",
-    possible_buyers: [],
+    possible_sellers: [],
   },
 ];
 
