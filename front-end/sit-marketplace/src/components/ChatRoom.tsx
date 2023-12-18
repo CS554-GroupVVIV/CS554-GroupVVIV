@@ -85,8 +85,6 @@ export default function ChatRoom({ room }) {
   if (!loading) {
     return (
       <div>
-        <h3>Chat Room with {room}:</h3>
-
         {/* <h4 style={{ textAlign: "center" }}> --- History --- </h4> */}
         <Chat
           chat={data && data.getChatByParticipants.messages}

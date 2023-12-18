@@ -112,54 +112,50 @@ export default function ProductCard({ productData }) {
           <p>Condition: {productData && productData.condition}</p>
 
           <div>
-            <Button
-              size="small"
-              variant="contained"
-              color="inherit"
-              hidden={
-                !currentUser || productData.seller_id === currentUser.uid
-                  ? true
-                  : false
-              }
-              onClick={() => {
-                if (currentUser.uid) {
-                  addPossibleBuyer({
-                    variables: {
-                      id: productData.seller_id,
-                      buyerId: currentUser.uid,
-                    },
-                  });
-                  socket.emit("join room", {
-                    room: productData.seller_id,
-                    user: currentUser.uid,
-                  });
+            {!currentUser || productData.seller_id !== currentUser.uid ? (
+              <>
+                <Button
+                  size="small"
+                  variant="contained"
+                  color="inherit"
+                  onClick={() => {
+                    if (currentUser.uid) {
+                      addPossibleBuyer({
+                        variables: {
+                          id: productData.seller_id,
+                          buyerId: currentUser.uid,
+                        },
+                      });
+                      socket.emit("join room", {
+                        room: productData.seller_id,
+                        user: currentUser.uid,
+                      });
 
-                  // socket.emit("message", {
-                  //   room: productData.seller_id,
-                  //   sender: currentUser.uid,
-                  //   message: `Hi, I have questions regarding product: "${productData.name}"`,
-                  //   time: new Date().toISOString(),
-                  // });
-                }
-              }}
-            >
-              Chat with seller
-            </Button>
+                      // socket.emit("message", {
+                      //   room: productData.seller_id,
+                      //   sender: currentUser.uid,
+                      //   message: `Hi, I have questions regarding product: "${productData.name}"`,
+                      //   time: new Date().toISOString(),
+                      // });
+                    }
+                  }}
+                >
+                  Chat with seller
+                </Button>
 
-            <Button
-              sx={{ marginLeft: 3 }}
-              size="small"
-              variant="contained"
-              color="inherit"
-              hidden={
-                !currentUser || productData.seller_id === currentUser.uid
-                  ? true
-                  : false
-              }
-              onClick={handleFavorite}
-            >
-              {hasFavorited ? "Favorited" : "Favorite"}
-            </Button>
+                <Button
+                  sx={{ marginLeft: 3 }}
+                  size="small"
+                  variant="contained"
+                  color="inherit"
+                  onClick={handleFavorite}
+                >
+                  {hasFavorited ? "Favorited" : "Favorite"}
+                </Button>
+              </>
+            ) : (
+              <></>
+            )}
           </div>
         </CardContent>
       </Card>
