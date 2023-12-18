@@ -100,25 +100,6 @@ export default function Products() {
           ))}
         </Tabs>
 
-        {/* <Tabs
-          value={value}
-          onChange={(e) => handleChange(e, value)}
-          variant="scrollable"
-          scrollButtons="auto"
-          aria-label="scrollable auto tabs example"
-        >
-          {category_list.map((category, idx) => (
-            <Link
-              key={category}
-              onClick={() => {
-                setCurCategory(category);
-              }}
-            >
-              <Tab label={category} key={idx} value={idx} />
-            </Link>
-          ))}
-        </Tabs> */}
-
         <h1>Products:</h1>
         {currentUser ? (
           <button
