@@ -129,7 +129,7 @@ export const DateTime = new GraphQLScalarType({
   name: "DateTime",
   description: "DateTime scalar type",
   serialize(value) {
-    return value.toISOString();
+    return new Date(value).toISOString();
   },
   parseValue(value) {
     return new Date(value);
