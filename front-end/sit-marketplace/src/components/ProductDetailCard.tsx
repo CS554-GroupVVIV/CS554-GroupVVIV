@@ -44,8 +44,7 @@ export default function ProductDetailCard() {
   const [addFavorite, { addData, addLoading, addError }] =
     useMutation(ADD_FAVORITE_TO_USER);
 
-  const [showEditForm , setShowEditForm] = useState(false);
-
+  const [showEditForm, setShowEditForm] = useState(false);
 
   useEffect(() => {
     console.log(data, userData);
@@ -94,11 +93,12 @@ export default function ProductDetailCard() {
           <p className="card-title">Detail of Product</p>
           {productData.status !== "completed" &&
           currentUser &&
-          currentUser.uid == productData.seller_id && ! showEditForm ? (
+          currentUser.uid == productData.seller_id &&
+          !showEditForm ? (
             <button onClick={() => setShowEditForm(true)}>Edit</button>
-            ) : null}
-            {showEditForm ? <EditProduct productData={productData} /> : null}
-            <p>Item: {productData.name}</p>
+          ) : null}
+          {showEditForm ? <EditProduct productData={productData} /> : null}
+          <p>Item: {productData.name}</p>
           <p>Seller Id: {productData.seller_id}</p>
           {productData.status == "completed" &&
           currentUser &&

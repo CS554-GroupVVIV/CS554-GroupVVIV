@@ -246,6 +246,7 @@ export const resolvers = {
         if (!product) {
           const products = await productCollection();
           product = await products.findOne({ _id: new ObjectId(id) });
+          console.log(product);
           if (!product) {
             throw new GraphQLError("product not found", {
               extensions: { code: "NOT_FOUND" },
@@ -376,17 +377,17 @@ export const resolvers = {
       try {
         let id = checkString(args._id);
         const usersData = await userCollection();
-        var user = await client.json.get(`getUserById-${id}`, "$");
+        // var user = await client.json.get(`getUserById-${id}`, "$");
+        // if (!user) {
+        let user = await usersData.findOne({ _id: id });
         if (!user) {
-          user = await usersData.findOne({ _id: id });
-          if (!user) {
-            throw new GraphQLError("User not found", {
-              extensions: { code: "NOT_FOUND" },
-            });
-          }
+          throw new GraphQLError("User not found", {
+            extensions: { code: "NOT_FOUND" },
+          });
         }
-        await client.json.set(`getUserById-${id}`, "$", user);
-        client.expire(`getUserById-${id}`, 60);
+        // }
+        // await client.json.set(`getUserById-${id}`, "$", user);
+        // client.expire(`getUserById-${id}`, 60);
         return user;
       } catch (error) {
         throw new GraphQLError(error.message);
@@ -869,9 +870,9 @@ export const resolvers = {
             extensions: { code: "INTERNAL_SERVER_ERROR" },
           });
         }
-        client.json.set(`getUserById-${_id}`, "$", newUser);
-        client.expire(`getUserById-${_id}`, 3600);
-        client.json.del(`allUsers`);
+        // client.json.set(`getUserById-${_id}`, "$", newUser);
+        // client.expire(`getUserById-${_id}`, 3600);
+        // client.json.del(`allUsers`);
         return newUser;
       } catch (error) {
         throw new GraphQLError(error);
@@ -909,9 +910,9 @@ export const resolvers = {
             extensions: { code: "INTERNAL_SERVER_ERROR" },
           });
         }
-        client.json.set(`getUserById-${_id}`, "$", updatedUser);
-        client.expire(`getUserById-${_id}`, 3600);
-        client.json.del(`allUsers`);
+        // client.json.set(`getUserById-${_id}`, "$", updatedUser);
+        // client.expire(`getUserById-${_id}`, 3600);
+        // client.json.del(`allUsers`);
         return updatedUser;
       } catch (error) {
         throw new GraphQLError(error);

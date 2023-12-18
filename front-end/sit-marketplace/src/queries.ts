@@ -41,6 +41,14 @@ export const GET_USER = gql`
       email
       firstname
       lastname
+      comments {
+        _id
+        rating
+        comment_id
+        comment
+      }
+      rating
+      favorite
     }
   }
 `;

@@ -1,8 +1,8 @@
 import React, { useState, useContext, useEffect } from "react";
 import { Navigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext.jsx";
-import {  useQuery } from "@apollo/client";
-import {  GET_USER, GET_PRODUCTS_BY_IDS } from "../queries.ts";
+import { useQuery } from "@apollo/client";
+import { GET_USER, GET_PRODUCTS_BY_IDS } from "../queries.ts";
 import TransactionPost from "./TransactionPost.tsx";
 import TransactionProduct from "./TransactionProduct.tsx";
 import Favorite from "./Favorite.tsx";
@@ -40,6 +40,8 @@ function UserProfile() {
   const [toggleEdit, setToggleEdit] = useState<boolean>(false);
   const [togglePost, setTogglePost] = useState<boolean>(false);
   const [toogleProduct, setToggleProduct] = useState<boolean>(false);
+  const [toogleFavorite, setToggleFavorite] = useState<boolean>(false);
+
   const [toogleUpdateUser, setToggleUpdateUser] = useState<boolean>(false);
 
   useEffect(() => {
@@ -49,10 +51,6 @@ function UserProfile() {
       console.log("favorite", data.getUserById.favorite);
     }
   }, [loading, error, data]);
-
- 
-
-
 
   if (loading) return "Loading...";
   if (error) return "Error";
@@ -128,17 +126,22 @@ function UserProfile() {
 
     <div className="card">
       <h1>User Profile</h1>
-
+      {toogleUpdateUser ? (
+        <UserInfo data={data} />
+      ) : (
+        <div className="form-group">
+          <p>First Name: {data.getUserById.firstname}</p>
+          <p>Last Name: {data.getUserById.lastname}</p>
+          <p>Email: {data.getUserById.email}</p>
+        </div>
+      )}
       <button
         onClick={() => {
           setToggleUpdateUser(!toogleUpdateUser);
         }}
       >
-        User Info.
+        Edit User Info
       </button>
-      {toogleUpdateUser ? (
-        <UserInfo data={data}/>
-      ) : null}
       <br />
       <button
         onClick={() => {

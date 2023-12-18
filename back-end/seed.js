@@ -10,7 +10,6 @@ const userList = [
     lastname: "Fu",
     favorite: [],
     comments: [],
-    rating: 0,
   },
   {
     _id: "8C5bGSz1FRVbAQ47EDnDSvmKsqg2",
@@ -19,7 +18,6 @@ const userList = [
     lastname: "Wu",
     favorite: [],
     comments: [],
-    rating: 0,
   },
   {
     _id: "7SKDog0fjKOeS1jeuq32a9vYPue2",
