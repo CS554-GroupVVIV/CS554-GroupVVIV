@@ -8,7 +8,15 @@ import ProductCard from "./ProductCard";
 
 import SearchProduct from "./SearchProduct";
 import { GET_PRODUCTS, GET_PRODUCTS_BY_CATEGORY } from "../queries";
-import { Link, Tabs, Tab } from "@mui/material";
+import {
+  Link,
+  Tabs,
+  Tab,
+  Grid,
+  Button,
+  Typography,
+  TextField,
+} from "@mui/material";
 
 type Product = {
   _id: string;
@@ -44,42 +52,42 @@ export default function Products() {
       : { fetchPolicy: "cache-and-network" }
   );
 
-  console.log("product data", data);
-
   const [text, setText] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
 
   if (data) {
     // console.log(data);
     return (
-      <div>
-        <button
-          onClick={() => {
-            navigate("/");
+      <div style={{ marginTop: "5%" }}>
+        <Typography
+          variant="h4"
+          sx={{
+            // fontFamily: "monospace",
+            fontWeight: "bold",
+            marginTop: 10,
           }}
         >
-          Home
-        </button>
-
-        <form
-          onSubmit={(event) => {
-            event.preventDefault();
-            setSearchTerm(text);
-            setText("");
-          }}
-        >
-          <label>
-            Search Product:
-            <input
-              type="text"
-              value={text}
-              onChange={(e) => setText(e.target.value)}
-            />
-          </label>
-          <input type="submit" />
-        </form>
-
-        {searchTerm && <SearchProduct searchTerm={searchTerm} />}
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            Products
+            <Grid container justifyContent="flex-end">
+              {currentUser ? (
+                <Button
+                  size="large"
+                  variant="contained"
+                  color="inherit"
+                  onClick={() => {
+                    navigate("/newproduct");
+                  }}
+                  sx={{ marginRight: 2 }}
+                >
+                  Add New Product
+                </Button>
+              ) : (
+                <></>
+              )}
+            </Grid>
+          </div>
+        </Typography>
 
         <Tabs
           value={value}
@@ -100,43 +108,95 @@ export default function Products() {
           ))}
         </Tabs>
 
-        <h1>Products:</h1>
-        {currentUser ? (
-          <button
-            onClick={() => {
-              navigate("/newproduct");
+        <div style={{ display: "flex", justifyContent: "center" }}>
+          <TextField
+            variant="standard"
+            label="Search"
+            value={text}
+            onInput={(e) => setText(e.target.value)}
+            InputLabelProps={{
+              sx: {
+                // fontFamily: "monospace",
+                fontWeight: "bold",
+              },
+            }}
+            style={{
+              // fontFamily: "monospace",
+              fontWeight: "bold",
+              color: "#424242",
+              marginRight: 5,
+            }}
+            sx={{ minWidth: 400 }}
+          />
+          <Button
+            size="small"
+            variant="contained"
+            color="inherit"
+            sx={{ marginLeft: 3 }}
+            onClick={(event) => {
+              event.preventDefault();
+              setSearchTerm(text);
             }}
           >
-            New Product
-          </button>
-        ) : (
-          <button
-            onClick={() => {
-              navigate("/login");
-            }}
+            Search
+          </Button>
+          {searchTerm ? (
+            <Button
+              size="small"
+              variant="contained"
+              color="inherit"
+              sx={{ marginLeft: 3 }}
+              onClick={(event) => {
+                event.preventDefault();
+                setSearchTerm("");
+                setText("");
+              }}
+            >
+              Clear Search
+            </Button>
+          ) : (
+            <></>
+          )}
+        </div>
+        <div style={{ display: "flex", justifyContent: "center" }}>
+          <Grid
+            container
+            spacing={5}
+            marginTop={1}
+            sx={{ display: "flex", justifyContent: "center" }}
           >
-            New Product
-          </button>
-        )}
+            {searchTerm && <SearchProduct searchTerm={searchTerm} />}
+          </Grid>
+        </div>
 
-        {data && curCategory === "All" && data.products.length > 0
-          ? data.products.map((product: Product) => {
-              return <ProductCard key={product._id} productData={product} />;
-            })
-          : null}
-        {data && curCategory === "All" && data.products.length == 0 ? (
-          <p>No result found</p>
-        ) : null}
-        {data && curCategory != "All" && data.getProductsByCategory.length > 0
-          ? data.getProductsByCategory.map((product: Product) => {
-              return <ProductCard key={product._id} productData={product} />;
-            })
-          : null}
-        {data &&
-        curCategory != "All" &&
-        data.getProductsByCategory.length == 0 ? (
-          <p>No result found</p>
-        ) : null}
+        <div style={{ display: "flex", justifyContent: "center" }}>
+          <Grid container spacing={2} marginTop={1} justifyContent="center">
+            {data && curCategory === "All" && data.products.length > 0
+              ? data.products.map((product: Product) => {
+                  return (
+                    <ProductCard key={product._id} productData={product} />
+                  );
+                })
+              : null}
+            {data && curCategory === "All" && data.products.length == 0 ? (
+              <p>No result found</p>
+            ) : null}
+            {data &&
+            curCategory != "All" &&
+            data.getProductsByCategory.length > 0
+              ? data.getProductsByCategory.map((product: Product) => {
+                  return (
+                    <ProductCard key={product._id} productData={product} />
+                  );
+                })
+              : null}
+            {data &&
+            curCategory != "All" &&
+            data.getProductsByCategory.length == 0 ? (
+              <p>No result found</p>
+            ) : null}
+          </Grid>
+        </div>
       </div>
     );
   }

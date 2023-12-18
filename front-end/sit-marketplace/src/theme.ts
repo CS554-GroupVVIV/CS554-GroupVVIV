@@ -4,7 +4,7 @@ export const lightMode = createTheme({
   palette: {
     mode: "light",
     background: {
-      default: "snow",
+      default: "#fffafa",
     },
     text: {
       primary: "#424242",
@@ -19,7 +19,7 @@ export const darkMode = createTheme({
       default: "#424242",
     },
     text: {
-      primary: "snow",
+      primary: "#fffafa",
     },
   },
 });

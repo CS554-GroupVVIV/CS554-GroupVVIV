@@ -3,7 +3,14 @@ import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext.jsx";
 import { socketID, socket } from "./socket";
 
-import { Card, CardHeader, CardContent, Grid, Link } from "@mui/material";
+import {
+  Card,
+  CardHeader,
+  CardContent,
+  Grid,
+  Link,
+  Button,
+} from "@mui/material";
 
 export default function PostCard({ postData }) {
   const [id, setId] = useState(undefined);
@@ -11,29 +18,25 @@ export default function PostCard({ postData }) {
   const { currentUser } = useContext(AuthContext);
   return (
     <Grid item>
-      <Card
-        sx={{ width: 300, height: "100%" }}
-        style={{
-          borderRadius: "10%",
-        }}
-      >
-        <Link onClick={() => navigate(`/post/${postData._id}`)}>
+      <Card sx={{ width: 300, height: "100%" }}>
+        <Link
+          component="button"
+          sx={{
+            textDecoration: "none",
+          }}
+          onClick={() => navigate(`/post/${postData._id}`)}
+        >
           <CardHeader title={postData.item}></CardHeader>
         </Link>
-        <CardContent
-          style={{
-            display: "flex",
-            justifyContent: "center",
-          }}
-        >
-          <ul>
-            <li>Category: {postData.category}</li>
-            <li>Description: {postData.description}</li>
-            <li>Condition: {postData.condition}</li>
-            <li>Price: {postData.price}</li>
-            <li>Date: {postData.date}</li>
-          </ul>
-          <button
+
+        <CardContent>
+          <p>Price: {postData.price}</p>
+          <p>Condition: {postData.condition}</p>
+
+          <Button
+            size="small"
+            variant="contained"
+            color="inherit"
             hidden={
               !currentUser || postData.buyer_id === currentUser.uid
                 ? true
@@ -56,7 +59,7 @@ export default function PostCard({ postData }) {
             }}
           >
             Chat with buyer
-          </button>
+          </Button>
         </CardContent>
       </Card>
     </Grid>

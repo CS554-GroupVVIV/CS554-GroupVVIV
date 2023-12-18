@@ -18,6 +18,7 @@ import UserProfile from "./components/UserProfile.tsx";
 import ResetPassword from "./components/ResetPassword.tsx";
 import Error from "./components/Error.tsx";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import LogoutButton from "./components/LogoutButton.tsx";
 
 import ChatRoomList from "./components/ChatRoomList";
 import { socketID, socket } from "./components/socket";
@@ -117,7 +118,7 @@ function App() {
       {/*  <ThemeProvider theme={darkMode}> */}
       <CssBaseline />
       <AuthProvider>
-        <AppBar position="static">
+        <AppBar position="fixed">
           <Container maxWidth="xl">
             <Toolbar disableGutters>
               <Typography
@@ -187,6 +188,56 @@ function App() {
                 </Link>
               ) : (
                 <></>
+              )}
+
+              {user ? (
+                <>
+                  <LogoutButton />
+
+                  <Link
+                    color="inherit"
+                    component="button"
+                    onClick={() => {
+                      navigate("/userprofile");
+                    }}
+                    sx={{
+                      marginLeft: 5,
+                      textDecoration: "none",
+                    }}
+                  >
+                    User Profile
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <Link
+                    color="inherit"
+                    component="button"
+                    onClick={() => {
+                      navigate("/login");
+                    }}
+                    sx={{
+                      marginLeft: 5,
+                      textDecoration: "none",
+                    }}
+                  >
+                    Login
+                  </Link>
+
+                  <Link
+                    color="inherit"
+                    component="button"
+                    onClick={() => {
+                      navigate("/signup");
+                    }}
+                    sx={{
+                      marginLeft: 5,
+                      textDecoration: "none",
+                    }}
+                  >
+                    Signup
+                  </Link>
+                </>
               )}
 
               <ToggleSwitch />

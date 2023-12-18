@@ -12,7 +12,7 @@ import { AuthContext } from "../context/AuthContext";
 import SearchProduct from "./SearchProduct";
 import SearchPost from "./SearchPost";
 
-import { Grid } from "@mui/material";
+import { Grid, Button, Typography, TextField } from "@mui/material";
 import PostCard from "./PostCard";
 
 type Product = {
@@ -45,72 +45,35 @@ export default function Home() {
 
   // console.log(currentUser);
   return (
-    <div>
-      {currentUser ? (
-        <>
-          <LogoutButton />
-          <button
-            className="userprofile"
-            onClick={() => {
-              navigate("/userprofile");
-            }}
-          >
-            User Profile
-          </button>
-        </>
-      ) : (
-        <>
-          <button
-            onClick={() => {
-              navigate("/login");
-            }}
-          >
-            Login
-          </button>
-          <button
-            onClick={() => {
-              navigate("/signup");
-            }}
-          >
-            Signup
-          </button>
-        </>
-      )}
-
-      <div style={{ display: "flex", justifyContent: "center" }}>
-        <form
-          onSubmit={(event) => {
-            event.preventDefault();
-            setSearchTerm(text);
-            setText("");
-          }}
-        >
-          <label>
-            Search:
-            <input
-              type="text"
-              value={text}
-              onChange={(e) => setText(e.target.value)}
-            />
-          </label>
-          <input type="submit" />
-        </form>
-
-        {searchTerm && <SearchProduct searchTerm={searchTerm} />}
-        {searchTerm && <SearchPost searchTerm={searchTerm} />}
-      </div>
-
-      <Grid container sx={{ display: "flex", justifyContent: "center" }}>
+    <div style={{ marginTop: "5%" }}>
+      <Grid
+        container
+        spacing={5}
+        marginTop={1}
+        sx={{ display: "flex", justifyContent: "center" }}
+      >
         <Grid item>
           <div style={{ textAlign: "center" }}>
-            <h2>First 10 Products:</h2>
-            <button
-              onClick={() => {
-                navigate("/products");
+            <Typography
+              variant="h4"
+              sx={{
+                // fontFamily: "monospace",
+                fontWeight: "bold",
               }}
             >
-              More
-            </button>
+              First 10 Products
+              <Button
+                size="large"
+                variant="contained"
+                color="inherit"
+                onClick={() => {
+                  navigate("/products");
+                }}
+                sx={{ marginLeft: 5 }}
+              >
+                More
+              </Button>
+            </Typography>
           </div>
           <div style={{ display: "flex", justifyContent: "center" }}>
             <Grid
@@ -132,16 +95,29 @@ export default function Home() {
             </Grid>
           </div>
         </Grid>
+
         <Grid item>
           <div style={{ textAlign: "center" }}>
-            <h2>First 10 Posts:</h2>
-            <button
-              onClick={() => {
-                navigate("/posts");
+            <Typography
+              variant="h4"
+              sx={{
+                // fontFamily: "monospace",
+                fontWeight: "bold",
               }}
             >
-              More
-            </button>
+              First 10 Posts
+              <Button
+                size="large"
+                variant="contained"
+                color="inherit"
+                onClick={() => {
+                  navigate("/posts");
+                }}
+                sx={{ marginLeft: 5 }}
+              >
+                More
+              </Button>
+            </Typography>
           </div>
           <div style={{ display: "flex", justifyContent: "center" }}>
             <Grid

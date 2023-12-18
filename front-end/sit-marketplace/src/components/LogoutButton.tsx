@@ -1,11 +1,22 @@
 import React from "react";
+import { Link } from "@mui/material";
 import { doSignOut } from "../firebase/FirebaseFunction";
 
 const LogoutButton = () => {
   return (
-    <button className="button" type="button" onClick={doSignOut}>
+    <Link
+      color="inherit"
+      component="button"
+      onClick={() => {
+        doSignOut;
+      }}
+      sx={{
+        marginLeft: 5,
+        textDecoration: "none",
+      }}
+    >
       Log Out
-    </button>
+    </Link>
   );
 };
 

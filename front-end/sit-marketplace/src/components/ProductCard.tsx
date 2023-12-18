@@ -15,7 +15,11 @@ import {
   Button,
 } from "@mui/material";
 
-import { ADD_FAVORITE_TO_USER, REMOVE_FAVORITE_FROM_USER, ADD_POSSIBLE_BUYER } from "../queries";
+import {
+  ADD_FAVORITE_TO_USER,
+  REMOVE_FAVORITE_FROM_USER,
+  ADD_POSSIBLE_BUYER,
+} from "../queries";
 import { useMutation } from "@apollo/client";
 import { useQuery } from "@apollo/client";
 import { GET_USER } from "../queries";
@@ -80,23 +84,21 @@ export default function ProductCard({ productData }) {
 
   return (
     <Grid item>
-      <Card
-        sx={{ width: 300, height: "100%" }}
-        style={{
-          // backgroundColor: "snow",
-          borderRadius: "10%",
-        }}
-      >
-        <Link onClick={() => navigate(baseUrl + productData._id)}>
+      <Card sx={{ width: 300, height: "100%" }}>
+        <Link
+          component="button"
+          sx={{
+            textDecoration: "none",
+          }}
+          onClick={() => navigate(baseUrl + productData._id)}
+        >
           <CardHeader title={productData && productData.name}></CardHeader>
         </Link>
 
         <div style={{ display: "flex", justifyContent: "center" }}>
           <CardMedia
             component="img"
-            image={
-              productData.image ? productData.image : noImage
-            }
+            image={productData.image ? productData.image : noImage}
             title="thumbnail"
             sx={{
               width: "auto",
@@ -109,53 +111,56 @@ export default function ProductCard({ productData }) {
           <p>Price: {productData && productData.price}</p>
           <p>Condition: {productData && productData.condition}</p>
 
-          <Link
-            color="inherit"
-            component="button"
-            hidden={
-              !currentUser || productData.seller_id === currentUser.uid
-                ? true
-                : false
-            }
-            onClick={() => {
-              if (currentUser.uid) {
-                addPossibleBuyer({
-                  variables: {
-                    id: productData.seller_id,
-                    buyerId: currentUser.uid,
-                  },
-                });
-                socket.emit("join room", {
-                  room: productData.seller_id,
-                  user: currentUser.uid,
-                });
-
-                // socket.emit("message", {
-                //   room: productData.seller_id,
-                //   sender: currentUser.uid,
-                //   message: `Hi, I have questions regarding product: "${productData.name}"`,
-                //   time: new Date().toISOString(),
-                // });
+          <div>
+            <Button
+              size="small"
+              variant="contained"
+              color="inherit"
+              hidden={
+                !currentUser || productData.seller_id === currentUser.uid
+                  ? true
+                  : false
               }
-            }}
-          >
-            Chat with seller
-          </Link>
+              onClick={() => {
+                if (currentUser.uid) {
+                  addPossibleBuyer({
+                    variables: {
+                      id: productData.seller_id,
+                      buyerId: currentUser.uid,
+                    },
+                  });
+                  socket.emit("join room", {
+                    room: productData.seller_id,
+                    user: currentUser.uid,
+                  });
 
-          <br></br>
+                  // socket.emit("message", {
+                  //   room: productData.seller_id,
+                  //   sender: currentUser.uid,
+                  //   message: `Hi, I have questions regarding product: "${productData.name}"`,
+                  //   time: new Date().toISOString(),
+                  // });
+                }
+              }}
+            >
+              Chat with seller
+            </Button>
 
-          <Link
-            color="inherit"
-            component="button"
-            hidden={
-              !currentUser || productData.seller_id === currentUser.uid
-                ? true
-                : false
-            }
-            onClick={handleFavorite}
-          >
-            {hasFavorited ? <p>Favorited</p> : <p>Favorite</p>}
-          </Link>
+            <Button
+              sx={{ marginLeft: 3 }}
+              size="small"
+              variant="contained"
+              color="inherit"
+              hidden={
+                !currentUser || productData.seller_id === currentUser.uid
+                  ? true
+                  : false
+              }
+              onClick={handleFavorite}
+            >
+              {hasFavorited ? "Favorited" : "Favorite"}
+            </Button>
+          </div>
         </CardContent>
       </Card>
     </Grid>
