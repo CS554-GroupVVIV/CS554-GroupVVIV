@@ -131,56 +131,58 @@ export default function ProductCard({ productData }) {
           <p>Price: {productData && productData.price}</p>
           <p>Condition: {productData && productData.condition}</p>
 
-          <div style={{ display: "flex", justifyContent: "center" }}>
-            {!currentUser || productData.seller_id !== currentUser.uid ? (
-              <>
-                <Button
-                  size="small"
-                  variant="contained"
-                  color="inherit"
-                  onClick={() => {
-                    if (currentUser.uid) {
-                      addPossibleBuyer({
-                        variables: {
-                          id: productData.seller_id,
-                          buyerId: currentUser.uid,
-                        },
-                      });
-                      socket.emit("join room", {
-                        room: productData.seller_id,
-                        user: currentUser.uid,
-                      });
+          {currentUser && (
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              {productData.seller_id !== currentUser.uid ? (
+                <>
+                  <Button
+                    size="small"
+                    variant="contained"
+                    color="inherit"
+                    onClick={() => {
+                      if (currentUser.uid) {
+                        addPossibleBuyer({
+                          variables: {
+                            id: productData.seller_id,
+                            buyerId: currentUser.uid,
+                          },
+                        });
+                        socket.emit("join room", {
+                          room: productData.seller_id,
+                          user: currentUser.uid,
+                        });
 
-                      // socket.emit("message", {
-                      //   room: productData.seller_id,
-                      //   sender: currentUser.uid,
-                      //   message: `Hi, I have questions regarding product: "${productData.name}"`,
-                      //   time: new Date().toISOString(),
-                      // });
-                    }
-                  }}
-                >
-                  Chat with seller
-                </Button>
+                        // socket.emit("message", {
+                        //   room: productData.seller_id,
+                        //   sender: currentUser.uid,
+                        //   message: `Hi, I have questions regarding product: "${productData.name}"`,
+                        //   time: new Date().toISOString(),
+                        // });
+                      }
+                    }}
+                  >
+                    Chat with seller
+                  </Button>
 
-                <Button
-                  sx={{ marginLeft: 3 }}
-                  size="small"
-                  variant="contained"
-                  color="inherit"
-                  onClick={handleFavorite}
-                >
-                  {hasFavorited ? (
-                    <FavoriteIcon sx={{ color: "#e91e63" }} />
-                  ) : (
-                    <FavoriteBorderIcon />
-                  )}
-                </Button>
-              </>
-            ) : (
-              <></>
-            )}
-          </div>
+                  <Button
+                    sx={{ marginLeft: 3 }}
+                    size="small"
+                    variant="contained"
+                    color="inherit"
+                    onClick={handleFavorite}
+                  >
+                    {hasFavorited ? (
+                      <FavoriteIcon sx={{ color: "#e91e63" }} />
+                    ) : (
+                      <FavoriteBorderIcon />
+                    )}
+                  </Button>
+                </>
+              ) : (
+                <></>
+              )}
+            </div>
+          )}
         </CardContent>
       </Card>
     </Grid>
