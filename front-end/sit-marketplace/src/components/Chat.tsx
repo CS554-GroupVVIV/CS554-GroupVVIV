@@ -34,11 +34,12 @@ export default function Chat({ chat, participants }) {
             >
               <p
                 style={{
-                  padding: 3,
+                  padding: 10,
                   backgroundColor:
                     sender === currentUser.uid ? "blue" : "green",
                   borderRadius: 50,
                   color: "white",
+                  fontWeight: "bold",
                 }}
               >
                 {participantDict && participantDict[sender]}: {message}

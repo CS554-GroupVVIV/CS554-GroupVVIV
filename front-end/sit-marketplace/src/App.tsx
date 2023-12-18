@@ -245,12 +245,7 @@ function App() {
           </Container>
         </AppBar>
 
-        <Dialog
-          open={open}
-          keepMounted
-          onClose={handleClose}
-          aria-describedby="alert-dialog-slide-description"
-        >
+        <Dialog open={open} keepMounted onClose={handleClose}>
           <DialogTitle>{"Chat Rooms"}</DialogTitle>
           <DialogContent>
             <ChatRoomList uid={user && user.uid} />

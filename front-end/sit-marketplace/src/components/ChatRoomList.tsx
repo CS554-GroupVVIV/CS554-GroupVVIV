@@ -65,44 +65,41 @@ export default function ChatRoomList({ uid }) {
   // </button>;
 
   return (
-    <div>
-      <Grid
-        container
-        spacing={5}
-        sx={{
-          height: "90vh",
-          width: "auto",
-        }}
-        direction="row"
-      >
-        <Grid item>
-          <MenuList>
-            {rooms && Object.keys(rooms).length > 0 ? (
-              Object.keys(rooms).map((room, i) => {
-                return (
-                  <MenuItem
-                    key={i}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      curRoom === room
-                        ? setCurRoom(undefined)
-                        : setCurRoom(room);
-                    }}
-                  >
-                    {participantDict && participantDict[room]}
-                  </MenuItem>
-                );
-              })
-            ) : (
-              <h4>Nothing here...</h4>
-            )}
-          </MenuList>
-        </Grid>
-
-        <Grid item xs sx={{ width: 500 }}>
-          <div>{curRoom && <ChatRoom room={curRoom} />}</div>
-        </Grid>
+    <Grid
+      container
+      spacing={5}
+      sx={{
+        height: "100%",
+        width: "auto",
+        overflowY: "hidden",
+      }}
+      // sx={{ overflowY: "hidden" }}
+      direction="row"
+    >
+      <Grid item>
+        <MenuList>
+          {rooms && Object.keys(rooms).length > 0 ? (
+            Object.keys(rooms).map((room, i) => {
+              return (
+                <MenuItem
+                  key={i}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    curRoom === room ? setCurRoom(undefined) : setCurRoom(room);
+                  }}
+                >
+                  {participantDict && participantDict[room]}
+                </MenuItem>
+              );
+            })
+          ) : (
+            <h4>Nothing here...</h4>
+          )}
+        </MenuList>
       </Grid>
-    </div>
+      <Grid item xs sx={{ width: 500 }}>
+        {curRoom && <ChatRoom room={curRoom} />}
+      </Grid>
+    </Grid>
   );
 }
