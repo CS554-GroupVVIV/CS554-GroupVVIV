@@ -159,21 +159,37 @@ export const GET_COMMENT = gql`
 `;
 
 export const ADD_PRODUCT = gql`
-mutation Mutation($name: String!, $price: Float!, $description: String!, $condition: String!, $sellerId: String!, $image: String!, $category: String!) {
-  addProduct(name: $name, price: $price, description: $description, condition: $condition, seller_id: $sellerId, image: $image, category: $category) {
-    _id
-    buyer_id
-    category
-    condition
-    date
-    description
-    image
-    name
-    price
-    seller_id
-    status
+  mutation Mutation(
+    $name: String!
+    $price: Float!
+    $description: String!
+    $condition: String!
+    $sellerId: String!
+    $image: String!
+    $category: String!
+  ) {
+    addProduct(
+      name: $name
+      price: $price
+      description: $description
+      condition: $condition
+      seller_id: $sellerId
+      image: $image
+      category: $category
+    ) {
+      _id
+      buyer_id
+      category
+      condition
+      date
+      description
+      image
+      name
+      price
+      seller_id
+      status
+    }
   }
-}
 `;
 
 export const EDIT_PRODUCT = gql`
@@ -386,28 +402,27 @@ export const EDIT_USER = gql`
   }
 `;
 
-
 export const ADD_POSSIBLE_BUYER = gql`
-mutation Mutation($id: String!, $buyerId: String!) {
-  addPossibleBuyer(_id: $id, buyer_id: $buyerId) {
-    _id
-    buyer_id
-    category
-    condition
-    date
-    description
-    image
-    name
-    price
-    seller_id
-    status
-    possible_buyers {
+  mutation Mutation($id: String!, $buyerId: String!) {
+    addPossibleBuyer(_id: $id, buyer_id: $buyerId) {
       _id
-      firstname
-      lastname
+      buyer_id
+      category
+      condition
+      date
+      description
+      image
+      name
+      price
+      seller_id
+      status
+      possible_buyers {
+        _id
+        firstname
+        lastname
+      }
     }
   }
-}
 `;
 
 export const ADD_POSSIBLE_SELLER = gql`
@@ -650,6 +665,23 @@ export const GET_PRODUCTS_BY_CATEGORY = gql`
       price
       seller_id
       status
+    }
+  }
+`;
+
+export const GET_POSTS_BY_CATEGORY = gql`
+  query Query($category: String!) {
+    getPostsByCategory(category: $category) {
+      _id
+      buyer_id
+      condition
+      category
+      date
+      description
+      item
+      price
+      status
+      seller_id
     }
   }
 `;

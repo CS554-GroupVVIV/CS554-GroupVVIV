@@ -350,6 +350,29 @@ export const resolvers = {
       }
     },
 
+    getPostsByCategory: async (_, args) => {
+      try {
+        let category = checkCategory(args.category);
+        const posts = await postCollection();
+        let postsByCategory = await posts
+          .find({ category: category })
+          .toArray();
+        if (!postsByCategory) {
+          throw new GraphQLError("Post not found", {
+            extensions: { code: "NOT_FOUND" },
+          });
+        }
+        for (let i = 0; i < postsByCategory.length; i++) {
+          postsByCategory[i].date = dateObjectToHTMLDate(
+            postsByCategory[i].date
+          );
+        }
+        return postsByCategory;
+      } catch (error) {
+        throw new GraphQLError(error.message);
+      }
+    },
+
     getUserById: async (_, args) => {
       try {
         let id = checkString(args._id);
