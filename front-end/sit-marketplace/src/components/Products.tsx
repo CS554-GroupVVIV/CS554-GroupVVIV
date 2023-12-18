@@ -28,6 +28,11 @@ export default function Products() {
     "Stationary",
     "Other",
   ];
+  const [value, setValue] = React.useState(0);
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
 
   const { loading, error, data } = useQuery(
     curCategory === "All" ? GET_PRODUCTS : GET_PRODUCTS_BY_CATEGORY,
@@ -77,22 +82,42 @@ export default function Products() {
         {searchTerm && <SearchProduct searchTerm={searchTerm} />}
 
         <Tabs
-          value={1}
+          value={value}
+          onChange={(e, newValue) => handleChange(e, newValue)}
           variant="scrollable"
           scrollButtons="auto"
           aria-label="scrollable auto tabs example"
         >
-          {category_list.map((category) => (
+          {category_list.map((category, idx) => (
+            <Tab
+              label={category}
+              key={idx}
+              value={idx}
+              onClick={() => {
+                setCurCategory(category);
+              }}
+            />
+          ))}
+        </Tabs>
+
+        {/* <Tabs
+          value={value}
+          onChange={(e) => handleChange(e, value)}
+          variant="scrollable"
+          scrollButtons="auto"
+          aria-label="scrollable auto tabs example"
+        >
+          {category_list.map((category, idx) => (
             <Link
               key={category}
               onClick={() => {
                 setCurCategory(category);
               }}
             >
-              <Tab label={category} key={category} />
+              <Tab label={category} key={idx} value={idx} />
             </Link>
           ))}
-        </Tabs>
+        </Tabs> */}
 
         <h1>Products:</h1>
         {currentUser ? (
