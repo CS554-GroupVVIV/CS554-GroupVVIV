@@ -117,6 +117,7 @@ export default function Posts() {
             variant="standard"
             label="Search"
             value={text}
+            autoComplete="off"
             onInput={(e) => setText(e.target.value)}
             InputLabelProps={{
               sx: {

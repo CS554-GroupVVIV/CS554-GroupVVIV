@@ -3,6 +3,9 @@ import { useNavigate } from "react-router-dom";
 import noImage from "../assets/noimage.jpg";
 import { AuthContext } from "../context/AuthContext";
 
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+
 import { socketID, socket } from "./socket";
 
 import {
@@ -128,7 +131,7 @@ export default function ProductCard({ productData }) {
           <p>Price: {productData && productData.price}</p>
           <p>Condition: {productData && productData.condition}</p>
 
-          <div>
+          <div style={{ display: "flex", justifyContent: "center" }}>
             {!currentUser || productData.seller_id !== currentUser.uid ? (
               <>
                 <Button
@@ -167,7 +170,11 @@ export default function ProductCard({ productData }) {
                   color="inherit"
                   onClick={handleFavorite}
                 >
-                  {hasFavorited ? "Favorited" : "Favorite"}
+                  {hasFavorited ? (
+                    <FavoriteIcon sx={{ color: "#e91e63" }} />
+                  ) : (
+                    <FavoriteBorderIcon />
+                  )}
                 </Button>
               </>
             ) : (

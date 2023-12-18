@@ -29,16 +29,7 @@ export default function SearchPost({ searchTerm }) {
         </div>
 
         <div style={{ display: "flex", justifyContent: "center" }}>
-          <Grid
-            container
-            spacing={2}
-            style={{
-              overflowX: "auto",
-              flexWrap: "nowrap",
-              padding: "16px",
-              maxWidth: "80vw",
-            }}
-          >
+          <Grid container spacing={2} marginTop={1} justifyContent="center">
             {data &&
               data.searchPosts.map((post) => {
                 return <PostCard key={post._id} postData={post} />;

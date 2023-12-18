@@ -64,12 +64,14 @@ export default function ChatRoom({ room }) {
   };
 
   const messagesEndRef = useRef(null);
+
   useEffect(() => {
     socket.on("message", ({ sender, message, time }) => {
       // console.log("The server has broadcast message data to all clients");
       setChat([...chat, { sender, message, time }]);
-      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     });
+
+    messagesEndRef.current?.scrollIntoView({ behavior: "auto" });
 
     return () => {
       socket.off("message");
@@ -90,7 +92,7 @@ export default function ChatRoom({ room }) {
   if (!loading) {
     return (
       <Grid container spacing={2} direction={"column"}>
-        <Grid item height={"75vh"} sx={{ overflowY: "auto" }}>
+        <Grid item height={"70vh"} sx={{ overflowY: "auto" }}>
           {/* <h4 style={{ textAlign: "center" }}> --- History --- </h4> */}
           <Chat
             chat={data && data.getChatByParticipants.messages}
@@ -109,6 +111,8 @@ export default function ChatRoom({ room }) {
               label="message"
               value={message}
               onInput={(e) => setMessage(e.target.value)}
+              autoFocus
+              autoComplete="off"
               InputLabelProps={{
                 sx: {
                   // fontFamily: "monospace",

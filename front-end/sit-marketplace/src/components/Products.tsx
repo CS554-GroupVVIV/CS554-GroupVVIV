@@ -114,6 +114,7 @@ export default function Products() {
             label="Search"
             value={text}
             onInput={(e) => setText(e.target.value)}
+            autoComplete="off"
             InputLabelProps={{
               sx: {
                 // fontFamily: "monospace",
@@ -170,32 +171,36 @@ export default function Products() {
         </div>
 
         <div style={{ display: "flex", justifyContent: "center" }}>
-          <Grid container spacing={2} marginTop={1} justifyContent="center">
-            {data && curCategory === "All" && data.products.length > 0
-              ? data.products.map((product: Product) => {
-                  return (
-                    <ProductCard key={product._id} productData={product} />
-                  );
-                })
-              : null}
-            {data && curCategory === "All" && data.products.length == 0 ? (
-              <p>No result found</p>
-            ) : null}
-            {data &&
-            curCategory != "All" &&
-            data.getProductsByCategory.length > 0
-              ? data.getProductsByCategory.map((product: Product) => {
-                  return (
-                    <ProductCard key={product._id} productData={product} />
-                  );
-                })
-              : null}
-            {data &&
-            curCategory != "All" &&
-            data.getProductsByCategory.length == 0 ? (
-              <p>No result found</p>
-            ) : null}
-          </Grid>
+          {searchTerm ? (
+            <></>
+          ) : (
+            <Grid container spacing={2} marginTop={1} justifyContent="center">
+              {data && curCategory === "All" && data.products.length > 0
+                ? data.products.map((product: Product) => {
+                    return (
+                      <ProductCard key={product._id} productData={product} />
+                    );
+                  })
+                : null}
+              {data && curCategory === "All" && data.products.length == 0 ? (
+                <p>No result found</p>
+              ) : null}
+              {data &&
+              curCategory != "All" &&
+              data.getProductsByCategory.length > 0
+                ? data.getProductsByCategory.map((product: Product) => {
+                    return (
+                      <ProductCard key={product._id} productData={product} />
+                    );
+                  })
+                : null}
+              {data &&
+              curCategory != "All" &&
+              data.getProductsByCategory.length == 0 ? (
+                <p>No result found</p>
+              ) : null}
+            </Grid>
+          )}
         </div>
       </div>
     );

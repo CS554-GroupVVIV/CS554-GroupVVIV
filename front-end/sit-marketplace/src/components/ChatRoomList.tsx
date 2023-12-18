@@ -93,7 +93,7 @@ export default function ChatRoomList({ uid }) {
               );
             })
           ) : (
-            <h4>Nothing here...</h4>
+            <p>Nothing here...</p>
           )}
         </MenuList>
       </Grid>

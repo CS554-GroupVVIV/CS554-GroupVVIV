@@ -34,23 +34,11 @@ export default function SearchProduct({ searchTerm }) {
         </div>
 
         <div style={{ display: "flex", justifyContent: "center" }}>
-          <Grid
-            container
-            spacing={2}
-            style={{
-              overflowX: "auto",
-              flexWrap: "nowrap",
-              padding: "16px",
-              maxWidth: "80vw",
-            }}
-          >
-            {data.length == 0 ? (
-              <p>No Result Found</p>
-            ) : (
+          <Grid container spacing={2} marginTop={1} justifyContent="center">
+            {data &&
               data.searchProductsByName.map((product: Product) => {
                 return <ProductCard key={product._id} productData={product} />;
-              })
-            )}
+              })}
           </Grid>
         </div>
       </Grid>

@@ -73,27 +73,20 @@ function App() {
   // ToggleSwitch component
   const ToggleSwitch = () => {
     return (
-      <div
-        style={{
-          position: "absolute",
-          top: "10px",
-          right: "10px",
-        }}
-      >
-        <FormGroup>
-          <FormControlLabel
-            control={
-              <Switch
-                checked={theme.darkmode}
-                onChange={() => {
-                  dispatch(toggleTheme());
-                }}
-              />
-            }
-            label="Darkmode"
-          />
-        </FormGroup>
-      </div>
+      <FormGroup sx={{ marginLeft: 3 }}>
+        <FormControlLabel
+          control={
+            <Switch
+              checked={theme.darkmode}
+              onChange={() => {
+                dispatch(toggleTheme());
+              }}
+              color="default"
+            />
+          }
+          label="Darkmode"
+        />
+      </FormGroup>
     );
   };
 
@@ -122,14 +115,13 @@ function App() {
           <Container maxWidth="xl">
             <Toolbar disableGutters>
               <Typography
-                variant="h6"
+                variant="h5"
                 noWrap
                 sx={{
-                  mr: 2,
-                  display: { xs: "none", md: "flex" },
                   fontFamily: "monospace",
-                  fontWeight: 700,
+                  fontWeight: "bold",
                   letterSpacing: ".3rem",
+                  flexGrow: 1,
                 }}
               >
                 <Link
@@ -144,103 +136,109 @@ function App() {
                 >
                   Home
                 </Link>
-              </Typography>
 
-              <Link
-                color="inherit"
-                component="button"
-                onClick={() => {
-                  navigate("/products");
-                }}
-                sx={{
-                  marginLeft: 5,
-                  textDecoration: "none",
-                }}
-              >
-                Products
-              </Link>
-
-              <Link
-                color="inherit"
-                component="button"
-                onClick={() => {
-                  navigate("/posts");
-                }}
-                sx={{
-                  marginLeft: 5,
-                  textDecoration: "none",
-                }}
-              >
-                Posts
-              </Link>
-
-              {user ? (
                 <Link
                   color="inherit"
                   component="button"
-                  onClick={handleClickOpen}
+                  onClick={() => {
+                    navigate("/products");
+                  }}
                   sx={{
                     marginLeft: 5,
                     textDecoration: "none",
                   }}
                 >
-                  Chat Rooms
+                  Products
                 </Link>
-              ) : (
-                <></>
-              )}
 
-              {user ? (
-                <>
-                  <LogoutButton />
+                <Link
+                  color="inherit"
+                  component="button"
+                  onClick={() => {
+                    navigate("/posts");
+                  }}
+                  sx={{
+                    marginLeft: 5,
+                    textDecoration: "none",
+                  }}
+                >
+                  Posts
+                </Link>
+              </Typography>
 
-                  <Link
-                    color="inherit"
-                    component="button"
-                    onClick={() => {
-                      navigate("/userprofile");
-                    }}
-                    sx={{
-                      marginLeft: 5,
-                      textDecoration: "none",
-                    }}
-                  >
-                    User Profile
-                  </Link>
-                </>
-              ) : (
-                <>
-                  <Link
-                    color="inherit"
-                    component="button"
-                    onClick={() => {
-                      navigate("/login");
-                    }}
-                    sx={{
-                      marginLeft: 5,
-                      textDecoration: "none",
-                    }}
-                  >
-                    Login
-                  </Link>
+              <Typography
+                variant="subtitle1"
+                noWrap
+                sx={{
+                  fontWeight: "bold",
+                }}
+              >
+                <div style={{ display: "flex", justifyContent: "center" }}>
+                  {user ? (
+                    <>
+                      <Link
+                        color="inherit"
+                        component="button"
+                        onClick={() => {
+                          navigate("/userprofile");
+                        }}
+                        sx={{
+                          marginLeft: 5,
+                          textDecoration: "none",
+                        }}
+                      >
+                        User Profile
+                      </Link>
 
-                  <Link
-                    color="inherit"
-                    component="button"
-                    onClick={() => {
-                      navigate("/signup");
-                    }}
-                    sx={{
-                      marginLeft: 5,
-                      textDecoration: "none",
-                    }}
-                  >
-                    Signup
-                  </Link>
-                </>
-              )}
+                      <Link
+                        color="inherit"
+                        component="button"
+                        onClick={handleClickOpen}
+                        sx={{
+                          marginLeft: 5,
+                          textDecoration: "none",
+                        }}
+                      >
+                        Chat Rooms
+                      </Link>
 
-              <ToggleSwitch />
+                      <LogoutButton />
+                    </>
+                  ) : (
+                    <>
+                      <Link
+                        color="inherit"
+                        component="button"
+                        onClick={() => {
+                          navigate("/login");
+                        }}
+                        sx={{
+                          marginLeft: 5,
+                          textDecoration: "none",
+                        }}
+                      >
+                        Login
+                      </Link>
+
+                      <Link
+                        color="inherit"
+                        component="button"
+                        onClick={() => {
+                          navigate("/signup");
+                        }}
+                        sx={{
+                          marginLeft: 5,
+                          textDecoration: "none",
+                        }}
+                      >
+                        Signup
+                      </Link>
+                    </>
+                  )}
+
+                  <ToggleSwitch />
+                </div>
+              </Typography>
             </Toolbar>
           </Container>
         </AppBar>
