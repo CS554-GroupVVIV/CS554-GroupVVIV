@@ -20,7 +20,9 @@ export const typeDefs = `#graphql
         getPostBySeller(_id: String!):[Post],
         getPostByBuyer(_id: String!):[Post],
         getProductBySeller(_id: String!):[Product],
-        getProductByBuyer(_id: String!):[Product]
+        getProductByBuyer(_id: String!):[Product],
+        getBuyerByProduct(_id: String!):User,
+        getSellerByPost(_id: String!):User,
         getComment(user_id:String!, comment_id:String!): User
     }
     
@@ -35,7 +37,8 @@ export const typeDefs = `#graphql
         buyer_id:String,
         image:String!,
         category:String!,
-        status:String!
+        status:String!,
+        possible_buyers:[User]
     }
 
     type Post {
@@ -48,7 +51,8 @@ export const typeDefs = `#graphql
       condition:String!,
       date: String!,
       description:String,
-      status:String!
+      status:String!,
+      possible_sellers:[User]
   }
 
     type Comment{
@@ -82,9 +86,11 @@ export const typeDefs = `#graphql
 
     type Mutation {
         addProduct(name:String!, price: Float!,description:String!,condition:String!,seller_id:String!, image:String!,category:String!):Product,
-        editProduct(_id: String!, name:String, price: Float,date:DateTime,description:String,condition:String,seller_id:String!,buyer_id:String, image:String,category:String,status:String ):Product,
+        addPossibleBuyer(_id:String!,buyer_id:String!):Product,
+        editProduct(_id: String!, name:String!, price: Float!,description:String!,condition:String!,seller_id:String!,buyer_id:String, image:String!,category:String!,status:String! ):Product,
         removeProduct(_id:String!):Product,
         addPost(buyer_id: String!, item:String!, category:String!, price: Float!, condition:String!, description:String):Post,
+        addPossibleSeller(_id:String!,seller_id:String!):Post,
         editPost(_id: String!, buyer_id: String!, item:String!, category:String!, price: Float!, condition:String!, description:String!, status:String!):Post,
         removePost(_id:String!):Post,
         addUser(_id: String!, email: String!, firstname: String!, lastname: String!, favorite: String): User,

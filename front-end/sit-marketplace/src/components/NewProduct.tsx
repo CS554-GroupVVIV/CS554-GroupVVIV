@@ -1,7 +1,6 @@
 import { useState, useRef, useEffect, useContext } from "react";
 import React from "react";
-// import { useRouter } from "next/navigation";
-import { useNavigate } from "react-router-dom";
+import { useNavigate,redirect } from "react-router-dom";
 
 import { useMutation, useQuery } from "@apollo/client";
 import { ADD_PRODUCT, GET_PRODUCTS } from "../queries";

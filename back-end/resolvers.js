@@ -25,6 +25,7 @@ import {
   dateObjectToHTMLDate,
   // HTMLDateToDateObject,
   checkRating,
+  checkStatus,
 } from "./helper.js";
 
 export const resolvers = {
@@ -52,6 +53,42 @@ export const resolvers = {
           count += 1;
         });
         return isNaN(total / count) ? 0 : Number(result.toFixed(2));
+      } catch (error) {
+        throw new GraphQLError(error.message);
+      }
+    },
+  },
+
+  Product: {
+    possible_buyers: async (parentValue) => {
+      try {
+        const users = await userCollection();
+        const usersData = await users.find({}).toArray();
+        const possible_buyers = parentValue.possible_buyers;
+        let possible_buyers_info = [];
+        possible_buyers.map((id) => {
+          let user = usersData.find((user) => user._id === id);
+          possible_buyers_info.push(user);
+        });
+        return possible_buyers_info;
+      } catch (error) {
+        throw new GraphQLError(error.message);
+      }
+    },
+  },
+
+  Post: {
+    possible_sellers: async (parentValue) => {
+      try {
+        const users = await userCollection();
+        const usersData = await users.find({}).toArray();
+        const possible_sellers = parentValue.possible_sellers;
+        let possible_sellers_info = [];
+        possible_sellers.map((id) => {
+          let user = usersData.find((user) => user._id === id);
+          possible_sellers_info.push(user);
+        });
+        return possible_sellers_info;
       } catch (error) {
         throw new GraphQLError(error.message);
       }
@@ -327,7 +364,7 @@ export const resolvers = {
           }
         }
         await client.json.set(`getUserById-${id}`, "$", user);
-        client.expire(`getUserById-${id}`, 3600);
+        client.expire(`getUserById-${id}`, 60);
         return user;
       } catch (error) {
         throw new GraphQLError(error.message);
@@ -577,6 +614,7 @@ export const resolvers = {
           image: image,
           category: category,
           status: "active",
+          possible_buyers: [],
         };
         let insertedProduct = await products.insertOne(newProduct);
         if (!insertedProduct) {
@@ -600,7 +638,7 @@ export const resolvers = {
 
     editProduct: async (_, args) => {
       try {
-        if (Object.keys(args).length !== 7) {
+        if (Object.keys(args).length < 9 || Object.keys(args).length > 10) {
           throw new GraphQLError("All fields are required", {
             extensions: { code: "BAD_INPUT" },
           });
@@ -611,8 +649,12 @@ export const resolvers = {
         let description = checkDescription(args.description);
         let condition = checkCondition(args.condition);
         let seller_id = checkString(args.seller_id);
-        let image = checkUrl(args.image);
         let category = checkCategory(args.category);
+        let status = checkStatus(args.status);
+        let buyer_id = "";
+        if (status == "completed") {
+          buyer_id = checkString(args.buyer_id);
+        }
         // ********need input check*************
         const products = await productCollection();
         const updatedProduct = {
@@ -621,12 +663,14 @@ export const resolvers = {
           description: description,
           condition: condition,
           seller_id: seller_id,
-          buyer_id: "",
-          image: image,
+          buyer_id: buyer_id,
           category: category,
-          status: "active",
-          date: new Date(),
+          status: status,
         };
+        if (args.image !== "") {
+          let image = checkUrl(args.image);
+          updatedProduct.image = image;
+        }
         let updated = await products.findOneAndUpdate(
           { _id: new ObjectId(_id) },
           { $set: updatedProduct },
@@ -635,7 +679,6 @@ export const resolvers = {
         client.json.del(`allProducts`);
         client.json.set(`getProductById-${_id}`, "$", updated);
         client.expire(`getProductById-${_id}`, 3600);
-
         if (!updated) {
           throw new GraphQLError(`Could not Edit Product`, {
             extensions: { code: "INTERNAL_SERVER_ERROR" },
@@ -692,6 +735,7 @@ export const resolvers = {
           date: new Date(),
           description: description,
           status: "active",
+          possible_sellers: [],
         };
         let insertedPost = await posts.insertOne(newPost);
         if (!insertedPost) {
@@ -1208,6 +1252,79 @@ export const resolvers = {
         }
         const user = await users.findOne({ _id: user_id });
         return user;
+      } catch (error) {
+        throw new GraphQLError(error.message);
+      }
+    },
+    addPossibleBuyer: async (_, args) => {
+      try {
+        let { _id, buyer_id } = args;
+        const products = await productCollection();
+        const product = await products.findOne({ _id: new ObjectId(_id) });
+        if (!product) {
+          throw new GraphQLError("product not found", {
+            extensions: { code: "NOT_FOUND" },
+          });
+        }
+        if (product.possible_buyers.includes(buyer_id)) {
+          throw new GraphQLError("The possible buyer already exists", {
+            extensions: { code: "BAD_INPUT" },
+          });
+        }
+        const users = await userCollection();
+        const buyer = await users.findOne({ _id: buyer_id });
+        if (!buyer) {
+          throw new GraphQLError("buyer not found", {
+            extensions: { code: "NOT_FOUND" },
+          });
+        }
+        const update = await products.findOneAndUpdate(
+          { _id: new ObjectId(_id) },
+          { $push: { possible_buyers: buyer_id } },
+          { new: true }
+        );
+        if (!update) {
+          throw new GraphQLError(`Could not Edit Product`, {
+            extensions: { code: "INTERNAL_SERVER_ERROR" },
+          });
+        }
+        return update;
+      } catch (error) {
+        throw new GraphQLError(error.message);
+      }
+    },
+    addPossibleSeller: async (_, args) => {
+      try {
+        let { _id, seller_id } = args;
+        const posts = await postCollection();
+        const post = await posts.findOne({ _id: new ObjectId(_id) });
+        if (!post) {
+          throw new GraphQLError("post not found", {
+            extensions: { code: "NOT_FOUND" },
+          });
+        }
+        if (post.possible_sellers.includes(seller_id)) {
+          throw new GraphQLError("The possible seller already exists", {
+            extensions: { code: "BAD_INPUT" },
+          });
+        }
+        const users = await userCollection();
+        const seller = await users.findOne({ _id: seller_id });
+        if (!seller) {
+          throw new GraphQLError("seller not found", {
+            extensions: { code: "NOT_FOUND" },
+          });
+        }
+        const update = await posts.findOneAndUpdate(
+          { _id: new ObjectId(_id) },
+          { $push: { possible_sellers: seller_id } }
+        );
+        if (!update) {
+          throw new GraphQLError(`Could not Edit Post`, {
+            extensions: { code: "INTERNAL_SERVER_ERROR" },
+          });
+        }
+        return update;
       } catch (error) {
         throw new GraphQLError(error.message);
       }
