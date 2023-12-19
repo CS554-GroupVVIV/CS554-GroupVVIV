@@ -236,7 +236,6 @@ function App() {
         <Dialog open={open} keepMounted onClose={handleClose}>
           <DialogTitle>
             <Typography
-              variant="h5"
               sx={{
                 fontWeight: "bold",
               }}
