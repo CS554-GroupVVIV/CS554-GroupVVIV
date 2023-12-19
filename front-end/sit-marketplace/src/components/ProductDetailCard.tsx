@@ -163,12 +163,14 @@ export default function ProductDetailCard() {
                   <Divider sx={{ marginBottom: 3 }} />
 
                   <p>Seller Id: {productData.seller_id}</p>
-                  {/* {productData.status == "completed" &&
-          currentUser &&
-          (currentUser.uid == productData.seller_id ||
-            currentUser.uid == productData.buyer_id) ? (
-          Buyer Id: {productData.buyer_id}
-          ) : null} */}
+                  {productData.status === "completed" &&
+                  currentUser &&
+                  (currentUser.uid === productData.seller_id ||
+                    currentUser.uid === productData.buyer_id) ? (
+                    <p>Buyer Id: {productData.buyer_id}</p>
+                  ) : (
+                    <></>
+                  )}
                   <p>Category: {productData.category}</p>
                   <p>Price: {productData.price}</p>
                   <p>
@@ -239,6 +241,19 @@ export default function ProductDetailCard() {
                     </p>
                   )}
                 </Typography>
+
+                <Divider sx={{ marginTop: 3, marginBottom: 3 }} />
+                <Button
+                  size="small"
+                  variant="contained"
+                  color="inherit"
+                  onClick={() => {
+                    navigate(-1);
+                  }}
+                  sx={{ fontWeight: "bold" }}
+                >
+                  Back
+                </Button>
               </Grid>
             </Grid>
           </Grid>
