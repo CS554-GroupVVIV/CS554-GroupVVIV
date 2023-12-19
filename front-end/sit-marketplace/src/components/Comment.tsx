@@ -6,6 +6,8 @@ import { checkRating } from "../helper.js";
 import { common } from "@mui/material/colors";
 import { set } from "firebase/database";
 
+import { Button } from "@mui/material";
+
 const Comment = ({ data }) => {
   const { currentUser } = useContext(AuthContext);
 
@@ -139,7 +141,10 @@ const Comment = ({ data }) => {
     console.log(record);
     return (
       <>
-        <button
+        <Button
+          size="small"
+          variant="contained"
+          color="inherit"
           onClick={() => {
             setPrevComment(record);
             setRating(record.rating);
@@ -147,7 +152,7 @@ const Comment = ({ data }) => {
           }}
         >
           Comment
-        </button>
+        </Button>
         <dialog id="editForm" className="modal">
           <div className="modal-box">
             <h3 className="font-bold text-lg">Comment</h3>

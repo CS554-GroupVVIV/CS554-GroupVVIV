@@ -6,7 +6,21 @@ import EditProduct from "./EditProduct.tsx";
 import { socketID, socket } from "./socket";
 import Comment from "./Comment.tsx";
 
-import { Card, CardHeader, CardContent, Grid, Link } from "@mui/material";
+import {
+  Card,
+  CardHeader,
+  CardContent,
+  Grid,
+  Link,
+  CardMedia,
+  Typography,
+  Button,
+  IconButton,
+  Divider,
+} from "@mui/material";
+
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 
 import {
   ADD_FAVORITE_TO_USER,
@@ -89,103 +103,146 @@ export default function ProductDetailCard() {
     const productData = data.getProductById;
     console.log(data, "data");
     return (
-      <div className="card w-96 bg-base-100 shadow-xl border-indigo-500/100">
-        <div className="card-body">
-          <p className="card-title">Detail of Product</p>
-          <p>Item: {productData.name}</p>
-          <p>Seller Id: {productData.seller_id}</p>
-          {productData.status == "completed" &&
+      <div style={{ display: "flex", justifyContent: "center" }}>
+        <Grid
+          container
+          direction="row"
+          marginTop={12}
+          component="main"
+          style={{
+            maxWidth: "70vw",
+          }}
+        >
+          <Grid item xs>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+              }}
+            >
+              <CardMedia
+                component="img"
+                image={productData.image}
+                title="thumbnail"
+                sx={{
+                  width: "auto",
+                  height: "80vh",
+                }}
+              />
+            </div>
+          </Grid>
+
+          <Grid item xs>
+            <Grid container direction="column" padding={2} spacing={5}>
+              <Grid item xs>
+                <Typography
+                  align="left"
+                  variant="h4"
+                  sx={{ fontWeight: "bolder" }}
+                >
+                  {productData.name}
+                </Typography>
+              </Grid>
+
+              <Grid item xs>
+                <Typography
+                  align="left"
+                  variant="h5"
+                  sx={{ fontWeight: "bold" }}
+                >
+                  {productData.description}
+                </Typography>
+              </Grid>
+
+              <Grid item xs>
+                <Typography
+                  align="left"
+                  variant="body2"
+                  sx={{ fontWeight: "bold" }}
+                >
+                  <Divider sx={{ marginBottom: 3 }} />
+
+                  <p>Seller Id: {productData.seller_id}</p>
+                  {/* {productData.status == "completed" &&
           currentUser &&
           (currentUser.uid == productData.seller_id ||
             currentUser.uid == productData.buyer_id) ? (
-            <p>Buyer Id: {productData.buyer_id}</p>
-          ) : null}
-          <p>Category: {productData.category}</p>
-          <div className="image">
-            {productData && productData.image ? (
-              <img
-                src={productData.image}
-                alt="product image"
-                style={{ width: "100%", height: "100%" }}
-              />
-            ) : (
-              <img
-                src={noImage}
-                alt="product image"
-                style={{ width: "100%", height: "100%" }}
-              />
-            )}
-          </div>
-          <p>Price: {productData.price}</p>
-          <p>Transaction Date: {productData.date.split("T")[0]}</p>
-          <p>Status: {productData.status}</p>
-          {currentUser ? (
-            <div>
-              <div className="card-actions justify-end">
-                {productData.status != "completed" &&
-                productData.seller_id == currentUser.uid ? (
-                  <EditProduct productData={productData} />
-                ) : null}
-                {productData.status == "completed" &&
-                (productData.buyer_id == currentUser.uid ||
-                  productData.seller_id == currentUser.uid) ? (
-                  <Comment data={productData} />
-                ) : null}
-                {productData.status == "active" &&
-                productData.seller_id != currentUser.uid ? (
-                  <>
-                    <button
-                      // hidden={
-                      //   !currentUser || productData.seller_id === currentUser.uid
-                      //     ? true
-                      //     : false
-                      // }
-                      onClick={() => {
-                        if (currentUser.uid) {
-                          addPossibleBuyer({
-                            variables: {
-                              id: data.getProductById._id,
-                              buyerId: userData.getUserById._id,
-                            },
-                          });
-                          socket.emit("join room", {
-                            room: productData.seller_id,
-                            user: currentUser.uid,
-                          });
-                          // socket.emit("message", {
-                          //   room: productData.seller_id,
-                          //   sender: currentUser.uid,
-                          //   message: `Hi, I have questions regarding product: "${productData.name}"`,
-                          //   time: new Date().toISOString(),
-                          // });
-                        }
-                      }}
-                    >
-                      Chat with seller
-                    </button>
-                    <button
-                      hidden={
-                        !currentUser ||
-                        productData.seller_id === currentUser.uid
-                          ? true
-                          : false
-                      }
-                      onClick={() => handleFavorite(productData)}
-                    >
-                      {hasFavorited ? <p>Favorited</p> : <p>Favorite</p>}
-                    </button>
-                  </>
-                ) : null}
-              </div>
-            </div>
-          ) : (
-            <div>
-              <button onClick={() => navigate("/login")}>
-                Log In to konw more
-              </button>
-            </div>
-          )}
-        </div>
+          Buyer Id: {productData.buyer_id}
+          ) : null} */}
+                  <p>Category: {productData.category}</p>
+                  <p>Price: {productData.price}</p>
+                  <p>
+                    Transaction Date:
+                    {new Date(productData.date).toLocaleString()}
+                  </p>
+                  <p>Status: {productData.status}</p>
+
+                  <Divider sx={{ marginTop: 3, marginBottom: 3 }} />
+
+                  {currentUser ? (
+                    <div>
+                      <div className="card-actions justify-end">
+                        {productData.status !== "completed" &&
+                        productData.seller_id === currentUser.uid ? (
+                          <EditProduct productData={productData} />
+                        ) : null}
+                        {productData.status === "completed" &&
+                        (productData.buyer_id === currentUser.uid ||
+                          productData.seller_id === currentUser.uid) ? (
+                          <Comment data={productData} />
+                        ) : null}
+
+                        {productData.status === "active" &&
+                        productData.seller_id !== currentUser.uid ? (
+                          <>
+                            <Button
+                              size="small"
+                              variant="contained"
+                              color="inherit"
+                              onClick={() => {
+                                if (currentUser.uid) {
+                                  addPossibleBuyer({
+                                    variables: {
+                                      id: productData.seller_id,
+                                      buyerId: currentUser.uid,
+                                    },
+                                  });
+                                  socket.emit("join room", {
+                                    room: productData.seller_id,
+                                    user: currentUser.uid,
+                                  });
+                                }
+                              }}
+                              sx={{ fontWeight: "bold" }}
+                            >
+                              Chat with seller
+                            </Button>
+                            <IconButton
+                              sx={{ marginLeft: 3 }}
+                              onClick={handleFavorite}
+                            >
+                              {hasFavorited ? (
+                                <FavoriteIcon sx={{ color: "#e91e63" }} />
+                              ) : (
+                                <FavoriteBorderIcon />
+                              )}
+                            </IconButton>
+                          </>
+                        ) : (
+                          <></>
+                        )}
+                      </div>
+                    </div>
+                  ) : (
+                    <p>
+                      (Login to chat with seller or add product to favorite)
+                    </p>
+                  )}
+                </Typography>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
       </div>
     );
   }

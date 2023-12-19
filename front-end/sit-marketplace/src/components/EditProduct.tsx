@@ -306,7 +306,14 @@ const EditProduct = ({ productData }) => {
 
   return (
     <>
-      <button onClick={() => setToggleEditForm(true)}>Edit</button>
+      <Button
+        size="small"
+        variant="contained"
+        color="inherit"
+        onClick={() => setToggleEditForm(true)}
+      >
+        Edit
+      </Button>
       <div className="modal-box">
         <Dialog open={toggleEditForm} maxWidth="md">
           <DialogTitle>Edit Product</DialogTitle>
