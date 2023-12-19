@@ -67,7 +67,7 @@ export const resolvers = {
         const usersData = await users.find({}).toArray();
         const possible_buyers = parentValue.possible_buyers;
         let possible_buyers_info = [];
-        possible_buyers.map((id) => {
+        possible_buyers?.map((id) => {
           let user = usersData.find((user) => user._id === id);
           possible_buyers_info.push(user);
         });
@@ -85,7 +85,7 @@ export const resolvers = {
         const usersData = await users.find({}).toArray();
         const possible_sellers = parentValue.possible_sellers;
         let possible_sellers_info = [];
-        possible_sellers.map((id) => {
+        possible_sellers?.map((id) => {
           let user = usersData.find((user) => user._id === id);
           possible_sellers_info.push(user);
         });

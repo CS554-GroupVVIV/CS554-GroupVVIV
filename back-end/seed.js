@@ -24,6 +24,15 @@ const userList = [
     email: "dchen30@stevens.edu",
     firstname: "Karol",
     lastname: "Chen",
+    favorite: [
+      "657e177ed64d25302ad3b2c5",
+      "657e177ed64d25302ad3b2c6",
+      "657e177ed64d25302ad3b2c7",
+      "657e177ed64d25302ad3b2c8",
+      "657e177ed64d25302ad3b2c9",
+    ],
+    comment: [],
+    rating: 5,
   },
 ];
 const productList = [

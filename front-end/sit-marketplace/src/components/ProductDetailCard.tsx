@@ -14,6 +14,7 @@ import {
   SEARCH_PRODUCTS_BY_ID,
   GET_USER,
   ADD_POSSIBLE_BUYER,
+  GET_USER_FOR_FAVORITE,
 } from "../queries";
 import { useMutation } from "@apollo/client";
 import { useQuery } from "@apollo/client";
@@ -29,7 +30,7 @@ export default function ProductDetailCard() {
     variables: { id: id },
     fetchPolicy: "cache-and-network",
   });
-  const { data: userData } = useQuery(GET_USER, {
+  const { data: userData, error: userError } = useQuery(GET_USER_FOR_FAVORITE, {
     variables: { id: currentUser ? currentUser.uid : "" },
     fetchPolicy: "cache-and-network",
   });
@@ -39,33 +40,16 @@ export default function ProductDetailCard() {
   const [addPossibleBuyer] = useMutation(ADD_POSSIBLE_BUYER);
 
   const [removeFavorite, { removeData, removeLoading, removeError }] =
-    useMutation(REMOVE_FAVORITE_FROM_USER, {
-      refetchQueries: [
-        {
-          query: GET_USER,
-          variables: { _id: currentUser.uid },
-        },
-      ],
-    });
+    useMutation(REMOVE_FAVORITE_FROM_USER);
 
-  const [addFavorite, { addData, addLoading, addError }] = useMutation(
-    ADD_FAVORITE_TO_USER,
-    {
-      refetchQueries: [
-        {
-          query: GET_USER,
-          variables: { _id: currentUser.uid },
-        },
-      ],
-    }
-  );
+  const [addFavorite, { addData, addLoading, addError }] =
+    useMutation(ADD_FAVORITE_TO_USER);
 
   const [showEditForm, setShowEditForm] = useState(false);
 
   useEffect(() => {
-    console.log(data, userData);
     if (data && userData && userData.getUserById) {
-      if (userData.getUserById.favorite.includes(data.getProductById._id)) {
+      if (userData.getUserById.favorite?.includes(data.getProductById._id)) {
         console.log(userData.getUserById.favorite);
         setHasFavorited(true);
       }
@@ -73,9 +57,6 @@ export default function ProductDetailCard() {
   }, [userData, data]);
 
   function handleFavorite(productData) {
-    console.log("user id", currentUser.uid);
-    console.log("product id", productData._id);
-
     try {
       if (!currentUser || !currentUser.uid) {
         alert("You need to login to favorite this product!");
@@ -94,15 +75,21 @@ export default function ProductDetailCard() {
         setHasFavorited(true);
       }
     } catch (error) {
-      console.log(error.message);
+      console.log(error);
     }
     // if (addError || removeError) {
     //   console.log(addError);
     //   console.log(removeError);
     // }
   }
+  if (error) {
+    return <div>{error.message}</div>;
+  } else if (loading) {
+    return <div>{loading}</div>;
+  }
   if (data) {
     const productData = data.getProductById;
+    console.log(data, "data");
     return (
       <div className="card w-96 bg-base-100 shadow-xl border-indigo-500/100">
         <div className="card-body">
