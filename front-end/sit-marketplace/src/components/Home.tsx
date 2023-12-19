@@ -44,41 +44,48 @@ export default function Home() {
 
   // console.log(currentUser);
   return (
-    <div style={{ marginTop: 50 }}>
+    <div style={{ marginTop: 80 }}>
       <Grid
         container
         direction={"column"}
-        spacing={5}
+        spacing={3}
         mt={1}
         pl={"10%"}
         pr={"10%"}
         sx={{ display: "flex", justifyContent: "center" }}
       >
-        <Grid item sx={{ display: "flex", justifyContent: "center" }}>
-          <Typography
-            variant="h4"
-            sx={{
-              fontWeight: "bold",
-              minWidth: "50%",
-            }}
-            padding={3}
-          >
-            Welcome to Stevens Marketplace!
+        <Grid
+          item
+          sx={{
+            width: "80%",
+          }}
+        >
+          <Typography variant="h4" fontWeight={"bold"}>
+            👋 Welcome to Stevens Marketplace!
+          </Typography>
+
+          <Typography variant="body1" fontWeight={"bold"} mt={3}>
+            This is a Web APP for the Stevens community to purchase and request
+            high-quality items from alumni, current students, and faculty.
           </Typography>
         </Grid>
 
-        <Divider />
+        <Divider
+          sx={{
+            mt: 3,
+          }}
+        />
 
         <Grid item>
           <div style={{ display: "flex", justifyContent: "center" }}>
             <Typography
-              variant="h5"
+              variant="h4"
               sx={{
                 fontWeight: "bold",
-                minWidth: "50%",
+                width: "80%",
               }}
             >
-              First 10 Products:
+              👉 First 10 Products:
             </Typography>
             <Grid container justifyContent="flex-end">
               <Button
@@ -101,9 +108,9 @@ export default function Home() {
               style={{
                 overflowX: "auto",
                 flexWrap: "nowrap",
-                padding: "16px",
                 maxWidth: "75vw",
               }}
+              p={3}
             >
               {productData &&
                 productData.getProductsByStatus
@@ -116,20 +123,18 @@ export default function Home() {
             </Grid>
           </div>
         </Grid>
-
         <Divider />
-
         <Grid item>
           <div style={{ display: "flex", justifyContent: "center" }}>
             <Typography
-              variant="h5"
+              variant="h4"
               sx={{
                 // fontFamily: "monospace",
                 fontWeight: "bold",
-                minWidth: "50%",
+                minWidth: "80%",
               }}
             >
-              First 10 Posts:
+              👉 First 10 Posts:
             </Typography>
             <Grid container justifyContent="flex-end">
               <Button
@@ -152,9 +157,9 @@ export default function Home() {
               style={{
                 overflowX: "auto",
                 flexWrap: "nowrap",
-                padding: "16px",
                 maxWidth: "75vw",
               }}
+              p={3}
             >
               {postData &&
                 postData.getPostsByStatus.slice(0, 10).map((post) => {

@@ -104,15 +104,7 @@ export default function ProductDetailCard() {
     console.log(data, "data");
     return (
       <div style={{ display: "flex", justifyContent: "center" }}>
-        <Grid
-          container
-          direction="row"
-          marginTop={12}
-          component="main"
-          style={{
-            maxWidth: "70vw",
-          }}
-        >
+        <Grid container direction="row" marginTop={12} component="main">
           <Grid item xs>
             <div
               style={{

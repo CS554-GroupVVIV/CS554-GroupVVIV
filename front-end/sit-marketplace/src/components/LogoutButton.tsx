@@ -10,7 +10,7 @@ const LogoutButton = () => {
       onClick={doSignOut}
       sx={{
         textDecoration: "none",
-        marginRight: 5,
+        padding: 2,
       }}
     >
       Log Out

@@ -47,6 +47,7 @@ import {
   DialogContentText,
   DialogActions,
   Divider,
+  IconButton,
 } from "@mui/material";
 
 function App() {
@@ -71,33 +72,6 @@ function App() {
 
   // initialize dispatch variable
   const dispatch = useDispatch();
-
-  // ToggleSwitch component
-  const ToggleSwitch = () => {
-    return (
-      <FormGroup sx={{ marginRight: 1 }}>
-        <FormControlLabel
-          control={
-            <Switch
-              checked={theme.darkmode}
-              onChange={() => {
-                dispatch(toggleTheme());
-              }}
-              color="default"
-            />
-          }
-          label={
-            theme.darkmode ? (
-              <DarkModeIcon fontSize="large" />
-            ) : (
-              <LightModeIcon fontSize="large" />
-            )
-          }
-          labelPlacement="start"
-        />
-      </FormGroup>
-    );
-  };
 
   const [open, setOpen] = useState(false);
 
@@ -125,7 +99,7 @@ function App() {
             <Toolbar disableGutters>
               <Typography
                 variant="h5"
-                noWrap
+                // noWrap
                 sx={{
                   fontWeight: "bold",
                   flexGrow: 1,
@@ -139,6 +113,7 @@ function App() {
                   }}
                   sx={{
                     textDecoration: "none",
+                    padding: 2,
                   }}
                 >
                   Home
@@ -152,7 +127,7 @@ function App() {
                   }}
                   sx={{
                     textDecoration: "none",
-                    marginLeft: 5,
+                    padding: 2,
                   }}
                 >
                   Products
@@ -166,7 +141,7 @@ function App() {
                   }}
                   sx={{
                     textDecoration: "none",
-                    marginLeft: 5,
+                    padding: 2,
                   }}
                 >
                   Posts
@@ -174,8 +149,8 @@ function App() {
               </Typography>
 
               <Typography
-                variant="inherit"
-                noWrap
+                variant="subtitle1"
+                // noWrap
                 sx={{
                   fontWeight: "bold",
                 }}
@@ -191,7 +166,7 @@ function App() {
                         }}
                         sx={{
                           textDecoration: "none",
-                          marginRight: 5,
+                          padding: 2,
                         }}
                       >
                         User Profile
@@ -203,7 +178,7 @@ function App() {
                         onClick={handleClickOpen}
                         sx={{
                           textDecoration: "none",
-                          marginRight: 5,
+                          padding: 2,
                         }}
                       >
                         Chat Rooms
@@ -221,7 +196,7 @@ function App() {
                         }}
                         sx={{
                           textDecoration: "none",
-                          marginRight: 5,
+                          padding: 2,
                         }}
                       >
                         Login
@@ -243,7 +218,15 @@ function App() {
                     </>
                   )}
 
-                  <ToggleSwitch />
+                  <IconButton
+                    color="inherit"
+                    size="large"
+                    onClick={() => {
+                      dispatch(toggleTheme());
+                    }}
+                  >
+                    {theme.darkmode ? <DarkModeIcon /> : <LightModeIcon />}
+                  </IconButton>
                 </div>
               </Typography>
             </Toolbar>
