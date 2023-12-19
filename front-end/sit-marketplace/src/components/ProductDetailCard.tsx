@@ -174,12 +174,16 @@ export default function ProductDetailCard() {
                       {productData.status !== "completed" &&
                       productData.seller_id === currentUser.uid ? (
                         <EditProduct productData={productData} />
-                      ) : null}
+                      ) : (
+                        <p>Completed, only poster can edit.</p>
+                      )}
                       {productData.status === "completed" &&
                       (productData.buyer_id === currentUser.uid ||
                         productData.seller_id === currentUser.uid) ? (
                         <Comment data={productData} />
-                      ) : null}
+                      ) : (
+                        <p>Completed, only poster/buyer can comment.</p>
+                      )}
 
                       {productData.status === "active" &&
                       productData.seller_id !== currentUser.uid ? (

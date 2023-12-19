@@ -122,14 +122,17 @@ export default function PostDetail() {
                   {post.status !== "completed" &&
                   post.buyer_id === currentUser.uid ? (
                     <EditPost postData={post} />
-                  ) : null}
+                  ) : (
+                    <p>Completed, only poster can edit.</p>
+                  )}
                   {post.status === "completed" &&
                   (post.buyer_id === currentUser.uid ||
                     post.seller_id === currentUser.uid) ? (
                     <Comment data={post} />
-                  ) : null}
-                  {post.status === "active" &&
-                  post.buyer_id !== currentUser.uid ? (
+                  ) : (
+                    <p>Completed, only poster/seller can comment.</p>
+                  )}
+                  {post.buyer_id !== currentUser.uid ? (
                     <Button
                       size="small"
                       variant="contained"
@@ -148,9 +151,8 @@ export default function PostDetail() {
                           });
                         }
                       }}
-                      sx={{ fontWeight: "bold" }}
                     >
-                      Chat with seller
+                      Chat with buyer
                     </Button>
                   ) : (
                     <></>

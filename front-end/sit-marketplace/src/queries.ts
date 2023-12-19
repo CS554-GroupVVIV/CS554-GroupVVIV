@@ -551,6 +551,7 @@ export const SEARCH_PRODUCTS_BY_NAME = gql`
       buyer_id
       category
       condition
+      image
       date
       description
       name
