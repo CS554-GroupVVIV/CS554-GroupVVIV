@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { useQuery } from "@apollo/client";
 import { AuthContext } from "../context/AuthContext.jsx";
 import {
@@ -54,6 +54,7 @@ export default function Dashboard() {
 
   const [value, setValue] = useState(0);
   const [toogleUpdateUser, setToggleUpdateUser] = useState<boolean>(false);
+  const [user, setUser] = useState({});
 
   const { loading, error, data } = useQuery(GET_USER, {
     variables: { id: currentUser ? currentUser.uid : "" },
@@ -117,11 +118,18 @@ export default function Dashboard() {
     );
   }
 
+  useEffect(() => {
+    if (data) {
+      setUser(data);
+    }
+  }, [data]);
+
   if (loading) {
     return <p>Loading</p>;
   } else if (error) {
     <p>Error</p>;
-  } else if (data)
+  } else if (data) {
+    console.log(data.getUserById);
     return (
       <Grid container direction="row" height={"100vh"}>
         <Grid item sx={{ width: "25%" }} mt={8}>
@@ -239,4 +247,5 @@ export default function Dashboard() {
         </Grid>
       </Grid>
     );
+  }
 }
