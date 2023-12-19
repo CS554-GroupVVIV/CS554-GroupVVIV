@@ -9,6 +9,7 @@ export const GET_PRODUCTS = gql`
       condition
       date
       description
+      image
       name
       price
       seller_id

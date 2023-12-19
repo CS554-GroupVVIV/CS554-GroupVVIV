@@ -665,7 +665,7 @@ export const resolvers = {
         }
         let image = args.image;
         if (!(image == "" || image == null)) {
-          image = checkUrl(image);
+          // image = checkUrl(image);
         }
         let category = checkCategory(args.category);
         // ********need input check*************

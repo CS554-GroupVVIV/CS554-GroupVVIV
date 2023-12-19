@@ -143,6 +143,7 @@ const checkDescription = (description) => {
 // };
 
 const checkUrl = (url) => {
+  console.log(url);
   if (!url) throw new Error("You must provide a URL to search for");
   if (typeof url !== "string") throw new Error("URL must be a string");
   if (url.trim().length === 0)

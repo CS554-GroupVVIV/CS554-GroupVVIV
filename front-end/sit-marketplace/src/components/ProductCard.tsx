@@ -119,7 +119,7 @@ export default function ProductCard({ productData }) {
     //   console.log(removeError);
     // }
   }
-
+  console.log(productData.image);
   return (
     <Grid item>
       <Card sx={{ width: 300, height: "100%" }}>
