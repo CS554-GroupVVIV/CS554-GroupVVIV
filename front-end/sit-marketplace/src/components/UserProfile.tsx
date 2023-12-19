@@ -143,20 +143,20 @@ export default function Dashboard() {
                     }}
                   >
                     <Typography component="p" variant="subtitle2">
-                      Id: {data.getUserById._id}
+                      Id: {data && data.getUserById._id}
                     </Typography>
                     <Typography component="p" variant="subtitle2">
                       Name:{" "}
-                      {data.getUserById.firstname +
-                        " " +
+                      {data &&
+                        data.getUserById.firstname + " " + data &&
                         data.getUserById.lastname}
                     </Typography>
                     <Typography component="p" variant="subtitle2">
-                      Email: {data.getUserById.email}
+                      Email: {data && data.getUserById.email}
                     </Typography>
                     <Typography component="p" variant="subtitle2">
-                      Rating: {data.getUserById.rating.toFixed(2)} from{" "}
-                      {data.getUserById.comments.length} users
+                      Rating: {data && data.getUserById.rating?.toFixed(2)} from{" "}
+                      {data && data.getUserById.comments?.length} users
                     </Typography>
                   </Box>
                 )}
