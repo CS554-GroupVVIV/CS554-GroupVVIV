@@ -24,6 +24,14 @@ const userList = [
     email: "dchen30@stevens.edu",
     firstname: "Karol",
     lastname: "Chen",
+    favorite: [
+      // "657e177ed64d25302ad3b2c5",
+      // "657e177ed64d25302ad3b2c6",
+      // "657e177ed64d25302ad3b2c7",
+      // "657e177ed64d25302ad3b2c8",
+      // "657e177ed64d25302ad3b2c9",
+    ],
+    comments: [],
   },
 ];
 const productList = [
@@ -38,6 +46,43 @@ const productList = [
     buyer_id: null,
     image: "7ENPNeTB3qkgvrS+W9aXTg==",
     category: "Other",
+    status: "active",
+    possible_buyers: [],
+  },
+  {
+    _id: new ObjectId(),
+    name: "phone",
+    price: 500,
+    date: {
+      $date: "2023-12-19T01:41:01.750Z",
+    },
+    description: "test",
+    condition: "Gently Used",
+    seller_id: "7SKDog0fjKOeS1jeuq32a9vYPue2",
+    buyer_id: null,
+    image:
+      "https://vviv-images.s3.us-west-1.amazonaws.com/phone1702950060654deeppurple1.webp",
+    category: "Electronics",
+    status: "active",
+    possible_buyers: [],
+  },
+  {
+    // _id: {
+    //   $oid: "6580f7bb26a29e6992110a1f",
+    // },
+    _id: new ObjectId(),
+    name: "desk",
+    price: 12,
+    date: {
+      $date: "2023-12-19T01:54:03.600Z",
+    },
+    description: "test",
+    condition: "Brand New",
+    seller_id: "7SKDog0fjKOeS1jeuq32a9vYPue2",
+    buyer_id: null,
+    image:
+      "https://vviv-images.s3.us-west-1.amazonaws.com/desk1702950840957download.png",
+    category: "Furniture",
     status: "active",
     possible_buyers: [],
   },
