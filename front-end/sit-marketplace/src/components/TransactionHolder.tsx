@@ -13,7 +13,7 @@ import {
   MenuItem,
 } from "@mui/material";
 
-const TransactionHolder = ({ type, purchaseData, soldData }) => {
+const PostTransactionHolder = ({ purchaseData, soldData }) => {
   const [purchasedStatus, setPurchasedStatus] = useState("completed");
   const [soldStatus, setSoldStatus] = useState("completed");
 
@@ -47,26 +47,6 @@ const TransactionHolder = ({ type, purchaseData, soldData }) => {
   }, [purchaseData]);
 
   useEffect(() => {
-    let active = [];
-    let inactive = [];
-    let completed = [];
-    if (soldData && soldData.length > 0) {
-      soldData.map((data) => {
-        if (data.status == "active") {
-          active.push(data);
-        } else if (data.status == "inactive") {
-          inactive.push(data);
-        } else if (data.status == "completed") {
-          completed.push(data);
-        }
-      });
-    }
-    setSoldActive(active);
-    setSoldInactive(inactive);
-    setSoldCompleted(completed);
-  }, [soldData]);
-
-  useEffect(() => {
     if (purchasedStatus == "active") {
       setCurrentPurchase(purchaseActive);
     } else if (purchasedStatus == "inactive") {
@@ -80,37 +60,17 @@ const TransactionHolder = ({ type, purchaseData, soldData }) => {
     setPurchasedStatus(event.target.value);
   };
 
-  useEffect(() => {
-    if (soldStatus == "active") {
-      setCurrentSold(soldActive);
-    } else if (soldStatus == "inactive") {
-      setCurrentSold(soldInactive);
-    } else if (soldStatus == "completed") {
-      setCurrentSold(soldCompleted);
-    }
-  }, [soldStatus, soldActive, soldInactive, soldCompleted]);
-
-  const handleSoldStatusChange = (event) => {
-    setSoldStatus(event.target.value);
-  };
-
-  // console.log(purchaseActive);
-  // console.log(purchaseInactive);
-  // console.log(purchaseCompleted);
-  // console.log(soldActive);
-  // console.log(soldInactive);
-  // console.log(soldCompleted);
-
-  // console.log(purchaseData, currentPurchase);
-  // console.log(soldData, currentSold);
-
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
       <Box sx={{ marginBottom: 2 }}>
         <Paper sx={{ p: 2, display: "flex", flexDirection: "column" }}>
           <Box sx={{ display: "flex" }}>
             <Typography variant="h5" component="p">
-              Purchased
+              {purchasedStatus == "completed"
+                ? "Purchased"
+                : purchasedStatus == "active"
+                ? "Looking for"
+                : "Retrived Purchase"}
             </Typography>
             <FormControl sx={{ ml: 3, minWidth: 120 }} size="small">
               <InputLabel id="demo-select-small-label">Status</InputLabel>
@@ -134,16 +94,10 @@ const TransactionHolder = ({ type, purchaseData, soldData }) => {
                   No Result Found
                 </Typography>
               </Grid>
-            ) : type === "post" ? (
-              currentPurchase.map((purchase, index) => (
-                <Grid item xs={4} key={index}>
-                  <PostCard postData={purchase} />
-                </Grid>
-              ))
             ) : (
               currentPurchase.map((purchase, index) => (
                 <Grid item xs={4} key={index}>
-                  <ProductCard productData={purchase} />
+                  <PostCard postData={purchase} />
                 </Grid>
               ))
             )}
@@ -153,38 +107,16 @@ const TransactionHolder = ({ type, purchaseData, soldData }) => {
 
       <Box sx={{ marginBottom: 2 }}>
         <Paper sx={{ p: 2, display: "flex", flexDirection: "column" }}>
-          <Box sx={{ display: "flex" }}>
-            <Typography variant="h5">Sold</Typography>
-            <FormControl sx={{ ml: 3, minWidth: 120 }} size="small">
-              <InputLabel id="demo-select-small-label">Status</InputLabel>
-              <Select
-                labelId="demo-select-small-label"
-                id="demo-select-small"
-                value={soldStatus}
-                label="Status"
-                onChange={handleSoldStatusChange}
-              >
-                <MenuItem value={"active"}>Active</MenuItem>
-                <MenuItem value={"inactive"}>Inactive</MenuItem>
-                <MenuItem value={"completed"}>Completed</MenuItem>
-              </Select>
-            </FormControl>
-          </Box>
+          <Typography variant="h5">Sold</Typography>
           <Grid container spacing={3}>
             {currentSold.length == 0 ? (
               <Grid item xs={12}>
                 <Typography variant="body1">No Result Found</Typography>
               </Grid>
-            ) : type === "post" ? (
-              currentSold.map((sold, index) => (
-                <Grid item xs={4} key={index}>
-                  <PostCard key={index} postData={sold} />
-                </Grid>
-              ))
             ) : (
               currentSold.map((sold, index) => (
                 <Grid item xs={4} key={index}>
-                  <ProductCard productData={sold} />
+                  <PostCard key={index} postData={sold} />
                 </Grid>
               ))
             )}
@@ -195,4 +127,4 @@ const TransactionHolder = ({ type, purchaseData, soldData }) => {
   );
 };
 
-export default TransactionHolder;
+export default PostTransactionHolder;
