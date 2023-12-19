@@ -121,7 +121,7 @@ function App() {
       <CssBaseline />
       <AuthProvider>
         <AppBar position="fixed">
-          <Container maxWidth="xl">
+          <Container maxWidth={"xl"}>
             <Toolbar disableGutters>
               <Typography
                 variant="h5"
@@ -272,21 +272,36 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/products" element={<Products />} />
             <Route path="/posts" element={<Posts />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<SignUp />} />
-            <Route path="/newpost" element={<PostForm />} />
+            <Route
+              path="/login"
+              element={user ? <Navigate to={"/"} /> : <Login />}
+            />
+            <Route
+              path="/signup"
+              element={user ? <Navigate to={"/"} /> : <SignUp />}
+            />
+            <Route
+              path="/resetpassword"
+              element={user ? <Navigate to={"/login"} /> : <ResetPassword />}
+            />
+
+            <Route
+              path="/newproduct"
+              element={user ? <ProductForm /> : <Navigate to={"/login"} />}
+            />
+            <Route
+              path="/newpost"
+              element={user ? <PostForm /> : <Navigate to={"/login"} />}
+            />
             <Route path="/product/:id" element={<ProductDetailCard />} />
             <Route path="/post/:id" element={<PostDetail />} />
-            <Route path="/newproduct" element={<ProductForm />} />
-            <Route path="/error" element={<Error />} />
+
             <Route
               path="/userprofile"
               element={user ? <UserProfile /> : <Navigate to={"/login"} />}
             />
-            <Route
-              path="/resetpassword"
-              element={user ? <Home /> : <ResetPassword />}
-            />
+
+            <Route path="/error" element={<Error />} />
           </Routes>
         </div>
       </AuthProvider>

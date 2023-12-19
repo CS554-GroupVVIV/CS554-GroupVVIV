@@ -152,7 +152,6 @@ function Login() {
                 <Grid container>
                   <Grid item xs>
                     <Link
-                      href="#"
                       variant="body2"
                       onClick={() => {
                         navigate("/resetpassword");
@@ -163,7 +162,6 @@ function Login() {
                   </Grid>
                   <Grid item>
                     <Link
-                      href="#"
                       variant="body2"
                       onClick={() => {
                         navigate("/signup");
