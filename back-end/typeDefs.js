@@ -41,7 +41,8 @@ export const typeDefs = `#graphql
         image:String!,
         category:String!,
         status:String!,
-        possible_buyers:[User]
+        possible_buyers:[User],
+        completion_date: String
     }
 
     type Post {
@@ -55,7 +56,8 @@ export const typeDefs = `#graphql
       date: String!,
       description:String,
       status:String!,
-      possible_sellers:[User]
+      possible_sellers:[User],
+      completion_date: String
   }
 
     type Comment{
@@ -90,18 +92,16 @@ export const typeDefs = `#graphql
     type Mutation {
         addProduct(name:String!, price: Float!,description:String!,condition:String!,seller_id:String!, image:String!,category:String!):Product,
         addPossibleBuyer(_id:String!,buyer_id:String!):Product,
-        editProduct(_id: String!, name:String!, price: Float!,description:String!,condition:String!,seller_id:String!,buyer_id:String, image:String!,category:String!,status:String! ):Product,
+        editProduct(_id: String!, name:String!, price: Float!,description:String,condition:String!,seller_id:String!,buyer_id:String, image:String!,category:String!,status:String! ):Product,
         removeProduct(_id:String!):Product,
         addPost(buyer_id: String!, item:String!, category:String!, price: Float!, condition:String!, description:String):Post,
         addPossibleSeller(_id:String!,seller_id:String!):Post,
-        editPost(_id: String!, buyer_id: String!, item:String!, category:String!, price: Float!, condition:String!, description:String!, status:String!):Post,
+        editPost(_id: String!, buyer_id: String!,seller_id:String, item:String!, category:String!, price: Float!, condition:String!, description:String, status:String!):Post,
         removePost(_id:String!):Post,
         addUser(_id: String!, email: String!, firstname: String!, lastname: String!, favorite: String): User,
         editUser(_id: String!, email: String!, firstname: String!, lastname: String!): User,
         addChat(participants: [String!]!): Chat,
         addMessage(_id: String!, sender: ID!, time: DateTime!, message: String!): Message,
-        retrievePost(_id: String!, user_id:String!): Post,
-        repostPost(_id: String!, user_id:String!): Post,
         addComment(user_id: String!, comment_id: String!, rating: Int!, comment: String): User,
         editComment(user_id: String!, comment_id: String!, rating: Int!, comment: String): User,
         addProductToUserFavorite(_id:String!,productId:String!):[String],

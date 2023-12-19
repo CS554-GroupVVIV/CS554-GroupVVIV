@@ -5,11 +5,15 @@ import {
   SEARCH_POST_BY_ID,
   RETRIEVE_POST,
   REPOST_POST,
+  GET_USER,
+  ADD_POSSIBLE_SELLER,
 } from "../queries";
+import { socketID, socket } from "./socket";
 import { ObjectId } from "mongodb";
 import { AuthContext } from "../context/AuthContext.jsx";
 import Comment from "./Comment.js";
 import { useNavigate, useParams } from "react-router-dom";
+import EditPost from "./EditPost.js";
 
 export default function PostDetail() {
   const { currentUser } = useContext(AuthContext);
@@ -20,36 +24,43 @@ export default function PostDetail() {
     loading: postsLoading,
     error: postsError,
   } = useQuery(GET_POSTS);
+
   const { data, loading, error } = useQuery(SEARCH_POST_BY_ID, {
     variables: { id: id },
     fetchPolicy: "cache-and-network",
   });
-
-  const [retrievePost] = useMutation(RETRIEVE_POST, {
-    onError: (e) => {
-      alert(e);
-    },
-    onCompleted: () => {
-      alert("Sucess");
-    },
+  const { data: userData, error: userError } = useQuery(GET_USER, {
+    variables: { id: currentUser ? currentUser.uid : "" },
+    fetchPolicy: "cache-and-network",
   });
 
-  const [repostPost] = useMutation(REPOST_POST, {
-    onError: (e) => {
-      alert(e);
-    },
-    onCompleted: () => {
-      alert("Sucess");
-    },
-  });
+  const [addPossibleSeller] = useMutation(ADD_POSSIBLE_SELLER);
 
-  const retrieve = (post) => {
-    retrievePost({ variables: { id: post._id, user_id: currentUser.uid } });
-  };
+  // const [retrievePost] = useMutation(RETRIEVE_POST, {
+  //   onError: (e) => {
+  //     alert(e);
+  //   },
+  //   onCompleted: () => {
+  //     alert("Sucess");
+  //   },
+  // });
 
-  const repost = (post) => {
-    repostPost({ variables: { id: post._id, user_id: currentUser.uid } });
-  };
+  // const [repostPost] = useMutation(REPOST_POST, {
+  //   onError: (e) => {
+  //     alert(e);
+  //   },
+  //   onCompleted: () => {
+  //     alert("Sucess");
+  //   },
+  // });
+
+  // const retrieve = (post) => {
+  //   retrievePost({ variables: { id: post._id, user_id: currentUser.uid } });
+  // };
+
+  // const repost = (post) => {
+  //   repostPost({ variables: { id: post._id, user_id: currentUser.uid } });
+  // };
 
   if (loading) {
     return <h1>Loading...</h1>;
@@ -76,23 +87,9 @@ export default function PostDetail() {
           <p>Status: {post.status}</p>
           {currentUser ? (
             <div className="card-actions justify-end">
-              {post.buyer_id == currentUser.uid && post.status == "active" ? (
-                <button
-                  onClick={() => {
-                    retrieve(post);
-                  }}
-                >
-                  Retrieve Post
-                </button>
-              ) : null}
-              {post.buyer_id == currentUser.uid && post.status == "inactive" ? (
-                <button
-                  onClick={() => {
-                    repost(post);
-                  }}
-                >
-                  Repost
-                </button>
+              {post.status != "completed" &&
+              post.buyer_id == currentUser.uid ? (
+                <EditPost postData={post} />
               ) : null}
               {post.status == "completed" &&
               (post.buyer_id == currentUser.uid ||
@@ -100,7 +97,37 @@ export default function PostDetail() {
                 <Comment data={post} />
               ) : null}
               {post.status == "active" && post.buyer_id != currentUser.uid ? (
-                <button>Chat with buyer</button>
+                <>
+                  <button
+                    onClick={() => {
+                      if (currentUser.uid) {
+                        addPossibleSeller({
+                          variables: {
+                            id: data.getPostById._id,
+                            buyerId: userData.getUserById._id,
+                          },
+                        });
+                        socket.emit("join room", {
+                          room: post.seller_id,
+                          user: currentUser.uid,
+                        });
+                      }
+                    }}
+                  >
+                    Chat with buyer
+                  </button>
+                  {/* <button
+                      hidden={
+                        !currentUser ||
+                        post.seller_id === currentUser.uid
+                          ? true
+                          : false
+                      }
+                      onClick={() => handleFavorite(post)}
+                    >
+                      {hasFavorited ? <p>Favorited</p> : <p>Favorite</p>}
+                    </button> */}
+                </>
               ) : null}
             </div>
           ) : (

@@ -41,13 +41,14 @@ const productList = [
     price: 3,
     date: new Date("2023-12-01"),
     description: "5 pencils",
-    condition: "functional",
+    condition: "Functional",
     seller_id: "mRdeR8wDRzLVEbeer5PpbJY6TDE3",
     buyer_id: null,
     image: "7ENPNeTB3qkgvrS+W9aXTg==",
     category: "Other",
     status: "active",
     possible_buyers: [],
+    completion_date: null,
   },
   {
     _id: new ObjectId(),
@@ -63,6 +64,7 @@ const productList = [
     category: "Electronics",
     status: "active",
     possible_buyers: [],
+    completion_date: null,
   },
   {
     // _id: {
@@ -81,6 +83,7 @@ const productList = [
     category: "Furniture",
     status: "active",
     possible_buyers: [],
+    completion_date: null,
   },
   {
     _id: new ObjectId(),
@@ -95,6 +98,7 @@ const productList = [
     category: "Book",
     status: "active",
     possible_buyers: [],
+    completion_date: null,
   },
   {
     _id: new ObjectId(),
@@ -109,6 +113,7 @@ const productList = [
     category: "Book",
     status: "active",
     possible_buyers: [],
+    completion_date: null,
   },
   {
     _id: new ObjectId(),
@@ -123,6 +128,7 @@ const productList = [
     category: "Book",
     status: "active",
     possible_buyers: [],
+    completion_date: null,
   },
   {
     _id: new ObjectId(),
@@ -137,6 +143,7 @@ const productList = [
     category: "Book",
     status: "active",
     possible_buyers: [],
+    completion_date: null,
   },
   {
     _id: new ObjectId(),
@@ -151,6 +158,7 @@ const productList = [
     category: "Book",
     status: "active",
     possible_buyers: [],
+    completion_date: null,
   },
   {
     _id: new ObjectId(),
@@ -165,13 +173,30 @@ const productList = [
     category: "Book",
     status: "active",
     possible_buyers: [],
+    completion_date: null,
+  },
+  {
+    _id: new ObjectId(),
+    name: "css",
+    price: 1,
+    date: new Date(),
+    description: "css",
+    condition: "Brand New",
+    seller_id: "mRdeR8wDRzLVEbeer5PpbJY6TDE3",
+    buyer_id: null,
+    image:
+      "https://vviv-images.s3.us-west-1.amazonaws.com/css1702976481029home.jpeg",
+    category: "Book",
+    status: "active",
+    possible_buyers: [],
+    completion_date: null,
   },
 ];
 const postList = [
   {
     _id: new ObjectId(),
     buyer_id: "mRdeR8wDRzLVEbeer5PpbJY6TDE3",
-    seller_id: "",
+    seller_id: null,
     item: "Book",
     category: "Book",
     price: 10,
@@ -180,6 +205,7 @@ const postList = [
     description: "textbook",
     status: "active",
     possible_sellers: [],
+    completion_date: null,
   },
   {
     _id: new ObjectId(),
@@ -193,11 +219,12 @@ const postList = [
     description: "",
     status: "active",
     possible_sellers: [],
+    completion_date: null,
   },
   {
     _id: new ObjectId(),
     buyer_id: "mRdeR8wDRzLVEbeer5PpbJY6TDE3",
-    seller_id: "",
+    seller_id: null,
     item: "Pen",
     category: "Book",
     price: 10,
@@ -206,6 +233,7 @@ const postList = [
     description: "black pen",
     status: "inactive",
     possible_sellers: [],
+    completion_date: null,
   },
   {
     _id: new ObjectId(),
@@ -218,7 +246,8 @@ const postList = [
     date: new Date("2023-12-07"),
     description: "textbook",
     status: "completed",
-    possible_sellers: [],
+    possible_sellers: ["8C5bGSz1FRVbAQ47EDnDSvmKsqg2"],
+    completion_date: new Date("2023-12-08"),
   },
   {
     _id: new ObjectId(),
@@ -231,7 +260,8 @@ const postList = [
     date: new Date("2023-12-01"),
     description: "",
     status: "completed",
-    possible_sellers: [],
+    possible_sellers: ["mRdeR8wDRzLVEbeer5PpbJY6TDE3"],
+    completion_date: new Date("2023-12-08"),
   },
 ];
 

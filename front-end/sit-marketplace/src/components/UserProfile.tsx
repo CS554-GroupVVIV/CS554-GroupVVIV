@@ -14,6 +14,7 @@ import PostTransactionHolder from "./PostTransactionHolder.js";
 import FavoriteHolder from "./FavoriteHolder.js";
 import { styled, createTheme, ThemeProvider } from "@mui/material/styles";
 import MuiDrawer from "@mui/material/Drawer";
+import CommentPage from "./CommentPage.js";
 import {
   Button,
   CssBaseline,
@@ -197,6 +198,7 @@ export default function Dashboard() {
               <Tab label="Product" />
               <Tab label="Post" />
               <Tab label="Favorite" />
+              <Tab label="Comments" />
             </Tabs>
           </Box>
 
@@ -226,6 +228,9 @@ export default function Dashboard() {
           </CustomTabPanel>
           <CustomTabPanel value={value} index={2}>
             <FavoriteHolder favorite={data.getUserById.favorite} />
+          </CustomTabPanel>
+          <CustomTabPanel value={value} index={3}>
+            <CommentPage />
           </CustomTabPanel>
         </Box>
       </Box>
