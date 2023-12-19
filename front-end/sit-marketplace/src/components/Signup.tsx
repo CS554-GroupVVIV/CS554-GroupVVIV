@@ -49,7 +49,7 @@ function SignUp() {
       );
       email = validation.checkEmail(email.value);
       // email = email.value (Cancel to use Steven's email address)
-      passwordOne = validation.checkPassword(passwordOne.value)
+      passwordOne = validation.checkPassword(passwordOne.value);
     } catch (error) {
       alert(error);
       return false;
@@ -190,7 +190,6 @@ function SignUp() {
                 <Grid container>
                   <Grid item xs>
                     <Link
-                      href="#"
                       variant="body2"
                       onClick={() => {
                         navigate("/resetpassword");
@@ -201,7 +200,6 @@ function SignUp() {
                   </Grid>
                   <Grid item>
                     <Link
-                      href="#"
                       variant="body2"
                       onClick={() => {
                         navigate("/login");

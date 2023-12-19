@@ -15,9 +15,7 @@ import {
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Navigate, useNavigate } from "react-router-dom";
-import {
-  doPasswordReset,
-} from "../firebase/FirebaseFunction";
+import { doPasswordReset } from "../firebase/FirebaseFunction";
 
 function ResetPassword() {
   const navigate = useNavigate();
@@ -108,7 +106,6 @@ function ResetPassword() {
                 <Grid container>
                   <Grid item xs>
                     <Link
-                      href="#"
                       variant="body2"
                       onClick={() => {
                         navigate("/login");
@@ -119,7 +116,6 @@ function ResetPassword() {
                   </Grid>
                   <Grid item sx={{ marginX: "1%" }}>
                     <Link
-                      href="#"
                       variant="body2"
                       onClick={() => {
                         navigate("/signup");

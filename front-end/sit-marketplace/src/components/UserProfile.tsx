@@ -9,7 +9,8 @@ import {
   GET_POSTS_BY_BUYER,
 } from "../queries";
 import UserInfo from "./UserInfo";
-import TransactionHolder from "./TransactionHolder.js";
+import ProductTransactionHolder from "./ProductTransactionHolder.js";
+import PostTransactionHolder from "./PostTransactionHolder.js";
 import FavoriteHolder from "./FavoriteHolder.js";
 import { styled, createTheme, ThemeProvider } from "@mui/material/styles";
 import MuiDrawer from "@mui/material/Drawer";
@@ -201,8 +202,7 @@ export default function Dashboard() {
 
           <CustomTabPanel value={value} index={0}>
             {productBuyer && productSeller ? (
-              <TransactionHolder
-                type="product"
+              <ProductTransactionHolder
                 purchaseData={productBuyer.getProductByBuyer}
                 soldData={productSeller.getProductBySeller}
               />
@@ -214,8 +214,7 @@ export default function Dashboard() {
           </CustomTabPanel>
           <CustomTabPanel value={value} index={1}>
             {postBuyer && postSeller ? (
-              <TransactionHolder
-                type="post"
+              <PostTransactionHolder
                 purchaseData={postBuyer.getPostByBuyer}
                 soldData={postSeller.getPostBySeller}
               />
