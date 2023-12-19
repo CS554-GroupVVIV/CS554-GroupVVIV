@@ -45,8 +45,6 @@ export default function ProductDetailCard() {
   const [addFavorite, { addData, addLoading, addError }] =
     useMutation(ADD_FAVORITE_TO_USER);
 
-  const [showEditForm, setShowEditForm] = useState(false);
-
   useEffect(() => {
     if (data && userData && userData.getUserById) {
       if (userData.getUserById.favorite?.includes(data.getProductById._id)) {
@@ -94,13 +92,6 @@ export default function ProductDetailCard() {
       <div className="card w-96 bg-base-100 shadow-xl border-indigo-500/100">
         <div className="card-body">
           <p className="card-title">Detail of Product</p>
-          {productData.status !== "completed" &&
-          currentUser &&
-          currentUser.uid == productData.seller_id &&
-          !showEditForm ? (
-            <button onClick={() => setShowEditForm(true)}>Edit</button>
-          ) : null}
-          {showEditForm ? <EditProduct productData={productData} /> : null}
           <p>Item: {productData.name}</p>
           <p>Seller Id: {productData.seller_id}</p>
           {productData.status == "completed" &&
@@ -131,35 +122,9 @@ export default function ProductDetailCard() {
           {currentUser ? (
             <div>
               <div className="card-actions justify-end">
-                <button
-                  hidden={
-                    !currentUser || productData.seller_id === currentUser.uid
-                      ? true
-                      : false
-                  }
-                  onClick={() => handleFavorite(productData)}
-                >
-                  {hasFavorited ? <p>Favorited</p> : <p>Favorite</p>}
-                </button>
-                {productData.seller_id == currentUser.uid &&
-                productData.status == "active" ? (
-                  <button
-                  // onClick={() => {
-                  //   retrieve(product);
-                  // }}
-                  >
-                    Retrieve Product
-                  </button>
-                ) : null}
-                {productData.seller_id == currentUser.uid &&
-                productData.status == "inactive" ? (
-                  <button
-                  // onClick={() => {
-                  //   repost(product);
-                  // }}
-                  >
-                    Repost
-                  </button>
+                {productData.status != "completed" &&
+                productData.seller_id == currentUser.uid ? (
+                  <EditProduct productData={productData} />
                 ) : null}
                 {productData.status == "completed" &&
                 (productData.buyer_id == currentUser.uid ||
@@ -168,35 +133,48 @@ export default function ProductDetailCard() {
                 ) : null}
                 {productData.status == "active" &&
                 productData.seller_id != currentUser.uid ? (
-                  <button
-                    hidden={
-                      !currentUser || productData.seller_id === currentUser.uid
-                        ? true
-                        : false
-                    }
-                    onClick={() => {
-                      if (currentUser.uid) {
-                        addPossibleBuyer({
-                          variables: {
-                            id: data.getProductById._id,
-                            buyerId: userData.getUserById._id,
-                          },
-                        });
-                        socket.emit("join room", {
-                          room: productData.seller_id,
-                          user: currentUser.uid,
-                        });
-                        // socket.emit("message", {
-                        //   room: productData.seller_id,
-                        //   sender: currentUser.uid,
-                        //   message: `Hi, I have questions regarding product: "${productData.name}"`,
-                        //   time: new Date().toISOString(),
-                        // });
+                  <>
+                    <button
+                      // hidden={
+                      //   !currentUser || productData.seller_id === currentUser.uid
+                      //     ? true
+                      //     : false
+                      // }
+                      onClick={() => {
+                        if (currentUser.uid) {
+                          addPossibleBuyer({
+                            variables: {
+                              id: data.getProductById._id,
+                              buyerId: userData.getUserById._id,
+                            },
+                          });
+                          socket.emit("join room", {
+                            room: productData.seller_id,
+                            user: currentUser.uid,
+                          });
+                          // socket.emit("message", {
+                          //   room: productData.seller_id,
+                          //   sender: currentUser.uid,
+                          //   message: `Hi, I have questions regarding product: "${productData.name}"`,
+                          //   time: new Date().toISOString(),
+                          // });
+                        }
+                      }}
+                    >
+                      Chat with seller
+                    </button>
+                    <button
+                      hidden={
+                        !currentUser ||
+                        productData.seller_id === currentUser.uid
+                          ? true
+                          : false
                       }
-                    }}
-                  >
-                    Chat with seller
-                  </button>
+                      onClick={() => handleFavorite(productData)}
+                    >
+                      {hasFavorited ? <p>Favorited</p> : <p>Favorite</p>}
+                    </button>
+                  </>
                 ) : null}
               </div>
             </div>

@@ -13,6 +13,12 @@ export const GET_PRODUCTS = gql`
       price
       seller_id
       status
+      possible_buyers {
+        _id
+        firstname
+        lastname
+      }
+      completion_date
     }
   }
 `;
@@ -30,6 +36,12 @@ export const GET_POSTS = gql`
       condition
       description
       status
+      possible_sellers {
+        _id
+        firstname
+        lastname
+      }
+      completion_date
     }
   }
 `;
@@ -232,24 +244,24 @@ export const EDIT_PRODUCT = gql`
     $id: String!
     $name: String!
     $price: Float!
-    $date: String!
-    $description: String!
+    $description: String
     $condition: String!
     $sellerId: String!
     $image: String!
     $category: String!
+    $status: String!
     $buyerId: String
   ) {
     editProduct(
       _id: $id
       name: $name
       price: $price
-      date: $date
       description: $description
       condition: $condition
       seller_id: $sellerId
       buyer_id: $buyerId
       image: $image
+      status: $status
       category: $category
     ) {
       _id
@@ -268,22 +280,23 @@ export const EDIT_PRODUCT = gql`
       price
       seller_id
       status
+      completion_date
     }
   }
 `;
 
-export const DELETE_PRODUCT = gql`
-  mutation ($id: String!) {
-    deleteProduct(_id: $id) {
-      name
-      price
-      date
-      description
-      condition
-      category
-    }
-  }
-`;
+// export const DELETE_PRODUCT = gql`
+//   mutation ($id: String!) {
+//     deleteProduct(_id: $id) {
+//       name
+//       price
+//       date
+//       description
+//       condition
+//       category
+//     }
+//   }
+// `;
 
 export const ADD_POST = gql`
   mutation (
@@ -312,6 +325,12 @@ export const ADD_POST = gql`
       date
       description
       status
+      possible_sellers {
+        _id
+        firstname
+        lastname
+      }
+      completion_date
     }
   }
 `;
@@ -320,20 +339,24 @@ export const EDIT_POST = gql`
   mutation (
     $id: String!
     $buyer_id: String!
+    $seller_id: String
     $item: String!
     $category: String!
     $price: Float!
     $condition: String!
-    $description: String!
+    $description: String
+    $status: String!
   ) {
     editPost(
       _id: $id
       buyer_id: $buyer_id
+      seller_id: $seller_id
       item: $item
       category: $category
       price: $price
       condition: $condition
       description: $description
+      status: $status
     ) {
       _id
       buyer_id
@@ -345,26 +368,34 @@ export const EDIT_POST = gql`
       date
       description
       status
+      possible_sellers {
+        _id
+        firstname
+        lastname
+      }
+      completion_date
     }
   }
 `;
 
-export const DELETE_POST = gql`
-  mutation ($id: String!) {
-    deletePost(_id: $id) {
-      _id
-      buyer_id
-      seller_id
-      item
-      category
-      price
-      condition
-      date
-      description
-      status
-    }
-  }
-`;
+// export const DELETE_POST = gql`
+//   mutation ($id: String!) {
+//     deletePost(_id: $id) {
+//       _id
+//       buyer_id
+//       seller_id
+//       item
+//       category
+//       price
+//       condition
+//       date
+//       description
+//       status
+//       possible_sellers
+//       completion_date
+//     }
+//   }
+// `;
 
 export const ADD_MESSAGE = gql`
   mutation (
@@ -569,40 +600,6 @@ export const SEARCH_POST_BY_ID = gql`
       }
       price
       seller_id
-      status
-    }
-  }
-`;
-
-export const RETRIEVE_POST = gql`
-  mutation ($id: String!, $user_id: String!) {
-    retrievePost(_id: $id, user_id: $user_id) {
-      _id
-      buyer_id
-      seller_id
-      item
-      category
-      price
-      condition
-      date
-      description
-      status
-    }
-  }
-`;
-
-export const REPOST_POST = gql`
-  mutation ($id: String!, $user_id: String!) {
-    repostPost(_id: $id, user_id: $user_id) {
-      _id
-      buyer_id
-      seller_id
-      item
-      category
-      price
-      condition
-      date
-      description
       status
     }
   }

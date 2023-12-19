@@ -1,25 +1,27 @@
 import { useState, useRef, useEffect, useContext } from "react";
 import React from "react";
-import { useNavigate,redirect } from "react-router-dom";
+import { useNavigate, redirect } from "react-router-dom";
 
 import { useMutation, useQuery } from "@apollo/client";
 import { ADD_PRODUCT, GET_PRODUCTS } from "../queries";
 import { uploadFileToS3 } from "../aws.tsx";
 import { AuthContext } from "../context/AuthContext";
 
-import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
-import TextField from "@mui/material/TextField";
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
+import {
+  Button,
+  CssBaseline,
+  TextField,
+  Grid,
+  Box,
+  Typography,
+  Container,
+  Select,
+  MenuItem,
+  InputLabel,
+  FormControl,
+  Stack,
+} from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import Select from "@mui/material/Select";
-import MenuItem from "@mui/material/MenuItem";
-import InputLabel from "@mui/material/InputLabel";
-import FormControl from "@mui/material/FormControl";
-import Stack from "@mui/material/Stack";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { styled } from "@mui/material/styles";
 
@@ -33,6 +35,8 @@ export default function SellForm() {
   const categoryRef = useRef<HTMLSelectElement | null>(null);
   const imageRef = useRef<HTMLInputElement | null>(null);
   const [name, setName] = useState<string>("");
+  const [category, setCategory] = useState<string>("");
+  const [image, setImage] = useState<File | null>(null);
   const [price, setPrice] = useState<number>(0);
   const [condition, setCondition] = useState<string>("");
   const [description, setDescription] = useState<string>("");
@@ -40,9 +44,7 @@ export default function SellForm() {
   const [priceError, setPriceError] = useState<boolean>(false);
   const [conditionError, setConditionError] = useState<boolean>(false);
   const [descriptionError, setDescriptionError] = useState<boolean>(false);
-  const [category, setCategory] = useState<string>("");
   const [categoryError, setCategoryError] = useState<boolean>(false);
-  const [image, setImage] = useState<File | null>(null);
   const [imageError, setImageError] = useState<boolean>(false);
 
   const defaultTheme = createTheme();

@@ -1,14 +1,6 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
-import { EDIT_PRODUCT } from "../queries";
+import { EDIT_POST } from "../queries";
 import { useMutation } from "@apollo/client";
-// import {
-//   checkName,
-//   checkPrice,
-//   checkDescription,
-//   checkCategory,
-//   checkCondition,
-//   checkStatus,
-// } from "../helper.tsx";
 import { uploadFileToS3 } from "../aws.tsx";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import {
@@ -29,8 +21,8 @@ import {
   DialogTitle,
 } from "@mui/material";
 
-const EditProduct = ({ productData }) => {
-  // const [image, setImage] = useState<File | undefined>(undefined);
+const EditPost = ({ postData }) => {
+  console.log(postData);
   const [toggleEditForm, setToggleEditForm] = useState(false);
 
   const nameRef = useRef<HTMLInputElement | null>(null);
@@ -38,31 +30,26 @@ const EditProduct = ({ productData }) => {
   const conditionRef = useRef<HTMLSelectElement | null>(null);
   const descriptionRef = useRef<HTMLTextAreaElement | null>(null);
   const categoryRef = useRef<HTMLSelectElement | null>(null);
-  const imageRef = useRef<HTMLInputElement | null>(null);
   const statusRef = useRef<HTMLSelectElement | null>(null);
-  const buyerRef = useRef<HTMLSelectElement | null>(null);
+  const sellerRef = useRef<HTMLSelectElement | null>(null);
 
-  const [name, setName] = useState<string>(productData.name);
-  const [category, setCategory] = useState<string>(productData.category);
-  const [image, setImage] = useState<File | null>(productData.image);
-  const [price, setPrice] = useState<number>(productData.price);
-  const [condition, setCondition] = useState<string>(productData.condition);
-  const [description, setDescription] = useState<string>(
-    productData.description
-  );
+  const [name, setName] = useState<string>(postData.item);
+  const [category, setCategory] = useState<string>(postData.category);
+  const [price, setPrice] = useState<number>(postData.price);
+  const [condition, setCondition] = useState<string>(postData.condition);
+  const [description, setDescription] = useState<string>(postData.description);
 
-  const [status, setStatus] = useState<string>(productData.status);
-  const [buyer, setBuyer] = useState<string>("");
+  const [status, setStatus] = useState<string>(postData.status);
+  const [seller, setSeller] = useState<string>("");
   const [nameError, setNameError] = useState<boolean>(false);
   const [priceError, setPriceError] = useState<boolean>(false);
   const [conditionError, setConditionError] = useState<boolean>(false);
   const [descriptionError, setDescriptionError] = useState<boolean>(false);
   const [categoryError, setCategoryError] = useState<boolean>(false);
-  const [imageError, setImageError] = useState<boolean>(false);
   const [statusError, setStatusError] = useState<boolean>(false);
-  const [buyerError, setBuyerError] = useState<boolean>(false);
+  const [sellerError, setSellerError] = useState<boolean>(false);
 
-  const [editProduct] = useMutation(EDIT_PRODUCT, {
+  const [editPost] = useMutation(EDIT_POST, {
     onError: (e) => {
       alert(e);
     },
@@ -181,26 +168,6 @@ const EditProduct = ({ productData }) => {
       setCategory(category);
     },
 
-    checkImage(e: React.ChangeEvent<HTMLInputElement>): void {
-      setImageError(false);
-      const image: File | undefined = e.target.files?.[0];
-      if (!image || !(image instanceof File)) {
-        setImageError(true);
-        return;
-      }
-      if (image.size > 10000000) {
-        setImageError(true);
-        console.log("image size", image.size);
-        return;
-      }
-      if (!image.type.match(/image.*/)) {
-        setImageError(true);
-        console.log("image type", image.type);
-        return;
-      }
-      setImage(image);
-    },
-
     checkStatus(): void {
       setStatusError(false);
       let status: string | undefined = statusRef.current?.value;
@@ -221,23 +188,23 @@ const EditProduct = ({ productData }) => {
       setStatus(statusLower);
     },
 
-    checkBuyer(): void {
-      setBuyerError(false);
-      let buyer: string | undefined = buyerRef.current?.value;
-      if (!buyer || buyer.trim() == "") {
-        setBuyerError(true);
+    checkSeller(): void {
+      setSellerError(false);
+      let seller: string | undefined = sellerRef.current?.value;
+      if (!seller || seller.trim() == "") {
+        setSellerError(true);
         return;
       }
-      buyer = buyer.trim();
+      seller = seller.trim();
 
       let flag = false;
-      productData.possible_buyers.map((possible_buyer) => {
-        if (possible_buyer._id == buyer) {
-          setBuyer(buyer);
+      postData.possible_sellers.map((possible_sellers) => {
+        if (possible_sellers._id == seller) {
+          setSeller(seller);
           flag = true;
         }
       });
-      if (!flag) setBuyerError(true);
+      if (!flag) setSellerError(true);
     },
   };
 
@@ -255,50 +222,38 @@ const EditProduct = ({ productData }) => {
         conditionError ||
         descriptionError ||
         categoryError ||
-        imageError ||
         statusError
       ) {
         return;
       }
 
-      console.log(name);
-      console.log(category);
-
       if (
-        name == productData.name &&
-        category == productData.category &&
-        price == productData.price &&
-        condition == productData.condition &&
-        description == productData.description &&
-        status == productData.status &&
-        image == null
+        name == postData.item &&
+        category == postData.category &&
+        price == postData.price &&
+        condition == postData.condition &&
+        description == postData.description &&
+        status == postData.status
       ) {
         alert("No change made");
         return;
       }
 
-      let imageUrl = productData.image;
-      if (image) {
-        imageUrl = await uploadFileToS3(image, name);
-      }
-
       let variables = {
-        id: productData._id,
-        name: name,
+        id: postData._id,
+        item: name,
         description: description,
-        sellerId: productData.seller_id,
+        buyer_id: postData.buyer_id,
         price: price,
         category: category,
         condition: condition,
         status: status,
-        image: imageUrl,
       };
 
       if (status == "completed") {
-        variables.buyerId = buyer;
+        variables.seller_id = seller;
       }
-      console.log("variables", variables);
-      await editProduct({ variables: variables });
+      await editPost({ variables: variables });
     } catch (err) {
       alert;
     }
@@ -309,7 +264,7 @@ const EditProduct = ({ productData }) => {
       <button onClick={() => setToggleEditForm(true)}>Edit</button>
       <div className="modal-box">
         <Dialog open={toggleEditForm} maxWidth="md">
-          <DialogTitle>Edit Product</DialogTitle>
+          <DialogTitle>Edit Post</DialogTitle>
           <DialogContent>
             <DialogContentText id="alert-dialog-description">
               Please fill out the form below to upload an item to the
@@ -372,39 +327,6 @@ const EditProduct = ({ productData }) => {
                       style={{ color: "red" }}
                     >
                       * Please select from provided categories
-                    </Typography>
-                  )}
-                </Grid>
-                <Grid item xs={12}>
-                  <div>
-                    {/* <label htmlFor="image">
-                    <Button
-                      component="label"
-                      variant="contained"
-                      startIcon={<CloudUploadIcon />}
-                    >
-                      Upload Image *
-                    </Button>
-                  </label> */}
-                    <input
-                      name="image"
-                      id="image"
-                      type="file"
-                      // inputRef={imageRef}
-                      onChange={(e) => {
-                        helper.checkImage(e);
-                      }}
-                      // style={{ opacity: 0, zIndex: -1 }}
-                    />
-                  </div>
-                  {imageError && (
-                    <Typography
-                      component="span"
-                      variant="body2"
-                      style={{ color: "red" }}
-                    >
-                      * Please upload an image with size &lt; 10MB and the
-                      correct file type.
                     </Typography>
                   )}
                 </Grid>
@@ -514,23 +436,23 @@ const EditProduct = ({ productData }) => {
                     <div>
                       <FormControl sx={{ minWidth: 200 }} required>
                         <InputLabel id="demo-simple-select-helper-label">
-                          Buyer
+                          Seller
                         </InputLabel>
                         <Select
-                          inputRef={buyerRef}
+                          inputRef={sellerRef}
                           defaultValue={""}
                           label="Buyer"
-                          onBlur={helper.checkBuyer}
+                          onBlur={helper.checkSeller}
                         >
-                          {productData.possible_buyers.length === 0 ? (
+                          {postData.possible_sellers.length === 0 ? (
                             <MenuItem value="" disabled>
                               No Availabile Options
                             </MenuItem>
                           ) : (
-                            productData.possible_buyers.map((buyer) => {
+                            postData.possible_sellers.map((seller) => {
                               return (
-                                <MenuItem key={buyer._id} value={buyer._id}>
-                                  {buyer.firstname} {buyer.lastname}
+                                <MenuItem key={seller._id} value={seller._id}>
+                                  {seller.firstname} {seller.lastname}
                                 </MenuItem>
                               );
                             })
@@ -538,7 +460,7 @@ const EditProduct = ({ productData }) => {
                         </Select>
                       </FormControl>
                     </div>
-                    {buyerError && (
+                    {sellerError && (
                       <Typography
                         component="span"
                         variant="body2"
@@ -573,122 +495,10 @@ const EditProduct = ({ productData }) => {
               </Button>
             </Stack>
           </DialogActions>
-
-          {/* <form onSubmit={editSubmit} encType="multipart/form-data">
-            <label htmlFor="name">Name</label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              // ref={(node) => {
-              //   name = node;
-              // }}
-              defaultValue={productData.name}
-              placeholder={productData.name}
-            />
-            <label htmlFor="description">Description</label>
-            <textarea
-              id="description"
-              name="description"
-              rows={3}
-              maxLength={100}
-              ref={(node) => {
-                description = node;
-              }}
-              placeholder={productData.description}
-              defaultValue={productData.description}
-            />
-            <label htmlFor="price">Price</label>
-            <input
-              type="number"
-              step="0.01"
-              id="price"
-              name="price"
-              placeholder={productData.price}
-              ref={(node) => {
-                price = node;
-              }}
-              defaultValue={productData.price}
-            />
-            <label htmlFor="category">Category</label>
-            <select
-              id="category"
-              name="category"
-              placeholder={productData.category}
-              ref={(node) => {
-                category = node;
-              }}
-              defaultValue={productData.category}
-            >
-              <option value="books">Books</option>
-              <option value="electronics">Electronics</option>
-              <option value="furniture">Furniture</option>
-              <option value="clothing">Clothing</option>
-              <option value="stationary">Stationary</option>
-              <option value="others">Others</option>
-            </select>
-            <label htmlFor="condition">Condition</label>
-            <select
-              id="condition"
-              name="condition"
-              placeholder={productData.condition}
-              ref={(node) => {
-                condition = node;
-              }}
-              defaultValue={productData.condition}
-            >
-              <option value="brand new">Brand New</option>
-              <option value="like new">Like New</option>
-              <option value="gently used">Gently Used</option>
-              <option value="functional">Functional</option>
-            </select>
-            <label htmlFor="image">Image</label>
-            <input type="file" id="image" name="image" onChange={uploadImage} />
-            <label htmlFor="status">Status</label>
-            <select
-              id="status"
-              name="status"
-              placeholder={productData.status}
-              onChange={statusChange}
-              ref={(node) => {
-                status = node;
-              }}
-              defaultValue={productData.status}
-            >
-              <option value="active">active</option>
-              <option value="inactive">inactive</option>
-              <option value="completed">completed</option>
-            </select>
-            {currentStatus == "completed" ? (
-              <>
-                <label htmlFor="buyer">Buyer</label>
-                <select
-                  id="buyer"
-                  name="buyer"
-                  placeholder="nospecific"
-                  ref={(node) => {
-                    buyer = node;
-                  }}
-                  defaultValue="nospecific"
-                >
-                  <option value="nospecific">No specific buyer</option>
-                  {productData.possible_buyers.map((buyer) => {
-                    return (
-                      <option key={buyer._id} value={buyer._id}>
-                        {buyer.firstname} {buyer.lastname}
-                      </option>
-                    );
-                  })}
-                </select>
-              </>
-            ) : null}
-
-            <button type="submit">Submit</button>
-          </form> */}
         </Dialog>
       </div>
     </>
   );
 };
 
-export default EditProduct;
+export default EditPost;
