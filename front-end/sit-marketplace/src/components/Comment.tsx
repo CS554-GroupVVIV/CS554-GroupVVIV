@@ -1,12 +1,22 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext, useRef } from "react";
 import { useQuery, useMutation } from "@apollo/client";
 import { AuthContext } from "../context/AuthContext.jsx";
 import { ADD_COMMENT, GET_COMMENT, EDIT_COMMENT } from "../queries";
-import { checkRating } from "../helper.js";
-import { common } from "@mui/material/colors";
-import { set } from "firebase/database";
 
-import { Button } from "@mui/material";
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Typography,
+  TextField,
+  Grid,
+  Box,
+  Stack,
+  Rating,
+} from "@mui/material";
 
 const Comment = ({ data }) => {
   const { currentUser } = useContext(AuthContext);
@@ -14,8 +24,15 @@ const Comment = ({ data }) => {
   const [toggleNewComment, setToggleNewComment] = useState<boolean>(false);
   const [toggleEditComment, setToggleEditComment] = useState<boolean>(false);
 
-  const [rating, setRating] = useState<number>(0);
   const [prevComment, setPrevComment] = useState({});
+  const [rating, setRating] = useState<number>(0);
+  const [commentInput, setCommentInput] = useState("");
+
+  const ratingRef = useRef();
+  const commentInputRef = useRef();
+
+  const [ratingError, setRatingError] = useState<boolean>(false);
+  const [commentInputError, setCommentInputError] = useState<boolean>(false);
 
   let user_id = undefined;
   if (data.seller_id === currentUser.uid) {
@@ -33,6 +50,38 @@ const Comment = ({ data }) => {
   } = useQuery(GET_COMMENT, {
     variables: { user_id: user_id, comment_id: currentUser.uid },
   });
+
+  const helper = {
+    checkRating(newValue): void {
+      console.log(newValue);
+      setRatingError(false);
+      let rating: number | undefined = newValue;
+      if (!rating || rating < 1 || rating > 5) {
+        setRatingError(true);
+        return;
+      }
+      setRating(rating);
+      // console.log(rating);
+      return;
+    },
+
+    checkComment(): void {
+      setCommentInputError(false);
+      let commentInput: string | undefined = commentInputRef.current?.value;
+      if (!commentInput || commentInput.trim() == "") {
+        setCommentInputError(true);
+        return;
+      }
+      commentInput = commentInput.trim();
+      if (commentInput.length < 0 || commentInput.length > 100) {
+        setCommentInputError(true);
+        return;
+      }
+      setCommentInput(commentInput);
+      return;
+    },
+  };
+
   const [addComment] = useMutation(ADD_COMMENT, {
     onError: (e) => {
       alert(e);
@@ -55,38 +104,21 @@ const Comment = ({ data }) => {
     },
   });
 
-  useEffect(() => {
-    if (toggleNewComment) {
-      document.getElementById("commentForm").showModal();
-    } else {
-      if (document.getElementById("commentForm"))
-        document.getElementById("commentForm").close();
-    }
-  }, [toggleNewComment, rating]);
-
   const cancelNewComment = () => {
     setToggleNewComment(false);
-    document.getElementById("comment-form").reset();
     setRating(0);
   };
+
   const saveNewComment = () => {
     try {
-      let comment = "";
-      if (
-        document.getElementById("newComment").value &&
-        document.getElementById("newComment").value.trim() != ""
-      ) {
-        comment = document.getElementById("newComment").value.trim();
-        if (comment.length > 100) {
-          throw "Maximum length of comment is 100 letters ";
-        }
-      }
+      helper.checkRating(rating);
+      helper.checkComment();
       addComment({
         variables: {
           user_id: user_id,
           comment_id: currentUser.uid,
           rating: rating,
-          comment: comment,
+          comment: commentInput,
         },
       });
     } catch (e) {
@@ -94,42 +126,23 @@ const Comment = ({ data }) => {
     }
   };
 
-  useEffect(() => {
-    if (toggleEditComment) {
-      document.getElementById("editForm").showModal();
-    } else {
-      if (document.getElementById("editForm")) {
-        document.getElementById("editForm").close();
-      }
-    }
-  }, [toggleEditComment, rating]);
-
   const cancelEditComment = () => {
+    console.log(prevComment);
     setToggleEditComment(false);
-    document.getElementById("edit-form").reset();
-    setRating(comment.getComment.comments[0].rating);
+    // setRating(prevComment.rating);
   };
+
   const saveEditComment = () => {
     try {
-      let comment = "";
-      if (
-        document.getElementById("editComment").value &&
-        document.getElementById("editComment").value.trim() != ""
-      ) {
-        comment = document.getElementById("editComment").value.trim();
-        if (comment.length > 100) {
-          throw "Maximum length of comment is 100 letters ";
-        }
-        if (rating == prevComment.rating && comment == prevComment.comment) {
-          throw "No Change Made";
-        }
-      }
+      helper.checkRating(rating);
+      helper.checkComment();
+
       editComment({
         variables: {
           user_id: user_id,
           comment_id: currentUser.uid,
           rating: rating,
-          comment: comment,
+          comment: commentInput,
         },
       });
     } catch (e) {
@@ -138,7 +151,6 @@ const Comment = ({ data }) => {
   };
 
   const EditComment = ({ record }) => {
-    console.log(record);
     return (
       <>
         <Button
@@ -153,7 +165,83 @@ const Comment = ({ data }) => {
         >
           Comment
         </Button>
-        <dialog id="editForm" className="modal">
+
+        <Dialog open={toggleEditComment} maxWidth="md">
+          <DialogTitle>Comment</DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              Update your transaction experience with {user_id}
+            </DialogContentText>
+            <Box
+              component="form"
+              noValidate
+              sx={{ mt: 3, display: "flex", flexWrap: "wrap" }}
+            >
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <Typography component="legend">Rating</Typography>
+                  <Rating
+                    name="simple-controlled"
+                    ref={ratingRef}
+                    defaultValue={prevComment.rating}
+                    onChange={(event, newValue) => {
+                      // helper.checkRating(newValue);
+                      setRating(newValue);
+                    }}
+                  />
+                  {ratingError && (
+                    <Typography
+                      component="span"
+                      variant="body2"
+                      style={{ color: "red" }}
+                    >
+                      * Please give ratings in range 1~5
+                    </Typography>
+                  )}
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    fullWidth
+                    id="comment"
+                    label="Comment"
+                    name="comment"
+                    inputRef={commentInputRef}
+                    defaultValue={prevComment.comment}
+                    onBlur={helper.checkComment}
+                  />
+                  {commentInputError && (
+                    <Typography
+                      component="span"
+                      variant="body2"
+                      style={{ color: "red" }}
+                    >
+                      * Comment should have 100 letters at most
+                    </Typography>
+                  )}
+                </Grid>
+              </Grid>
+            </Box>
+          </DialogContent>
+          <DialogActions>
+            <Stack spacing={2} direction="row">
+              <Button
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+                onClick={cancelEditComment}
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={saveEditComment}
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+              >
+                Save
+              </Button>
+            </Stack>
+          </DialogActions>
+        </Dialog>
+        {/* <dialog id="editForm" className="modal">
           <div className="modal-box">
             <h3 className="font-bold text-lg">Comment</h3>
             <p>Update your transaction experience with {user_id}</p>
@@ -249,7 +337,7 @@ const Comment = ({ data }) => {
               </button>
             </div>
           </div>
-        </dialog>
+        </dialog> */}
       </>
     );
   };
@@ -257,115 +345,94 @@ const Comment = ({ data }) => {
   const NewComment = () => {
     return (
       <>
-        <button
+        <Button
+          size="small"
+          variant="contained"
+          color="inherit"
           onClick={() => {
-            setToggleNewComment(!toggleNewComment);
+            setToggleNewComment(true);
           }}
         >
           Comment
-        </button>
-        <dialog id="commentForm" className="modal">
-          <div className="modal-box">
-            <h3 className="font-bold text-lg">Comment</h3>
-            <p>How was your transaction experience with {user_id}?</p>
-            <form id="comment-form">
-              <div className="space-y-12">
-                <div className="border-b border-gray-900/10 pb-12">
-                  <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-                    <div className="rating">
-                      <label
-                        htmlFor="edit-first-name"
-                        className="block text-sm font-medium leading-6 text-gray-900"
-                      >
-                        Rating:
-                      </label>
-                      <input
-                        type="checkbox"
-                        name="rating-2"
-                        value={1}
-                        onChange={() => {
-                          setRating(1);
-                        }}
-                        checked={rating > 0}
-                        className="mask mask-star-2 bg-orange-400"
-                      />
-                      <input
-                        type="checkbox"
-                        name="rating-2"
-                        value={2}
-                        onChange={() => {
-                          setRating(2);
-                        }}
-                        checked={rating > 1}
-                        className="mask mask-star-2 bg-orange-400"
-                      />
-                      <input
-                        type="checkbox"
-                        name="rating-2"
-                        value={3}
-                        onChange={() => {
-                          setRating(3);
-                        }}
-                        checked={rating > 2}
-                        className="mask mask-star-2 bg-orange-400"
-                      />
-                      <input
-                        type="checkbox"
-                        name="rating-2"
-                        value={4}
-                        onChange={() => {
-                          setRating(4);
-                        }}
-                        checked={rating > 3}
-                        className="mask mask-star-2 bg-orange-400"
-                      />
-                      <input
-                        type="checkbox"
-                        name="rating-2"
-                        value={5}
-                        onChange={() => {
-                          setRating(5);
-                        }}
-                        checked={rating > 4}
-                        className="mask mask-star-2 bg-orange-400"
-                      />
-                    </div>
-                    <div className="sm:col-span-3">
-                      <label
-                        htmlFor="edit-first-name"
-                        className="block text-sm font-medium leading-6 text-gray-900"
-                      >
-                        Leave your comment:
-                      </label>
-                      <div className="mt-2">
-                        <input
-                          type="textarea"
-                          name="newComment"
-                          id="newComment"
-                          className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </form>
-            <div className="float-right mt-3">
-              <button
-                onClick={cancelNewComment}
-                className="text-sm font-semibold leading-6 text-gray-900 mr-6"
+        </Button>
+
+        <Dialog open={toggleNewComment} maxWidth="md">
+          <DialogTitle>Comment</DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              How was your transaction experience with {user_id}?
+            </DialogContentText>
+            <Box
+              component="form"
+              noValidate
+              sx={{ mt: 3, display: "flex", flexWrap: "wrap" }}
+            >
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <Typography component="legend">Rating</Typography>
+                  <Rating
+                    name="simple-controlled"
+                    value={rating}
+                    ref={ratingRef}
+                    onChange={(event, newValue) => {
+                      // event.preventDefault();
+                      setRating(newValue);
+                      // helper.checkRating(newValue);
+                    }}
+                  />
+                  {ratingError && (
+                    <Typography
+                      component="span"
+                      variant="body2"
+                      style={{ color: "red" }}
+                    >
+                      * Please give ratings in range 1~5
+                    </Typography>
+                  )}
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    fullWidth
+                    id="comment"
+                    label="Comment"
+                    name="comment"
+                    inputRef={commentInputRef}
+                    onBlur={helper.checkComment}
+                  />
+                  {commentInputError && (
+                    <Typography
+                      component="span"
+                      variant="body2"
+                      style={{ color: "red" }}
+                    >
+                      * Comment should have 100 letters at most
+                    </Typography>
+                  )}
+                </Grid>
+              </Grid>
+            </Box>
+          </DialogContent>
+          <DialogActions>
+            <Stack spacing={2} direction="row">
+              <Button
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+                onClick={() => {
+                  setToggleNewComment(false);
+                }}
               >
-                Close
-              </button>
-              <button
+                Cancel
+              </Button>
+              <Button
                 onClick={saveNewComment}
-                className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
               >
-                Submit
-              </button>
-            </div>
-          </div>
-        </dialog>
+                Save
+              </Button>
+            </Stack>
+          </DialogActions>
+        </Dialog>
       </>
     );
   };
