@@ -12,7 +12,6 @@ export const lightMode = createTheme({
   },
   typography: {
     fontFamily: "monospace",
-    letterSpacing: ".3rem",
     button: {
       fontWeight: "bold",
     },
@@ -31,7 +30,6 @@ export const darkMode = createTheme({
   },
   typography: {
     fontFamily: "monospace",
-    letterSpacing: ".3rem",
     button: {
       fontWeight: "bold",
     },

@@ -12,7 +12,7 @@ import { AuthContext } from "../context/AuthContext";
 import SearchProduct from "./SearchProduct";
 import SearchPost from "./SearchPost";
 
-import { Grid, Button, Typography, TextField } from "@mui/material";
+import { Grid, Button, Typography, Divider } from "@mui/material";
 import PostCard from "./PostCard";
 
 type Product = {
@@ -54,6 +54,21 @@ export default function Home() {
         pr={"10%"}
         sx={{ display: "flex", justifyContent: "center" }}
       >
+        <Grid item sx={{ display: "flex", justifyContent: "center" }}>
+          <Typography
+            variant="h4"
+            sx={{
+              fontWeight: "bold",
+              minWidth: "50%",
+            }}
+            padding={3}
+          >
+            Welcome to Stevens Marketplace!
+          </Typography>
+        </Grid>
+
+        <Divider />
+
         <Grid item>
           <div style={{ display: "flex", justifyContent: "center" }}>
             <Typography
@@ -101,6 +116,8 @@ export default function Home() {
             </Grid>
           </div>
         </Grid>
+
+        <Divider />
 
         <Grid item>
           <div style={{ display: "flex", justifyContent: "center" }}>

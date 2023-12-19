@@ -30,19 +30,26 @@ export default function Chat({ chat, participants }) {
               style={{
                 alignSelf:
                   sender === currentUser.uid ? "flex-end" : "flex-start",
+                maxWidth: "70%",
               }}
             >
+              <p
+                style={{
+                  fontWeight: "bold",
+                }}
+              >
+                {participantDict && participantDict[sender]}:
+              </p>
               <p
                 style={{
                   padding: 10,
                   backgroundColor:
                     sender === currentUser.uid ? "blue" : "green",
-                  borderRadius: 50,
+                  borderRadius: 20,
                   color: "white",
-                  fontWeight: "bold",
                 }}
               >
-                {participantDict && participantDict[sender]}: {message}
+                {message}
               </p>
               <p>{new Date(time).toLocaleString()}</p>
             </div>

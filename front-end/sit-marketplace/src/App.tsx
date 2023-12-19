@@ -46,7 +46,7 @@ import {
   DialogContent,
   DialogContentText,
   DialogActions,
-  Button,
+  Divider,
 } from "@mui/material";
 
 function App() {
@@ -261,6 +261,7 @@ function App() {
               Chat Rooms
             </Typography>
           </DialogTitle>
+          <Divider />
           <DialogContent>
             <ChatRoomList uid={user && user.uid} />
           </DialogContent>

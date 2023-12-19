@@ -9,7 +9,7 @@ import { AuthContext } from "../context/AuthContext";
 
 import Chat from "./Chat";
 
-import { Grid, Button, TextField } from "@mui/material";
+import { Grid, Button, TextField, Divider } from "@mui/material";
 
 export default function ChatRoom({ room }) {
   const { currentUser } = useContext(AuthContext);
@@ -99,14 +99,19 @@ export default function ChatRoom({ room }) {
         pl={2}
         pr={2}
       >
-        {/* <h4 style={{ textAlign: "center" }}> --- History --- </h4> */}
         <Chat
           chat={data && data.getChatByParticipants.messages}
           participants={[currentUser.uid, room]}
         />
 
-        {/* <h4 style={{ textAlign: "center" }}> --- New --- </h4> */}
+        {chat.length > 0 && (
+          <>
+            <Divider />
+            <p>New Messages:</p>
+          </>
+        )}
         <Chat chat={chat} participants={[currentUser.uid, room]} />
+
         <div ref={messagesEndRef} />
       </Grid>
 
