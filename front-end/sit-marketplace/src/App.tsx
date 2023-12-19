@@ -75,7 +75,7 @@ function App() {
   // ToggleSwitch component
   const ToggleSwitch = () => {
     return (
-      <FormGroup sx={{ marginRight: 1, justifyContent: "center" }}>
+      <FormGroup sx={{ marginRight: 1 }}>
         <FormControlLabel
           control={
             <Switch
@@ -121,7 +121,7 @@ function App() {
       <CssBaseline />
       <AuthProvider>
         <AppBar position="fixed">
-          <Container maxWidth={"90%"}>
+          <Container maxWidth="xl">
             <Toolbar disableGutters>
               <Typography
                 variant="h5"
@@ -227,7 +227,7 @@ function App() {
                         Login
                       </Link>
 
-                      <Link
+                      {/* <Link
                         color="inherit"
                         component="button"
                         onClick={() => {
@@ -239,7 +239,7 @@ function App() {
                         }}
                       >
                         Signup
-                      </Link>
+                      </Link> */}
                     </>
                   )}
 
