@@ -53,6 +53,15 @@ export const GET_USER = gql`
   }
 `;
 
+export const GET_USER_FOR_FAVORITE = gql`
+  query Query($id: String!) {
+    getUserById(_id: $id) {
+      _id
+      favorite
+    }
+  }
+`;
+
 export const GET_USERS_BY_IDS = gql`
   query ($ids: [String!]!) {
     getUsersByIds(ids: $ids) {
@@ -133,6 +142,24 @@ export const GET_PRODUCTS_BY_SELLER = gql`
 export const GET_PRODUCTS_BY_BUYER = gql`
   query GetProductByBuyer($id: String!) {
     getProductByBuyer(_id: $id) {
+      _id
+      buyer_id
+      category
+      condition
+      date
+      description
+      image
+      name
+      price
+      seller_id
+      status
+    }
+  }
+`;
+
+export const GET_PRODUCTS_BY_STATUS = gql`
+  query GetProductsByStatus($status: String!) {
+    getProductsByStatus(status: $status) {
       _id
       buyer_id
       category
@@ -680,6 +707,23 @@ export const GET_PRODUCTS_BY_CATEGORY = gql`
 export const GET_POSTS_BY_CATEGORY = gql`
   query Query($category: String!) {
     getPostsByCategory(category: $category) {
+      _id
+      buyer_id
+      condition
+      category
+      date
+      description
+      item
+      price
+      status
+      seller_id
+    }
+  }
+`;
+
+export const GET_POSTS_BY_STATUS = gql`
+  query GetPostsByStatus($status: String!) {
+    getPostsByStatus(status: $status) {
       _id
       buyer_id
       condition

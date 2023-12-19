@@ -49,13 +49,13 @@ export const AuthProvider = ({ children }) => {
     };
   }, [auth]);
 
-  if (loadingUser) {
-    return (
-      <div>
-        <h1>Loading....Loading....Loading....Loading....Loading....</h1>
-      </div>
-    );
-  }
+  // if (loadingUser) {
+  //   return (
+  //     <div>
+  //       <h1>Loading....Loading....Loading....Loading....Loading....</h1>
+  //     </div>
+  //   );
+  // }
 
   return (
     <AuthContext.Provider value={{ currentUser }}>

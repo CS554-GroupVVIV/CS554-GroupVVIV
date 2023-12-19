@@ -28,6 +28,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { ThemeProvider } from "@mui/material/styles";
 import { darkMode, lightMode } from "./theme.ts";
 import { toggleTheme } from "./redux/themeSlice.ts";
+import DarkModeIcon from "@mui/icons-material/DarkMode";
+import LightModeIcon from "@mui/icons-material/LightMode";
 
 import {
   CssBaseline,
@@ -73,27 +75,27 @@ function App() {
   // ToggleSwitch component
   const ToggleSwitch = () => {
     return (
-      <div
-        style={{
-          position: "absolute",
-          top: "10px",
-          right: "10px",
-        }}
-      >
-        <FormGroup>
-          <FormControlLabel
-            control={
-              <Switch
-                checked={theme.darkmode}
-                onChange={() => {
-                  dispatch(toggleTheme());
-                }}
-              />
-            }
-            label="Darkmode"
-          />
-        </FormGroup>
-      </div>
+      <FormGroup sx={{ marginRight: 1, justifyContent: "center" }}>
+        <FormControlLabel
+          control={
+            <Switch
+              checked={theme.darkmode}
+              onChange={() => {
+                dispatch(toggleTheme());
+              }}
+              color="default"
+            />
+          }
+          label={
+            theme.darkmode ? (
+              <DarkModeIcon fontSize="large" />
+            ) : (
+              <LightModeIcon fontSize="large" />
+            )
+          }
+          labelPlacement="start"
+        />
+      </FormGroup>
     );
   };
 
@@ -119,17 +121,14 @@ function App() {
       <CssBaseline />
       <AuthProvider>
         <AppBar position="fixed">
-          <Container maxWidth="xl">
+          <Container maxWidth={"90%"}>
             <Toolbar disableGutters>
               <Typography
-                variant="h6"
+                variant="h5"
                 noWrap
                 sx={{
-                  mr: 2,
-                  display: { xs: "none", md: "flex" },
-                  fontFamily: "monospace",
-                  fontWeight: 700,
-                  letterSpacing: ".3rem",
+                  fontWeight: "bold",
+                  flexGrow: 1,
                 }}
               >
                 <Link
@@ -144,109 +143,124 @@ function App() {
                 >
                   Home
                 </Link>
-              </Typography>
 
-              <Link
-                color="inherit"
-                component="button"
-                onClick={() => {
-                  navigate("/products");
-                }}
-                sx={{
-                  marginLeft: 5,
-                  textDecoration: "none",
-                }}
-              >
-                Products
-              </Link>
-
-              <Link
-                color="inherit"
-                component="button"
-                onClick={() => {
-                  navigate("/posts");
-                }}
-                sx={{
-                  marginLeft: 5,
-                  textDecoration: "none",
-                }}
-              >
-                Posts
-              </Link>
-
-              {user ? (
                 <Link
                   color="inherit"
                   component="button"
-                  onClick={handleClickOpen}
+                  onClick={() => {
+                    navigate("/products");
+                  }}
                   sx={{
-                    marginLeft: 5,
                     textDecoration: "none",
+                    marginLeft: 5,
                   }}
                 >
-                  Chat Rooms
+                  Products
                 </Link>
-              ) : (
-                <></>
-              )}
 
-              {user ? (
-                <>
-                  <LogoutButton />
+                <Link
+                  color="inherit"
+                  component="button"
+                  onClick={() => {
+                    navigate("/posts");
+                  }}
+                  sx={{
+                    textDecoration: "none",
+                    marginLeft: 5,
+                  }}
+                >
+                  Posts
+                </Link>
+              </Typography>
 
-                  <Link
-                    color="inherit"
-                    component="button"
-                    onClick={() => {
-                      navigate("/userprofile");
-                    }}
-                    sx={{
-                      marginLeft: 5,
-                      textDecoration: "none",
-                    }}
-                  >
-                    User Profile
-                  </Link>
-                </>
-              ) : (
-                <>
-                  <Link
-                    color="inherit"
-                    component="button"
-                    onClick={() => {
-                      navigate("/login");
-                    }}
-                    sx={{
-                      marginLeft: 5,
-                      textDecoration: "none",
-                    }}
-                  >
-                    Login
-                  </Link>
+              <Typography
+                variant="inherit"
+                noWrap
+                sx={{
+                  fontWeight: "bold",
+                }}
+              >
+                <div style={{ display: "flex", justifyContent: "center" }}>
+                  {user ? (
+                    <>
+                      <Link
+                        color="inherit"
+                        component="button"
+                        onClick={() => {
+                          navigate("/userprofile");
+                        }}
+                        sx={{
+                          textDecoration: "none",
+                          marginRight: 5,
+                        }}
+                      >
+                        User Profile
+                      </Link>
 
-                  <Link
-                    color="inherit"
-                    component="button"
-                    onClick={() => {
-                      navigate("/signup");
-                    }}
-                    sx={{
-                      marginLeft: 5,
-                      textDecoration: "none",
-                    }}
-                  >
-                    Signup
-                  </Link>
-                </>
-              )}
+                      <Link
+                        color="inherit"
+                        component="button"
+                        onClick={handleClickOpen}
+                        sx={{
+                          textDecoration: "none",
+                          marginRight: 5,
+                        }}
+                      >
+                        Chat Rooms
+                      </Link>
 
-              <ToggleSwitch />
+                      <LogoutButton />
+                    </>
+                  ) : (
+                    <>
+                      <Link
+                        color="inherit"
+                        component="button"
+                        onClick={() => {
+                          navigate("/login");
+                        }}
+                        sx={{
+                          textDecoration: "none",
+                          marginRight: 5,
+                        }}
+                      >
+                        Login
+                      </Link>
+
+                      <Link
+                        color="inherit"
+                        component="button"
+                        onClick={() => {
+                          navigate("/signup");
+                        }}
+                        sx={{
+                          textDecoration: "none",
+                          marginRight: 5,
+                        }}
+                      >
+                        Signup
+                      </Link>
+                    </>
+                  )}
+
+                  <ToggleSwitch />
+                </div>
+              </Typography>
             </Toolbar>
           </Container>
         </AppBar>
 
         <Dialog open={open} keepMounted onClose={handleClose}>
-          <DialogTitle>{"Chat Rooms"}</DialogTitle>
+          <DialogTitle>
+            <Typography
+              variant="h5"
+              sx={{
+                fontWeight: "bold",
+              }}
+            >
+              Chat Rooms
+            </Typography>
+          </DialogTitle>
           <DialogContent>
             <ChatRoomList uid={user && user.uid} />
           </DialogContent>

@@ -68,8 +68,9 @@ export default function ChatRoom({ room }) {
     socket.on("message", ({ sender, message, time }) => {
       // console.log("The server has broadcast message data to all clients");
       setChat([...chat, { sender, message, time }]);
-      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     });
+
+    messagesEndRef.current?.scrollIntoView({ behavior: "auto" });
 
     return () => {
       socket.off("message");
@@ -87,73 +88,80 @@ export default function ChatRoom({ room }) {
     }
   }, [room]);
 
-  if (!loading) {
-    return (
-      <Grid container spacing={2} direction={"column"}>
-        <Grid item height={"75vh"} sx={{ overflowY: "auto" }}>
-          {/* <h4 style={{ textAlign: "center" }}> --- History --- </h4> */}
-          <Chat
-            chat={data && data.getChatByParticipants.messages}
-            participants={[currentUser.uid, room]}
-          />
+  return (
+    <Grid container direction={"column"}>
+      <Grid
+        item
+        height={"60vh"}
+        sx={{ overflowY: "auto", border: 2 }}
+        mt={1}
+        mb={1}
+        pl={2}
+        pr={2}
+      >
+        {/* <h4 style={{ textAlign: "center" }}> --- History --- </h4> */}
+        <Chat
+          chat={data && data.getChatByParticipants.messages}
+          participants={[currentUser.uid, room]}
+        />
 
-          {/* <h4 style={{ textAlign: "center" }}> --- New --- </h4> */}
-          <Chat chat={chat} participants={[currentUser.uid, room]} />
-          <div ref={messagesEndRef} />
-        </Grid>
+        {/* <h4 style={{ textAlign: "center" }}> --- New --- </h4> */}
+        <Chat chat={chat} participants={[currentUser.uid, room]} />
+        <div ref={messagesEndRef} />
+      </Grid>
 
-        <Grid item>
-          <div style={{ display: "flex", justifyContent: "center" }}>
-            <TextField
-              variant="outlined"
-              label="message"
-              value={message}
-              onInput={(e) => setMessage(e.target.value)}
-              InputLabelProps={{
-                sx: {
-                  // fontFamily: "monospace",
-                  fontWeight: "bold",
-                },
-              }}
-              style={{
+      <Grid item sx={{ padding: 1 }}>
+        <div style={{ display: "flex", justifyContent: "center" }}>
+          <TextField
+            variant="outlined"
+            label="message"
+            value={message}
+            onInput={(e) => setMessage(e.target.value)}
+            autoFocus
+            autoComplete="off"
+            InputLabelProps={{
+              sx: {
                 // fontFamily: "monospace",
                 fontWeight: "bold",
-                color: "#424242",
-                marginRight: 5,
-              }}
-              sx={{ width: "80%" }}
-            />
-            <Button
-              variant="contained"
-              color="inherit"
-              onClick={(event) => {
-                event.preventDefault();
-                const msgData = {
-                  sender: currentUser.uid,
-                  time: new Date().toISOString(),
-                  message: message,
-                  chatId: data.getChatByParticipants._id,
-                };
+              },
+            }}
+            style={{
+              // fontFamily: "monospace",
+              fontWeight: "bold",
+              color: "#424242",
+            }}
+            sx={{ width: "80%" }}
+          />
+          <Button
+            variant="contained"
+            color="inherit"
+            onClick={(event) => {
+              event.preventDefault();
+              const msgData = {
+                sender: currentUser.uid,
+                time: new Date().toISOString(),
+                message: message,
+                chatId: data.getChatByParticipants._id,
+              };
 
-                socket.emit("message", {
-                  room: room,
-                  sender: msgData.sender,
-                  message: msgData.message,
-                  time: msgData.time,
-                });
+              socket.emit("message", {
+                room: room,
+                sender: msgData.sender,
+                message: msgData.message,
+                time: msgData.time,
+              });
 
-                // console.log(msgData);
-                handleAddMsg(msgData);
+              // console.log(msgData);
+              handleAddMsg(msgData);
 
-                setMessage("");
-              }}
-              sx={{ width: "20%" }}
-            >
-              Send
-            </Button>
-          </div>
-        </Grid>
+              setMessage("");
+            }}
+            sx={{ marginLeft: 1 }}
+          >
+            Send
+          </Button>
+        </div>
       </Grid>
-    );
-  }
+    </Grid>
+  );
 }

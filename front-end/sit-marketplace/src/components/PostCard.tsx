@@ -26,38 +26,45 @@ export default function PostCard({ postData }) {
           }}
           onClick={() => navigate(`/post/${postData._id}`)}
         >
-          <CardHeader title={postData.item}></CardHeader>
+          <CardHeader
+            titleTypographyProps={{ fontWeight: "bold" }}
+            title={postData.item}
+          ></CardHeader>
         </Link>
 
         <CardContent>
           <p>Price: {postData.price}</p>
           <p>Condition: {postData.condition}</p>
 
-          {!currentUser || postData.buyer_id !== currentUser.uid ? (
-            <Button
-              size="small"
-              variant="contained"
-              color="inherit"
-              onClick={() => {
-                if (currentUser.uid) {
-                  socket.emit("join room", {
-                    room: postData.buyer_id,
-                    user: currentUser.uid,
-                  });
+          {currentUser && (
+            <>
+              {postData.buyer_id !== currentUser.uid ? (
+                <Button
+                  size="small"
+                  variant="contained"
+                  color="inherit"
+                  onClick={() => {
+                    if (currentUser.uid) {
+                      socket.emit("join room", {
+                        room: postData.buyer_id,
+                        user: currentUser.uid,
+                      });
 
-                  // socket.emit("message", {
-                  //   room: productData.seller_id,
-                  //   sender: currentUser.uid,
-                  //   message: `Hi, I have questions regarding product: "${productData.name}"`,
-                  //   time: new Date().toISOString(),
-                  // });
-                }
-              }}
-            >
-              Chat with buyer
-            </Button>
-          ) : (
-            <></>
+                      // socket.emit("message", {
+                      //   room: productData.seller_id,
+                      //   sender: currentUser.uid,
+                      //   message: `Hi, I have questions regarding product: "${productData.name}"`,
+                      //   time: new Date().toISOString(),
+                      // });
+                    }
+                  }}
+                >
+                  Chat with buyer
+                </Button>
+              ) : (
+                <></>
+              )}
+            </>
           )}
         </CardContent>
       </Card>

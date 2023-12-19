@@ -62,8 +62,19 @@ const checkCategory = (category) => {
   ) {
     throw new Error("Invalid Category");
   }
-  return category;
+
+  return capitalizeFirstLetter(category);
 };
+
+function capitalizeFirstLetter(string) {
+  if (string && string.length > 1) {
+    return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+  } else if (string && string.length === 1) {
+    return string.toUpperCase();
+  } else {
+    return string;
+  }
+}
 
 const checkPrice = (price) => {
   if (!price) {

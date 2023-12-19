@@ -12,8 +12,10 @@ export const typeDefs = `#graphql
         getProductById(_id:String!):Product,
         getProductsByCategory(category:String!):[Product],
         getProductsByPriceRange(low:Int,high:Int!):[Product],
+        getProductsByStatus(status:String!):[Product],
         getPostById(_id:String!):Post,
         getPostsByCategory(category:String!):[Post],
+        getPostsByStatus(status:String!):[Post],
         getUserById(_id: String!): User,
         getChatById(_id: String!): Chat,
         getChatByParticipants(participants: [String!]!): Chat,
@@ -68,8 +70,8 @@ export const typeDefs = `#graphql
     email: String!,
     firstname: String!,
     lastname: String!,
-    comments:[Comment]!
-    rating: Float!
+    comments:[Comment]
+    rating: Float
     favorite: [String]!
   }
 
@@ -129,7 +131,7 @@ export const DateTime = new GraphQLScalarType({
   name: "DateTime",
   description: "DateTime scalar type",
   serialize(value) {
-    return value.toISOString();
+    return new Date(value).toISOString();
   },
   parseValue(value) {
     return new Date(value);

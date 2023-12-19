@@ -49,7 +49,7 @@ export const resolvers = {
         const comments = user.comments;
         let total = 0;
         let count = 0;
-        comments.map((comment) => {
+        comments?.map((comment) => {
           total += comment.rating;
           count += 1;
         });
@@ -67,7 +67,7 @@ export const resolvers = {
         const usersData = await users.find({}).toArray();
         const possible_buyers = parentValue.possible_buyers;
         let possible_buyers_info = [];
-        possible_buyers.map((id) => {
+        possible_buyers?.map((id) => {
           let user = usersData.find((user) => user._id === id);
           possible_buyers_info.push(user);
         });
@@ -85,7 +85,7 @@ export const resolvers = {
         const usersData = await users.find({}).toArray();
         const possible_sellers = parentValue.possible_sellers;
         let possible_sellers_info = [];
-        possible_sellers.map((id) => {
+        possible_sellers?.map((id) => {
           let user = usersData.find((user) => user._id === id);
           possible_sellers_info.push(user);
         });
@@ -262,6 +262,33 @@ export const resolvers = {
       }
     },
 
+    getProductsByStatus: async (_, args) => {
+      try {
+        let status = checkStatus(args.status);
+        let productList = await client.json.get(
+          `getProductsByStatus-${status}`,
+          "$"
+        );
+        if (!productList) {
+          const products = await productCollection();
+          productList = await products.find({ status: status }).toArray();
+          if (!productList) {
+            throw new GraphQLError("product not found", {
+              extensions: { code: "NOT_FOUND" },
+            });
+          }
+          for (let i = 0; i < productList.length; i++) {
+            productList[i].date = dateObjectToHTMLDate(productList[i].date);
+          }
+          client.json.set(`getProductsByStatus-${status}`, "$", productList);
+          client.expire(`getProductsByStatus-${status}`, 3600);
+        }
+        return productList;
+      } catch (error) {
+        throw new GraphQLError(error.message);
+      }
+    },
+
     // getProductsByIds: async (_, args) => {
     //   try {
     //     const productData = await productCollection();
@@ -368,6 +395,25 @@ export const resolvers = {
           );
         }
         return postsByCategory;
+      } catch (error) {
+        throw new GraphQLError(error.message);
+      }
+    },
+
+    getPostsByStatus: async (_, args) => {
+      try {
+        let status = checkStatus(args.status);
+        const postData = await postCollection();
+        let posts = await postData.find({ status: status }).toArray();
+        if (!posts) {
+          throw new GraphQLError("Post not found", {
+            extensions: { code: "NOT_FOUND" },
+          });
+        }
+        for (let i = 0; i < posts.length; i++) {
+          posts[i].date = dateObjectToHTMLDate(posts[i].date);
+        }
+        return posts;
       } catch (error) {
         throw new GraphQLError(error.message);
       }

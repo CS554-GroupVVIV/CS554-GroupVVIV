@@ -3,6 +3,9 @@ import { useNavigate } from "react-router-dom";
 import noImage from "../assets/noimage.jpg";
 import { AuthContext } from "../context/AuthContext";
 
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+
 import { socketID, socket } from "./socket";
 
 import {
@@ -20,6 +23,7 @@ import {
   REMOVE_FAVORITE_FROM_USER,
   ADD_POSSIBLE_BUYER,
   GET_USERS_BY_IDS,
+  GET_USER_FOR_FAVORITE,
 } from "../queries";
 import { useMutation } from "@apollo/client";
 import { useQuery } from "@apollo/client";
@@ -32,7 +36,11 @@ export default function ProductCard({ productData }) {
 
   const [hasFavorited, setHasFavorited] = useState(false);
 
-  const { data: userData } = useQuery(GET_USER, {
+  const {
+    data: userData,
+    loading: userLoading,
+    error: userError,
+  } = useQuery(GET_USER_FOR_FAVORITE, {
     variables: { id: currentUser ? currentUser.uid : "" },
     fetchPolicy: "cache-and-network",
   });
@@ -46,7 +54,7 @@ export default function ProductCard({ productData }) {
       refetchQueries: [
         {
           query: GET_USER,
-          variables: { _id: currentUser.uid },
+          variables: { _id: currentUser ? currentUser.uid : "" },
         },
       ],
     });
@@ -57,17 +65,29 @@ export default function ProductCard({ productData }) {
       refetchQueries: [
         {
           query: GET_USER,
-          variables: { _id: currentUser.uid },
+          variables: { _id: currentUser ? currentUser.uid : "" },
         },
       ],
     }
   );
 
   useEffect(() => {
-    if (userData?.getUserById?.favorite?.includes(productData._id)) {
-      setHasFavorited(true);
+    console.log("user data", userData);
+    console.log(userLoading);
+    console.log("error", userError);
+    if (!userLoading) {
+      console.log(userData, "usedata");
+      console.log("in favorite?", userData?.getUserById?.favorite);
+      if (userData?.getUserById?.favorite?.includes(productData._id)) {
+        console.log(userData);
+        console.log(userData.getUserById);
+        setHasFavorited(true);
+      } else {
+        console.log("in the else");
+        setHasFavorited(false);
+      }
     }
-  }, [userData]);
+  }, [userLoading, userData]);
 
   function handleFavorite() {
     console.log("user id", currentUser.uid);
@@ -109,7 +129,10 @@ export default function ProductCard({ productData }) {
           }}
           onClick={() => navigate(baseUrl + productData._id)}
         >
-          <CardHeader title={productData && productData.name}></CardHeader>
+          <CardHeader
+            titleTypographyProps={{ fontWeight: "bold" }}
+            title={productData && productData.name}
+          ></CardHeader>
         </Link>
 
         <div style={{ display: "flex", justifyContent: "center" }}>
@@ -128,52 +151,59 @@ export default function ProductCard({ productData }) {
           <p>Price: {productData && productData.price}</p>
           <p>Condition: {productData && productData.condition}</p>
 
-          <div>
-            {!currentUser || productData.seller_id !== currentUser.uid ? (
-              <>
-                <Button
-                  size="small"
-                  variant="contained"
-                  color="inherit"
-                  onClick={() => {
-                    if (currentUser.uid) {
-                      addPossibleBuyer({
-                        variables: {
-                          id: productData.seller_id,
-                          buyerId: currentUser.uid,
-                        },
-                      });
-                      socket.emit("join room", {
-                        room: productData.seller_id,
-                        user: currentUser.uid,
-                      });
+          {currentUser && (
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              {productData.seller_id !== currentUser.uid ? (
+                <>
+                  <Button
+                    size="small"
+                    variant="contained"
+                    color="inherit"
+                    onClick={() => {
+                      if (currentUser.uid) {
+                        addPossibleBuyer({
+                          variables: {
+                            id: productData.seller_id,
+                            buyerId: currentUser.uid,
+                          },
+                        });
+                        socket.emit("join room", {
+                          room: productData.seller_id,
+                          user: currentUser.uid,
+                        });
 
-                      // socket.emit("message", {
-                      //   room: productData.seller_id,
-                      //   sender: currentUser.uid,
-                      //   message: `Hi, I have questions regarding product: "${productData.name}"`,
-                      //   time: new Date().toISOString(),
-                      // });
-                    }
-                  }}
-                >
-                  Chat with seller
-                </Button>
+                        // socket.emit("message", {
+                        //   room: productData.seller_id,
+                        //   sender: currentUser.uid,
+                        //   message: `Hi, I have questions regarding product: "${productData.name}"`,
+                        //   time: new Date().toISOString(),
+                        // });
+                      }
+                    }}
+                    sx={{ fontWeight: "bold" }}
+                  >
+                    Chat with seller
+                  </Button>
 
-                <Button
-                  sx={{ marginLeft: 3 }}
-                  size="small"
-                  variant="contained"
-                  color="inherit"
-                  onClick={handleFavorite}
-                >
-                  {hasFavorited ? "Favorited" : "Favorite"}
-                </Button>
-              </>
-            ) : (
-              <></>
-            )}
-          </div>
+                  <Button
+                    sx={{ marginLeft: 3 }}
+                    size="small"
+                    variant="contained"
+                    color="inherit"
+                    onClick={handleFavorite}
+                  >
+                    {hasFavorited ? (
+                      <FavoriteIcon sx={{ color: "#e91e63" }} />
+                    ) : (
+                      <FavoriteBorderIcon />
+                    )}
+                  </Button>
+                </>
+              ) : (
+                <></>
+              )}
+            </div>
+          )}
         </CardContent>
       </Card>
     </Grid>

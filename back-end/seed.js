@@ -187,6 +187,21 @@ const postList = [
   },
   {
     _id: new ObjectId(),
+    buyer_id: "7SKDog0fjKOeS1jeuq32a9vYPue2",
+    seller_id: null,
+    item: "chair",
+    category: "Furniture",
+    price: 10,
+    condition: "Like New",
+    date: {
+      $date: "2023-12-19T01:56:11.230Z",
+    },
+    description: "",
+    status: "active",
+    possible_sellers: [],
+  },
+  {
+    _id: new ObjectId(),
     buyer_id: "mRdeR8wDRzLVEbeer5PpbJY6TDE3",
     seller_id: "",
     item: "Pen",
