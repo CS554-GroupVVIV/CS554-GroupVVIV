@@ -16,6 +16,7 @@ import {
   Grid,
   Link,
   Button,
+  IconButton,
 } from "@mui/material";
 
 import {
@@ -185,19 +186,13 @@ export default function ProductCard({ productData }) {
                     Chat with seller
                   </Button>
 
-                  <Button
-                    sx={{ marginLeft: 3 }}
-                    size="small"
-                    variant="contained"
-                    color="inherit"
-                    onClick={handleFavorite}
-                  >
+                  <IconButton sx={{ marginLeft: 3 }} onClick={handleFavorite}>
                     {hasFavorited ? (
                       <FavoriteIcon sx={{ color: "#e91e63" }} />
                     ) : (
                       <FavoriteBorderIcon />
                     )}
-                  </Button>
+                  </IconButton>
                 </>
               ) : (
                 <></>
