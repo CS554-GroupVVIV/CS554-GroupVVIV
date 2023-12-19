@@ -68,8 +68,8 @@ export const typeDefs = `#graphql
     email: String!,
     firstname: String!,
     lastname: String!,
-    comments:[Comment]!
-    rating: Float!
+    comments:[Comment]
+    rating: Float
     favorite: [String]!
   }
 

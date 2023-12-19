@@ -49,7 +49,7 @@ export const resolvers = {
         const comments = user.comments;
         let total = 0;
         let count = 0;
-        comments.map((comment) => {
+        comments?.map((comment) => {
           total += comment.rating;
           count += 1;
         });
