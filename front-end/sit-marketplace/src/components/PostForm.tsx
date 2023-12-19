@@ -220,170 +220,168 @@ export default function PostForm() {
   };
 
   return (
-    <ThemeProvider theme={defaultTheme}>
-      <Container component="main" maxWidth="sm">
-        <CssBaseline />
-        <Box
-          sx={{
-            marginTop: 8,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-          }}
-        >
-          <Typography component="h1" variant="h5">
-            New Post
-          </Typography>
-          <Typography component="span" variant="body1">
-            We're excited to help you find the perfect item you're looking for!
-            Please fill out the form with as much detail as possible. Your
-            responses will not only help with the matching process but also
-            increase the likelihood of finding your ideal item.
-          </Typography>
+    <Container component="main" maxWidth="sm">
+      <Box
+        sx={{
+          marginTop: 10,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <Typography component="h1" variant="h5">
+          New Post
+        </Typography>
 
-          <Box component="form" noValidate onSubmit={submit} sx={{ mt: 3 }}>
-            <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <TextField
-                  name="item"
-                  required
-                  fullWidth
-                  id="item"
-                  label="Item Name"
-                  inputRef={nameRef}
-                  onBlur={helper.checkName}
-                />
-                {nameError && (
-                  <Typography
-                    component="span"
-                    variant="body2"
-                    style={{ color: "red" }}
-                  >
-                    * Item name should be within range 1-20 characters and only
-                    contain letters, numbers and spaces
-                  </Typography>
-                )}
-              </Grid>
-              <Grid item xs={12}>
-                <div>
-                  <FormControl sx={{ minWidth: 200 }} required>
-                    <InputLabel id="demo-simple-select-helper-label">
-                      Category
-                    </InputLabel>
-                    <Select
-                      inputRef={categoryRef}
-                      defaultValue={""}
-                      label="Category"
-                      onBlur={helper.checkCategory}
-                    >
-                      <MenuItem value={"Book"}>Book</MenuItem>
-                      <MenuItem value={"Clothing"}>Clothing</MenuItem>
-                      <MenuItem value={"Electronics"}>Electronics</MenuItem>
-                      <MenuItem value={"Furniture"}>Furniture</MenuItem>
-                      <MenuItem value={"Stationary"}>Stationary</MenuItem>
-                      <MenuItem value={"Other"}>Other</MenuItem>
-                    </Select>
-                  </FormControl>
-                </div>
-                {categoryError && (
-                  <Typography
-                    component="span"
-                    variant="body2"
-                    style={{ color: "red" }}
-                  >
-                    * Please select from provided categories
-                  </Typography>
-                )}
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  id="price"
-                  label="Price"
-                  name="price"
-                  type="number"
-                  inputRef={priceRef}
-                  onBlur={helper.checkPrice}
-                />
-                {priceError && (
-                  <Typography
-                    component="span"
-                    variant="body2"
-                    style={{ color: "red" }}
-                  >
-                    * Price should be in range from 0 to 100000 and have at most
-                    2 demical places.
-                  </Typography>
-                )}
-              </Grid>
-              <Grid item xs={12}>
-                <div>
-                  <FormControl sx={{ minWidth: 200 }} required>
-                    <InputLabel id="demo-simple-select-helper-label">
-                      Condition
-                    </InputLabel>
-                    <Select
-                      inputRef={conditionRef}
-                      defaultValue={""}
-                      label="Condition"
-                      onBlur={helper.checkCondition}
-                    >
-                      <MenuItem value={"Brand New"}>Brand New</MenuItem>
-                      <MenuItem value={"Like New"}>Like New</MenuItem>
-                      <MenuItem value={"Gently Used"}>Gently Used</MenuItem>
-                      <MenuItem value={"Functional"}>Functional</MenuItem>
-                    </Select>
-                  </FormControl>
-                </div>
-                {conditionError && (
-                  <Typography
-                    component="span"
-                    variant="body2"
-                    style={{ color: "red" }}
-                  >
-                    * Please select from provided options
-                  </Typography>
-                )}
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  id="about"
-                  label="Descriptional Preference (100 letters max)"
-                  name="about"
-                  defaultValue={""}
-                  inputRef={descriptionRef}
-                  onBlur={helper.checkdescription}
-                />
-                {descriptionError && (
-                  <Typography
-                    component="span"
-                    variant="body2"
-                    style={{ color: "red" }}
-                  >
-                    * Description should have 100 letters at most
-                  </Typography>
-                )}
-              </Grid>
+        <Typography component="span" variant="body1">
+          We're excited to help you find the perfect item you're looking for!
+          Please fill out the form with as much detail as possible. Your
+          responses will not only help with the matching process but also
+          increase the likelihood of finding your ideal item.
+        </Typography>
+
+        <Box component="form" noValidate onSubmit={submit} sx={{ mt: 3 }}>
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <TextField
+                name="item"
+                required
+                fullWidth
+                id="item"
+                label="Item Name"
+                inputRef={nameRef}
+                onBlur={helper.checkName}
+              />
+              {nameError && (
+                <Typography
+                  component="span"
+                  variant="body2"
+                  style={{ color: "red" }}
+                >
+                  * Item name should be within range 1-20 characters and only
+                  contain letters, numbers and spaces
+                </Typography>
+              )}
             </Grid>
-            <br />
-            <Stack spacing={2} direction="row">
-              <Button
-                type="button"
-                variant="contained"
-                sx={{ mt: 3, mb: 2 }}
-                onClick={() => navigate("/posts")}
-              >
-                Cancel
-              </Button>
-              <Button type="submit" variant="contained" sx={{ mt: 3, mb: 2 }}>
-                Save
-              </Button>
-            </Stack>
-          </Box>
+            <Grid item xs={12}>
+              <div>
+                <FormControl sx={{ minWidth: 200 }} required>
+                  <InputLabel id="demo-simple-select-helper-label">
+                    Category
+                  </InputLabel>
+                  <Select
+                    inputRef={categoryRef}
+                    defaultValue={""}
+                    label="Category"
+                    onBlur={helper.checkCategory}
+                  >
+                    <MenuItem value={"Book"}>Book</MenuItem>
+                    <MenuItem value={"Clothing"}>Clothing</MenuItem>
+                    <MenuItem value={"Electronics"}>Electronics</MenuItem>
+                    <MenuItem value={"Furniture"}>Furniture</MenuItem>
+                    <MenuItem value={"Stationary"}>Stationary</MenuItem>
+                    <MenuItem value={"Other"}>Other</MenuItem>
+                  </Select>
+                </FormControl>
+              </div>
+              {categoryError && (
+                <Typography
+                  component="span"
+                  variant="body2"
+                  style={{ color: "red" }}
+                >
+                  * Please select from provided categories
+                </Typography>
+              )}
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                required
+                fullWidth
+                id="price"
+                label="Price"
+                name="price"
+                type="number"
+                inputRef={priceRef}
+                onBlur={helper.checkPrice}
+              />
+              {priceError && (
+                <Typography
+                  component="span"
+                  variant="body2"
+                  style={{ color: "red" }}
+                >
+                  * Price should be in range from 0 to 100000 and have at most 2
+                  demical places.
+                </Typography>
+              )}
+            </Grid>
+            <Grid item xs={12}>
+              <div>
+                <FormControl sx={{ minWidth: 200 }} required>
+                  <InputLabel id="demo-simple-select-helper-label">
+                    Condition
+                  </InputLabel>
+                  <Select
+                    inputRef={conditionRef}
+                    defaultValue={""}
+                    label="Condition"
+                    onBlur={helper.checkCondition}
+                  >
+                    <MenuItem value={"Brand New"}>Brand New</MenuItem>
+                    <MenuItem value={"Like New"}>Like New</MenuItem>
+                    <MenuItem value={"Gently Used"}>Gently Used</MenuItem>
+                    <MenuItem value={"Functional"}>Functional</MenuItem>
+                  </Select>
+                </FormControl>
+              </div>
+              {conditionError && (
+                <Typography
+                  component="span"
+                  variant="body2"
+                  style={{ color: "red" }}
+                >
+                  * Please select from provided options
+                </Typography>
+              )}
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                id="about"
+                label="Descriptional Preference (100 letters max)"
+                name="about"
+                defaultValue={""}
+                inputRef={descriptionRef}
+                onBlur={helper.checkdescription}
+              />
+              {descriptionError && (
+                <Typography
+                  component="span"
+                  variant="body2"
+                  style={{ color: "red" }}
+                >
+                  * Description should have 100 letters at most
+                </Typography>
+              )}
+            </Grid>
+          </Grid>
+          <br />
+          <Stack spacing={2} direction="row">
+            <Button
+              type="button"
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+              onClick={() => navigate("/posts")}
+            >
+              Cancel
+            </Button>
+            <Button type="submit" variant="contained" sx={{ mt: 3, mb: 2 }}>
+              Save
+            </Button>
+          </Stack>
         </Box>
-      </Container>
-    </ThemeProvider>
+      </Box>
+    </Container>
   );
 }
