@@ -23,6 +23,7 @@ import {
   REMOVE_FAVORITE_FROM_USER,
   ADD_POSSIBLE_BUYER,
   GET_USERS_BY_IDS,
+  GET_USER_FOR_FAVORITE,
 } from "../queries";
 import { useMutation } from "@apollo/client";
 import { useQuery } from "@apollo/client";
@@ -35,7 +36,11 @@ export default function ProductCard({ productData }) {
 
   const [hasFavorited, setHasFavorited] = useState(false);
 
-  const { data: userData } = useQuery(GET_USER, {
+  const {
+    data: userData,
+    loading: userLoading,
+    error: userError,
+  } = useQuery(GET_USER_FOR_FAVORITE, {
     variables: { id: currentUser ? currentUser.uid : "" },
     fetchPolicy: "cache-and-network",
   });
@@ -67,10 +72,22 @@ export default function ProductCard({ productData }) {
   );
 
   useEffect(() => {
-    if (userData?.getUserById?.favorite?.includes(productData._id)) {
-      setHasFavorited(true);
+    console.log("user data", userData);
+    console.log(userLoading);
+    console.log("error", userError);
+    if (!userLoading) {
+      console.log(userData, "usedata");
+      console.log("in favorite?", userData?.getUserById?.favorite);
+      if (userData?.getUserById?.favorite?.includes(productData._id)) {
+        console.log(userData);
+        console.log(userData.getUserById);
+        setHasFavorited(true);
+      } else {
+        console.log("in the else");
+        setHasFavorited(false);
+      }
     }
-  }, [userData]);
+  }, [userLoading, userData]);
 
   function handleFavorite() {
     console.log("user id", currentUser.uid);

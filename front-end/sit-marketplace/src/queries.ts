@@ -53,6 +53,15 @@ export const GET_USER = gql`
   }
 `;
 
+export const GET_USER_FOR_FAVORITE = gql`
+  query Query($id: String!) {
+    getUserById(_id: $id) {
+      _id
+      favorite
+    }
+  }
+`;
+
 export const GET_USERS_BY_IDS = gql`
   query ($ids: [String!]!) {
     getUsersByIds(ids: $ids) {
