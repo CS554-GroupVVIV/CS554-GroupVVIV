@@ -54,9 +54,7 @@ const productList = [
     _id: new ObjectId(),
     name: "phone",
     price: 500,
-    date: {
-      $date: "2023-12-19T01:41:01.750Z",
-    },
+    date: new Date("2023-12-01"),
     description: "test",
     condition: "Gently Used",
     seller_id: "7SKDog0fjKOeS1jeuq32a9vYPue2",
@@ -68,14 +66,13 @@ const productList = [
     possible_buyers: [],
   },
   {
-    _id: {
-      $oid: "6580f7bb26a29e6992110a1f",
-    },
+    // _id: {
+    //   $oid: "6580f7bb26a29e6992110a1f",
+    // },
+    _id: new ObjectId(),
     name: "desk",
     price: 12,
-    date: {
-      $date: "2023-12-19T01:54:03.600Z",
-    },
+    date: new Date("2023-12-01"),
     description: "test",
     condition: "Brand New",
     seller_id: "7SKDog0fjKOeS1jeuq32a9vYPue2",
@@ -193,9 +190,7 @@ const postList = [
     category: "Furniture",
     price: 10,
     condition: "Like New",
-    date: {
-      $date: "2023-12-19T01:56:11.230Z",
-    },
+    date: new Date(),
     description: "",
     status: "active",
     possible_sellers: [],
