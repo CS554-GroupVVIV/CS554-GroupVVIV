@@ -35,7 +35,7 @@ export const AuthProvider = ({ children }) => {
             .catch((error) => {
               console.error("Error during sign out:", error);
             });
-        }, 10 * 60 * 1000); // 10 mins automatically sign out
+        }, 60 * 60 * 1000);
 
         return () => {
           clearTimeout(signOutTimer);

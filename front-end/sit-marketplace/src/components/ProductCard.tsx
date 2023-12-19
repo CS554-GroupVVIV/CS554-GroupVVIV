@@ -75,7 +75,7 @@ export default function ProductCard({ productData }) {
   useEffect(() => {
     console.log("user data", userData);
     console.log(userLoading);
-    console.log("error", userError);
+
     if (!userLoading) {
       console.log(userData, "usedata");
       console.log("in favorite?", userData?.getUserById?.favorite);
@@ -88,7 +88,7 @@ export default function ProductCard({ productData }) {
         setHasFavorited(false);
       }
     }
-  }, [userLoading, userData]);
+  }, [userLoading, userData, userError]);
 
   function handleFavorite() {
     console.log("user id", currentUser.uid);
@@ -104,6 +104,7 @@ export default function ProductCard({ productData }) {
         removeFavorite({
           variables: { id: currentUser.uid, productId: productData._id },
         });
+        console.log(false)
         setHasFavorited(false);
       } else {
         addFavorite({

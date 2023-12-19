@@ -434,7 +434,12 @@ export const ADD_USER = gql`
       lastname
       favorite
       rating
-      comments
+      comments {
+        _id
+        comment
+        comment_id
+        rating
+      }
     }
   }
 `;

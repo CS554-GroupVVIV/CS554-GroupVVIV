@@ -1044,6 +1044,7 @@ export const resolvers = {
           lastname,
           favorite: favorite ? [favorite] : [],
           comments: [],
+          rating: 0
         };
         const insertedUser = await usersData.insertOne(newUser);
         if (!insertedUser) {
@@ -1269,7 +1270,7 @@ export const resolvers = {
         }
 
         //add new product into favorite array and update
-        favorite.push(productId);
+        favorite = [...favorite, productId];
         userToUpdate.favorite = favorite;
         const updatedUser = await usersData.findOneAndUpdate(
           { _id: _id.toString() },
@@ -1367,7 +1368,7 @@ export const resolvers = {
         const updatedUser = await usersData.findOneAndUpdate(
           { _id: _id.toString() },
           { $set: { favorite: favorite } },
-          { new: true }
+          { returnDocument: "after" }
         );
 
         if (!updatedUser) {

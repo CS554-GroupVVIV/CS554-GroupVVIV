@@ -62,7 +62,7 @@ function SignUp() {
         firstname
       );
 
-      addUser({
+      await addUser({
         variables: {
           id: user.uid.toString(),
           email: user.email,
