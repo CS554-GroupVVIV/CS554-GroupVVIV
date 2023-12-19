@@ -58,7 +58,7 @@ export default function Products() {
   if (data) {
     // console.log(data);
     return (
-      <div style={{ marginTop: 70 }}>
+      <div style={{ marginTop: 70, padding: 10 }}>
         <div style={{ display: "flex", justifyContent: "center" }}>
           <Typography
             variant="h4"

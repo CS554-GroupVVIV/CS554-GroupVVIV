@@ -262,6 +262,33 @@ export const resolvers = {
       }
     },
 
+    getProductsByStatus: async (_, args) => {
+      try {
+        let status = checkStatus(args.status);
+        let productList = await client.json.get(
+          `getProductsByStatus-${status}`,
+          "$"
+        );
+        if (!productList) {
+          const products = await productCollection();
+          productList = await products.find({ status: status }).toArray();
+          if (!productList) {
+            throw new GraphQLError("product not found", {
+              extensions: { code: "NOT_FOUND" },
+            });
+          }
+          for (let i = 0; i < productList.length; i++) {
+            productList[i].date = dateObjectToHTMLDate(productList[i].date);
+          }
+          client.json.set(`getProductsByStatus-${status}`, "$", productList);
+          client.expire(`getProductsByStatus-${status}`, 3600);
+        }
+        return productList;
+      } catch (error) {
+        throw new GraphQLError(error.message);
+      }
+    },
+
     // getProductsByIds: async (_, args) => {
     //   try {
     //     const productData = await productCollection();
@@ -368,6 +395,25 @@ export const resolvers = {
           );
         }
         return postsByCategory;
+      } catch (error) {
+        throw new GraphQLError(error.message);
+      }
+    },
+
+    getPostsByStatus: async (_, args) => {
+      try {
+        let status = checkStatus(args.status);
+        const postData = await postCollection();
+        let posts = await postData.find({ status: status }).toArray();
+        if (!posts) {
+          throw new GraphQLError("Post not found", {
+            extensions: { code: "NOT_FOUND" },
+          });
+        }
+        for (let i = 0; i < posts.length; i++) {
+          posts[i].date = dateObjectToHTMLDate(posts[i].date);
+        }
+        return posts;
       } catch (error) {
         throw new GraphQLError(error.message);
       }

@@ -112,7 +112,7 @@ function App() {
       <CssBaseline />
       <AuthProvider>
         <AppBar position="fixed">
-          <Container maxWidth="xl">
+          <Container maxWidth={"100%"}>
             <Toolbar disableGutters>
               <Typography
                 variant="h5"
@@ -167,7 +167,7 @@ function App() {
               </Typography>
 
               <Typography
-                variant="subtitle1"
+                variant="subtitle2"
                 noWrap
                 sx={{
                   fontWeight: "bold",

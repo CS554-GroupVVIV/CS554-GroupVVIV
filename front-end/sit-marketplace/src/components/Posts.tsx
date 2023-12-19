@@ -62,7 +62,7 @@ export default function Posts() {
     const posts = data.posts;
     // console.log(posts);
     return (
-      <div style={{ marginTop: 70 }}>
+      <div style={{ marginTop: 70, padding: 10 }}>
         <div style={{ display: "flex", justifyContent: "center" }}>
           <Typography
             variant="h4"
@@ -175,30 +175,36 @@ export default function Posts() {
         </div>
 
         <div style={{ display: "flex", justifyContent: "center" }}>
-          <Grid container spacing={2} marginTop={1} justifyContent="center">
-            {/* {posts &&
+          {searchTerm ? (
+            <></>
+          ) : (
+            <Grid container spacing={2} marginTop={1} justifyContent="center">
+              {/* {posts &&
           posts.map((post: Post) => {
             return <PostCard key={post._id} postData={post} />;
           })} */}
-            {data && curCategory === "All" && data.posts.length > 0
-              ? data.posts.map((post: Post) => {
-                  return <PostCard key={post._id} postData={post} />;
-                })
-              : null}
-            {data && curCategory === "All" && data.posts.length == 0 ? (
-              <p>No result found</p>
-            ) : null}
-            {data && curCategory != "All" && data.getPostsByCategory.length > 0
-              ? data.getPostsByCategory.map((post: Post) => {
-                  return <PostCard key={post._id} postData={post} />;
-                })
-              : null}
-            {data &&
-            curCategory != "All" &&
-            data.getPostsByCategory.length == 0 ? (
-              <p>No result found</p>
-            ) : null}
-          </Grid>
+              {data && curCategory === "All" && data.posts.length > 0
+                ? data.posts.map((post: Post) => {
+                    return <PostCard key={post._id} postData={post} />;
+                  })
+                : null}
+              {data && curCategory === "All" && data.posts.length == 0 ? (
+                <p>No result found</p>
+              ) : null}
+              {data &&
+              curCategory != "All" &&
+              data.getPostsByCategory.length > 0
+                ? data.getPostsByCategory.map((post: Post) => {
+                    return <PostCard key={post._id} postData={post} />;
+                  })
+                : null}
+              {data &&
+              curCategory != "All" &&
+              data.getPostsByCategory.length == 0 ? (
+                <p>No result found</p>
+              ) : null}
+            </Grid>
+          )}
         </div>
       </div>
     );

@@ -157,6 +157,24 @@ export const GET_PRODUCTS_BY_BUYER = gql`
   }
 `;
 
+export const GET_PRODUCTS_BY_STATUS = gql`
+  query GetProductsByStatus($status: String!) {
+    getProductsByStatus(status: $status) {
+      _id
+      buyer_id
+      category
+      condition
+      date
+      description
+      image
+      name
+      price
+      seller_id
+      status
+    }
+  }
+`;
+
 export const GET_COMMENT = gql`
   query ($user_id: String!, $comment_id: String!) {
     getComment(user_id: $user_id, comment_id: $comment_id) {
@@ -689,6 +707,23 @@ export const GET_PRODUCTS_BY_CATEGORY = gql`
 export const GET_POSTS_BY_CATEGORY = gql`
   query Query($category: String!) {
     getPostsByCategory(category: $category) {
+      _id
+      buyer_id
+      condition
+      category
+      date
+      description
+      item
+      price
+      status
+      seller_id
+    }
+  }
+`;
+
+export const GET_POSTS_BY_STATUS = gql`
+  query GetPostsByStatus($status: String!) {
+    getPostsByStatus(status: $status) {
       _id
       buyer_id
       condition
