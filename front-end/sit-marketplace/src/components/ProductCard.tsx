@@ -129,7 +129,10 @@ export default function ProductCard({ productData }) {
           }}
           onClick={() => navigate(baseUrl + productData._id)}
         >
-          <CardHeader title={productData && productData.name}></CardHeader>
+          <CardHeader
+            titleTypographyProps={{ fontWeight: "bold" }}
+            title={productData && productData.name}
+          ></CardHeader>
         </Link>
 
         <div style={{ display: "flex", justifyContent: "center" }}>
@@ -177,6 +180,7 @@ export default function ProductCard({ productData }) {
                         // });
                       }
                     }}
+                    sx={{ fontWeight: "bold" }}
                   >
                     Chat with seller
                   </Button>

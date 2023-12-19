@@ -60,14 +60,7 @@ export default function Products() {
     return (
       <div style={{ marginTop: 70, padding: 10 }}>
         <div style={{ display: "flex", justifyContent: "center" }}>
-          <Typography
-            variant="h4"
-            margin={1}
-            sx={{
-              // fontFamily: "monospace",
-              fontWeight: "bold",
-            }}
-          >
+          <Typography variant="h4" margin={1} fontWeight={"bold"}>
             Products
           </Typography>
           <Grid container justifyContent="flex-end">

@@ -28,6 +28,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { ThemeProvider } from "@mui/material/styles";
 import { darkMode, lightMode } from "./theme.ts";
 import { toggleTheme } from "./redux/themeSlice.ts";
+import DarkModeIcon from "@mui/icons-material/DarkMode";
+import LightModeIcon from "@mui/icons-material/LightMode";
 
 import {
   CssBaseline,
@@ -73,7 +75,7 @@ function App() {
   // ToggleSwitch component
   const ToggleSwitch = () => {
     return (
-      <FormGroup sx={{ marginLeft: 3 }}>
+      <FormGroup sx={{ marginRight: 1, justifyContent: "center" }}>
         <FormControlLabel
           control={
             <Switch
@@ -84,7 +86,14 @@ function App() {
               color="default"
             />
           }
-          label="Darkmode"
+          label={
+            theme.darkmode ? (
+              <DarkModeIcon fontSize="large" />
+            ) : (
+              <LightModeIcon fontSize="large" />
+            )
+          }
+          labelPlacement="start"
         />
       </FormGroup>
     );
@@ -112,15 +121,13 @@ function App() {
       <CssBaseline />
       <AuthProvider>
         <AppBar position="fixed">
-          <Container maxWidth={"100%"}>
+          <Container maxWidth={"90%"}>
             <Toolbar disableGutters>
               <Typography
                 variant="h5"
                 noWrap
                 sx={{
-                  fontFamily: "monospace",
                   fontWeight: "bold",
-                  letterSpacing: ".3rem",
                   flexGrow: 1,
                 }}
               >
@@ -144,8 +151,8 @@ function App() {
                     navigate("/products");
                   }}
                   sx={{
-                    marginLeft: 5,
                     textDecoration: "none",
+                    marginLeft: 5,
                   }}
                 >
                   Products
@@ -158,8 +165,8 @@ function App() {
                     navigate("/posts");
                   }}
                   sx={{
-                    marginLeft: 5,
                     textDecoration: "none",
+                    marginLeft: 5,
                   }}
                 >
                   Posts
@@ -167,7 +174,7 @@ function App() {
               </Typography>
 
               <Typography
-                variant="subtitle2"
+                variant="inherit"
                 noWrap
                 sx={{
                   fontWeight: "bold",
@@ -183,8 +190,8 @@ function App() {
                           navigate("/userprofile");
                         }}
                         sx={{
-                          marginLeft: 5,
                           textDecoration: "none",
+                          marginRight: 5,
                         }}
                       >
                         User Profile
@@ -195,8 +202,8 @@ function App() {
                         component="button"
                         onClick={handleClickOpen}
                         sx={{
-                          marginLeft: 5,
                           textDecoration: "none",
+                          marginRight: 5,
                         }}
                       >
                         Chat Rooms
@@ -213,8 +220,8 @@ function App() {
                           navigate("/login");
                         }}
                         sx={{
-                          marginLeft: 5,
                           textDecoration: "none",
+                          marginRight: 5,
                         }}
                       >
                         Login
@@ -227,8 +234,8 @@ function App() {
                           navigate("/signup");
                         }}
                         sx={{
-                          marginLeft: 5,
                           textDecoration: "none",
+                          marginRight: 5,
                         }}
                       >
                         Signup

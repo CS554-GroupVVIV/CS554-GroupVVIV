@@ -26,7 +26,10 @@ export default function PostCard({ postData }) {
           }}
           onClick={() => navigate(`/post/${postData._id}`)}
         >
-          <CardHeader title={postData.item}></CardHeader>
+          <CardHeader
+            titleTypographyProps={{ fontWeight: "bold" }}
+            title={postData.item}
+          ></CardHeader>
         </Link>
 
         <CardContent>

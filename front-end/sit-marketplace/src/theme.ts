@@ -10,6 +10,13 @@ export const lightMode = createTheme({
       primary: "#424242",
     },
   },
+  typography: {
+    fontFamily: "monospace",
+    letterSpacing: ".3rem",
+    button: {
+      fontWeight: "bold",
+    },
+  },
 });
 
 export const darkMode = createTheme({
@@ -20,6 +27,13 @@ export const darkMode = createTheme({
     },
     text: {
       primary: "#fffafa",
+    },
+  },
+  typography: {
+    fontFamily: "monospace",
+    letterSpacing: ".3rem",
+    button: {
+      fontWeight: "bold",
     },
   },
 });

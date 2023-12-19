@@ -59,7 +59,6 @@ export default function Home() {
             <Typography
               variant="h5"
               sx={{
-                // fontFamily: "monospace",
                 fontWeight: "bold",
                 minWidth: "50%",
               }}

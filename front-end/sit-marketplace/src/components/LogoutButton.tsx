@@ -9,8 +9,8 @@ const LogoutButton = () => {
       component="button"
       onClick={doSignOut}
       sx={{
-        marginLeft: 5,
         textDecoration: "none",
+        marginRight: 5,
       }}
     >
       Log Out
