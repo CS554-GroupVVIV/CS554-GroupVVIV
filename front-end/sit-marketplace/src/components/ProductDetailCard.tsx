@@ -54,7 +54,14 @@ export default function ProductDetailCard() {
   const [addPossibleBuyer] = useMutation(ADD_POSSIBLE_BUYER);
 
   const [removeFavorite, { removeData, removeLoading, removeError }] =
-    useMutation(REMOVE_FAVORITE_FROM_USER);
+    useMutation(REMOVE_FAVORITE_FROM_USER, {
+      refetchQueries: [
+        {
+          query: GET_USER,
+          variables: { _id: currentUser ? currentUser.uid : "" },
+        },
+      ],
+    });
 
   const [addFavorite, { addData, addLoading, addError }] =
     useMutation(ADD_FAVORITE_TO_USER);

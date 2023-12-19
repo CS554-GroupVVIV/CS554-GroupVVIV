@@ -60,6 +60,8 @@ export default function Dashboard() {
     fetchPolicy: "cache-and-network",
   });
 
+  console.log(data && data.getUserById);
+
   const {
     data: productSeller,
     loading: productSellerLoading,
