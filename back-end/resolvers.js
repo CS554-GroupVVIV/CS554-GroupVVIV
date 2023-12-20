@@ -649,13 +649,7 @@ export const resolvers = {
             extensions: { code: "BAD_INPUT" },
           });
         }
-        let name = checkName(args.name);
-        let price = checkPrice(args.price);
-        let date = new Date();
-        let description = checkDescription(args.description);
-        let condition = checkCondition(args.condition);
         let seller_id = checkString(args.seller_id);
-        // check if the id is existed in the database
         const usersData = await userCollection();
         const user = await usersData.findOne({ _id: seller_id });
         if (!user) {
@@ -663,18 +657,18 @@ export const resolvers = {
             extensions: { code: "NOT_FOUND" },
           });
         }
-        let image = args.image;
-        if (!(image == "" || image == null)) {
-          // image = checkUrl(image);
-        }
+        let name = checkName(args.name);
+        let price = checkPrice(args.price);
+        let description = checkDescription(args.description);
+        let condition = checkCondition(args.condition);
+        let image = checkUrl(args.image);
         let category = checkCategory(args.category);
-        // ********need input check*************
         const products = await productCollection();
         const newProduct = {
           _id: new ObjectId(),
           name: name,
           price: price,
-          date: date,
+          date: new Date(),
           description: description,
           condition: condition,
           seller_id: seller_id,
@@ -704,90 +698,6 @@ export const resolvers = {
       }
     },
 
-    editProduct: async (_, args) => {
-      try {
-        if (Object.keys(args).length < 8 || Object.keys(args).length > 10) {
-          throw new GraphQLError("All fields are required", {
-            extensions: { code: "BAD_INPUT" },
-          });
-        }
-        let _id = checkId(args._id);
-        let name = checkName(args.name);
-        let price = checkPrice(args.price);
-        let description = checkDescription(args.description);
-        let condition = checkCondition(args.condition);
-        let seller_id = checkString(args.seller_id);
-        let category = checkCategory(args.category);
-        console.log(category);
-        let status = checkStatus(args.status);
-        let buyer_id = "";
-        let completion_date = null;
-        if (status == "completed") {
-          buyer_id = checkString(args.buyer_id);
-          completion_date = new Date();
-        }
-        // ********need input check*************
-        const products = await productCollection();
-        const updatedProduct = {
-          name: name,
-          price: price,
-          description: description,
-          condition: condition,
-          seller_id: seller_id,
-          buyer_id: buyer_id,
-          category: category,
-          status: status,
-          completion_date: completion_date,
-        };
-        if (args.image !== "") {
-          let image = checkUrl(args.image);
-          updatedProduct.image = image;
-        }
-        let updated = await products.findOneAndUpdate(
-          { _id: new ObjectId(_id) },
-          { $set: updatedProduct },
-          { returnDocument: "after" }
-        );
-        client.json.del(`allProducts`);
-        client.json.set(`getProductById-${_id}`, "$", updated);
-        client.expire(`getProductById-${_id}`, 3600);
-        if (!updated) {
-          throw new GraphQLError(`Could not Edit Product`, {
-            extensions: { code: "INTERNAL_SERVER_ERROR" },
-          });
-        }
-        updated.date = dateObjectToHTMLDate(updated.date);
-        if (completion_date) {
-          updated.completion_date = dateObjectToHTMLDate(
-            updated.completion_date
-          );
-        }
-
-        return updated;
-      } catch (error) {
-        throw new GraphQLError(error.message);
-      }
-    },
-    removeProduct: async (_, args) => {
-      try {
-        let id = checkId(args._id);
-        const products = await productCollection();
-        const deletedProduct = await products.findOneAndDelete({
-          _id: new ObjectId(id),
-        });
-        client.json.del(`allProducts`);
-        client.json.del(`getProductById-${id}`);
-        if (!deletedProduct) {
-          throw new GraphQLError(`Could not Delete Product`, {
-            extensions: { code: "INTERNAL_SERVER_ERROR" },
-          });
-        }
-        deletedProduct.date = dateObjectToHTMLDate(deletedProduct.date);
-        return deletedProduct;
-      } catch (error) {
-        throw new GraphQLError(error.message);
-      }
-    },
     addPost: async (_, args) => {
       try {
         if (Object.keys(args).length !== 6) {
@@ -796,6 +706,13 @@ export const resolvers = {
           });
         }
         let buyer_id = checkString(args.buyer_id);
+        const usersData = await userCollection();
+        const user = await usersData.findOne({ _id: buyer_id });
+        if (!user) {
+          throw new GraphQLError(`USER NOT FOUND`, {
+            extensions: { code: "NOT_FOUND" },
+          });
+        }
         let item = checkName(args.item);
         let category = checkCategory(args.category);
         let price = checkPrice(args.price);
@@ -814,6 +731,7 @@ export const resolvers = {
           description: description,
           status: "active",
           possible_sellers: [],
+          completion_date: null,
         };
         let insertedPost = await posts.insertOne(newPost);
         if (!insertedPost) {
@@ -831,6 +749,7 @@ export const resolvers = {
         throw new GraphQLError(error.message);
       }
     },
+
     editPost: async (_, args) => {
       try {
         if (Object.keys(args).length < 7 || Object.keys(args).length > 9) {
@@ -839,38 +758,36 @@ export const resolvers = {
           });
         }
         let _id = checkId(args._id);
-        console.log(_id);
         const posts = await postCollection();
         const post = await posts.findOne({ _id: new ObjectId(_id) });
+        if (!post) {
+          throw new GraphQLError("Post Not Found", {
+            extensions: { code: "NOT_FOUND" },
+          });
+        }
         let buyer_id = checkString(args.buyer_id);
+        if (post.buyer_id != buyer_id) {
+          throw new GraphQLError("Not authorized to edit", {
+            extensions: { code: "NOT_AUTHORIZED" },
+          });
+        }
         let item = checkName(args.item);
         let category = checkCategory(args.category);
         let price = checkPrice(args.price);
         let condition = checkCondition(args.condition);
         let description = checkDescription(args.description);
         let status = checkStatus(args.status);
-        console.log(post);
-        let date = post.date;
         if (
-          item == post.item &&
-          category == post.category &&
-          price == post.price &&
-          condition == post.condition &&
-          description == post.description &&
-          status == post.status
+          item == product.item &&
+          category == product.category &&
+          price == product.price &&
+          condition == product.condition &&
+          description == product.description &&
+          status == product.status
         ) {
           throw new GraphQLError(`No Change made`, {
             extensions: { code: "BAD_INPUT" },
           });
-        }
-        if (
-          item != post.item ||
-          category != post.category ||
-          price != post.price ||
-          condition != post.condition ||
-          description != post.description
-        ) {
-          date = new Date();
         }
         let seller_id = "";
         let completion_date = null;
@@ -880,12 +797,10 @@ export const resolvers = {
         }
         const updatedPost = {
           item: item,
-          buyer_id: buyer_id,
           seller_id: seller_id,
           category: category,
           price: price,
           condition: condition,
-          date: date,
           description: description,
           status: status,
           completion_date: completion_date,
@@ -925,15 +840,27 @@ export const resolvers = {
         let _id = checkId(args._id);
         const products = await productCollection();
         const product = await products.findOne({ __id: new ObjectId(_id) });
+        if (!product) {
+          throw new GraphQLError("Product Not Found", {
+            extensions: { code: "NOT_FOUND" },
+          });
+        }
         let seller_id = checkString(args.seller_id);
+        if (product.seller_id != seller_id) {
+          throw new GraphQLError("Not authorized to edit", {
+            extensions: { code: "NOT_AUTHORIZED" },
+          });
+        }
         let name = checkName(args.name);
         let category = checkCategory(args.category);
-        let image = checkUrl(args.image);
+        let image = product.image;
+        if (args.image && args.image.trim() != "") {
+          image = checkUrl(args.image);
+        }
         let price = checkPrice(args.price);
         let condition = checkCondition(args.condition);
         let description = checkDescription(args.description);
         let status = checkStatus(args.status);
-        let date = product.date;
         if (
           item == product.item &&
           category == product.category &&
@@ -947,16 +874,6 @@ export const resolvers = {
             extensions: { code: "BAD_INPUT" },
           });
         }
-        if (
-          item != product.item ||
-          category != product.category ||
-          image != product.image ||
-          price != product.price ||
-          condition != product.condition ||
-          description != product.description
-        ) {
-          date = new Date();
-        }
         let buyer_id = "";
         let completion_date = null;
         if (status == "completed") {
@@ -966,13 +883,11 @@ export const resolvers = {
 
         const updatedProduct = {
           name: name,
-          seller_id: seller_id,
           buyer_id: buyer_id,
           category: category,
           image: image,
           price: price,
           condition: condition,
-          date: date,
           description: description,
           status: status,
           completion_date: completion_date,
@@ -997,33 +912,12 @@ export const resolvers = {
             updated.completion_date
           );
         }
-
         return updated;
       } catch (error) {
         throw new GraphQLError(error.message);
       }
     },
-    removePost: async (_, args) => {
-      try {
-        let id = checkId(args._id);
-        const posts = await postCollection();
-        const deletedPost = await posts.findOneAndDelete({
-          _id: new ObjectId(id),
-        });
-        if (!deletedPost) {
-          throw new GraphQLError(`Could not Delete Post`, {
-            extensions: { code: "INTERNAL_SERVER_ERROR" },
-          });
-        }
-        client.json.del(`allPosts`);
-        client.json.del(`getPostById-${id}`);
 
-        deletedPost.date = dateObjectToHTMLDate(deletedPost.date);
-        return deletedPost;
-      } catch (error) {
-        throw new GraphQLError(error.message);
-      }
-    },
     addUser: async (_, args) => {
       try {
         let { _id, email, firstname, lastname, favorite } = args;
