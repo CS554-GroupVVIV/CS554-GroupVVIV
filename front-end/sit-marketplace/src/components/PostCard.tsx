@@ -16,8 +16,10 @@ import {
 } from "@mui/material";
 
 import {
-  ADD_FAVORITE_TO_USER,
-  REMOVE_FAVORITE_FROM_USER,
+  // ADD_FAVORITE_TO_USER,
+  // REMOVE_FAVORITE_FROM_USER,
+  ADD_FAVORITE_POST_TO_USER,
+  REMOVE_FAVORITE_POST_FROM_USER,
   ADD_POSSIBLE_BUYER,
   GET_USERS_BY_IDS,
   GET_USER_FOR_FAVORITE,
@@ -30,6 +32,7 @@ export default function PostCard({ postData }) {
   const [id, setId] = useState(undefined);
   const navigate = useNavigate();
   const { currentUser } = useContext(AuthContext);
+  console.log(currentUser);
   const [hasFavorited, setHasFavorited] = useState(false);
   const {
     data: userData,
@@ -40,12 +43,12 @@ export default function PostCard({ postData }) {
     fetchPolicy: "cache-and-network",
   });
   const [removeFavorite, { removeData, removeLoading, removeError }] =
-    useMutation(REMOVE_FAVORITE_FROM_USER, {
+    useMutation(REMOVE_FAVORITE_POST_FROM_USER, {
       refetchQueries: [GET_USER, "getUserById"],
     });
 
   const [addFavorite, { addData, addLoading, addError }] = useMutation(
-    ADD_FAVORITE_TO_USER,
+    ADD_FAVORITE_POST_TO_USER,
     {
       refetchQueries: [
         {
@@ -57,8 +60,12 @@ export default function PostCard({ postData }) {
   );
 
   useEffect(() => {
+    console.log(userData?.getUserById?.favorite_post);
+    console.log(postData);
     if (!userLoading) {
-      if (userData?.getUserById?.favorite?.includes(postData._id)) {
+      console.log(userData?.getUserById.favorite_post);
+
+      if (userData?.getUserById?.favorite_post?.includes(postData._id)) {
         setHasFavorited(true);
       } else {
         setHasFavorited(false);
@@ -73,16 +80,14 @@ export default function PostCard({ postData }) {
         return;
       }
       if (hasFavorited) {
-        //it is favorite function for product. it needs to be replaced by function for post
         removeFavorite({
-          variables: { id: currentUser.uid, productId: postData._id },
+          variables: { id: currentUser.uid, postId: postData._id },
         });
         console.log(false);
         setHasFavorited(false);
       } else {
-        //it is favorite function for product. it needs to be replaced by function for post
         addFavorite({
-          variables: { id: currentUser.uid, productId: postData._id },
+          variables: { id: currentUser.uid, postId: postData._id },
         });
         setHasFavorited(true);
       }
@@ -98,19 +103,19 @@ export default function PostCard({ postData }) {
           sx={{
             textDecoration: "none",
           }}
-          onClick={() => navigate(`/post/${postData._id}`)}
+          onClick={() => navigate(`/post/${postData && postData._id}`)}
         >
           <CardHeader
             titleTypographyProps={{ fontWeight: "bold" }}
-            title={postData.item}
+            title={postData && postData.item}
           ></CardHeader>
         </Link>
 
         <CardContent>
-          <p>Price: {postData.price}</p>
-          <p>Condition: {postData.condition}</p>
+          <p>Price: {postData && postData.price}</p>
+          <p>Condition: {postData && postData.condition}</p>
 
-          {currentUser && (
+          {postData && currentUser && (
             <>
               {postData.buyer_id !== currentUser.uid ? (
                 <>

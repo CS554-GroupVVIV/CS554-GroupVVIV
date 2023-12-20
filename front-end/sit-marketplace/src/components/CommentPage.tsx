@@ -10,7 +10,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useQuery } from "@apollo/client";
-import { GET_USER } from "../queries";
+import { GET_USER } from "../queries.js";
 
 const style = {
   width: "100%",

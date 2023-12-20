@@ -237,7 +237,10 @@ export default function Dashboard() {
               )}
             </CustomTabPanel>
             <CustomTabPanel value={value} index={2}>
-              <FavoriteHolder favorite={data.getUserById.favorite} />
+              <FavoriteHolder
+                favorite={data.getUserById.favorite}
+                favorite_post={data.getUserById.favorite_post}
+              />
             </CustomTabPanel>
             <CustomTabPanel value={value} index={3}>
               <CommentPage user_id={currentUser.uid} />

@@ -1043,8 +1043,9 @@ export const resolvers = {
           firstname,
           lastname,
           favorite: favorite ? [favorite] : [],
+          favorite_post: favorite_post ? [favorite_post] : [],
           comments: [],
-          rating: 0
+          rating: 0,
         };
         const insertedUser = await usersData.insertOne(newUser);
         if (!insertedUser) {
@@ -1289,6 +1290,45 @@ export const resolvers = {
       }
     },
 
+    addPostToUserFavorite: async (_, args) => {
+      let { _id, postId } = args;
+      try {
+        //find current user by id
+        const usersData = await userCollection();
+        let userToUpdate = await usersData.findOne({ _id: _id.toString() });
+        if (!userToUpdate) {
+          throw new GraphQLError(`USER NOT FOUND`, {
+            extensions: { code: "NOT_FOUND" },
+          });
+        }
+        //check if the postId already exists
+        let favorite_post = userToUpdate.favorite_post || [];
+        if (favorite_post && favorite_post.includes(postId)) {
+          throw new GraphQLError(`Areadly favorite this post`, {
+            extensions: { code: "BAD_INPUT" },
+          });
+        }
+
+        //add new post into favorite array and update
+        favorite_post = [...favorite_post, postId];
+        userToUpdate.favorite_post = favorite_post;
+        const updatedUser = await usersData.findOneAndUpdate(
+          { _id: _id.toString() },
+          { $set: { favorite_post: favorite_post } },
+          { new: true }
+        );
+
+        if (!updatedUser) {
+          throw new GraphQLError(`Could not Edit User`, {
+            extensions: { code: "INTERNAL_SERVER_ERROR" },
+          });
+        }
+        return updatedUser.favorite_post;
+      } catch (error) {
+        throw new GraphQLError(error.message);
+      }
+    },
+
     addComment: async (_, args) => {
       try {
         const users = await userCollection();
@@ -1378,6 +1418,45 @@ export const resolvers = {
         }
 
         return updatedUser.favorite;
+      } catch (error) {
+        throw new GraphQLError(error.message);
+      }
+    },
+
+    removePostFromUserFavorite: async (_, args) => {
+      let { _id, postId } = args;
+      try {
+        //find current user by id
+        const usersData = await userCollection();
+        const userToUpdate = await usersData.findOne({ _id: _id.toString() });
+        if (!userToUpdate) {
+          throw new GraphQLError(`USER NOT FOUND`, {
+            extensions: { code: "NOT_FOUND" },
+          });
+        }
+        //check if the postId exists
+        let favorite_post = userToUpdate.favorite_post || [];
+        if (favorite_post && !favorite_post.includes(postId)) {
+          throw new GraphQLError(`Cannot found this post in favorite`, {
+            extensions: { code: "BAD_INPUT" },
+          });
+        }
+
+        //add new post into favorite array and update
+        favorite_post = favorite_post.filter((id) => id !== postId);
+        const updatedUser = await usersData.findOneAndUpdate(
+          { _id: _id.toString() },
+          { $set: { favorite_post: favorite_post } },
+          { returnDocument: "after" }
+        );
+
+        if (!updatedUser) {
+          throw new GraphQLError(`Could not Edit User`, {
+            extensions: { code: "INTERNAL_SERVER_ERROR" },
+          });
+        }
+
+        return updatedUser.favorite_post;
       } catch (error) {
         throw new GraphQLError(error.message);
       }
