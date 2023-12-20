@@ -149,10 +149,10 @@ const checkUrl = (url) => {
   if (url.trim().length === 0)
     throw new Error("URL cannot be an empty string or just spaces");
   url = url.trim();
-  const regex = new RegExp(
-    /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/
-  );
-  if (!regex.test(url)) throw new Error("You must provide a valid URL");
+  // const regex = new RegExp(
+  //   /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/
+  // );
+  // if (!regex.test(url)) throw new Error("You must provide a valid URL");
 
   return url;
 };

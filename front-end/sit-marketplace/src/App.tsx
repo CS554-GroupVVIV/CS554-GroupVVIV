@@ -95,7 +95,7 @@ function App() {
       <CssBaseline />
       <AuthProvider>
         <AppBar position="fixed">
-          <Container maxWidth={"xl"}>
+          <Container maxWidth={"xxl"}>
             <Toolbar disableGutters>
               <Typography
                 variant="h5"

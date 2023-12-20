@@ -24,6 +24,10 @@ export default function ChatRoomList({ uid }) {
     }
   }
 
+  // useEffect(() => {
+  //   socket.emit("rooms");
+  // }, []);
+
   useEffect(() => {
     socket.on("rooms", (data) => {
       setRooms(data);

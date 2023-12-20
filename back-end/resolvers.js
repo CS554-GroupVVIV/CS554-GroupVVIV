@@ -664,9 +664,9 @@ export const resolvers = {
           });
         }
         let image = args.image;
-        if (!(image == "" || image == null)) {
-          // image = checkUrl(image);
-        }
+        // if (!(image == "" || image == null)) {
+        image = checkUrl(image);
+        // }
         let category = checkCategory(args.category);
         // ********need input check*************
         const products = await productCollection();
@@ -1044,7 +1044,7 @@ export const resolvers = {
           lastname,
           favorite: favorite ? [favorite] : [],
           comments: [],
-          rating: 0
+          rating: 0,
         };
         const insertedUser = await usersData.insertOne(newUser);
         if (!insertedUser) {
