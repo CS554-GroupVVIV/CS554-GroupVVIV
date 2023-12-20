@@ -285,6 +285,7 @@ function App() {
             />
 
             <Route path="/error" element={<Error />} />
+            <Route path="/404" element={<Error />} />
           </Routes>
         </div>
       </AuthProvider>
