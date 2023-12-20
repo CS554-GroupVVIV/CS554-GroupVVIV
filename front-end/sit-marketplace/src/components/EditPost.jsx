@@ -27,29 +27,29 @@ const EditPost = ({ postData }) => {
 
   const [toggleEditForm, setToggleEditForm] = useState(false);
 
-  const nameRef = useRef<HTMLInputElement | null>(null);
-  const priceRef = useRef<HTMLInputElement | null>(null);
-  const conditionRef = useRef<HTMLSelectElement | null>(null);
-  const descriptionRef = useRef<HTMLTextAreaElement | null>(null);
-  const categoryRef = useRef<HTMLSelectElement | null>(null);
-  const statusRef = useRef<HTMLSelectElement | null>(null);
-  const sellerRef = useRef<HTMLSelectElement | null>(null);
+  const nameRef = useRef(null);
+  const priceRef = useRef(null);
+  const conditionRef = useRef(null);
+  const descriptionRef = useRef(null);
+  const categoryRef = useRef(null);
+  const statusRef = useRef(null);
+  const sellerRef = useRef(null);
 
-  const [name, setName] = useState<string>(postData.item);
-  const [category, setCategory] = useState<string>(postData.category);
-  const [price, setPrice] = useState<number>(postData.price);
-  const [condition, setCondition] = useState<string>(postData.condition);
-  const [description, setDescription] = useState<string>(postData.description);
+  const [name, setName] = useState(postData.item);
+  const [category, setCategory] = useState(postData.category);
+  const [price, setPrice] = useState(postData.price);
+  const [condition, setCondition] = useState(postData.condition);
+  const [description, setDescription] = useState(postData.description);
 
-  const [status, setStatus] = useState<string>(postData.status);
-  const [seller, setSeller] = useState<string>("");
-  const [nameError, setNameError] = useState<boolean>(false);
-  const [priceError, setPriceError] = useState<boolean>(false);
-  const [conditionError, setConditionError] = useState<boolean>(false);
-  const [descriptionError, setDescriptionError] = useState<boolean>(false);
-  const [categoryError, setCategoryError] = useState<boolean>(false);
-  const [statusError, setStatusError] = useState<boolean>(false);
-  const [sellerError, setSellerError] = useState<boolean>(false);
+  const [status, setStatus] = useState(postData.status);
+  const [seller, setSeller] = useState("");
+  const [nameError, setNameError] = useState(false);
+  const [priceError, setPriceError] = useState(false);
+  const [conditionError, setConditionError] = useState(false);
+  const [descriptionError, setDescriptionError] = useState(false);
+  const [categoryError, setCategoryError] = useState(false);
+  const [statusError, setStatusError] = useState(false);
+  const [sellerError, setSellerError] = useState(false);
 
   const [editPost] = useMutation(EDIT_POST, {
     onError: (e) => {
@@ -62,7 +62,7 @@ const EditPost = ({ postData }) => {
   });
 
   const helper = {
-    checkName: ()=> {
+    checkName: () => {
       setNameError(false);
       let input = nameRef.current?.value;
       if (!input || input.trim() == "") {
@@ -83,7 +83,7 @@ const EditPost = ({ postData }) => {
       return;
     },
 
-    checkPrice: ()=> {
+    checkPrice: () => {
       setPriceError(false);
       setPrice(0);
       let price = priceRef.current?.value;
@@ -109,7 +109,7 @@ const EditPost = ({ postData }) => {
       return;
     },
 
-    checkCondition: ()=> {
+    checkCondition: () => {
       setConditionError(false);
       let condition = conditionRef.current?.value;
       if (!condition || condition.trim() == "") {
@@ -130,9 +130,9 @@ const EditPost = ({ postData }) => {
       setCondition(condition);
     },
 
-    checkDescription: ()=> {
+    checkDescription: () => {
       setDescriptionError(false);
-      let description= descriptionRef.current?.value;
+      let description = descriptionRef.current?.value;
       if (description && description.trim() != "") {
         description = description.trim();
         if (description.length > 100) {
@@ -147,7 +147,7 @@ const EditPost = ({ postData }) => {
       }
     },
 
-    checkCategory: ()=> {
+    checkCategory: () => {
       setCategoryError(false);
       let category = categoryRef.current?.value;
       if (!category || category.trim() == "") {
@@ -170,7 +170,7 @@ const EditPost = ({ postData }) => {
       setCategory(category);
     },
 
-    checkStatus: ()=> {
+    checkStatus: () => {
       setStatusError(false);
       let status = statusRef.current?.value;
       if (!status || status.trim() == "") {
@@ -190,7 +190,7 @@ const EditPost = ({ postData }) => {
       setStatus(statusLower);
     },
 
-    checkSeller: ()=>{
+    checkSeller: () => {
       setSellerError(false);
       let seller = sellerRef.current?.value;
       if (!seller || seller.trim() == "") {
