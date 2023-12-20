@@ -778,21 +778,26 @@ export const resolvers = {
         let description = checkDescription(args.description);
         let status = checkStatus(args.status);
         if (
-          item == product.item &&
-          category == product.category &&
-          price == product.price &&
-          condition == product.condition &&
-          description == product.description &&
-          status == product.status
+          item == post.item &&
+          category == post.category &&
+          price == post.price &&
+          condition == post.condition &&
+          description == post.description &&
+          status == post.status
         ) {
           throw new GraphQLError(`No Change made`, {
             extensions: { code: "BAD_INPUT" },
           });
         }
-        let seller_id = "";
+        let seller_id = null;
         let completion_date = null;
         if (status == "completed") {
           seller_id = checkString(args.seller_id);
+          if (!post.possible_sellers.includes(seller_id)) {
+            throw new GraphQLError(`Not valid seller`, {
+              extensions: { code: "BAD_INPUT" },
+            });
+          }
           completion_date = new Date();
         }
         const updatedPost = {
@@ -832,14 +837,14 @@ export const resolvers = {
 
     editProduct: async (_, args) => {
       try {
-        if (Object.keys(args).length < 9 || Object.keys(args).length > 10) {
+        if (Object.keys(args).length != 9) {
           throw new GraphQLError("All fields are required", {
             extensions: { code: "BAD_INPUT" },
           });
         }
         let _id = checkId(args._id);
         const products = await productCollection();
-        const product = await products.findOne({ __id: new ObjectId(_id) });
+        const product = await products.findOne({ _id: new ObjectId(_id) });
         if (!product) {
           throw new GraphQLError("Product Not Found", {
             extensions: { code: "NOT_FOUND" },
@@ -853,16 +858,13 @@ export const resolvers = {
         }
         let name = checkName(args.name);
         let category = checkCategory(args.category);
-        let image = product.image;
-        if (args.image && args.image.trim() != "") {
-          image = checkUrl(args.image);
-        }
+        let image = checkUrl(args.image);
         let price = checkPrice(args.price);
         let condition = checkCondition(args.condition);
         let description = checkDescription(args.description);
         let status = checkStatus(args.status);
         if (
-          item == product.item &&
+          name == product.name &&
           category == product.category &&
           image == product.image &&
           price == product.price &&
@@ -874,10 +876,15 @@ export const resolvers = {
             extensions: { code: "BAD_INPUT" },
           });
         }
-        let buyer_id = "";
+        let buyer_id = null;
         let completion_date = null;
         if (status == "completed") {
           buyer_id = checkString(args.buyer_id);
+          if (!product.possible_buyers.includes(buyer_id)) {
+            throw new GraphQLError(`Not valid buyer`, {
+              extensions: { code: "BAD_INPUT" },
+            });
+          }
           completion_date = new Date();
         }
 

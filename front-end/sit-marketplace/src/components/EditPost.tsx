@@ -3,6 +3,7 @@ import { EDIT_POST } from "../queries";
 import { useMutation } from "@apollo/client";
 import { uploadFileToS3 } from "../aws.tsx";
 import OutlinedInput from "@mui/material/OutlinedInput";
+import { AuthContext } from "../context/AuthContext";
 import {
   Button,
   TextField,
@@ -22,7 +23,8 @@ import {
 } from "@mui/material";
 
 const EditPost = ({ postData }) => {
-  console.log(postData);
+  const { currentUser } = useContext(AuthContext);
+
   const [toggleEditForm, setToggleEditForm] = useState(false);
 
   const nameRef = useRef<HTMLInputElement | null>(null);
@@ -216,6 +218,9 @@ const EditPost = ({ postData }) => {
       helper.checkCondition();
       helper.checkDescription();
       helper.checkStatus();
+      if (status == "completed") {
+        helper.checkSeller();
+      }
       if (
         nameError ||
         priceError ||
@@ -241,11 +246,11 @@ const EditPost = ({ postData }) => {
 
       let variables = {
         id: postData._id,
+        buyer_id: currentUser.uid,
         item: name,
-        description: description,
-        buyer_id: postData.buyer_id,
-        price: price,
         category: category,
+        description: description,
+        price: price,
         condition: condition,
         status: status,
       };

@@ -10,7 +10,8 @@ import { useMutation } from "@apollo/client";
 //   checkStatus,
 // } from "../helper.tsx";
 import { uploadFileToS3 } from "../aws.tsx";
-import OutlinedInput from "@mui/material/OutlinedInput";
+import { AuthContext } from "../context/AuthContext";
+
 import {
   Button,
   TextField,
@@ -30,6 +31,7 @@ import {
 } from "@mui/material";
 
 const EditProduct = ({ productData }) => {
+  const { currentUser } = useContext(AuthContext);
   // const [image, setImage] = useState<File | undefined>(undefined);
   const [toggleEditForm, setToggleEditForm] = useState(false);
 
@@ -249,6 +251,9 @@ const EditProduct = ({ productData }) => {
       helper.checkCondition();
       helper.checkDescription();
       helper.checkStatus();
+      if (status == "completed") {
+        helper.checkBuyer();
+      }
       if (
         nameError ||
         priceError ||
@@ -256,14 +261,11 @@ const EditProduct = ({ productData }) => {
         descriptionError ||
         categoryError ||
         imageError ||
-        statusError
+        statusError ||
+        buyerError
       ) {
         return;
       }
-
-      console.log(name);
-      console.log(category);
-
       if (
         name == productData.name &&
         category == productData.category &&
@@ -271,33 +273,31 @@ const EditProduct = ({ productData }) => {
         condition == productData.condition &&
         description == productData.description &&
         status == productData.status &&
-        image == null
+        image == productData.image
       ) {
         alert("No change made");
         return;
       }
 
       let imageUrl = productData.image;
-      if (image) {
+      if (image != productData.image) {
         imageUrl = await uploadFileToS3(image, name);
       }
-
       let variables = {
         id: productData._id,
+        sellerId: currentUser.uid,
         name: name,
-        description: description,
-        sellerId: productData.seller_id,
-        price: price,
         category: category,
-        condition: condition,
-        status: status,
         image: imageUrl,
+        price: price,
+        condition: condition,
+        description: description,
+        status: status,
       };
 
       if (status == "completed") {
         variables.buyerId = buyer;
       }
-      console.log("variables", variables);
       await editProduct({ variables: variables });
     } catch (err) {
       alert;
