@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { useQuery } from "@apollo/client";
 import { AuthContext } from "../context/AuthContext.jsx";
 import {
@@ -54,11 +54,14 @@ export default function Dashboard() {
 
   const [value, setValue] = useState(0);
   const [toogleUpdateUser, setToggleUpdateUser] = useState<boolean>(false);
+  const [user, setUser] = useState({});
 
   const { loading, error, data } = useQuery(GET_USER, {
     variables: { id: currentUser ? currentUser.uid : "" },
     fetchPolicy: "cache-and-network",
   });
+
+  console.log(data && data.getUserById);
 
   const {
     data: productSeller,
@@ -115,124 +118,134 @@ export default function Dashboard() {
     );
   }
 
+  useEffect(() => {
+    if (data) {
+      setUser(data);
+    }
+  }, [data]);
+
   if (loading) {
     return <p>Loading</p>;
   } else if (error) {
     <p>Error</p>;
-  } else if (data)
+  } else if (data) {
+    console.log(data.getUserById);
     return (
-      <Box sx={{ mt: 8, display: "flex" }}>
-        <CssBaseline />
-        <Drawer variant="permanent" open={true}>
-          <Grid sx={{ mx: 1 }}>
-            <Card variant="outlined" style={{ border: "none" }}>
-              <CardHeader
-                title={`${"User Profile"}`}
-                titleTypographyProps={{ align: "center" }}
-                subheaderTypographyProps={{
-                  align: "center",
-                }}
-              />
-              <CardContent>
-                {toogleUpdateUser ? (
-                  <UserInfo data={data} />
-                ) : (
-                  <Box
-                    sx={{
-                      display: "flex",
-                      flexDirection: "column",
-                      justifyContent: "space-between",
-                    }}
-                  >
-                    <Typography component="p" variant="subtitle2">
-                      Id: {data && data.getUserById._id}
-                    </Typography>
-                    <Typography component="p" variant="subtitle2">
-                      Name:{" "}
-                      {data &&
-                        data.getUserById.firstname + " " + data &&
-                        data.getUserById.lastname}
-                    </Typography>
-                    <Typography component="p" variant="subtitle2">
-                      Email: {data && data.getUserById.email}
-                    </Typography>
-                    <Typography component="p" variant="subtitle2">
-                      Rating: {data && data.getUserById.rating?.toFixed(2)} from{" "}
-                      {data && data.getUserById.comments?.length} users
-                    </Typography>
-                  </Box>
-                )}
-              </CardContent>
-              <CardActions>
-                <Button
-                  fullWidth
-                  variant="outlined"
-                  onClick={() => {
-                    setToggleUpdateUser(!toogleUpdateUser);
+      <Grid container direction="row" height={"100vh"}>
+        <Grid item sx={{ width: "25%" }} mt={8}>
+          <Card
+            variant="outlined"
+            style={{ border: "none" }}
+            sx={{ width: "100%", padding: 3, height: "100%" }}
+          >
+            <CardHeader
+              title={`${"User Profile"}`}
+              titleTypographyProps={{ align: "center" }}
+              subheaderTypographyProps={{
+                align: "center",
+              }}
+            />
+            <CardContent>
+              {toogleUpdateUser ? (
+                <UserInfo data={data} />
+              ) : (
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "space-between",
                   }}
                 >
-                  {toogleUpdateUser ? "Cancel" : "Edit Profile"}
-                </Button>
-              </CardActions>
-            </Card>
-          </Grid>
-        </Drawer>
-        <Box
-          component="main"
-          sx={{
-            backgroundColor: (theme) =>
-              theme.palette.mode === "light"
-                ? theme.palette.grey[100]
-                : theme.palette.grey[900],
-            flexGrow: 1,
-            height: "100vh",
-            overflow: "auto",
-          }}
-        >
-          <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-            <Tabs
-              value={value}
-              onChange={handleChange}
-              aria-label="basic tabs example"
-            >
-              <Tab label="Product" />
-              <Tab label="Post" />
-              <Tab label="Favorite" />
-              <Tab label="Comments" />
-            </Tabs>
-          </Box>
+                  <Typography component="p" variant="subtitle2">
+                    Id: {data && data.getUserById._id}
+                  </Typography>
+                  <Typography component="p" variant="subtitle2">
+                    Name: {data && data.getUserById.firstname}{" "}
+                    {data && data.getUserById.lastname}
+                  </Typography>
+                  <Typography component="p" variant="subtitle2">
+                    Email: {data && data.getUserById.email}
+                  </Typography>
+                  <Typography component="p" variant="subtitle2">
+                    Rating: {data && data.getUserById.rating?.toFixed(2)} from{" "}
+                    {data && data.getUserById.comments?.length} users
+                  </Typography>
+                </Box>
+              )}
+            </CardContent>
+            <CardActions>
+              <Button
+                fullWidth
+                variant="outlined"
+                onClick={() => {
+                  setToggleUpdateUser(!toogleUpdateUser);
+                }}
+              >
+                {toogleUpdateUser ? "Cancel" : "Edit Profile"}
+              </Button>
+            </CardActions>
+          </Card>
+        </Grid>
 
-          <CustomTabPanel value={value} index={0}>
-            {productBuyer && productSeller ? (
-              <ProductTransactionHolder
-                purchaseData={productBuyer.getProductByBuyer}
-                soldData={productSeller.getProductBySeller}
-              />
-            ) : productBuyerLoading && productSellerLoading ? (
-              <p>Loading</p>
-            ) : (
-              <p>Error</p>
-            )}
-          </CustomTabPanel>
-          <CustomTabPanel value={value} index={1}>
-            {postBuyer && postSeller ? (
-              <PostTransactionHolder
-                purchaseData={postBuyer.getPostByBuyer}
-                soldData={postSeller.getPostBySeller}
-              />
-            ) : postBuyerLoading && postSellerLoading ? (
-              <p>Loading</p>
-            ) : (
-              <p>Error</p>
-            )}
-          </CustomTabPanel>
-          <CustomTabPanel value={value} index={2}>
-            <FavoriteHolder favorite={data.getUserById.favorite} />
-          </CustomTabPanel>
-          <CustomTabPanel value={value} index={3}>
-            <CommentPage />
-          </CustomTabPanel>
-        </Box>
-      </Box>
+        <Grid item xs mt={8}>
+          <Box
+            component="main"
+            sx={{
+              backgroundColor: (theme) =>
+                theme.palette.mode === "light"
+                  ? theme.palette.grey[100]
+                  : theme.palette.grey[900],
+              flexGrow: 1,
+              overflow: "auto",
+              height: "100%",
+            }}
+          >
+            <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+              <Tabs
+                value={value}
+                onChange={handleChange}
+                aria-label="basic tabs example"
+              >
+                <Tab label="Product" />
+                <Tab label="Post" />
+                <Tab label="Favorite" />
+                <Tab label="Comments" />
+              </Tabs>
+            </Box>
+
+            <CustomTabPanel value={value} index={0}>
+              {productBuyer && productSeller ? (
+                <ProductTransactionHolder
+                  purchaseData={productBuyer.getProductByBuyer}
+                  soldData={productSeller.getProductBySeller}
+                />
+              ) : productBuyerLoading && productSellerLoading ? (
+                <p>Loading</p>
+              ) : (
+                <p>Error</p>
+              )}
+            </CustomTabPanel>
+            <CustomTabPanel value={value} index={1}>
+              {postBuyer && postSeller ? (
+                <PostTransactionHolder
+                  purchaseData={postBuyer.getPostByBuyer}
+                  soldData={postSeller.getPostBySeller}
+                />
+              ) : postBuyerLoading && postSellerLoading ? (
+                <p>Loading</p>
+              ) : (
+                <p>Error</p>
+              )}
+            </CustomTabPanel>
+            <CustomTabPanel value={value} index={2}>
+              <FavoriteHolder favorite={data.getUserById.favorite} />
+            </CustomTabPanel>
+            <CustomTabPanel value={value} index={3}>
+              <CommentPage />
+            </CustomTabPanel>
+          </Box>
+        </Grid>
+      </Grid>
     );
+  }
 }

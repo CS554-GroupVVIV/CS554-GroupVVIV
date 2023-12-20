@@ -52,12 +52,7 @@ export default function ProductCard({ productData }) {
 
   const [removeFavorite, { removeData, removeLoading, removeError }] =
     useMutation(REMOVE_FAVORITE_FROM_USER, {
-      refetchQueries: [
-        {
-          query: GET_USER,
-          variables: { _id: currentUser ? currentUser.uid : "" },
-        },
-      ],
+      refetchQueries: [GET_USER, "getUserById"],
     });
 
   const [addFavorite, { addData, addLoading, addError }] = useMutation(
@@ -73,26 +68,26 @@ export default function ProductCard({ productData }) {
   );
 
   useEffect(() => {
-    console.log("user data", userData);
-    console.log(userLoading);
-
+    // console.log("user data", userData);
+    // console.log(userLoading);
+    // console.log("error", userError);
     if (!userLoading) {
-      console.log(userData, "usedata");
-      console.log("in favorite?", userData?.getUserById?.favorite);
+      // console.log(userData, "usedata");
+      // console.log("in favorite?", userData?.getUserById?.favorite);
       if (userData?.getUserById?.favorite?.includes(productData._id)) {
-        console.log(userData);
-        console.log(userData.getUserById);
+        // console.log(userData);
+        // console.log(userData.getUserById);
         setHasFavorited(true);
       } else {
-        console.log("in the else");
+        // console.log("in the else");
         setHasFavorited(false);
       }
     }
   }, [userLoading, userData, userError]);
 
   function handleFavorite() {
-    console.log("user id", currentUser.uid);
-    console.log("product id", productData._id);
+    // console.log("user id", currentUser.uid);
+    // console.log("product id", productData._id);
 
     try {
       if (!currentUser || !currentUser.uid) {
@@ -120,7 +115,6 @@ export default function ProductCard({ productData }) {
     //   console.log(removeError);
     // }
   }
-  console.log(productData.image);
   return (
     <Grid item>
       <Card sx={{ width: 300, height: "100%" }}>

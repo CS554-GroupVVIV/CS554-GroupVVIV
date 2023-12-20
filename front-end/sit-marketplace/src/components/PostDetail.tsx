@@ -98,14 +98,10 @@ export default function PostDetail() {
             </Typography>
           </Grid>
 
-          <Grid item xs>
-            <Typography
-              align="left"
-              variant="body2"
-              sx={{ fontWeight: "bold" }}
-            >
-              <Divider sx={{ marginBottom: 3 }} />
+          <Divider sx={{ marginTop: 3, marginBottom: 3 }} />
 
+          <Grid item xs>
+            <div>
               <p>Buyer Id: {post.buyer_id}</p>
               {post.status === "completed" &&
               currentUser &&
@@ -117,54 +113,55 @@ export default function PostDetail() {
               <p>Price: {post.price}</p>
               <p>Transaction Date: {new Date(post.date).toLocaleString()}</p>
               <p>Status: {post.status}</p>
+            </div>
 
-              <Divider sx={{ marginTop: 3, marginBottom: 3 }} />
-
-              {currentUser ? (
-                <div>
-                  <div className="card-actions justify-end">
-                    {post.status !== "completed" &&
-                    post.buyer_id === currentUser.uid ? (
-                      <EditPost postData={post} />
-                    ) : null}
-                    {post.status === "completed" &&
-                    (post.buyer_id === currentUser.uid ||
-                      post.seller_id === currentUser.uid) ? (
-                      <Comment data={post} />
-                    ) : null}
-                    {post.status === "active" &&
-                    post.buyer_id !== currentUser.uid ? (
-                      <Button
-                        size="small"
-                        variant="contained"
-                        color="inherit"
-                        onClick={() => {
-                          if (currentUser.uid) {
-                            addPossibleSeller({
-                              variables: {
-                                id: data.getPostById._id,
-                                buyerId: userData.getUserById._id,
-                              },
-                            });
-                            socket.emit("join room", {
-                              room: post.seller_id,
-                              user: currentUser.uid,
-                            });
-                          }
-                        }}
-                        sx={{ fontWeight: "bold" }}
-                      >
-                        Chat with seller
-                      </Button>
-                    ) : (
-                      <></>
-                    )}
-                  </div>
+            <Divider sx={{ marginTop: 3, marginBottom: 3 }} />
+            {currentUser ? (
+              <div>
+                <div className="card-actions justify-end">
+                  {post.status !== "completed" &&
+                  post.buyer_id === currentUser.uid ? (
+                    <EditPost postData={post} />
+                  ) : (
+                    <p>Completed, only poster can edit.</p>
+                  )}
+                  {post.status === "completed" &&
+                  (post.buyer_id === currentUser.uid ||
+                    post.seller_id === currentUser.uid) ? (
+                    <Comment data={post} />
+                  ) : (
+                    <p>Completed, only poster/seller can comment.</p>
+                  )}
+                  {post.buyer_id !== currentUser.uid ? (
+                    <Button
+                      size="small"
+                      variant="contained"
+                      color="inherit"
+                      onClick={() => {
+                        if (currentUser.uid) {
+                          addPossibleSeller({
+                            variables: {
+                              id: data.getPostById._id,
+                              buyerId: userData.getUserById._id,
+                            },
+                          });
+                          socket.emit("join room", {
+                            room: post.seller_id,
+                            user: currentUser.uid,
+                          });
+                        }
+                      }}
+                    >
+                      Chat with buyer
+                    </Button>
+                  ) : (
+                    <></>
+                  )}
                 </div>
-              ) : (
-                <p>(Login to chat with seller or add product to favorite)</p>
-              )}
-            </Typography>
+              </div>
+            ) : (
+              <p>(Login to chat with seller or add product to favorite)</p>
+            )}
 
             <Divider sx={{ marginTop: 3, marginBottom: 3 }} />
             <Button

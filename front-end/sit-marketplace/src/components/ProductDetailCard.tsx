@@ -54,7 +54,10 @@ export default function ProductDetailCard() {
   const [addPossibleBuyer] = useMutation(ADD_POSSIBLE_BUYER);
 
   const [removeFavorite, { removeData, removeLoading, removeError }] =
-    useMutation(REMOVE_FAVORITE_FROM_USER);
+    useMutation(
+      REMOVE_FAVORITE_FROM_USER
+      // ,{refetchQueries: [GET_USER, "getUserById"]}
+    );
 
   const [addFavorite, { addData, addLoading, addError }] =
     useMutation(ADD_FAVORITE_TO_USER);
@@ -117,7 +120,7 @@ export default function ProductDetailCard() {
                 image={productData.image}
                 title="thumbnail"
                 sx={{
-                  width: "auto",
+                  maxWidth: "60%",
                   height: "80vh",
                 }}
               />
@@ -147,13 +150,7 @@ export default function ProductDetailCard() {
               </Grid>
 
               <Grid item xs>
-                <Typography
-                  align="left"
-                  variant="body2"
-                  sx={{ fontWeight: "bold" }}
-                >
-                  <Divider sx={{ marginBottom: 3 }} />
-
+                <div>
                   <p>Seller Id: {productData.seller_id}</p>
                   {productData.status === "completed" &&
                   currentUser &&
@@ -170,69 +167,73 @@ export default function ProductDetailCard() {
                     {new Date(productData.date).toLocaleString()}
                   </p>
                   <p>Status: {productData.status}</p>
+                </div>
 
-                  <Divider sx={{ marginTop: 3, marginBottom: 3 }} />
+                <Divider sx={{ marginTop: 3, marginBottom: 3 }} />
 
+                <div>
                   {currentUser ? (
-                    <div>
-                      <div className="card-actions justify-end">
-                        {productData.status !== "completed" &&
-                        productData.seller_id === currentUser.uid ? (
-                          <EditProduct productData={productData} />
-                        ) : null}
-                        {productData.status === "completed" &&
-                        (productData.buyer_id === currentUser.uid ||
-                          productData.seller_id === currentUser.uid) ? (
-                          <Comment data={productData} />
-                        ) : null}
+                    <div className="card-actions justify-end">
+                      {productData.status !== "completed" &&
+                      productData.seller_id === currentUser.uid ? (
+                        <EditProduct productData={productData} />
+                      ) : (
+                        <p>Completed, only poster can edit.</p>
+                      )}
+                      {productData.status === "completed" &&
+                      (productData.buyer_id === currentUser.uid ||
+                        productData.seller_id === currentUser.uid) ? (
+                        <Comment data={productData} />
+                      ) : (
+                        <p>Completed, only poster/buyer can comment.</p>
+                      )}
 
-                        {productData.status === "active" &&
-                        productData.seller_id !== currentUser.uid ? (
-                          <>
-                            <Button
-                              size="small"
-                              variant="contained"
-                              color="inherit"
-                              onClick={() => {
-                                if (currentUser.uid) {
-                                  addPossibleBuyer({
-                                    variables: {
-                                      id: productData.seller_id,
-                                      buyerId: currentUser.uid,
-                                    },
-                                  });
-                                  socket.emit("join room", {
-                                    room: productData.seller_id,
-                                    user: currentUser.uid,
-                                  });
-                                }
-                              }}
-                              sx={{ fontWeight: "bold" }}
-                            >
-                              Chat with seller
-                            </Button>
-                            <IconButton
-                              sx={{ marginLeft: 3 }}
-                              onClick={handleFavorite}
-                            >
-                              {hasFavorited ? (
-                                <FavoriteIcon sx={{ color: "#e91e63" }} />
-                              ) : (
-                                <FavoriteBorderIcon />
-                              )}
-                            </IconButton>
-                          </>
-                        ) : (
-                          <></>
-                        )}
-                      </div>
+                      {productData.status === "active" &&
+                      productData.seller_id !== currentUser.uid ? (
+                        <>
+                          <Button
+                            size="small"
+                            variant="contained"
+                            color="inherit"
+                            onClick={() => {
+                              if (currentUser.uid) {
+                                addPossibleBuyer({
+                                  variables: {
+                                    id: productData.seller_id,
+                                    buyerId: currentUser.uid,
+                                  },
+                                });
+                                socket.emit("join room", {
+                                  room: productData.seller_id,
+                                  user: currentUser.uid,
+                                });
+                              }
+                            }}
+                            sx={{ fontWeight: "bold" }}
+                          >
+                            Chat with seller
+                          </Button>
+                          <IconButton
+                            sx={{ marginLeft: 3 }}
+                            onClick={handleFavorite}
+                          >
+                            {hasFavorited ? (
+                              <FavoriteIcon sx={{ color: "#e91e63" }} />
+                            ) : (
+                              <FavoriteBorderIcon />
+                            )}
+                          </IconButton>
+                        </>
+                      ) : (
+                        <></>
+                      )}
                     </div>
                   ) : (
                     <p>
                       (Login to chat with seller or add product to favorite)
                     </p>
                   )}
-                </Typography>
+                </div>
 
                 <Divider sx={{ marginTop: 3, marginBottom: 3 }} />
                 <Button
