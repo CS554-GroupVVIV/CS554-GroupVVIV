@@ -17,7 +17,6 @@ import MuiDrawer from "@mui/material/Drawer";
 import CommentPage from "./CommentPage.js";
 import {
   Button,
-  CssBaseline,
   Box,
   Grid,
   Tab,
@@ -241,7 +240,7 @@ export default function Dashboard() {
               <FavoriteHolder favorite={data.getUserById.favorite} />
             </CustomTabPanel>
             <CustomTabPanel value={value} index={3}>
-              <CommentPage />
+              <CommentPage user_id={currentUser.uid} />
             </CustomTabPanel>
           </Box>
         </Grid>
