@@ -442,6 +442,7 @@ export const ADD_USER = gql`
         comment_id
         rating
       }
+      favorite_post
     }
   }
 `;

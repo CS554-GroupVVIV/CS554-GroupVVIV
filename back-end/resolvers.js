@@ -944,7 +944,7 @@ export const resolvers = {
           firstname,
           lastname,
           favorite: favorite ? [favorite] : [],
-          favorite_post: favorite_post ? [favorite_post] : [],
+          favorite_post: [],
           comments: [],
           rating: 0,
         };
