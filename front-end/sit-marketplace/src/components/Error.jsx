@@ -1,12 +1,16 @@
 import { Container, Link } from "@mui/material";
 import { useNavigate, useLocation } from "react-router";
 
-export default function Error() {
+export default function Error({ messageProp, statusCodeProp }) {
   const location = useLocation();
   const navigate = useNavigate();
-  const { message, statusCode } = location.state;
-  console.log("message", message);
-  console.log("statusCode", statusCode);
+  const { message: locationMessage, statusCode: locationStatusCode } =
+    location.state || {};
+
+  // Use props if they exist, otherwise use location state
+  const message = messageProp || locationMessage;
+  const statusCode = statusCodeProp || locationStatusCode;
+
   let errorMessage;
   switch (statusCode) {
     case 400:

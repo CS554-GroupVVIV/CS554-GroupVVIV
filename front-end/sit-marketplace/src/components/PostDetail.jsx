@@ -113,7 +113,7 @@ export default function PostDetail() {
                           addPossibleSeller({
                             variables: {
                               id: data.getPostById._id,
-                              buyerId: userData.getUserById._id,
+                              buyerId: currentUser.uid,
                             },
                           });
                           socket.emit("join room", {

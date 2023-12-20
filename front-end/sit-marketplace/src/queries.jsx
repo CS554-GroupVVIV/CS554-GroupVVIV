@@ -62,6 +62,7 @@ export const GET_USER = gql`
       }
       rating
       favorite
+      favorite_post
     }
   }
 `;
@@ -71,6 +72,7 @@ export const GET_USER_FOR_FAVORITE = gql`
     getUserById(_id: $id) {
       _id
       favorite
+      favorite_post
     }
   }
 `;
@@ -591,19 +593,30 @@ export const SEARCH_PRODUCTS_BY_ID = gql`
 `;
 
 export const SEARCH_POST_BY_ID = gql`
-  query GetProductById($id: String!) {
+  query Query($id: String!) {
     getPostById(_id: $id) {
       _id
       buyer_id
       category
+      completion_date
       condition
       date
       description
       item
       possible_sellers {
         _id
+        favorite
+        comments {
+          comment_id
+          comment
+          _id
+          rating
+        }
+        favorite_post
+        email
         firstname
         lastname
+        rating
       }
       price
       seller_id
@@ -677,6 +690,18 @@ export const ADD_FAVORITE_TO_USER = gql`
 export const REMOVE_FAVORITE_FROM_USER = gql`
   mutation Mutation($id: String!, $productId: String!) {
     removeProductFromUserFavorite(_id: $id, productId: $productId)
+  }
+`;
+
+export const ADD_FAVORITE_POST_TO_USER = gql`
+  mutation Mutation($id: String!, $postId: String!) {
+    addPostToUserFavorite(_id: $id, postId: $postId)
+  }
+`;
+
+export const REMOVE_FAVORITE_POST_FROM_USER = gql`
+  mutation Mutation($id: String!, $postId: String!) {
+    removePostFromUserFavorite(_id: $id, postId: $postId)
   }
 `;
 

@@ -75,7 +75,7 @@ export default function Home() {
                 width: "80%",
               }}
             >
-              👉 First 10 Products:
+              👉 Products:
             </Typography>
             <Grid container justifyContent="flex-end">
               <Button
@@ -122,7 +122,7 @@ export default function Home() {
                 minWidth: "80%",
               }}
             >
-              👉 First 10 Posts:
+              👉 Posts:
             </Typography>
             <Grid container justifyContent="flex-end">
               <Button

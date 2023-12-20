@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
 import { socketID, socket } from "./socket";
 
-import { Grid, MenuList, MenuItem, Button } from "@mui/material";
+import { Grid, MenuList, MenuItem, Button, Stack } from "@mui/material";
 
 import { useQuery } from "@apollo/client";
 import { GET_USERS_BY_IDS } from "../queries";
 
 import ChatRoom from "./ChatRoom";
+import RatingProfile from "./Rating";
 
 export default function ChatRoomList({ uid }) {
   const [rooms, setRooms] = useState({});
@@ -23,6 +24,10 @@ export default function ChatRoomList({ uid }) {
       participantDict[user._id] = user.firstname;
     }
   }
+
+  // useEffect(() => {
+  //   socket.emit("rooms");
+  // }, []);
 
   useEffect(() => {
     socket.on("rooms", (data) => {
@@ -56,17 +61,21 @@ export default function ChatRoomList({ uid }) {
     <>
       <div style={{ display: "flex", justifyContent: "right" }}>
         {curRoom && (
-          <Button
-            size="small"
-            variant="contained"
-            color="inherit"
-            onClick={() => {
-              socket.emit("leave");
-              setCurRoom(undefined);
-            }}
-          >
-            Close connection with {participantDict && participantDict[curRoom]}
-          </Button>
+          <Stack spacing={2} direction="row">
+            <RatingProfile id={curRoom} />
+            <Button
+              size="small"
+              variant="contained"
+              color="inherit"
+              onClick={() => {
+                socket.emit("leave");
+                setCurRoom(undefined);
+              }}
+            >
+              Close connection with{" "}
+              {participantDict && participantDict[curRoom]}
+            </Button>
+          </Stack>
         )}
       </div>
 

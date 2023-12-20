@@ -58,11 +58,11 @@ export default function PostForm() {
     },
   });
 
-  useEffect(() => {
-    if (!currentUser) {
-      return navigate("/login");
-    }
-  }, [currentUser]);
+  // useEffect(() => {
+  //   if (!currentUser) {
+  //     return navigate("/login");
+  //   }
+  // }, [currentUser]);
 
   const helper = {
     checkName: ()=> {
