@@ -16,7 +16,7 @@ export default function ChatRoom({ room }) {
   const [message, setMessage] = useState("");
 
   const { loading, error, data } = useQuery(GET_CHAT_BY_PARTICIPANTS, {
-    variables: { participants: [currentUser.uid, room] },
+    variables: { participants: [currentUser?.uid, room] },
     fetchPolicy: "cache-and-network",
   });
 
