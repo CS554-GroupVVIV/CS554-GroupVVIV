@@ -443,7 +443,7 @@ const main = async () => {
   const postCollection = await posts();
 
   await userCollection.insertMany(userList);
-  // await productCollection.insertMany(productList);
+  await productCollection.insertMany(productList);
   // await postCollection.insertMany(postList);
 
   console.log("Done seeding database");
