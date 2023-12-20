@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from "react";
 
 import { useQuery } from "@apollo/client";
-import { SEARCH_POSTS } from "../queries";
+import { SEARCH_PRODUCTS_BY_NAME } from "../queries";
 
-import PostCard from "./PostCard";
+import ProductCard from "./ProductCard.jsx";
 
 import { Grid, Button, Typography } from "@mui/material";
 
-export default function SearchPost({ searchTerm }) {
-  const { loading, error, data } = useQuery(SEARCH_POSTS, {
-    variables: { searchTerm: searchTerm },
+export default function SearchProduct({ searchTerm }) {
+  const { loading, error, data } = useQuery(SEARCH_PRODUCTS_BY_NAME, {
+    variables: { name: searchTerm },
     fetchPolicy: "cache-and-network",
   });
 
@@ -31,8 +31,8 @@ export default function SearchPost({ searchTerm }) {
         <div style={{ display: "flex", justifyContent: "center" }}>
           <Grid container spacing={2} marginTop={1} justifyContent="center">
             {data &&
-              data.searchPosts.map((post) => {
-                return <PostCard key={post._id} postData={post} />;
+              data.searchProductsByName.map((product) => {
+                return <ProductCard key={product._id} productData={product} />;
               })}
           </Grid>
         </div>

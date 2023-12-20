@@ -6,19 +6,10 @@ import { useQuery } from "@apollo/client";
 import { GET_PRODUCTS_BY_STATUS, GET_POSTS_BY_STATUS } from "../queries";
 
 import ProductCard from "./ProductCard";
-import LogoutButton from "./LogoutButton";
 import { AuthContext } from "../context/AuthContext";
-
-import SearchProduct from "./SearchProduct";
-import SearchPost from "./SearchPost";
 
 import { Grid, Button, Typography, Divider } from "@mui/material";
 import PostCard from "./PostCard";
-
-type Product = {
-  _id: string;
-  name: string;
-};
 
 export default function Home() {
   const navigate = useNavigate();
@@ -42,7 +33,6 @@ export default function Home() {
     fetchPolicy: "cache-and-network",
   });
 
-  // console.log(currentUser);
   return (
     <div style={{ marginTop: 80 }}>
       <Grid
@@ -113,13 +103,11 @@ export default function Home() {
               p={3}
             >
               {productData &&
-                productData.getProductsByStatus
-                  .slice(0, 10)
-                  .map((product: Product) => {
-                    return (
-                      <ProductCard key={product._id} productData={product} />
-                    );
-                  })}
+                productData.getProductsByStatus.slice(0, 10).map((product) => {
+                  return (
+                    <ProductCard key={product._id} productData={product} />
+                  );
+                })}
             </Grid>
           </div>
         </Grid>

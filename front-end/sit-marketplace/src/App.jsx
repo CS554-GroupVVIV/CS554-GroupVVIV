@@ -1,33 +1,32 @@
 import React, { useContext, useState, useEffect } from "react";
 import { Route, Routes, Navigate, useNavigate } from "react-router-dom";
 
-import Home from "./components/Home.tsx";
-import Products from "./components/Products.tsx";
-import Posts from "./components/Posts.tsx";
-import Login from "./components/Login.tsx";
-import SignUp from "./components/Signup.tsx";
-import SearchProduct from "./components/SearchProduct.tsx";
-import ChatRooms from "./components/ChatRoomList.tsx";
+import Home from "./components/Home.jsx";
+import Products from "./components/Products.jsx";
+import Posts from "./components/Posts.jsx";
+import Login from "./components/Login.jsx";
+import SignUp from "./components/Signup.jsx";
+import SearchProduct from "./components/SearchProduct.jsx";
+import ChatRooms from "./components/ChatRoomList.jsx";
 import { AuthProvider } from "./context/AuthContext.jsx";
-import PostForm from "./components/PostForm.tsx";
-import ProductDetail from "./components/ProductDetail.tsx";
-import ProductDetailCard from "./components/ProductDetailCard.tsx";
-import PostDetail from "./components/PostDetail.tsx";
-import ProductForm from "./components/NewProduct.tsx";
-import UserProfile from "./components/UserProfile.tsx";
-import ResetPassword from "./components/ResetPassword.tsx";
-import Error from "./components/Error.tsx";
+import PostForm from "./components/PostForm.jsx";
+import ProductDetailCard from "./components/ProductDetailCard.jsx";
+import PostDetail from "./components/PostDetail.jsx";
+import ProductForm from "./components/NewProduct.jsx";
+import UserProfile from "./components/UserProfile.jsx";
+import ResetPassword from "./components/ResetPassword.jsx";
+import Error from "./components/Error.jsx";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import LogoutButton from "./components/LogoutButton.tsx";
+import LogoutButton from "./components/LogoutButton.jsx";
 
-import ChatRoomList from "./components/ChatRoomList";
-import { socketID, socket } from "./components/socket";
+import ChatRoomList from "./components/ChatRoomList.jsx";
+import { socketID, socket } from "./components/socket.jsx";
 
 // redux and theme
 import { useSelector, useDispatch } from "react-redux";
 import { ThemeProvider } from "@mui/material/styles";
-import { darkMode, lightMode } from "./theme.ts";
-import { toggleTheme } from "./redux/themeSlice.ts";
+import { darkMode, lightMode } from "./theme.js";
+import { toggleTheme } from "./redux/themeSlice.js";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
 import LightModeIcon from "@mui/icons-material/LightMode";
 

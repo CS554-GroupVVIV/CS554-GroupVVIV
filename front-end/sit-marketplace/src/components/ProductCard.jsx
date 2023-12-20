@@ -23,12 +23,11 @@ import {
   ADD_FAVORITE_TO_USER,
   REMOVE_FAVORITE_FROM_USER,
   ADD_POSSIBLE_BUYER,
-  GET_USERS_BY_IDS,
   GET_USER_FOR_FAVORITE,
+  GET_USER
 } from "../queries";
 import { useMutation } from "@apollo/client";
 import { useQuery } from "@apollo/client";
-import { GET_USER } from "../queries";
 
 export default function ProductCard({ productData }) {
   const navigate = useNavigate();

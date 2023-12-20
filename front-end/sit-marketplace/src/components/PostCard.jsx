@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext.jsx";
-import { socketID, socket } from "./socket";
+import { socketID, socket } from "./socket.jsx";
 
 import {
   Card,

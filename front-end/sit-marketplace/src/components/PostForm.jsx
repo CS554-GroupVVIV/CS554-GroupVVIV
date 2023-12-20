@@ -18,43 +18,29 @@ import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
 import Stack from "@mui/material/Stack";
 
-// interface Post {
-//   _id: string;
-//   buyer_id: string;
-//   seller_id: string;
-//   item: string;
-//   category: string;
-//   price: number;
-//   condition: string;
-//   date: string;
-//   description: string;
-//   isComplete: boolean;
-// }
 
 export default function PostForm() {
   const { currentUser } = useContext(AuthContext);
-  const nameRef = useRef<HTMLInputElement | null>(null);
-  const categoryRef = useRef<HTMLSelectElement | null>(null);
-  const priceRef = useRef<HTMLInputElement | null>(null);
-  const conditionRef = useRef<HTMLSelectElement | null>(null);
-  const descriptionRef = useRef<HTMLTextAreaElement | null>(null);
-  const [name, setName] = useState<string>("");
-  const [category, setCategory] = useState<string>("");
-  const [price, setPrice] = useState<number>(0);
-  const [contidion, setCondition] = useState<string>("");
-  const [description, setdescription] = useState<string>("");
-  const [nameError, setNameError] = useState<boolean>(false);
-  const [categoryError, setCategoryError] = useState<boolean>(false);
-  const [priceError, setPriceError] = useState<boolean>(false);
-  const [conditionError, setConditionError] = useState<boolean>(false);
-  const [descriptionError, setdescriptionError] = useState<boolean>(false);
-
-  const defaultTheme = createTheme();
+  const nameRef = useRef(null);
+  const categoryRef = useRef(null);
+  const priceRef = useRef(null);
+  const conditionRef = useRef(null);
+  const descriptionRef = useRef(null);
+  const [name, setName] = useState("");
+  const [category, setCategory] = useState("");
+  const [price, setPrice] = useState(0);
+  const [contidion, setCondition] = useState("");
+  const [description, setdescription] = useState("");
+  const [nameError, setNameError] = useState(false);
+  const [categoryError, setCategoryError] = useState(false);
+  const [priceError, setPriceError] = useState(false);
+  const [conditionError, setConditionError] = useState(false);
+  const [descriptionError, setdescriptionError] = useState(false);
 
   const { data, loading, error } = useQuery(GET_POSTS);
   const [addPost] = useMutation(ADD_POST, {
     update(cache, { data: { addPost } }) {
-      const { posts }: any = cache.readQuery({
+      const { posts } = cache.readQuery({
         query: GET_POSTS,
       });
 
@@ -79,9 +65,9 @@ export default function PostForm() {
   }, [currentUser]);
 
   const helper = {
-    checkName(): void {
+    checkName: ()=> {
       setNameError(false);
-      let input: string | undefined = nameRef.current?.value;
+      let input = nameRef.current?.value;
       if (!input || input.trim() == "") {
         setNameError(true);
         return;
@@ -100,9 +86,9 @@ export default function PostForm() {
       return;
     },
 
-    checkCategory(): void {
+    checkCategory: ()=> {
       setCategoryError(false);
-      let input: string | undefined = categoryRef.current?.value;
+      let input= categoryRef.current?.value;
       if (!input || input.trim() == "") {
         setCategoryError(true);
         return;
@@ -124,16 +110,16 @@ export default function PostForm() {
       return;
     },
 
-    checkPrice(): void {
+    checkPrice: ()=> {
       setPriceError(false);
       setPrice(0);
-      let price: string | undefined = priceRef.current?.value;
+      let price = priceRef.current?.value;
       if (!price || price.trim() == "") {
         setPriceError(true);
         return;
       }
       price = price.trim();
-      let value: number = parseFloat(price);
+      let value = parseFloat(price);
       if (Number.isNaN(value)) {
         setPriceError(true);
         return;
@@ -150,15 +136,15 @@ export default function PostForm() {
       return;
     },
 
-    checkCondition(): void {
+    checkCondition: ()=> {
       setConditionError(false);
-      let condition: string | undefined = conditionRef.current?.value;
+      let condition= conditionRef.current?.value;
       if (!condition || condition.trim() == "") {
         setConditionError(true);
         return;
       }
       condition = condition.trim();
-      let conditionLower: string = condition.toLowerCase();
+      let conditionLower = condition.toLowerCase();
       if (
         conditionLower != "brand new" &&
         conditionLower != "like new" &&
@@ -171,9 +157,9 @@ export default function PostForm() {
       setCondition(condition);
     },
 
-    checkdescription(): void {
+    checkdescription: ()=> {
       setdescriptionError(false);
-      let description: string | undefined = descriptionRef.current?.value;
+      let description = descriptionRef.current?.value;
       if (description && description.trim() != "") {
         description = description.trim();
         if (description.length > 100) {
@@ -191,7 +177,7 @@ export default function PostForm() {
 
   const navigate = useNavigate();
 
-  const submit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const submit = async (e) => {
     e.preventDefault();
     helper.checkName();
     helper.checkCategory();

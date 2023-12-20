@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 import { useQuery } from "@apollo/client";
 import { AuthContext } from "../context/AuthContext";
-import ProductCard from "./ProductCard";
+import ProductCard from "./ProductCard.jsx";
 
 import SearchProduct from "./SearchProduct";
 import { GET_PRODUCTS, GET_PRODUCTS_BY_CATEGORY } from "../queries";
@@ -17,11 +17,6 @@ import {
   Typography,
   TextField,
 } from "@mui/material";
-
-type Product = {
-  _id: string;
-  name: string;
-};
 
 export default function Products() {
   const navigate = useNavigate();
@@ -168,7 +163,7 @@ export default function Products() {
           ) : (
             <Grid container spacing={2} marginTop={1} justifyContent="center">
               {data && curCategory === "All" && data.products.length > 0
-                ? data.products.map((product: Product) => {
+                ? data.products.map((product) => {
                     return (
                       <ProductCard key={product._id} productData={product} />
                     );
@@ -180,7 +175,7 @@ export default function Products() {
               {data &&
               curCategory != "All" &&
               data.getProductsByCategory.length > 0
-                ? data.getProductsByCategory.map((product: Product) => {
+                ? data.getProductsByCategory.map((product) => {
                     return (
                       <ProductCard key={product._id} productData={product} />
                     );

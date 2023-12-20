@@ -18,10 +18,12 @@ import {
   Rating,
 } from "@mui/material";
 
-const NewComment = ({ user_id }) => {
+const EditComment = ({ record }) => {
   const { currentUser } = useContext(AuthContext);
 
-  const [toggleNewComment, setToggleNewComment] = useState<boolean>(false);
+  const [toggleEditComment, setToggleEditComment] = useState<boolean>(false);
+
+  const [prevComment, setPrevComment] = useState({});
   const [rating, setRating] = useState<number>(0);
   const [commentInput, setCommentInput] = useState("");
 
@@ -31,10 +33,15 @@ const NewComment = ({ user_id }) => {
   const [ratingError, setRatingError] = useState<boolean>(false);
   const [commentInputError, setCommentInputError] = useState<boolean>(false);
 
+  let user_id = undefined;
+  if (record.comments[0].comment_id !== currentUser.uid) {
+    throw "You are not authorized to comment";
+  }
+
   const helper = {
-    checkRating(newValue): void {
+    checkRating: (newValue)=> {
       setRatingError(false);
-      let rating: number | undefined = newValue;
+      let rating = newValue;
       if (!rating || rating < 1 || rating > 5) {
         setRatingError(true);
         return;
@@ -43,9 +50,9 @@ const NewComment = ({ user_id }) => {
       return;
     },
 
-    checkComment(): void {
+    checkComment: ()=> {
       setCommentInputError(false);
-      let commentInput: string | undefined = commentInputRef.current?.value;
+      let commentInput = commentInputRef.current?.value;
       if (!commentInput || commentInput.trim() == "") {
         setCommentInputError(true);
         return;
@@ -60,35 +67,29 @@ const NewComment = ({ user_id }) => {
     },
   };
 
-  const [addComment] = useMutation(ADD_COMMENT, {
+  const [editComment] = useMutation(EDIT_COMMENT, {
     onError: (e) => {
       alert(e);
-      cancelNewComment();
+      cancelEditComment();
     },
     onCompleted: () => {
       alert("Success");
-      setToggleNewComment(false);
+      setToggleEditComment(false);
     },
-    refetchQueries: [
-      {
-        query: GET_COMMENT,
-        variables: { user_id: user_id, comment_id: currentUser.uid },
-      },
-    ],
   });
 
-  const cancelNewComment = () => {
-    setToggleNewComment(false);
-    setRating(0);
+  const cancelEditComment = () => {
+    setToggleEditComment(false);
   };
 
-  const saveNewComment = () => {
+  const saveEditComment = () => {
     try {
       helper.checkRating(rating);
       helper.checkComment();
-      addComment({
+
+      editComment({
         variables: {
-          user_id: user_id,
+          user_id: record._id,
           comment_id: currentUser.uid,
           rating: rating,
           comment: commentInput,
@@ -106,18 +107,19 @@ const NewComment = ({ user_id }) => {
         variant="contained"
         color="inherit"
         onClick={() => {
-          setToggleNewComment(true);
+          setPrevComment(record.comments[0]);
+          setRating(record.rating);
+          setToggleEditComment(true);
         }}
-        style={{ marginTop: 100 }}
       >
         Comment
       </Button>
 
-      <Dialog open={toggleNewComment} maxWidth="md">
+      <Dialog open={toggleEditComment} maxWidth="md">
         <DialogTitle>Comment</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            How was your transaction experience with {user_id}?
+            Update your transaction experience with {user_id}
           </DialogContentText>
           <Box
             component="form"
@@ -129,8 +131,8 @@ const NewComment = ({ user_id }) => {
                 <Typography component="legend">Rating</Typography>
                 <Rating
                   name="simple-controlled"
-                  value={rating}
                   ref={ratingRef}
+                  defaultValue={prevComment.rating}
                   onChange={(event, newValue) => {
                     helper.checkRating(newValue);
                   }}
@@ -152,6 +154,7 @@ const NewComment = ({ user_id }) => {
                   label="Comment"
                   name="comment"
                   inputRef={commentInputRef}
+                  defaultValue={prevComment.comment}
                   onBlur={helper.checkComment}
                 />
                 {commentInputError && (
@@ -172,14 +175,12 @@ const NewComment = ({ user_id }) => {
             <Button
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
-              onClick={() => {
-                setToggleNewComment(false);
-              }}
+              onClick={cancelEditComment}
             >
               Cancel
             </Button>
             <Button
-              onClick={saveNewComment}
+              onClick={saveEditComment}
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
@@ -192,4 +193,4 @@ const NewComment = ({ user_id }) => {
   );
 };
 
-export default NewComment;
+export default EditComment;

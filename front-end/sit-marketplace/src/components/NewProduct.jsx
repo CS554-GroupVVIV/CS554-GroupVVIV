@@ -4,7 +4,7 @@ import { useNavigate, redirect } from "react-router-dom";
 
 import { useMutation, useQuery } from "@apollo/client";
 import { ADD_PRODUCT, GET_PRODUCTS } from "../queries";
-import { uploadFileToS3 } from "../aws.tsx";
+import { uploadFileToS3 } from "../aws";
 import { AuthContext } from "../context/AuthContext";
 
 import {
@@ -28,26 +28,25 @@ import { styled } from "@mui/material/styles";
 export default function SellForm() {
   const { currentUser } = useContext(AuthContext);
   let navigate = useNavigate();
-  const nameRef = useRef<HTMLInputElement | null>(null);
-  const priceRef = useRef<HTMLInputElement | null>(null);
-  const conditionRef = useRef<HTMLSelectElement | null>(null);
-  const descriptionRef = useRef<HTMLTextAreaElement | null>(null);
-  const categoryRef = useRef<HTMLSelectElement | null>(null);
-  const imageRef = useRef<HTMLInputElement | null>(null);
-  const [name, setName] = useState<string>("");
-  const [category, setCategory] = useState<string>("");
-  const [image, setImage] = useState<File | null>(null);
-  const [price, setPrice] = useState<number>(0);
-  const [condition, setCondition] = useState<string>("");
-  const [description, setDescription] = useState<string>("");
-  const [nameError, setNameError] = useState<boolean>(false);
-  const [priceError, setPriceError] = useState<boolean>(false);
-  const [conditionError, setConditionError] = useState<boolean>(false);
-  const [descriptionError, setDescriptionError] = useState<boolean>(false);
-  const [categoryError, setCategoryError] = useState<boolean>(false);
-  const [imageError, setImageError] = useState<boolean>(false);
+  const nameRef = useRef(null);
+  const priceRef = useRef(null);
+  const conditionRef = useRef(null);
+  const descriptionRef = useRef(null);
+  const categoryRef = useRef(null);
+  const imageRef = useRef(null);
+  const [name, setName] = useState("");
+  const [category, setCategory] = useState("");
+  const [image, setImage] = useState(null);
+  const [price, setPrice] = useState(0);
+  const [condition, setCondition] = useState("");
+  const [description, setDescription] = useState("");
+  const [nameError, setNameError] = useState(false);
+  const [priceError, setPriceError] = useState(false);
+  const [conditionError, setConditionError] = useState(false);
+  const [descriptionError, setDescriptionError] = useState(false);
+  const [categoryError, setCategoryError] = useState(false);
+  const [imageError, setImageError] = useState(false);
 
-  const defaultTheme = createTheme();
 
   const [addProduct] = useMutation(ADD_PRODUCT, {
     onError: (e) => {
@@ -58,26 +57,11 @@ export default function SellForm() {
       navigate("/products");
     },
   });
-  // const [addProduct] = useMutation(ADD_PRODUCT, {
-  //   update(cache, { data: { addProduct } }) {
-  //     const { products } = cache.readQuery({ query: GET_PRODUCTS });
-  //     cache.writeQuery({
-  //       query: ADD_PRODUCT,
-  //       data: { products: [...products, addProduct] },
-  //     });
-  //   },
-  // });
-
-  // useEffect(() => {
-  //   if (!currentUser) {
-  //     return navigate("/ogin");
-  //   }
-  // }, [currentUser]);
 
   const helper = {
-    checkName(): void {
+    checkName: ()=> {
       setNameError(false);
-      let input: string | undefined = nameRef.current?.value;
+      let input = nameRef.current?.value;
       if (!input || input.trim() == "") {
         setNameError(true);
         return;
@@ -96,16 +80,16 @@ export default function SellForm() {
       return;
     },
 
-    checkPrice(): void {
+    checkPrice: ()=> {
       setPriceError(false);
       setPrice(0);
-      let price: string | undefined = priceRef.current?.value;
+      let price = priceRef.current?.value;
       if (!price || price.trim() == "") {
         setPriceError(true);
         return;
       }
       price = price.trim();
-      let value: number = parseFloat(price);
+      let value = parseFloat(price);
       if (Number.isNaN(value)) {
         setPriceError(true);
         return;
@@ -122,20 +106,20 @@ export default function SellForm() {
       return;
     },
 
-    checkCondition(): void {
+    checkCondition: ()=> {
       setConditionError(false);
-      let condition: string | undefined = conditionRef.current?.value;
+      let condition = conditionRef.current?.value;
       if (!condition || condition.trim() == "") {
         setConditionError(true);
         return;
       }
       condition = condition.trim();
-      let conditionLower: string = condition.toLowerCase();
+      let conditionLower = condition.toLowerCase();
       if (
-        conditionLower != "brand new" &&
+        conditionLower !== "brand new" &&
         conditionLower != "like new" &&
-        conditionLower != "gently used" &&
-        conditionLower != "functional"
+        conditionLower !== "gently used" &&
+        conditionLower !== "functional"
       ) {
         setConditionError(true);
         return;
@@ -143,9 +127,9 @@ export default function SellForm() {
       setCondition(condition);
     },
 
-    checkDescription(): void {
+    checkDescription: ()=> {
       setDescriptionError(false);
-      let description: string | undefined = descriptionRef.current?.value;
+      let description = descriptionRef.current?.value;
       if (description && description.trim() != "") {
         description = description.trim();
         if (description.length > 100) {
@@ -160,9 +144,9 @@ export default function SellForm() {
       }
     },
 
-    checkCategory(): void {
+    checkCategory: ()=> {
       setCategoryError(false);
-      let category: string | undefined = categoryRef.current?.value;
+      let category = categoryRef.current?.value;
       if (!category || category.trim() == "") {
         setCategoryError(true);
         return;
@@ -183,9 +167,9 @@ export default function SellForm() {
       setCategory(categoryLower);
     },
 
-    checkImage(e: React.ChangeEvent<HTMLInputElement>): void {
+    checkImage: (e)=> {
       setImageError(false);
-      const image: File | undefined = e.target.files?.[0];
+      const image = e.target.files?.[0];
       if (!image || !(image instanceof File)) {
         setImageError(true);
         return;
@@ -221,7 +205,7 @@ export default function SellForm() {
   //   setImage(image);
   // };
 
-  const submit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const submit = async (e) => {
     e.preventDefault();
     helper.checkName();
     helper.checkPrice();
@@ -244,7 +228,7 @@ export default function SellForm() {
       //   "error",
       //   nameError,
       //   priceError,
-      //   conditionError,
+      //   conditionError,l
       //   descriptionError,
       //   categoryError
       // );
@@ -266,107 +250,6 @@ export default function SellForm() {
     });
   };
 
-  // return (
-  //   <div>
-  //     <h2>Upload Item</h2>
-  //     <div className="main">
-  //       <div className="description">
-  //         <p>
-  //           Please fill out the form below to upload an item to the marketplace.
-  //           Please ensure that all fields are filled out correctly.
-  //         </p>
-  //       </div>
-  //       <div className="form">
-  //         <form onSubmit={submit} encType="multipart/form-data">
-  //           <label htmlFor="title">Title</label>
-  //           <input
-  //             type="text"
-  //             id="title"
-  //             name="title"
-  //             ref={nameRef}
-  //             onBlur={helper.checkName}
-  //           />
-  //           <label htmlFor="category">Category</label>
-  //           <select
-  //             name="category"
-  //             id="category"
-  //             ref={categoryRef}
-  //             onBlur={helper.checkCategory}
-  //             defaultValue={""}
-  //           >
-  //             <option disabled></option>
-  //             <option>Book</option>
-  //             <option>Clothing</option>
-  //             <option>Electronics</option>
-  //             <option>Furniture</option>
-  //             <option>Stationary</option>
-  //             <option>Other</option>
-  //           </select>
-  //           <label htmlFor="description">Description</label>
-  //           <textarea
-  //             id="description"
-  //             name="description"
-  //             rows={3}
-  //             maxLength={100}
-  //             ref={descriptionRef}
-  //             onBlur={helper.checkDescription}
-  //             defaultValue={""}
-  //           />
-  //           <label htmlFor="image">Image</label>
-  //           <input
-  //             type="file"
-  //             id="image"
-  //             name="image"
-  //             ref={imageRef}
-  //             onBlur={helper.checkImage}
-  //           />
-  //           <label htmlFor="price">Price</label>
-  //           <input
-  //             type="number"
-  //             step="0.01"
-  //             id="price"
-  //             name="price"
-  //             ref={priceRef}
-  //             onBlur={helper.checkPrice}
-  //           />
-  //           <label htmlFor="category">Category</label>
-  //           <select
-  //             name="category"
-  //             id="category"
-  //             ref={categoryRef}
-  //             onBlur={helper.checkCategory}
-  //             defaultValue={""}
-  //           >
-  //             <option disabled></option>
-  //             <option value="electronics">Electronics</option>
-  //             <option value="clothing">Clothing</option>
-  //             <option value="furniture">Furniture</option>
-  //             <option value="books">Books</option>
-  //             <option value="stationery">Stationery</option>
-  //             <option value="other">Other</option>
-  //           </select>
-  //           <label htmlFor="condition">Condition</label>
-  //           <select
-  //             name="condition"
-  //             id="condition"
-  //             ref={conditionRef}
-  //             onBlur={helper.checkCondition}
-  //             defaultValue={""}
-  //           >
-  //             <option disabled></option>
-  //             <option value="brand new">Brand New</option>
-  //             <option value="like new">Like New</option>
-  //             <option value="gently used">Gently Used</option>
-  //             <option value="functional">Functional</option>
-  //           </select>
-  //           <label htmlFor="image">Image</label>
-  //           <input type="file" id="image" name="image" ref={imageRef} onChange={uploadImage}/>
-  //           <button type="submit">Submit</button>
-  //         </form>
-  //       </div>
-  //     </div>
-  //   </div>
-  // );
 
   const VisuallyHiddenInput = styled("input")({
     clip: "rect(0 0 0 0)",

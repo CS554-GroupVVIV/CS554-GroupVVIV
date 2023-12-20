@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
 import { EDIT_POST } from "../queries";
 import { useMutation } from "@apollo/client";
-import { uploadFileToS3 } from "../aws.tsx";
+import { uploadFileToS3 } from "../aws";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import {
   Button,
@@ -60,9 +60,9 @@ const EditPost = ({ postData }) => {
   });
 
   const helper = {
-    checkName(): void {
+    checkName: ()=> {
       setNameError(false);
-      let input: string | undefined = nameRef.current?.value;
+      let input = nameRef.current?.value;
       if (!input || input.trim() == "") {
         setNameError(true);
         return;
@@ -81,16 +81,16 @@ const EditPost = ({ postData }) => {
       return;
     },
 
-    checkPrice(): void {
+    checkPrice: ()=> {
       setPriceError(false);
       setPrice(0);
-      let price: string | undefined = priceRef.current?.value;
+      let price = priceRef.current?.value;
       if (!price || price.trim() == "") {
         setPriceError(true);
         return;
       }
       price = price.trim();
-      let value: number = parseFloat(price);
+      let value = parseFloat(price);
       if (Number.isNaN(value)) {
         setPriceError(true);
         return;
@@ -107,15 +107,15 @@ const EditPost = ({ postData }) => {
       return;
     },
 
-    checkCondition(): void {
+    checkCondition: ()=> {
       setConditionError(false);
-      let condition: string | undefined = conditionRef.current?.value;
+      let condition = conditionRef.current?.value;
       if (!condition || condition.trim() == "") {
         setConditionError(true);
         return;
       }
       condition = condition.trim();
-      let conditionLower: string = condition.toLowerCase();
+      let conditionLower = condition.toLowerCase();
       if (
         conditionLower != "brand new" &&
         conditionLower != "like new" &&
@@ -128,9 +128,9 @@ const EditPost = ({ postData }) => {
       setCondition(condition);
     },
 
-    checkDescription(): void {
+    checkDescription: ()=> {
       setDescriptionError(false);
-      let description: string | undefined = descriptionRef.current?.value;
+      let description= descriptionRef.current?.value;
       if (description && description.trim() != "") {
         description = description.trim();
         if (description.length > 100) {
@@ -145,9 +145,9 @@ const EditPost = ({ postData }) => {
       }
     },
 
-    checkCategory(): void {
+    checkCategory: ()=> {
       setCategoryError(false);
-      let category: string | undefined = categoryRef.current?.value;
+      let category = categoryRef.current?.value;
       if (!category || category.trim() == "") {
         setCategoryError(true);
         return;
@@ -168,9 +168,9 @@ const EditPost = ({ postData }) => {
       setCategory(category);
     },
 
-    checkStatus(): void {
+    checkStatus: ()=> {
       setStatusError(false);
-      let status: string | undefined = statusRef.current?.value;
+      let status = statusRef.current?.value;
       if (!status || status.trim() == "") {
         setStatusError(true);
         return;
@@ -188,9 +188,9 @@ const EditPost = ({ postData }) => {
       setStatus(statusLower);
     },
 
-    checkSeller(): void {
+    checkSeller: ()=>{
       setSellerError(false);
-      let seller: string | undefined = sellerRef.current?.value;
+      let seller = sellerRef.current?.value;
       if (!seller || seller.trim() == "") {
         setSellerError(true);
         return;

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import ProductCard from "./ProductCard";
-import PostCard from "./PostCard";
+import PostCard from "./PostCard.jsx";
 import {
   Paper,
   Container,

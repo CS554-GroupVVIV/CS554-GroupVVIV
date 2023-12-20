@@ -1,21 +1,8 @@
 import React from "react";
-import { useQuery } from "@apollo/client";
-import { SEARCH_PRODUCTS_BY_ID } from "../queries";
-import PostCard from "./PostCard";
 import { Container, Typography, Grid, Box } from "@mui/material";
 import FavoriteProduct from "./FavoriteProduct";
 
 const FavoriteHolder = ({ favorite }) => {
-  // const FavoriteProduct = ({ favId }) => {
-  //   const { data, loading, error } = useQuery(SEARCH_PRODUCTS_BY_ID, {
-  //     variables: { id: favId },
-  //   });
-  //   if (data) {
-  //     return <ProductCard productData={data.getProductById} />;
-  //   }
-  // };
-
-  console.log(favorite);
 
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>

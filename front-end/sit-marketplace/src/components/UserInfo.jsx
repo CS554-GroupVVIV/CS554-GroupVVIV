@@ -1,12 +1,12 @@
 import React, { useState, useContext, useEffect } from "react";
-import * as validation from "../helper.tsx";
+import * as validation from "../helper";
 import { AuthContext } from "../context/AuthContext.jsx";
 import { useMutation } from "@apollo/client";
-import { EDIT_USER } from "../queries.ts";
+import { EDIT_USER } from "../queries";
 import {
   doPasswordReset,
   updateUserProfile,
-} from "../firebase/FirebaseFunction";
+} from "../firebase/FirebaseFunction.jsx";
 
 function UserInfo({ data }) {
   let { currentUser } = useContext(AuthContext);

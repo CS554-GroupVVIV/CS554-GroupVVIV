@@ -9,12 +9,12 @@ import {
   GET_POSTS_BY_BUYER,
 } from "../queries";
 import UserInfo from "./UserInfo";
-import ProductTransactionHolder from "./ProductTransactionHolder.js";
-import PostTransactionHolder from "./PostTransactionHolder.js";
-import FavoriteHolder from "./FavoriteHolder.js";
+import ProductTransactionHolder from "./ProductTransactionHolder";
+import PostTransactionHolder from "./PostTransactionHolder.jsx";
+import FavoriteHolder from "./FavoriteHolder.jsx";
 import { styled, createTheme, ThemeProvider } from "@mui/material/styles";
 import MuiDrawer from "@mui/material/Drawer";
-import CommentPage from "./CommentPage.js";
+import CommentPage from "./CommentPage.jsx";
 import {
   Button,
   CssBaseline,
@@ -53,7 +53,7 @@ export default function Dashboard() {
   let { currentUser } = useContext(AuthContext);
 
   const [value, setValue] = useState(0);
-  const [toogleUpdateUser, setToggleUpdateUser] = useState<boolean>(false);
+  const [toogleUpdateUser, setToggleUpdateUser] = useState(false);
   const [user, setUser] = useState({});
 
   const { loading, error, data } = useQuery(GET_USER, {

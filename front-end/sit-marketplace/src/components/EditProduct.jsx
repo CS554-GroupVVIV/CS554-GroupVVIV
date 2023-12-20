@@ -1,16 +1,7 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
 import { EDIT_PRODUCT } from "../queries";
 import { useMutation } from "@apollo/client";
-// import {
-//   checkName,
-//   checkPrice,
-//   checkDescription,
-//   checkCategory,
-//   checkCondition,
-//   checkStatus,
-// } from "../helper.tsx";
-import { uploadFileToS3 } from "../aws.tsx";
-import OutlinedInput from "@mui/material/OutlinedInput";
+import { uploadFileToS3 } from "../aws";
 import {
   Button,
   TextField,
@@ -33,34 +24,32 @@ const EditProduct = ({ productData }) => {
   // const [image, setImage] = useState<File | undefined>(undefined);
   const [toggleEditForm, setToggleEditForm] = useState(false);
 
-  const nameRef = useRef<HTMLInputElement | null>(null);
-  const priceRef = useRef<HTMLInputElement | null>(null);
-  const conditionRef = useRef<HTMLSelectElement | null>(null);
-  const descriptionRef = useRef<HTMLTextAreaElement | null>(null);
-  const categoryRef = useRef<HTMLSelectElement | null>(null);
-  const imageRef = useRef<HTMLInputElement | null>(null);
-  const statusRef = useRef<HTMLSelectElement | null>(null);
-  const buyerRef = useRef<HTMLSelectElement | null>(null);
+  const nameRef = useRef(null);
+  const priceRef = useRef(null);
+  const conditionRef = useRef(null);
+  const descriptionRef = useRef(null);
+  const categoryRef = useRef(null);
+  const imageRef = useRef(null);
+  const statusRef = useRef(null);
+  const buyerRef = useRef(null);
 
-  const [name, setName] = useState<string>(productData.name);
-  const [category, setCategory] = useState<string>(productData.category);
-  const [image, setImage] = useState<File | null>(productData.image);
-  const [price, setPrice] = useState<number>(productData.price);
-  const [condition, setCondition] = useState<string>(productData.condition);
-  const [description, setDescription] = useState<string>(
-    productData.description
-  );
+  const [name, setName] = useState(productData.name);
+  const [category, setCategory] = useState(productData.category);
+  const [image, setImage] = useState(productData.image);
+  const [price, setPrice] = useState(productData.price);
+  const [condition, setCondition] = useState(productData.condition);
+  const [description, setDescription] = useState(productData.description);
 
-  const [status, setStatus] = useState<string>(productData.status);
-  const [buyer, setBuyer] = useState<string>("");
-  const [nameError, setNameError] = useState<boolean>(false);
-  const [priceError, setPriceError] = useState<boolean>(false);
-  const [conditionError, setConditionError] = useState<boolean>(false);
-  const [descriptionError, setDescriptionError] = useState<boolean>(false);
-  const [categoryError, setCategoryError] = useState<boolean>(false);
-  const [imageError, setImageError] = useState<boolean>(false);
-  const [statusError, setStatusError] = useState<boolean>(false);
-  const [buyerError, setBuyerError] = useState<boolean>(false);
+  const [status, setStatus] = useState(productData.status);
+  const [buyer, setBuyer] = useState("");
+  const [nameError, setNameError] = useState(false);
+  const [priceError, setPriceError] = useState(false);
+  const [conditionError, setConditionError] = useState(false);
+  const [descriptionError, setDescriptionError] = useState(false);
+  const [categoryError, setCategoryError] = useState(false);
+  const [imageError, setImageError] = useState(false);
+  const [statusError, setStatusError] = useState(false);
+  const [buyerError, setBuyerError] = useState(false);
 
   const [editProduct] = useMutation(EDIT_PRODUCT, {
     onError: (e) => {
@@ -73,9 +62,9 @@ const EditProduct = ({ productData }) => {
   });
 
   const helper = {
-    checkName(): void {
+    checkName: () => {
       setNameError(false);
-      let input: string | undefined = nameRef.current?.value;
+      let input = nameRef.current?.value;
       if (!input || input.trim() == "") {
         setNameError(true);
         return;
@@ -94,16 +83,16 @@ const EditProduct = ({ productData }) => {
       return;
     },
 
-    checkPrice(): void {
+    checkPrice: () => {
       setPriceError(false);
       setPrice(0);
-      let price: string | undefined = priceRef.current?.value;
+      let price = priceRef.current?.value;
       if (!price || price.trim() == "") {
         setPriceError(true);
         return;
       }
       price = price.trim();
-      let value: number = parseFloat(price);
+      let value = parseFloat(price);
       if (Number.isNaN(value)) {
         setPriceError(true);
         return;
@@ -120,15 +109,15 @@ const EditProduct = ({ productData }) => {
       return;
     },
 
-    checkCondition(): void {
+    checkCondition: () => {
       setConditionError(false);
-      let condition: string | undefined = conditionRef.current?.value;
+      let condition = conditionRef.current?.value;
       if (!condition || condition.trim() == "") {
         setConditionError(true);
         return;
       }
       condition = condition.trim();
-      let conditionLower: string = condition.toLowerCase();
+      let conditionLower = condition.toLowerCase();
       if (
         conditionLower != "brand new" &&
         conditionLower != "like new" &&
@@ -141,9 +130,9 @@ const EditProduct = ({ productData }) => {
       setCondition(condition);
     },
 
-    checkDescription(): void {
+    checkDescription: () => {
       setDescriptionError(false);
-      let description: string | undefined = descriptionRef.current?.value;
+      let description = descriptionRef.current?.value;
       if (description && description.trim() != "") {
         description = description.trim();
         if (description.length > 100) {
@@ -158,9 +147,9 @@ const EditProduct = ({ productData }) => {
       }
     },
 
-    checkCategory(): void {
+    checkCategory: () => {
       setCategoryError(false);
-      let category: string | undefined = categoryRef.current?.value;
+      let category = categoryRef.current?.value;
       if (!category || category.trim() == "") {
         setCategoryError(true);
         return;
@@ -181,9 +170,9 @@ const EditProduct = ({ productData }) => {
       setCategory(category);
     },
 
-    checkImage(e: React.ChangeEvent<HTMLInputElement>): void {
+    checkImage: (e) => {
       setImageError(false);
-      const image: File | undefined = e.target.files?.[0];
+      const image = e.target.files?.[0];
       if (!image || !(image instanceof File)) {
         setImageError(true);
         return;
@@ -201,9 +190,9 @@ const EditProduct = ({ productData }) => {
       setImage(image);
     },
 
-    checkStatus(): void {
+    checkStatus: () => {
       setStatusError(false);
-      let status: string | undefined = statusRef.current?.value;
+      let status = statusRef.current?.value;
       if (!status || status.trim() == "") {
         setStatusError(true);
         return;
@@ -221,9 +210,9 @@ const EditProduct = ({ productData }) => {
       setStatus(statusLower);
     },
 
-    checkBuyer(): void {
+    checkBuyer: () => {
       setBuyerError(false);
-      let buyer: string | undefined = buyerRef.current?.value;
+      let buyer = buyerRef.current?.value;
       if (!buyer || buyer.trim() == "") {
         setBuyerError(true);
         return;
@@ -579,120 +568,7 @@ const EditProduct = ({ productData }) => {
             </Button>
           </Stack>
         </DialogActions>
-
-        {/* <form onSubmit={editSubmit} encType="multipart/form-data">
-            <label htmlFor="name">Name</label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              // ref={(node) => {
-              //   name = node;
-              // }}
-              defaultValue={productData.name}
-              placeholder={productData.name}
-            />
-            <label htmlFor="description">Description</label>
-            <textarea
-              id="description"
-              name="description"
-              rows={3}
-              maxLength={100}
-              ref={(node) => {
-                description = node;
-              }}
-              placeholder={productData.description}
-              defaultValue={productData.description}
-            />
-            <label htmlFor="price">Price</label>
-            <input
-              type="number"
-              step="0.01"
-              id="price"
-              name="price"
-              placeholder={productData.price}
-              ref={(node) => {
-                price = node;
-              }}
-              defaultValue={productData.price}
-            />
-            <label htmlFor="category">Category</label>
-            <select
-              id="category"
-              name="category"
-              placeholder={productData.category}
-              ref={(node) => {
-                category = node;
-              }}
-              defaultValue={productData.category}
-            >
-              <option value="books">Books</option>
-              <option value="electronics">Electronics</option>
-              <option value="furniture">Furniture</option>
-              <option value="clothing">Clothing</option>
-              <option value="stationary">Stationary</option>
-              <option value="others">Others</option>
-            </select>
-            <label htmlFor="condition">Condition</label>
-            <select
-              id="condition"
-              name="condition"
-              placeholder={productData.condition}
-              ref={(node) => {
-                condition = node;
-              }}
-              defaultValue={productData.condition}
-            >
-              <option value="brand new">Brand New</option>
-              <option value="like new">Like New</option>
-              <option value="gently used">Gently Used</option>
-              <option value="functional">Functional</option>
-            </select>
-            <label htmlFor="image">Image</label>
-            <input type="file" id="image" name="image" onChange={uploadImage} />
-            <label htmlFor="status">Status</label>
-            <select
-              id="status"
-              name="status"
-              placeholder={productData.status}
-              onChange={statusChange}
-              ref={(node) => {
-                status = node;
-              }}
-              defaultValue={productData.status}
-            >
-              <option value="active">active</option>
-              <option value="inactive">inactive</option>
-              <option value="completed">completed</option>
-            </select>
-            {currentStatus == "completed" ? (
-              <>
-                <label htmlFor="buyer">Buyer</label>
-                <select
-                  id="buyer"
-                  name="buyer"
-                  placeholder="nospecific"
-                  ref={(node) => {
-                    buyer = node;
-                  }}
-                  defaultValue="nospecific"
-                >
-                  <option value="nospecific">No specific buyer</option>
-                  {productData.possible_buyers.map((buyer) => {
-                    return (
-                      <option key={buyer._id} value={buyer._id}>
-                        {buyer.firstname} {buyer.lastname}
-                      </option>
-                    );
-                  })}
-                </select>
-              </>
-            ) : null}
-
-            <button type="submit">Submit</button>
-          </form> */}
       </Dialog>
-      {/* </div> */}
     </>
   );
 };

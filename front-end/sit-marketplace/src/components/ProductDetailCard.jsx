@@ -2,9 +2,9 @@ import React, { useState, useEffect, useRef, useContext } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import noImage from "../assets/noimage.jpg";
 import { AuthContext } from "../context/AuthContext";
-import EditProduct from "./EditProduct.tsx";
-import { socketID, socket } from "./socket";
-import Comment from "./Comment.tsx";
+import EditProduct from "./EditProduct.jsx";
+import { socketID, socket } from "./socket.jsx";
+import Comment from "./Comment.jsx";
 
 import {
   Card,

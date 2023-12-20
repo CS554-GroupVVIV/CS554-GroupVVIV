@@ -2,9 +2,9 @@ import React, { useContext, useEffect, useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import { doSignInWithEmailAndPassword } from "../firebase/FirebaseFunction";
-import ResetPassword from "./ResetPassword.tsx";
+import ResetPassword from "./ResetPassword";
 import { useMutation, useQuery } from "@apollo/client";
-import { EDIT_USER, GET_USER } from "../queries.ts";
+import { EDIT_USER, GET_USER } from "../queries";
 import {
   Avatar,
   Button,

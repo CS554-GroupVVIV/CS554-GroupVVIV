@@ -3,8 +3,8 @@ import { useQuery } from "@apollo/client";
 import { AuthContext } from "../context/AuthContext.jsx";
 import { GET_COMMENT } from "../queries";
 
-import EditComment from "./EditComment.js";
-import NewComment from "./NewComment.js";
+import EditComment from "./EditComment.jsx";
+import NewComment from "./NewComment.jsx";
 
 const Comment = ({ data }) => {
   const { currentUser } = useContext(AuthContext);

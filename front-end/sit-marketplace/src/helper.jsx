@@ -1,6 +1,6 @@
 // import { ObjectId } from "mongodb";
 
-export const checkFirstNameAndLastName = (str: string, valStr: string) => {
+export const checkFirstNameAndLastName = (str, valStr) => {
   if (str === undefined) throw new Error(`${valStr} must provide a string`);
   console.log(str);
   if (typeof str !== "string") throw new Error(`${valStr} must be a string`);
@@ -15,7 +15,7 @@ export const checkFirstNameAndLastName = (str: string, valStr: string) => {
   return str;
 };
 
-export const checkEmail = (email: string) => {
+export const checkEmail = (email) => {
   const regex = new RegExp(
     /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@(stevens.edu)$/i
   );
@@ -29,7 +29,7 @@ export const checkEmail = (email: string) => {
   return email;
 };
 
-export const checkRating = (rating: number) => {
+export const checkRating = (rating) => {
   if (!rating || typeof rating !== "number") {
     throw "Rating not valid";
   }
@@ -42,14 +42,14 @@ export const checkRating = (rating: number) => {
   return rating;
 };
 
-export const dateObjectToHTMLDate = (date: Date) => {
+export const dateObjectToHTMLDate = (date) => {
   const year = date.getFullYear();
   const month = (date.getMonth() + 1).toString().padStart(2, "0");
   const day = date.getDate().toString().padStart(2, "0");
   return `${year}-${month}-${day}`;
 };
 
-export const HTMLDateToDateObject = (date: string) => {
+export const HTMLDateToDateObject = (date) => {
   return new Date(date);
 };
 
@@ -62,7 +62,7 @@ export const checkPassword = (password) => {
   return password;
 };
 
-export const checkName = (name: string) => {
+export const checkName = (name) => {
   if (!name || name.trim() === "") {
     throw new Error("Name cannot be empty.");
   }
@@ -77,7 +77,7 @@ export const checkName = (name: string) => {
   return name;
 };
 
-export const checkPrice = (price: String) => {
+export const checkPrice = (price) => {
   if (!price || price.trim() === "") {
     throw new Error("Price cannot be empty.");
   }
@@ -92,7 +92,7 @@ export const checkPrice = (price: String) => {
   return value;
 };
 
-export const checkString = (str:String) => {
+export const checkString = (str) => {
   if (str === undefined) throw new Error("Must provide a string");
   if (typeof str !== "string") throw new Error("str must be a string");
   if (str.trim().length == 0) throw new Error("should not be just space");
@@ -100,7 +100,7 @@ export const checkString = (str:String) => {
   return str;
 };
 
-export const checkStatus = (status: String) =>{
+export const checkStatus = (status) =>{
   status = checkString(status);
   if(status.toLowerCase() != "active" && status.toLowerCase() != "inactive" && status.toLowerCase() != "completed"){
     throw new Error("Invalid Status. It must be active, inactive or completed");
@@ -108,7 +108,7 @@ export const checkStatus = (status: String) =>{
   return status;
 }
 
-export const checkCondition = (condition: String) => {
+export const checkCondition = (condition) => {
   if (!condition || condition.trim() == "") {
     throw new Error("Must provide a condition");
   }
@@ -125,7 +125,7 @@ export const checkCondition = (condition: String) => {
   return condition;
 };
 
-export const checkDescription = (description:String) => {
+export const checkDescription = (description) => {
   if (description && description.trim() != "") {
     description = description.trim();
     if (description.length > 100) {
@@ -138,7 +138,7 @@ export const checkDescription = (description:String) => {
   }
 };
 
-export const checkCategory = (category:String) => {
+export const checkCategory = (category) => {
   if (!category || category.trim() == "") {
     throw new Error("Must provide a category");
   }

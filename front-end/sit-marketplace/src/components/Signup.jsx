@@ -4,7 +4,7 @@ import { doCreateUserWithEmailAndPassword } from "../firebase/FirebaseFunction";
 import { AuthContext } from "../context/AuthContext";
 import { useMutation } from "@apollo/client";
 import { ADD_USER } from "../queries";
-import * as validation from "../helper.tsx";
+import * as validation from "../helper";
 import {
   Avatar,
   Button,

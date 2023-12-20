@@ -17,11 +17,6 @@ import {
   TextField,
 } from "@mui/material";
 
-type Post = {
-  _id: string;
-  title: string;
-};
-
 export default function Posts() {
   const navigate = useNavigate();
   const [text, setText] = useState("");
@@ -60,7 +55,6 @@ export default function Posts() {
     return <p>Something went wrong {error.message}</p>;
   } else if (data) {
     const posts = data.posts;
-    // console.log(posts);
     return (
       <div style={{ marginTop: 70, padding: 10 }}>
         <div style={{ display: "flex", justifyContent: "center" }}>
@@ -177,7 +171,7 @@ export default function Posts() {
             return <PostCard key={post._id} postData={post} />;
           })} */}
               {data && curCategory === "All" && data.posts.length > 0
-                ? data.posts.map((post: Post) => {
+                ? data.posts.map((post) => {
                     return <PostCard key={post._id} postData={post} />;
                   })
                 : null}
@@ -187,7 +181,7 @@ export default function Posts() {
               {data &&
               curCategory != "All" &&
               data.getPostsByCategory.length > 0
-                ? data.getPostsByCategory.map((post: Post) => {
+                ? data.getPostsByCategory.map((post) => {
                     return <PostCard key={post._id} postData={post} />;
                   })
                 : null}
