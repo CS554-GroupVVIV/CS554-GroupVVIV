@@ -28,7 +28,7 @@ export default function ChatRoom({ room }) {
         try {
           addChat({
             variables: {
-              participants: [currentUser.uid, room],
+              participants: [currentUser?.uid, room],
             },
             refetchQueries: [
               {
@@ -101,7 +101,7 @@ export default function ChatRoom({ room }) {
       >
         <Chat
           chat={data && data.getChatByParticipants.messages}
-          participants={[currentUser.uid, room]}
+          participants={[currentUser?.uid, room]}
         />
 
         {chat.length > 0 && (
@@ -110,7 +110,7 @@ export default function ChatRoom({ room }) {
             <p>New Messages:</p>
           </>
         )}
-        <Chat chat={chat} participants={[currentUser.uid, room]} />
+        <Chat chat={chat} participants={[currentUser?.uid, room]} />
 
         <div ref={messagesEndRef} />
       </Grid>
