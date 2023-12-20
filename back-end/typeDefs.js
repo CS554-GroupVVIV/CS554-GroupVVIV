@@ -75,6 +75,7 @@ export const typeDefs = `#graphql
     comments:[Comment]
     rating: Float
     favorite: [String]!
+    favorite_post:[String]!
   }
 
     type Message{
