@@ -99,7 +99,7 @@ export const typeDefs = `#graphql
         addPossibleSeller(_id:String!,seller_id:String!):Post,
         editPost(_id: String!, buyer_id: String!,seller_id:String, item:String!, category:String!, price: Float!, condition:String!, description:String, status:String!):Post,
         removePost(_id:String!):Post,
-        addUser(_id: String!, email: String!, firstname: String!, lastname: String!, favorite: String,favorite_post:String!): User,
+        addUser(_id: String!, email: String!, firstname: String!, lastname: String!, favorite: String): User,
         editUser(_id: String!, email: String!, firstname: String!, lastname: String!): User,
         addChat(participants: [String!]!): Chat,
         addMessage(_id: String!, sender: ID!, time: DateTime!, message: String!): Message,
