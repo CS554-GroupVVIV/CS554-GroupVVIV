@@ -1,7 +1,7 @@
 import { dbConnection, closeConnection } from "./config/mongoConnection.js";
 import { users, products, posts } from "./config/mongoCollections.js";
 import { ObjectId } from "mongodb";
-
+import { resolvers } from "./resolvers.js";
 const userList = [
   {
     _id: "mRdeR8wDRzLVEbeer5PpbJY6TDE3",
@@ -352,26 +352,27 @@ const postList = [
     _id: new ObjectId(),
     buyer_id: "mRdeR8wDRzLVEbeer5PpbJY6TDE3",
     seller_id: null,
-    item: "Book",
+    item: "Textbook",
     category: "Book",
-    price: 10,
-    condition: "Brand New",
-    date: new Date(),
-    description: "textbook",
+    price: 15,
+    condition: "Like New",
+    date: new Date("2023-12-19"),
+    description:
+      "Hi, anyone has the textbook for course 554 Web Programming II?",
     status: "active",
     possible_sellers: [],
     completion_date: null,
   },
   {
     _id: new ObjectId(),
-    buyer_id: "7SKDog0fjKOeS1jeuq32a9vYPue2",
+    buyer_id: "mRdeR8wDRzLVEbeer5PpbJY6TDE3",
     seller_id: null,
-    item: "chair",
-    category: "Furniture",
-    price: 10,
-    condition: "Like New",
-    date: new Date(),
-    description: "",
+    item: "Calculator",
+    category: "Stationary",
+    price: 15,
+    condition: "Functional",
+    date: new Date("2023-12-09"),
+    description: "Need a calculator for my math exam! Thank you!",
     status: "active",
     possible_sellers: [],
     completion_date: null,
@@ -381,11 +382,12 @@ const postList = [
     buyer_id: "mRdeR8wDRzLVEbeer5PpbJY6TDE3",
     seller_id: null,
     item: "Pen",
-    category: "Book",
+    category: "Stationary",
     price: 10,
     condition: "Brand New",
-    date: new Date(),
-    description: "black pen",
+    date: new Date("2023-12-01"),
+    description:
+      "EMERGENCY!!!! I have a test this afternoon and really need a black pen!!!!",
     status: "inactive",
     possible_sellers: [],
     completion_date: null,
@@ -418,6 +420,20 @@ const postList = [
     possible_sellers: ["mRdeR8wDRzLVEbeer5PpbJY6TDE3"],
     completion_date: new Date("2023-12-08"),
   },
+  {
+    _id: new ObjectId(),
+    buyer_id: "7SKDog0fjKOeS1jeuq32a9vYPue2",
+    seller_id: null,
+    item: "chair",
+    category: "Furniture",
+    price: 10,
+    condition: "Like New",
+    date: new Date(),
+    description: "",
+    status: "active",
+    possible_sellers: [],
+    completion_date: null,
+  },
 ];
 
 const main = async () => {
@@ -428,8 +444,8 @@ const main = async () => {
   const postCollection = await posts();
 
   await userCollection.insertMany(userList);
-  await productCollection.insertMany(productList);
-  await postCollection.insertMany(postList);
+  // await productCollection.insertMany(productList);
+  // await postCollection.insertMany(postList);
 
   console.log("Done seeding database");
   await closeConnection();

@@ -10,17 +10,16 @@ import {
   Typography,
 } from "@mui/material";
 import { useQuery } from "@apollo/client";
-import { GET_USER } from "../queries";
+import { GET_USER } from "../queries.js";
 
 const style = {
   width: "100%",
   bgcolor: "background.paper",
 };
 
-const CommentPage = () => {
-  const { currentUser } = useContext(AuthContext);
+const CommentPage = ({ user_id }) => {
   const { data, loading, error } = useQuery(GET_USER, {
-    variables: { id: currentUser.uid },
+    variables: { id: user_id },
   });
 
   if (loading) {
@@ -32,8 +31,10 @@ const CommentPage = () => {
     const comments = data.getUserById.comments;
     const rating = data.getUserById.rating;
     return (
-      <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-        <Typography variant="subtitle1">Rating: {rating}</Typography>
+      <Container maxWidth="lg">
+        <Typography variant="subtitle1">
+          Rating: {rating?.toFixed(2)} from {comments?.length} users
+        </Typography>
         {comments && comments.length == 0 ? (
           <p>No Comments</p>
         ) : (
@@ -51,7 +52,7 @@ const CommentPage = () => {
                           >
                             {`${comment.rating.toFixed(2)} from ${
                               comment.comment_id
-                            }\n${comment.comment}`}
+                            }\n"${comment.comment}"`}
                           </Typography>
                         }
                       />
