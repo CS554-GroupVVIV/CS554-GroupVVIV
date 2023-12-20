@@ -1,7 +1,6 @@
 import { dbConnection, closeConnection } from "./config/mongoConnection.js";
 import { users, products, posts } from "./config/mongoCollections.js";
 import { ObjectId } from "mongodb";
-import { resolvers } from "./resolvers.js";
 const userList = [
   {
     _id: "mRdeR8wDRzLVEbeer5PpbJY6TDE3",
