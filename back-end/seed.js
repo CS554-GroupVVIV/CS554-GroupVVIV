@@ -10,7 +10,6 @@ const userList = [
     favorite: [],
     favorite_post: [],
     comments: [],
-    rating: 0,
   },
   {
     _id: "8C5bGSz1FRVbAQ47EDnDSvmKsqg2",
@@ -20,7 +19,6 @@ const userList = [
     favorite: [],
     favorite_post: [],
     comments: [],
-    rating: 0,
   },
   {
     _id: "7SKDog0fjKOeS1jeuq32a9vYPue2",
@@ -30,7 +28,24 @@ const userList = [
     favorite: [],
     favorite_post: [],
     comments: [],
-    rating: 0,
+  },
+  {
+    _id: "MakfosvJBSRugNO7tQbAPA8XsW82",
+    email: "luoyi@stevens.edu",
+    firstname: "Lori",
+    lastname: "Fu",
+    favorite: [],
+    favorite_post: [],
+    comments: [],
+  },
+  {
+    _id: "WiICBEajMHVeQPxxFrpYaMyyRIt1",
+    email: "tlu14@stevens.edu",
+    firstname: "Daniel",
+    lastname: "Lu",
+    favorite: [],
+    favorite_post: [],
+    comments: [],
   },
 ];
 
@@ -40,6 +55,11 @@ const userIds = [
   "mRdeR8wDRzLVEbeer5PpbJY6TDE3",
   "8C5bGSz1FRVbAQ47EDnDSvmKsqg2",
   "7SKDog0fjKOeS1jeuq32a9vYPue2",
+];
+const userIds_2 = [
+  "MakfosvJBSRugNO7tQbAPA8XsW82",
+  "WiICBEajMHVeQPxxFrpYaMyyRIt1",
+  null,
 ];
 const productDetails = {
   Pencils: {
@@ -164,14 +184,15 @@ for (let key in productDetails) {
   const details = productDetails[key];
   const randomSeller = Math.floor(Math.random() * userIds.length);
   const randomCondition = Math.floor(Math.random() * conditions.length);
+  const randomBuyer = Math.floor(Math.random() * userIds_2.length);
 
-  const product = {
+  const activeProduct = {
     _id: new ObjectId(),
     name: key,
     price: details.p,
     date: new Date(
-      `2023-${Math.floor(Math.random() * 11) + 1}-${
-        Math.floor(Math.random() * 27) + 1
+      `2023-${Math.floor(Math.random() * 10) + 1}-${
+        Math.floor(Math.random() * 25) + 1
       }`
     ),
     description: details.d,
@@ -181,13 +202,59 @@ for (let key in productDetails) {
     image: details.url,
     category: details.c,
     status: "active",
-    possible_buyers: [],
+    possible_buyers: randomBuyer ? [randomBuyer] : null,
     completion_date: null,
   };
-  // console.log(product);
 
-  productList.push(product);
+  productList.push(activeProduct);
 }
+
+const inactiveProducts = [
+  {
+    _id: new ObjectId(),
+    name: "Stevens Hoodie",
+    price: 500,
+    date: new Date(
+      `2023-${Math.floor(Math.random() * 10) + 1}-${
+        Math.floor(Math.random() * 25) + 1
+      }`
+    ),
+    description: "Stevens Hoodie - LIMITED EDITION",
+    condition: "brand new",
+    seller_id: "8C5bGSz1FRVbAQ47EDnDSvmKsqg2",
+    buyer_id: null,
+    image:
+      "https://m.media-amazon.com/images/I/B1Wsm-8LxOS._CLa%7C2140%2C2000%7CB1nyqsQsIwL.png%7C0%2C0%2C2140%2C2000%2B0.0%2C0.0%2C2140.0%2C2000.0_AC_SX679_.png",
+    category: "clothing",
+    status: "inactive",
+    possible_buyers: [],
+    completion_date: null,
+  },
+  {
+    _id: new ObjectId(),
+    name: "Stevens Hoodie Red",
+    price: 600,
+    date: new Date(
+      `2023-${Math.floor(Math.random() * 10) + 1}-${
+        Math.floor(Math.random() * 25) + 1
+      }`
+    ),
+    description: "Stevens Hoodie - LIMITED EDITION",
+    condition: "brand new",
+    seller_id: "8C5bGSz1FRVbAQ47EDnDSvmKsqg2",
+    buyer_id: null,
+    image:
+      "https://cdn.spiritshop.com/DynamicImageHandler.ashx?width=1000&height=1000&did=76518&logo=null&pid=1386&cid=14273&view=1&ndz=1&tt=Stevens&bt=Ducks&cp1=%23181C33&cp2=%23EEEEEE&yt=2024&pset=4&tn=Your%20Name&tm=00&photo=0",
+    category: "clothing",
+    status: "inactive",
+    possible_buyers: [],
+    completion_date: null,
+  },
+];
+
+inactiveProducts.map((inactiveProduct) => {
+  productList.push(inactiveProduct);
+});
 
 const postDetails = {
   "Textbook for CS554": {
@@ -244,11 +311,11 @@ for (let key in postDetails) {
     seller_id: null,
     item: key,
     category: details.c,
-    price: Math.floor(Math.random() * 50),
+    price: Math.floor(Math.random() * 100),
     condition: conditions[randomCondition],
     date: new Date(
-      `2023-${Math.floor(Math.random() * 11) + 1}-${
-        Math.floor(Math.random() * 27) + 1
+      `2023-${Math.floor(Math.random() * 10) + 1}-${
+        Math.floor(Math.random() * 25) + 1
       }`
     ),
     description: details.d,
