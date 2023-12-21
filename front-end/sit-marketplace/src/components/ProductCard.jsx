@@ -37,7 +37,7 @@ export default function ProductCard({ productData }) {
 
   const { currentUser } = useContext(AuthContext);
 
-  const [isPossibleBuyer, setIsPossibleBuyer] = useState();
+  const [isPossibleBuyer, setIsPossibleBuyer] = useState(false);
   useEffect(() => {
     if (productData) {
       console.log(productData);
@@ -48,10 +48,12 @@ export default function ProductCard({ productData }) {
               // console.log(buyer);
               return buyer._id;
             })
-            .includes(currentUser.uid)
+            .includes(currentUser && currentUser.uid)
       );
     }
   }, [productData]);
+  // console.log(productData)
+
   // console.log("here", isPossibleBuyer);
 
   const [hasFavorited, setHasFavorited] = useState(false);

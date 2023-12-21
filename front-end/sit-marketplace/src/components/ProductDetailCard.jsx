@@ -23,6 +23,7 @@ import {
   REMOVE_FAVORITE_FROM_USER,
   SEARCH_PRODUCTS_BY_ID,
   ADD_POSSIBLE_BUYER,
+  REMOVE_POSSIBLE_BUYER,
   GET_USER_FOR_FAVORITE,
   GET_USER,
 } from "../queries";
@@ -35,11 +36,31 @@ export default function ProductDetailCard() {
   const navigate = useNavigate();
 
   const { currentUser } = useContext(AuthContext);
+
+  
   const [hasFavorited, setHasFavorited] = useState(false);
   const { loading, error, data } = useQuery(SEARCH_PRODUCTS_BY_ID, {
     variables: { id: id },
     fetchPolicy: "cache-and-network",
   });
+
+   const [isPossibleBuyer, setIsPossibleBuyer] = useState(false);
+  useEffect(() => {
+    if (data) {
+      console.log(data);
+      setIsPossibleBuyer(
+        data &&
+        data.getProductById.possible_buyers
+            .map((buyer) => {
+              // console.log(buyer);
+              return buyer._id;
+            })
+            .includes(currentUser && currentUser.uid)
+      );
+    }
+  }, [data]);
+
+
   const { data: userData, error: userError } = useQuery(GET_USER_FOR_FAVORITE, {
     variables: { id: currentUser ? currentUser.uid : "" },
     fetchPolicy: "cache-and-network",
@@ -61,6 +82,8 @@ export default function ProductDetailCard() {
   });
 
   const [addPossibleBuyer] = useMutation(ADD_POSSIBLE_BUYER);
+  const [removePossibleBuyer] = useMutation(REMOVE_POSSIBLE_BUYER);
+
 
   const [removeFavorite, { removeData, removeLoading, removeError }] =
     useMutation(
@@ -251,7 +274,27 @@ export default function ProductDetailCard() {
                               Chat
                             </Button>
 
-                            <Button
+                                {isPossibleBuyer?<Button
+                      size="small"
+                      variant="contained"
+                      onClick={() => {
+                        if (currentUser.uid) {
+                          removePossibleBuyer({
+                            variables: {
+                              id: productData._id,
+                              buyerId: currentUser.uid,
+                            },
+                            
+                          });
+                          // setIsPossibleBuyer(false);
+
+                          alert("You're no longer a potential buyer ...");
+                        }
+                      }}
+                      sx={{ fontWeight: "bold", marginLeft: 2 }}
+                    >
+                      Cancel
+                    </Button>:<Button
                               size="small"
                               variant="contained"
                               onClick={async () => {
@@ -282,7 +325,9 @@ export default function ProductDetailCard() {
                             >
                               Buy
                             </Button>
-
+}
+                              
+                            
                             <IconButton
                               sx={{ marginLeft: 3 }}
                               onClick={handleFavorite}

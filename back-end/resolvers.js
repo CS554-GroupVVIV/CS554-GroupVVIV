@@ -1534,7 +1534,7 @@ export const resolvers = {
           });
         }
         if (product.possible_buyers.includes(buyer_id)) {
-          return product;
+          return ;
         }
         const users = await userCollection();
         const buyer = await users.findOne({ _id: buyer_id });
@@ -1546,13 +1546,19 @@ export const resolvers = {
         const update = await products.findOneAndUpdate(
           { _id: new ObjectId(_id) },
           { $push: { possible_buyers: buyer_id } },
-          { new: true }
+          { returnDocument: "after" }
         );
         if (!update) {
           throw new GraphQLError(`Could not Edit Product`, {
             extensions: { code: "INTERNAL_SERVER_ERROR" },
           });
         }
+
+        client.json.del(`allProducts`);
+        client.json.del(`getProductsByStatus-active`);
+        client.json.del(`getProductById-${_id}`);
+
+
         return update;
       } catch (error) {
         throw new GraphQLError(error.message);
@@ -1583,13 +1589,18 @@ export const resolvers = {
         const update = await products.findOneAndUpdate(
           { _id: new ObjectId(_id) },
           { $pull: { possible_buyers: buyer_id } },
-          { new: true }
+          { returnDocument: "after" }
         );
         if (!update) {
           throw new GraphQLError(`Could not Edit Product`, {
             extensions: { code: "INTERNAL_SERVER_ERROR" },
           });
         }
+
+        client.json.del(`allProducts`);
+        client.json.del(`getProductsByStatus-active`);
+        client.json.del(`getProductById-${_id}`);
+
         return update;
       } catch (error) {
         throw new GraphQLError(error.message);
@@ -1624,6 +1635,12 @@ export const resolvers = {
             extensions: { code: "INTERNAL_SERVER_ERROR" },
           });
         }
+
+
+        client.json.del(`allPosts`);
+        client.json.del(`getPostsByStatus-active`);
+        client.json.del(`getPostById-${_id}`);
+
         return update;
       } catch (error) {
         throw new GraphQLError(error.message);
@@ -1658,6 +1675,11 @@ export const resolvers = {
             extensions: { code: "INTERNAL_SERVER_ERROR" },
           });
         }
+
+        client.json.del(`allPosts`);
+        client.json.del(`getPostsByStatus-active`);
+        client.json.del(`getPostById-${_id}`);
+        
         return update;
       } catch (error) {
         throw new GraphQLError(error.message);
