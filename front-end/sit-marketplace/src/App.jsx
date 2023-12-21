@@ -282,9 +282,10 @@ function App() {
               path="/userprofile"
               element={user ? <UserProfile /> : <Navigate to={"/login"} />}
             />
-
-            <Route path="/error" element={<Error />} />
-            <Route path="/404" element={<Error />} />
+            <Route
+              path="*"
+              element={<Error messageProp="Bad Input" statusCodeProp={400} />}
+            />
           </Routes>
         </div>
       </AuthProvider>
