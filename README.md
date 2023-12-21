@@ -86,7 +86,7 @@ Then, you can open http://localhost:5173 on browser to start using the website.
 
 <div align="left">
 
-  ![Image Imgur]([Imgur](https://i.imgur.com/LB5ksF4.gifv))
+  ![Image Imgur]([Imgur](https://i.imgur.com/LB5ksF4.gif))
 
 </div>
 
