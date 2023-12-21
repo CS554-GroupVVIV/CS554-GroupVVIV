@@ -138,7 +138,7 @@ const productDetails = {
     p: 10,
     url: "https://miro.medium.com/v2/resize:fit:1400/1*lY4N4t53Su3Yno74f3ERww.jpeg",
   },
-  "Cloud Computing Book": {
+  "Cloud Computing": {
     d: "Cloud Computing Principles",
     c: "book",
     p: 10,
