@@ -128,7 +128,6 @@ export default function Dashboard() {
   } else if (error) {
     <p>Error</p>;
   } else if (data) {
-    console.log(data.getUserById);
     return (
       <Grid container direction="row" height={"100vh"}>
         <Grid item sx={{ width: "25%" }} mt={8}>

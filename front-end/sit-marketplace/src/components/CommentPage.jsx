@@ -40,10 +40,10 @@ const CommentPage = ({ user_id }) => {
         ) : (
           <List sx={style} component="div" aria-label="comment">
             {comments &&
-              comments.map((comment) => {
-                console.log(comment);
+              comments.map((comment, index) => {
+                console.log(comment.comment);
                 return (
-                  <>
+                  <div key={comment._id}>
                     <ListItem>
                       <ListItemText
                         primary={
@@ -54,13 +54,16 @@ const CommentPage = ({ user_id }) => {
                             {`${comment.rating.toFixed(2)} from ${
                               comment.firstname
                             } on ${comment.date.toLocaleString()}
-                            \n"${comment.comment}"`}
+                            `}
+                            {comment.comment != ""
+                              ? `\n"${comment.comment}"`
+                              : null}
                           </Typography>
                         }
                       />
                     </ListItem>
-                    <Divider />
-                  </>
+                    {index != comments.length - 1 && <Divider />}
+                  </div>
                 );
               })}
           </List>
