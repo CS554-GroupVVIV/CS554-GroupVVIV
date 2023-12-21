@@ -123,6 +123,7 @@ export default function ProductDetailCard() {
   }
   if (data && sellerData) {
     const productData = data.getProductById;
+
     return (
       <>
         <Grid container marginTop={12} marginLeft={5} component="main">
@@ -262,13 +263,15 @@ export default function ProductDetailCard() {
                                     },
                                   });
 
-                                  addFavorite({
-                                    variables: {
-                                      id: currentUser.uid,
-                                      productId: productData._id,
-                                    },
-                                  });
-                                  setHasFavorited(true);
+                                  if (!hasFavorited) {
+                                    addFavorite({
+                                      variables: {
+                                        id: currentUser.uid,
+                                        productId: productData._id,
+                                      },
+                                    });
+                                    setHasFavorited(true);
+                                  }
 
                                   alert(
                                     "You're a potential buyer now!\n\nFeel free to contact the seller for further information."

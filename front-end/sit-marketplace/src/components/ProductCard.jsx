@@ -176,13 +176,15 @@ export default function ProductCard({ productData }) {
                           },
                         });
 
-                        addFavorite({
-                          variables: {
-                            id: currentUser.uid,
-                            productId: productData._id,
-                          },
-                        });
-                        setHasFavorited(true);
+                        if (!hasFavorited) {
+                          addFavorite({
+                            variables: {
+                              id: currentUser.uid,
+                              productId: productData._id,
+                            },
+                          });
+                          setHasFavorited(true);
+                        }
 
                         alert(
                           "Congrats! You're a potential buyer now!\n\nFeel free to contact the seller for further information."

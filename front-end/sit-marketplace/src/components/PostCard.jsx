@@ -146,12 +146,14 @@ export default function PostCard({ postData }) {
                           },
                         });
 
-                        addFavorite({
-                          variables: {
-                            id: currentUser.uid,
-                          },
-                        });
-                        setHasFavorited(true);
+                        if (!hasFavorited) {
+                          addFavorite({
+                            variables: {
+                              id: currentUser.uid,
+                            },
+                          });
+                          setHasFavorited(true);
+                        }
 
                         alert(
                           "You're a potential seller now!\n\nFeel free to contact the buyer for further information."
