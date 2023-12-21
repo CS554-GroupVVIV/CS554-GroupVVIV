@@ -48,7 +48,7 @@ export default function ProductCard({ productData }) {
               // console.log(buyer);
               return buyer._id;
             })
-            .includes(currentUser.uid)
+            .includes(currentUser?.uid)
       );
     }
   }, [productData]);
