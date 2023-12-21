@@ -84,23 +84,59 @@ Then, you can open http://localhost:5173 on browser to start using the website.
 
 1 - Access the Home page to browse products without the need to log in.
 
-<div align="left">
+<div align="center">
 
-  ![Image Imgur]([Imgur](https://i.imgur.com/LB5ksF4.gif))
+  ![Image Imgur](https://i.imgur.com/LB5ksF4.gif)
 
 </div>
 
 2 - Register a user using a Stevens' email address to access additional functionalities
 
-3 - Adding a new post to offer products for sale
+<div align="center">
+
+  ![Image Imgur](https://i.imgur.com/hCrPISW.gif)
+
+</div>
+
+3 - Adding a new post to offer products for sale (Error)
+
+<div align="center">
+
+  ![Image Imgur](https://i.imgur.com/LB5ksF4.gif)
+
+</div>
 
 4 - Submitting a new request to buy specific products
 
+<div align="center">
+
+  ![Image Imgur](https://i.imgur.com/eXO6Zqu.gif)
+
+</div>
+
 5 - Adding products to the favorites list
+
+<div align="center">
+
+  ![Image Imgur](https://i.imgur.com/7TB1quf.gif)
+
+</div>
 
 6 - Communicate with the seller or buyer using the chat system
 
+<div align="center">
+
+  ![Image Imgur](https://i.imgur.com/QcbF7Tc.gif)
+
+</div>
+
 7 - View information on the user profile page
+
+<div align="center">
+
+  ![Image Imgur](https://i.imgur.com/HJDd2qe.gif)
+
+</div>
 
 <p align="right"><a href="#readme-top">back to top</a></p>
 
@@ -122,15 +158,6 @@ Then, you can open http://localhost:5173 on browser to start using the website.
 
 <p align="right"><a href="#readme-top">back to top</a></p>
 
-<!-- ## Database Schema
-
-<div align="center">
-  <a href="">
-    <img src="Group VVIV SIT—Marketplace.jpeg" alt="Database" width="600" >
-  </a>
-  <br/>
-  <p align="right"><a href="#readme-top">back to top</a></p>
-</div> -->
 
 <!-- MARKDOWN LINKS & IMAGES -->
 
