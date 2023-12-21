@@ -153,7 +153,12 @@ export default function Products() {
             marginTop={1}
             sx={{ display: "flex", justifyContent: "center" }}
           >
-            {searchTerm && <SearchProduct searchTerm={searchTerm} />}
+            {searchTerm && (
+              <SearchProduct
+                searchTerm={searchTerm}
+                category={curCategory === "All" ? null : curCategory}
+              />
+            )}
           </Grid>
         </div>
 

@@ -213,15 +213,15 @@ const postDetails = {
   },
   Cellphone: {
     d: "OMG!!! I just lost my phone, anyone got an old phone!!!",
-    c: "Electronic",
+    c: "Electronics",
   },
   PS5: {
     d: "To easy getting straight A's, need a PS5",
-    c: "Electronic",
+    c: "Electronics",
   },
   "Windows Laptop": {
     d: "The app I want to use only works on Windows laptops, anyone got one?",
-    c: "Electronic",
+    c: "Electronics",
   },
   "Textbook for CS561": {
     d: "Hi, anyone has the textbook for course 561 DBMS I?",

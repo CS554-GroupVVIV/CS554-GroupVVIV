@@ -7,9 +7,9 @@ import PostCard from "./PostCard.jsx";
 
 import { Grid, Button, Typography } from "@mui/material";
 
-export default function SearchPost({ searchTerm }) {
+export default function SearchPost({ searchTerm, category }) {
   const { loading, error, data } = useQuery(SEARCH_POSTS, {
-    variables: { searchTerm: searchTerm },
+    variables: { searchTerm: searchTerm, category: category },
     fetchPolicy: "cache-and-network",
   });
 

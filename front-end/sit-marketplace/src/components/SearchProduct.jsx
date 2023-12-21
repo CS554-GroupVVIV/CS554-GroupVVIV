@@ -7,9 +7,9 @@ import ProductCard from "./ProductCard.jsx";
 
 import { Grid, Button, Typography } from "@mui/material";
 
-export default function SearchProduct({ searchTerm }) {
+export default function SearchProduct({ searchTerm, category }) {
   const { loading, error, data } = useQuery(SEARCH_PRODUCTS_BY_NAME, {
-    variables: { name: searchTerm },
+    variables: { name: searchTerm, category: category },
     fetchPolicy: "cache-and-network",
   });
 

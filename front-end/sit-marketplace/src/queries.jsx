@@ -536,8 +536,8 @@ export const ADD_POSSIBLE_SELLER = gql`
 // `;
 
 export const SEARCH_POSTS = gql`
-  query ($searchTerm: String!) {
-    searchPosts(searchTerm: $searchTerm) {
+  query ($searchTerm: String!, $category: String) {
+    searchPosts(searchTerm: $searchTerm, category: $category) {
       _id
       buyer_id
       seller_id
@@ -553,8 +553,8 @@ export const SEARCH_POSTS = gql`
 `;
 
 export const SEARCH_PRODUCTS_BY_NAME = gql`
-  query ($name: String!) {
-    searchProductsByName(name: $name) {
+  query ($name: String!, $category: String) {
+    searchProductsByName(name: $name, category: $category) {
       _id
       buyer_id
       category
