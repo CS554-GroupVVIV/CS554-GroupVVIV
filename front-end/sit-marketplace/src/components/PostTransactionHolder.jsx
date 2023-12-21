@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import ProductCard from "./ProductCard";
 import PostCard from "./PostCard";
 import {
   Paper,
@@ -15,16 +14,11 @@ import {
 
 const PostTransactionHolder = ({ purchaseData, soldData }) => {
   const [purchasedStatus, setPurchasedStatus] = useState("completed");
-  const [soldStatus, setSoldStatus] = useState("completed");
 
   const [purchaseActive, setPurchaseActive] = useState([]);
   const [purchaseInactive, setPurchaseInactive] = useState([]);
   const [purchaseCompleted, setPurchaseCompleted] = useState([]);
-  const [soldActive, setSoldActive] = useState([]);
-  const [soldInactive, setSoldInactive] = useState([]);
-  const [soldCompleted, setSoldCompleted] = useState([]);
   const [currentPurchase, setCurrentPurchase] = useState([]);
-  const [currentSold, setCurrentSold] = useState([]);
 
   useEffect(() => {
     let active = [];
@@ -109,12 +103,12 @@ const PostTransactionHolder = ({ purchaseData, soldData }) => {
         <Paper sx={{ p: 2, display: "flex", flexDirection: "column" }}>
           <Typography variant="h5">Sold</Typography>
           <Grid container spacing={3}>
-            {currentSold.length == 0 ? (
+            {soldData.length == 0 ? (
               <Grid item xs={12}>
                 <Typography variant="body1">No Result Found</Typography>
               </Grid>
             ) : (
-              currentSold.map((sold, index) => (
+              soldData.map((sold, index) => (
                 <Grid item xs={4} key={index}>
                   <PostCard key={index} postData={sold} />
                 </Grid>

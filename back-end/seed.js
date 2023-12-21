@@ -16,9 +16,27 @@ const userList = [
     email: "cwu34@stevens.edu",
     firstname: "Jason",
     lastname: "Wu",
-    favorite: [],
-    favorite_post: [],
-    comments: [],
+    favorite: ["6584a667ff6d6e6b84730141"],
+    favorite_post: ["6584ad8e36f3bfc519a59f10"],
+    comments: [
+      {
+        _id: new ObjectId(),
+        comment:
+          "Bad guy! The product is very much worn out though said brand new",
+        comment_id: "MakfosvJBSRugNO7tQbAPA8XsW82",
+        firstname: "Lori",
+        date: new Date("2023-12-01"),
+        rating: 2,
+      },
+      {
+        _id: new ObjectId(),
+        comment: "Thank you!",
+        comment_id: "WiICBEajMHVeQPxxFrpYaMyyRIt1",
+        firstname: "Daniel",
+        date: new Date("2023-12-21"),
+        rating: 5,
+      },
+    ],
   },
   {
     _id: "7SKDog0fjKOeS1jeuq32a9vYPue2",
@@ -34,9 +52,18 @@ const userList = [
     email: "luoyi@stevens.edu",
     firstname: "Lori",
     lastname: "Fu",
-    favorite: [],
-    favorite_post: [],
-    comments: [],
+    favorite: ["6584a667ff6d6e6b84730140", "6584a667ff6d6e6b84730141"],
+    favorite_post: ["6584ad8e36f3bfc519a59f0f", "6584ad8e36f3bfc519a59f10"],
+    comments: [
+      {
+        _id: new ObjectId(),
+        comment: "Great expereince!",
+        comment_id: "8C5bGSz1FRVbAQ47EDnDSvmKsqg2",
+        firstname: "Jason",
+        date: new Date("2023-12-21"),
+        rating: 5,
+      },
+    ],
   },
   {
     _id: "WiICBEajMHVeQPxxFrpYaMyyRIt1",
@@ -256,6 +283,49 @@ inactiveProducts.map((inactiveProduct) => {
   productList.push(inactiveProduct);
 });
 
+const completedProducts = [
+  {
+    _id: new ObjectId("6584a667ff6d6e6b84730140"),
+    name: "Earphone",
+    price: 10,
+    date: new Date(`2023-11-30`),
+    description: "Beats earphone - real bargain",
+    condition: "brand new",
+    seller_id: "8C5bGSz1FRVbAQ47EDnDSvmKsqg2",
+    buyer_id: "MakfosvJBSRugNO7tQbAPA8XsW82",
+    image:
+      "https://ss7.vzw.com/is/image/VerizonWireless/beats-studio-buds-true-wireless-noise-cancelling-earphones-white-mj4y3ll-a-a?wid=930&hei=930&fmt=webp",
+    category: "electronics",
+    status: "completed",
+    possible_buyers: ["MakfosvJBSRugNO7tQbAPA8XsW82"],
+    completion_date: new Date(`2023-11-31`),
+  },
+  {
+    _id: new ObjectId("6584a667ff6d6e6b84730141"),
+    name: "coffee machine",
+    price: 30,
+    date: new Date(`2023-11-11`),
+    description: "second-hand coffee machine",
+    condition: "functional",
+    seller_id: "WiICBEajMHVeQPxxFrpYaMyyRIt1",
+    buyer_id: "8C5bGSz1FRVbAQ47EDnDSvmKsqg2",
+    image: "https://dam.delonghi.com/600x600/assets/215464",
+    category: "electronics",
+    status: "completed",
+    possible_buyers: [
+      "MakfosvJBSRugNO7tQbAPA8XsW82",
+      "8C5bGSz1FRVbAQ47EDnDSvmKsqg2",
+    ],
+    completion_date: new Date(`2023-11-12`),
+  },
+];
+
+completedProducts.map((completedProduct) => {
+  productList.push(completedProduct);
+});
+
+// --------------------------------------------Post------------------------------------------------
+
 const postDetails = {
   "Textbook for CS554": {
     d: "Hi, anyone has the textbook for course 554 Web Programming II?",
@@ -298,14 +368,15 @@ const postDetails = {
     c: "book",
   },
 };
-
 let postList = [];
 for (let key in postDetails) {
   const details = postDetails[key];
   const randomBuyer = Math.floor(Math.random() * userIds.length);
+  const randomSeller = Math.floor(Math.random() * userIds_2.length);
+
   const randomCondition = Math.floor(Math.random() * conditions.length);
 
-  const post = {
+  const activePost = {
     _id: new ObjectId(),
     buyer_id: userIds[randomBuyer],
     seller_id: null,
@@ -320,12 +391,93 @@ for (let key in postDetails) {
     ),
     description: details.d,
     status: "active",
-    possible_sellers: [],
+    possible_sellers: userIds_2[randomSeller] ? [userIds_2[randomSeller]] : [],
     completion_date: null,
   };
 
-  postList.push(post);
+  postList.push(activePost);
 }
+
+const inactivePosts = [
+  {
+    _id: new ObjectId(),
+    item: "Desk",
+    price: 30,
+    date: new Date(
+      `2023-${Math.floor(Math.random() * 10) + 1}-${
+        Math.floor(Math.random() * 25) + 1
+      }`
+    ),
+    description: "I need a desk to place in my dorm",
+    condition: "like new",
+    seller_id: null,
+    buyer_id: "8C5bGSz1FRVbAQ47EDnDSvmKsqg2",
+    category: "furniture",
+    status: "inactive",
+    possible_sellers: [],
+    completion_date: null,
+  },
+  {
+    _id: new ObjectId(),
+    item: "Camera",
+    price: 100,
+    date: new Date(
+      `2023-${Math.floor(Math.random() * 10) + 1}-${
+        Math.floor(Math.random() * 25) + 1
+      }`
+    ),
+    description: "",
+    condition: "gently used",
+    seller_id: null,
+    buyer_id: "8C5bGSz1FRVbAQ47EDnDSvmKsqg2",
+    category: "electronics",
+    status: "inactive",
+    possible_sellers: [],
+    completion_date: null,
+  },
+];
+
+inactivePosts.map((inactivePost) => {
+  postList.push(inactivePost);
+});
+
+const completedPosts = [
+  {
+    _id: new ObjectId("6584ad8e36f3bfc519a59f0f"),
+    item: "Calculator",
+    price: 10,
+    date: new Date(`2023-11-30`),
+    description: "I need a calculator for my Math test tomorrow",
+    condition: "functional",
+    seller_id: "MakfosvJBSRugNO7tQbAPA8XsW82",
+    buyer_id: "8C5bGSz1FRVbAQ47EDnDSvmKsqg2",
+    category: "electronics",
+    status: "completed",
+    possible_sellers: ["MakfosvJBSRugNO7tQbAPA8XsW82"],
+    completion_date: new Date(`2023-11-31`),
+  },
+  {
+    _id: new ObjectId("6584ad8e36f3bfc519a59f10"),
+    item: "backpack",
+    price: 30,
+    date: new Date(`2023-11-12`),
+    description: "Anything that can hold a laptap will do",
+    condition: "functional",
+    seller_id: "8C5bGSz1FRVbAQ47EDnDSvmKsqg2",
+    buyer_id: "WiICBEajMHVeQPxxFrpYaMyyRIt1",
+    category: "stationary",
+    status: "completed",
+    possible_sellers: [
+      "MakfosvJBSRugNO7tQbAPA8XsW82",
+      "8C5bGSz1FRVbAQ47EDnDSvmKsqg2",
+    ],
+    completion_date: new Date(`2023-11-30`),
+  },
+];
+
+completedPosts.map((completedPost) => {
+  postList.push(completedPost);
+});
 
 const main = async () => {
   const db = await dbConnection();
