@@ -155,9 +155,9 @@ export default function Dashboard() {
                     justifyContent: "space-between",
                   }}
                 >
-                  <Typography component="p" variant="subtitle2">
+                  {/* <Typography component="p" variant="subtitle2">
                     Id: {data && data.getUserById._id}
-                  </Typography>
+                  </Typography> */}
                   <Typography component="p" variant="subtitle2">
                     Name: {data && data.getUserById.firstname}{" "}
                     {data && data.getUserById.lastname}

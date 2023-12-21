@@ -159,8 +159,8 @@ export default function PostDetail() {
                 <p>Seller: {sellerData.getUserById.firstname}</p>
               ) : null}
               <p>Category: {post.category}</p>
-              <p>Condition:{post.condition}</p>
-              <p>Price: {post.price}</p>
+              <p>Condition: {post.condition}</p>
+              <p>Price: {post.price.toFixed(2)}</p>
               <p>Post Date: {new Date(post.date).toLocaleString()}</p>
               <p>Status: {post.status}</p>
               {post.status === "completed" &&

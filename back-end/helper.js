@@ -63,7 +63,7 @@ const checkCategory = (category) => {
     throw new Error("Invalid Category");
   }
 
-  return capitalizeFirstLetter(category);
+  return categoryLower;
 };
 
 function capitalizeFirstLetter(string) {
@@ -114,7 +114,7 @@ const checkCondition = (condition) => {
   ) {
     throw new Error("Invalid Condition");
   }
-  return condition;
+  return conditionLower;
 };
 
 const checkDescription = (description) => {

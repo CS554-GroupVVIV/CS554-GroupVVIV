@@ -132,7 +132,7 @@ export default function ProductCard({ productData }) {
         </div>
 
         <CardContent>
-          <p>Price: {productData && productData.price}</p>
+          <p>Price: {productData && productData.price.toFixed(2)}</p>
           <p>Condition: {productData && productData.condition}</p>
 
           {currentUser && (

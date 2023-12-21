@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useContext } from "react";
 import { EDIT_PRODUCT } from "../queries";
 import { useMutation } from "@apollo/client";
 import { uploadFileToS3 } from "../aws";
@@ -355,12 +355,12 @@ const EditProduct = ({ productData }) => {
                       defaultValue={category}
                       onBlur={helper.checkCategory}
                     >
-                      <MenuItem value={"Book"}>Book</MenuItem>
-                      <MenuItem value={"Clothing"}>Clothing</MenuItem>
-                      <MenuItem value={"Electronics"}>Electronics</MenuItem>
-                      <MenuItem value={"Furniture"}>Furniture</MenuItem>
-                      <MenuItem value={"Stationary"}>Stationary</MenuItem>
-                      <MenuItem value={"Other"}>Other</MenuItem>
+                      <MenuItem value={"book"}>Book</MenuItem>
+                      <MenuItem value={"clothing"}>Clothing</MenuItem>
+                      <MenuItem value={"electronics"}>Electronics</MenuItem>
+                      <MenuItem value={"furniture"}>Furniture</MenuItem>
+                      <MenuItem value={"stationary"}>Stationary</MenuItem>
+                      <MenuItem value={"other"}>Other</MenuItem>
                     </Select>
                   </FormControl>
                 </div>

@@ -107,7 +107,7 @@ export default function PostCard({ postData }) {
         </Link>
 
         <CardContent>
-          <p>Price: {postData && postData.price}</p>
+          <p>Price: {postData && postData.price.toFixed(2)}</p>
           <p>Condition: {postData && postData.condition}</p>
 
           {postData && currentUser && (
