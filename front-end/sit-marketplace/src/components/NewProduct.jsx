@@ -443,7 +443,7 @@ export default function SellForm() {
               type="button"
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
-              onClick={() => navigate("/posts")}
+              onClick={() => navigate("/products")}
             >
               Cancel
             </Button>
