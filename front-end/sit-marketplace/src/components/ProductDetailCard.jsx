@@ -262,6 +262,15 @@ export default function ProductDetailCard() {
                                     },
                                   });
 
+
+                        addFavorite({
+                          variables: {
+                            id: currentUser.uid,
+                            productId: productData._id,
+                          },
+                        });
+                        setHasFavorited(true);
+
                                   alert(
                                     "You're a potential buyer now!\n\nFeel free to contact the seller for further information."
                                   );
