@@ -1294,7 +1294,7 @@ export const resolvers = {
             extensions: { code: "INTERNAL_SERVER_ERROR" },
           });
         }
-        client.json.del(`getPostById-${postId._id.toString()}`);
+        client.json.del(`getPostById-${postId}`);
         client.json.del(`allPosts`);
         return updatedUser.favorite_post;
       } catch (error) {
