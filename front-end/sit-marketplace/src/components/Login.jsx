@@ -130,6 +130,7 @@ function Login() {
                   name="email"
                   autoComplete="email"
                   autoFocus
+                  inputProps={{ maxLength: 100 }}
                 />
                 <TextField
                   margin="normal"
@@ -140,6 +141,7 @@ function Login() {
                   type="password"
                   id="password"
                   autoComplete="current-password"
+                  inputProps={{ maxLength: 100 }}
                 />
                 <Button
                   type="submit"

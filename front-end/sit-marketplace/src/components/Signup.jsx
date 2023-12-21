@@ -137,6 +137,7 @@ function SignUp() {
                   name="firstname"
                   autoComplete="firstname"
                   autoFocus
+                  inputProps={{ maxLength: 100 }}
                 />
                 <TextField
                   margin="normal"
@@ -146,6 +147,7 @@ function SignUp() {
                   label="Last Name"
                   name="lastname"
                   autoComplete="lastname"
+                  inputProps={{ maxLength: 100 }}
                 />
                 <TextField
                   margin="normal"
@@ -155,6 +157,7 @@ function SignUp() {
                   label="Email Address"
                   name="email"
                   autoComplete="email"
+                  inputProps={{ maxLength: 100 }}
                 />
                 <TextField
                   margin="normal"
@@ -165,6 +168,7 @@ function SignUp() {
                   type="password"
                   id="passwordOne"
                   autoComplete="password"
+                  inputProps={{ maxLength: 100 }}
                 />
                 <TextField
                   margin="normal"
@@ -175,6 +179,7 @@ function SignUp() {
                   type="password"
                   id="passwordTwo"
                   autoComplete="current-password"
+                  inputProps={{ maxLength: 100 }}
                 />
                 {pwMatch && <Alert severity="error">{pwMatch}</Alert>}
                 <Button

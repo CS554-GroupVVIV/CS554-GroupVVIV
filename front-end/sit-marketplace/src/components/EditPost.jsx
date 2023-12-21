@@ -299,6 +299,7 @@ const EditPost = ({ postData }) => {
                     inputRef={nameRef}
                     defaultValue={name}
                     onBlur={helper.checkName}
+                    inputProps={{ minLength: 1, maxLength: 20 }}
                   />
                   {nameError && (
                     <Typography
@@ -403,6 +404,7 @@ const EditPost = ({ postData }) => {
                     defaultValue={description}
                     inputRef={descriptionRef}
                     onBlur={helper.checkDescription}
+                    inputProps={{ maxLength: 100 }}
                   />
                   {descriptionError && (
                     <Typography

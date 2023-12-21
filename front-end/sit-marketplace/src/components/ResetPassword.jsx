@@ -92,6 +92,7 @@ function ResetPassword() {
                   name="email"
                   autoComplete="email"
                   autoFocus
+                  inputProps={{ maxLength: 100 }}
                 />
                 <Button
                   type="submit"
