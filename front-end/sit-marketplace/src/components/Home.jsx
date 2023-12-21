@@ -81,7 +81,7 @@ export default function Home() {
               <Button
                 size="small"
                 variant="contained"
-                color="inherit"
+                // color="inherit"
                 onClick={() => {
                   navigate("/products");
                 }}
@@ -128,7 +128,7 @@ export default function Home() {
               <Button
                 size="small"
                 variant="contained"
-                color="inherit"
+                // color="inherit"
                 onClick={() => {
                   navigate("/posts");
                 }}

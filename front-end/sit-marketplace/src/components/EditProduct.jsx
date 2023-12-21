@@ -298,7 +298,7 @@ const EditProduct = ({ productData }) => {
       <Button
         size="small"
         variant="contained"
-        color="inherit"
+        // color="inherit"
         onClick={() => setToggleEditForm(true)}
       >
         Edit

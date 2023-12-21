@@ -30,7 +30,7 @@ const RatingProfile = ({ id }) => {
         <Button
           size="small"
           variant="contained"
-          color="inherit"
+          // color="inherit"
           onClick={() => {
             setToggle(true);
           }}

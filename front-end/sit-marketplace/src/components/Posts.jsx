@@ -65,7 +65,7 @@ export default function Posts() {
             {currentUser ? (
               <Button
                 variant="contained"
-                color="inherit"
+                // color="inherit"
                 onClick={() => {
                   navigate("/newpost");
                 }}
@@ -122,7 +122,7 @@ export default function Posts() {
           <Button
             size="small"
             variant="contained"
-            color="inherit"
+            // color="inherit"
             sx={{ marginLeft: 3 }}
             onClick={(event) => {
               event.preventDefault();
@@ -135,7 +135,7 @@ export default function Posts() {
             <Button
               size="small"
               variant="contained"
-              color="inherit"
+              // color="inherit"
               sx={{ marginLeft: 3 }}
               onClick={(event) => {
                 event.preventDefault();

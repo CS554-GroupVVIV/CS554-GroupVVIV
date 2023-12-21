@@ -62,7 +62,7 @@ export default function Products() {
             {currentUser ? (
               <Button
                 variant="contained"
-                color="inherit"
+                // color="inherit"
                 onClick={() => {
                   navigate("/newproduct");
                 }}
@@ -119,7 +119,7 @@ export default function Products() {
           <Button
             size="small"
             variant="contained"
-            color="inherit"
+            // color="inherit"
             sx={{ marginLeft: 3 }}
             onClick={(event) => {
               event.preventDefault();
@@ -132,7 +132,7 @@ export default function Products() {
             <Button
               size="small"
               variant="contained"
-              color="inherit"
+              // color="inherit"
               sx={{ marginLeft: 3 }}
               onClick={(event) => {
                 event.preventDefault();
