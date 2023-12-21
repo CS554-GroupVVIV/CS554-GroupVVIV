@@ -24,7 +24,7 @@ export default function ChatRoom({ room }) {
 
   useEffect(() => {
     if (!loading) {
-      if (!data) {
+      if (!data && currentUser) {
         try {
           addChat({
             variables: {
