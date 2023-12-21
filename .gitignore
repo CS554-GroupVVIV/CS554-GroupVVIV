@@ -1,3 +1,4 @@
 front-end/sit-marketplace/.vite/*
 .vscode
 docker-compose.yml
+.env
