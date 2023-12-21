@@ -651,6 +651,7 @@ export const SEARCH_POST_BY_ID = gql`
       price
       seller_id
       status
+      completion_date
     }
   }
 `;

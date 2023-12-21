@@ -1,7 +1,9 @@
-import React, { useState, useRef} from "react";
+import React, { useState, useRef } from "react";
 import { EDIT_PRODUCT } from "../queries";
 import { useMutation } from "@apollo/client";
 import { uploadFileToS3 } from "../aws";
+import { AuthContext } from "../context/AuthContext";
+
 import {
   Button,
   TextField,
@@ -21,6 +23,8 @@ import {
 } from "@mui/material";
 
 const EditProduct = ({ productData }) => {
+  const { currentUser } = useContext(AuthContext);
+
   // const [image, setImage] = useState<File | undefined>(undefined);
   const [toggleEditForm, setToggleEditForm] = useState(false);
 
@@ -275,7 +279,7 @@ const EditProduct = ({ productData }) => {
         id: productData._id,
         name: name,
         description: description,
-        sellerId: productData.seller_id,
+        sellerId: currentUser.uid,
         price: price,
         category: category,
         condition: condition,
@@ -303,7 +307,6 @@ const EditProduct = ({ productData }) => {
       >
         Edit
       </Button>
-      {/* <div className="modal-box"> */}
       <Dialog open={toggleEditForm} maxWidth="md">
         <DialogTitle>Edit Product</DialogTitle>
         <DialogContent>
@@ -327,6 +330,7 @@ const EditProduct = ({ productData }) => {
                   inputRef={nameRef}
                   defaultValue={name}
                   onBlur={helper.checkName}
+                  inputProps={{ minLength: 1, maxLength: 20 }}
                 />
                 {nameError && (
                   <Typography
@@ -464,6 +468,7 @@ const EditProduct = ({ productData }) => {
                   defaultValue={description}
                   inputRef={descriptionRef}
                   onBlur={helper.checkDescription}
+                  inputProps={{ maxLength: 100 }}
                 />
                 {descriptionError && (
                   <Typography

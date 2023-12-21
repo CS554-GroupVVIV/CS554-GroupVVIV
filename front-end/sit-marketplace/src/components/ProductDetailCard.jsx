@@ -123,7 +123,6 @@ export default function ProductDetailCard() {
   }
   if (data && sellerData) {
     const productData = data.getProductById;
-    console.log(productData);
     return (
       <div style={{ display: "flex", justifyContent: "center" }}>
         <Grid container direction="row" marginTop={12} component="main">

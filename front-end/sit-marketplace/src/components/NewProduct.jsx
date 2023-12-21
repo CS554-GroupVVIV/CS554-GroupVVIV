@@ -1,6 +1,6 @@
 import { useState, useRef, useContext } from "react";
 import React from "react";
-import { useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import { useMutation } from "@apollo/client";
 import { ADD_PRODUCT } from "../queries";
@@ -287,6 +287,7 @@ export default function SellForm() {
                 label="Item Name"
                 inputRef={nameRef}
                 onBlur={helper.checkName}
+                inputProps={{ minLength: 1, maxLength: 20 }}
               />
               {nameError && (
                 <Typography
@@ -423,6 +424,7 @@ export default function SellForm() {
                 defaultValue={""}
                 inputRef={descriptionRef}
                 onBlur={helper.checkDescription}
+                inputProps={{ maxLength: 100 }}
               />
               {descriptionError && (
                 <Typography

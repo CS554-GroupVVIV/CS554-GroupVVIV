@@ -102,7 +102,7 @@ export const resolvers = {
         const products = await productCollection();
         var allProducts = await client.json.get(`allProducts`, "$");
         if (!allProducts) {
-          allProducts = await products.find({}).toArray();
+          allProducts = await products.find({}).sort({ date: -1 }).toArray();
           // if (!allProducts) {
           //   throw new GraphQLError("Product not found", {
           //     extensions: { code: "NOT_FOUND" },
@@ -124,7 +124,7 @@ export const resolvers = {
         const posts = await postCollection();
         var allPosts = await client.json.get(`allPosts`, "$");
         if (!allPosts) {
-          allPosts = await posts.find({}).toArray();
+          allPosts = await posts.find({}).sort({ date: -1 }).toArray();
           // if (!allPosts) {
           //   throw new GraphQLError("Post not found", {
           //     extensions: { code: "NOT_FOUND" },
@@ -202,12 +202,14 @@ export const resolvers = {
               item: { $regex: postItem, $options: "i" },
               category: args.category,
             })
+            .sort({ date: -1 })
             .toArray();
         } else {
           postsByItem = await posts
             .find({
               item: { $regex: postItem, $options: "i" },
             })
+            .sort({ date: -1 })
             .toArray();
         }
 
@@ -250,12 +252,14 @@ export const resolvers = {
               name: { $regex: productName, $options: "i" },
               category: args.category,
             })
+            .sort({ date: -1 })
             .toArray();
         } else {
           productsByName = await products
             .find({
               name: { $regex: productName, $options: "i" },
             })
+            .sort({ date: -1 })
             .toArray();
         }
 
@@ -310,7 +314,10 @@ export const resolvers = {
         );
         if (!productList) {
           const products = await productCollection();
-          productList = await products.find({ status: status }).toArray();
+          productList = await products
+            .find({ status: status })
+            .sort({ date: -1 })
+            .toArray();
           if (!productList) {
             throw new GraphQLError("product not found", {
               extensions: { code: "NOT_FOUND" },
@@ -355,6 +362,7 @@ export const resolvers = {
         const productData = await productCollection();
         const products = await productData
           .find({ category: category })
+          .sort({ date: -1 })
           .toArray();
         // if (!products) {
         //   throw new GraphQLError("product not found", {
@@ -422,6 +430,7 @@ export const resolvers = {
         const posts = await postCollection();
         let postsByCategory = await posts
           .find({ category: category })
+          .sort({ date: -1 })
           .toArray();
         if (!postsByCategory) {
           throw new GraphQLError("Post not found", {
@@ -443,7 +452,10 @@ export const resolvers = {
       try {
         let status = checkStatus(args.status);
         const postData = await postCollection();
-        let posts = await postData.find({ status: status }).toArray();
+        let posts = await postData
+          .find({ status: status })
+          .sort({ date: -1 })
+          .toArray();
         if (!posts) {
           throw new GraphQLError("Post not found", {
             extensions: { code: "NOT_FOUND" },
@@ -550,7 +562,10 @@ export const resolvers = {
         //   "$"
         // );
         // if (!sellerPosts) {
-        let sellerPosts = await posts.find({ seller_id: seller_id }).toArray();
+        let sellerPosts = await posts
+          .find({ seller_id: seller_id })
+          .sort({ date: -1 })
+          .toArray();
         if (!sellerPosts) {
           throw new GraphQLError("Post not found", {
             extensions: { code: "NOT_FOUND" },
@@ -578,7 +593,10 @@ export const resolvers = {
         let buyer_id = checkString(args._id);
 
         const posts = await postCollection();
-        let buyerPosts = await posts.find({ buyer_id: buyer_id }).toArray();
+        let buyerPosts = await posts
+          .find({ buyer_id: buyer_id })
+          .sort({ date: -1 })
+          .toArray();
         if (!buyerPosts) {
           throw new GraphQLError("Post not found", {
             extensions: { code: "NOT_FOUND" },
@@ -607,6 +625,7 @@ export const resolvers = {
 
         let sellerProducts = await products
           .find({ seller_id: seller_id })
+          .sort({ date: -1 })
           .toArray();
         if (!sellerProducts) {
           throw new GraphQLError("Product not found", {
@@ -640,6 +659,7 @@ export const resolvers = {
         const products = await productCollection();
         let buyerProducts = await products
           .find({ buyer_id: buyer_id })
+          .sort({ date: -1 })
           .toArray();
         if (!buyerProducts) {
           throw new GraphQLError("Product not found", {

@@ -160,6 +160,7 @@ const NewComment = ({ user_id }) => {
                     name="comment"
                     inputRef={commentInputRef}
                     onBlur={helper.checkComment}
+                    inputProps={{ maxLength: 100 }}
                   />
                   {commentInputError && (
                     <Typography
