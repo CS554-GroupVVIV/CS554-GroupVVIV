@@ -113,7 +113,7 @@ export default function PostDetail() {
     } else {
       return <Error statusCodeProp={404} />;
     }
-  } else {
+  } else if (data && userData) {
     const post = data.getPostById;
     return (
       <div style={{ display: "flex", justifyContent: "center" }}>
@@ -136,7 +136,7 @@ export default function PostDetail() {
 
           <Grid item xs>
             <div>
-              <p>Buyer Id: {post.buyer_id}</p>
+              <p>Buyer Id: {userData.getUserById.firstname}</p>
               {post.status === "completed" &&
               currentUser &&
               (currentUser.uid === post.seller_id ||

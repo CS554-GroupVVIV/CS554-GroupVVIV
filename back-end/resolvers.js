@@ -473,6 +473,11 @@ export const resolvers = {
         // }
         // await client.json.set(`getUserById-${id}`, "$", user);
         // client.expire(`getUserById-${id}`, 60);
+        let comment_string = user.comments.map((comment) => {
+          comment.date = dateObjectToHTMLDate(comment.date);
+          return comment;
+        });
+        user.comment = comment_string;
         return user;
       } catch (error) {
         throw new GraphQLError(error.message);
@@ -675,6 +680,7 @@ export const resolvers = {
             "comments.comment_id": comment_id,
           })
           .toArray();
+        console.log(commentExist[0]);
         return commentExist[0];
       } catch (error) {
         throw new GraphQLError(error.message);
@@ -792,11 +798,11 @@ export const resolvers = {
 
     editPost: async (_, args) => {
       try {
-        if (Object.keys(args).length < 7 || Object.keys(args).length > 9) {
-          throw new GraphQLError("All fields are required", {
-            extensions: { code: "BAD_INPUT" },
-          });
-        }
+        // if (Object.keys(args).length < 7 || Object.keys(args).length > 9) {
+        //   throw new GraphQLError("All fields are required", {
+        //     extensions: { code: "BAD_INPUT" },
+        //   });
+        // }
         let _id = checkId(args._id);
         const posts = await postCollection();
         const post = await posts.findOne({ _id: new ObjectId(_id) });
@@ -877,11 +883,11 @@ export const resolvers = {
 
     editProduct: async (_, args) => {
       try {
-        if (Object.keys(args).length != 9) {
-          throw new GraphQLError("All fields are required", {
-            extensions: { code: "BAD_INPUT" },
-          });
-        }
+        // if (Object.keys(args).length != 9) {
+        //   throw new GraphQLError("All fields are required", {
+        //     extensions: { code: "BAD_INPUT" },
+        //   });
+        // }
         let _id = checkId(args._id);
         const products = await productCollection();
         const product = await products.findOne({ _id: new ObjectId(_id) });
@@ -1274,6 +1280,7 @@ export const resolvers = {
       try {
         const users = await userCollection();
         const user_id = checkString(args.user_id);
+        const firstname = checkString(args.firstname);
         const userA = await users.findOne({ _id: user_id });
         if (!userA) {
           throw new GraphQLError("User not found", {
@@ -1292,7 +1299,7 @@ export const resolvers = {
           "comment.user_id": comment_id,
         });
         if (commentExist) {
-          throw new GraphQLError("Cannot add comment", {
+          throw new GraphQLError("Comment already exist", {
             extensions: { code: "BAD_INPUT" },
           });
         }
@@ -1306,7 +1313,9 @@ export const resolvers = {
           _id: new ObjectId(),
           comment_id: comment_id,
           rating: rating,
+          firstname: firstname,
           comment: commentText,
+          date: new Date(),
         };
 
         const insert = await users.updateOne(
@@ -1455,6 +1464,8 @@ export const resolvers = {
           comment_id: comment_id,
           rating: rating,
           comment: commentText,
+          firstname: commentExist.comments[0].firstname,
+          date: new Date(),
         };
 
         if (
