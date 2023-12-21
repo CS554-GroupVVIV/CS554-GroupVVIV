@@ -19,6 +19,7 @@ import {
   REMOVE_FAVORITE_POST_FROM_USER,
   GET_USER_FOR_FAVORITE,
   ADD_POSSIBLE_SELLER,
+  REMOVE_POSSIBLE_SELLER,
 } from "../queries";
 import { useMutation } from "@apollo/client";
 import { useQuery } from "@apollo/client";
@@ -28,6 +29,21 @@ export default function PostCard({ postData }) {
   const [id, setId] = useState(undefined);
   const navigate = useNavigate();
   const { currentUser } = useContext(AuthContext);
+
+  const [isPossibleSeller, setIsPossibleSeller] = useState(false);
+  useEffect(() => {
+    if (postData) {
+      setIsPossibleSeller(
+        postData &&
+          postData.possible_sellers
+            .map((seller) => {
+              return seller._id;
+            })
+            .includes(currentUser && currentUser.uid)
+      );
+    }
+  }, [postData]);
+
   const [hasFavorited, setHasFavorited] = useState(false);
   const {
     data: userData,
@@ -43,6 +59,7 @@ export default function PostCard({ postData }) {
     });
 
   const [addPossibleSeller] = useMutation(ADD_POSSIBLE_SELLER);
+  const [removePossibleSeller] = useMutation(REMOVE_POSSIBLE_SELLER);
 
   const [addFavorite, { addData, addLoading, addError }] = useMutation(
     ADD_FAVORITE_POST_TO_USER,
@@ -116,7 +133,6 @@ export default function PostCard({ postData }) {
             <div>
               {postData.buyer_id !== currentUser.uid ? (
                 <>
-                  {" "}
                   <Button
                     size="small"
                     variant="contained"
@@ -132,37 +148,64 @@ export default function PostCard({ postData }) {
                   >
                     Chat
                   </Button>
-                  <Button
-                    size="small"
-                    variant="contained"
-                    color="inherit"
-                    onClick={async () => {
-                      if (currentUser.uid) {
-                        await addPossibleSeller({
-                          variables: {
-                            id: postData._id,
-                            sellerId: currentUser.uid,
-                          },
-                        });
 
-                        if (!hasFavorited) {
-                          addFavorite({
+                  {isPossibleSeller ? (
+                    <Button
+                      size="small"
+                      variant="contained"
+                      color="inherit"
+                      onClick={() => {
+                        if (currentUser.uid) {
+                          removePossibleSeller({
                             variables: {
-                              id: currentUser.uid,
+                              id: postData._id,
+                              sellerId: currentUser.uid,
                             },
                           });
-                          setHasFavorited(true);
-                        }
+                          // setIsPossibleBuyer(false);
 
-                        alert(
-                          "You're a potential seller now!\n\nFeel free to contact the buyer for further information."
-                        );
-                      }
-                    }}
-                    sx={{ fontWeight: "bold", marginLeft: 2 }}
-                  >
-                    Sell
-                  </Button>
+                          alert("You're no longer a potential Seller ...");
+                        }
+                      }}
+                      sx={{ fontWeight: "bold", marginLeft: 2 }}
+                    >
+                      Cancel
+                    </Button>
+                  ) : (
+                    <Button
+                      size="small"
+                      variant="contained"
+                      color="inherit"
+                      onClick={() => {
+                        if (currentUser.uid) {
+                          addPossibleSeller({
+                            variables: {
+                              id: postData._id,
+                              sellerId: currentUser.uid,
+                            },
+                          });
+
+                          if (!hasFavorited) {
+                            addFavorite({
+                              variables: {
+                                postId: postData._id,
+                                id: currentUser.uid,
+                              },
+                            });
+                            setHasFavorited(true);
+                          }
+
+                          alert(
+                            "You're a potential seller now!\n\nFeel free to contact the buyer for further information."
+                          );
+                        }
+                      }}
+                      sx={{ fontWeight: "bold", marginLeft: 2 }}
+                    >
+                      Sell
+                    </Button>
+                  )}
+
                   <IconButton sx={{ float: "right" }} onClick={handleFavorite}>
                     {hasFavorited ? (
                       <FavoriteIcon sx={{ color: "#e91e63" }} />

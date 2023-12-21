@@ -1294,7 +1294,7 @@ export const resolvers = {
             extensions: { code: "INTERNAL_SERVER_ERROR" },
           });
         }
-        client.json.del(`getPostById-${postId._id.toString()}`);
+        client.json.del(`getPostById-${postId}`);
         client.json.del(`allPosts`);
         return updatedUser.favorite_post;
       } catch (error) {
@@ -1534,7 +1534,7 @@ export const resolvers = {
           });
         }
         if (product.possible_buyers.includes(buyer_id)) {
-          return ;
+          return;
         }
         const users = await userCollection();
         const buyer = await users.findOne({ _id: buyer_id });
@@ -1557,7 +1557,6 @@ export const resolvers = {
         client.json.del(`allProducts`);
         client.json.del(`getProductsByStatus-active`);
         client.json.del(`getProductById-${_id}`);
-
 
         return update;
       } catch (error) {
@@ -1636,9 +1635,7 @@ export const resolvers = {
           });
         }
 
-
         client.json.del(`allPosts`);
-        client.json.del(`getPostsByStatus-active`);
         client.json.del(`getPostById-${_id}`);
 
         return update;
@@ -1677,9 +1674,8 @@ export const resolvers = {
         }
 
         client.json.del(`allPosts`);
-        client.json.del(`getPostsByStatus-active`);
         client.json.del(`getPostById-${_id}`);
-        
+
         return update;
       } catch (error) {
         throw new GraphQLError(error.message);
