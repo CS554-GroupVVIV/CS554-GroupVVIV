@@ -1,17 +1,13 @@
-import React, { useState, useEffect, useRef, useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import noImage from "../assets/noimage.jpg";
 import { AuthContext } from "../context/AuthContext";
 import EditProduct from "./EditProduct.jsx";
-import { socketID, socket } from "./socket.jsx";
+import { socket } from "./socket.jsx";
 import Comment from "./Comment.jsx";
+import Error from "./Error.jsx";
 
 import {
-  Card,
-  CardHeader,
-  CardContent,
   Grid,
-  Link,
   CardMedia,
   Typography,
   Button,
@@ -26,9 +22,9 @@ import {
   ADD_FAVORITE_TO_USER,
   REMOVE_FAVORITE_FROM_USER,
   SEARCH_PRODUCTS_BY_ID,
-  GET_USER,
   ADD_POSSIBLE_BUYER,
   GET_USER_FOR_FAVORITE,
+  GET_USER,
 } from "../queries";
 import { useMutation } from "@apollo/client";
 import { useQuery } from "@apollo/client";
@@ -49,7 +45,10 @@ export default function ProductDetailCard() {
     fetchPolicy: "cache-and-network",
   });
 
-  const baseUrl = "/product/";
+  const { data: sellerData } = useQuery(GET_USER, {
+    variables: { id: data ? data.getProductById.seller_id : "" },
+    fetchPolicy: "cache-and-network",
+  });
 
   const [addPossibleBuyer] = useMutation(ADD_POSSIBLE_BUYER);
 
@@ -90,7 +89,7 @@ export default function ProductDetailCard() {
         setHasFavorited(true);
       }
     } catch (error) {
-      console.log(error);
+      alert(error);
     }
     // if (addError || removeError) {
     //   console.log(addError);
@@ -98,13 +97,16 @@ export default function ProductDetailCard() {
     // }
   }
   if (error) {
-    return <div>{error.message}</div>;
+    if (error.message == "Invalid id") {
+      return <Error statusCodeProp={400} />;
+    } else {
+      return <Error statusCodeProp={404} />;
+    }
   } else if (loading) {
-    return <div>{loading}</div>;
+    return <div>Loading</div>;
   }
-  if (data) {
+  if (data && sellerData) {
     const productData = data.getProductById;
-    console.log(data, "data");
     return (
       <div style={{ display: "flex", justifyContent: "center" }}>
         <Grid container direction="row" marginTop={12} component="main">
@@ -151,7 +153,8 @@ export default function ProductDetailCard() {
 
               <Grid item xs>
                 <div>
-                  <p>Seller Id: {productData.seller_id}</p>
+                  {/* <p>Seller Id: {productData.seller_id}</p> */}
+                  <p>Seller: {sellerData.getUserById.firstname}</p>
                   {productData.status === "completed" &&
                   currentUser &&
                   (currentUser.uid === productData.seller_id ||
@@ -177,16 +180,12 @@ export default function ProductDetailCard() {
                       {productData.status !== "completed" &&
                       productData.seller_id === currentUser.uid ? (
                         <EditProduct productData={productData} />
-                      ) : (
-                        <p>Completed, only poster can edit.</p>
-                      )}
+                      ) : null}
                       {productData.status === "completed" &&
                       (productData.buyer_id === currentUser.uid ||
                         productData.seller_id === currentUser.uid) ? (
                         <Comment data={productData} />
-                      ) : (
-                        <p>Completed, only poster/buyer can comment.</p>
-                      )}
+                      ) : null}
 
                       {productData.status === "active" &&
                       productData.seller_id !== currentUser.uid ? (

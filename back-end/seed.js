@@ -33,15 +33,14 @@ const userList = [
 
 // products
 const conditions = ["brand new", "like new", "gently used", "functional"];
-const sellers = [
+const userIds = [
   "mRdeR8wDRzLVEbeer5PpbJY6TDE3",
   "8C5bGSz1FRVbAQ47EDnDSvmKsqg2",
   "7SKDog0fjKOeS1jeuq32a9vYPue2",
-  "S3OyV8HdgkZk0yxKB3OHeqJoz2K3",
 ];
 const productDetails = {
   Pencils: {
-    d: "5 pencils",
+    d: "7 pencils",
     c: "stationary",
     p: 2,
     url: "https://pyxis.nymag.com/v1/imgs/f70/b36/dafb7c55f8d7ea922ec70f6a02704b01e5-23-pencils-lede.rsocial.w1200.jpg",
@@ -160,7 +159,7 @@ let productList = [];
 
 for (let key in productDetails) {
   const details = productDetails[key];
-  const randomSeller = Math.floor(Math.random() * sellers.length);
+  const randomSeller = Math.floor(Math.random() * userIds.length);
   const randomCondition = Math.floor(Math.random() * conditions.length);
 
   const product = {
@@ -174,7 +173,7 @@ for (let key in productDetails) {
     ),
     description: details.d,
     condition: conditions[randomCondition],
-    seller_id: sellers[randomSeller],
+    seller_id: userIds[randomSeller],
     buyer_id: null,
     image: details.url,
     category: details.c,
@@ -187,253 +186,76 @@ for (let key in productDetails) {
   productList.push(product);
 }
 
-//   {
-//     _id: new ObjectId(),
-//     name: "pencils",
-//     price: 3,
-//     date: new Date("2023-12-01"),
-//     description: "5 pencils",
-//     condition: "Functional",
-//     seller_id: "mRdeR8wDRzLVEbeer5PpbJY6TDE3",
-//     buyer_id: null,
-//     image:
-//       "https://pyxis.nymag.com/v1/imgs/f70/b36/dafb7c55f8d7ea922ec70f6a02704b01e5-23-pencils-lede.rsocial.w1200.jpg",
-//     category: "Other",
-//     status: "active",
-//     possible_buyers: [],
-//     completion_date: null,
-//   },
-//   {
-//     _id: new ObjectId(),
-//     name: "phone",
-//     price: 500,
-//     date: new Date("2023-12-01"),
-//     description: "test",
-//     condition: "Gently Used",
-//     seller_id: "7SKDog0fjKOeS1jeuq32a9vYPue2",
-//     buyer_id: null,
-//     image:
-//       "https://vviv-images.s3.us-west-1.amazonaws.com/phone1702950060654deeppurple1.webp",
-//     category: "Electronics",
-//     status: "active",
-//     possible_buyers: [],
-//     completion_date: null,
-//   },
-//   {
-//     // _id: {
-//     //   $oid: "6580f7bb26a29e6992110a1f",
-//     // },
-//     _id: new ObjectId(),
-//     name: "desk",
-//     price: 12,
-//     date: new Date("2023-12-01"),
-//     description: "test",
-//     condition: "Brand New",
-//     seller_id: "7SKDog0fjKOeS1jeuq32a9vYPue2",
-//     buyer_id: null,
-//     image:
-//       "https://vviv-images.s3.us-west-1.amazonaws.com/desk1702950840957download.png",
-//     category: "Furniture",
-//     status: "active",
-//     possible_buyers: [],
-//     completion_date: null,
-//   },
-//   {
-//     _id: new ObjectId(),
-//     name: "python 101",
-//     price: 10,
-//     date: new Date("2023-12-11"),
-//     description: "python book",
-//     condition: "Brand New",
-//     seller_id: "8C5bGSz1FRVbAQ47EDnDSvmKsqg2",
-//     buyer_id: null,
-//     image: "7ENPNeTB3qkgvrS+W9aXTg==",
-//     category: "Book",
-//     status: "active",
-//     possible_buyers: [],
-//     completion_date: null,
-//   },
-//   {
-//     _id: new ObjectId(),
-//     name: "java 101",
-//     price: 10,
-//     date: new Date("2023-12-12"),
-//     description: "java book",
-//     condition: "Brand New",
-//     seller_id: "mRdeR8wDRzLVEbeer5PpbJY6TDE3",
-//     buyer_id: null,
-//     image: "7ENPNeTB3qkgvrS+W9aXTg==",
-//     category: "Book",
-//     status: "active",
-//     possible_buyers: [],
-//     completion_date: null,
-//   },
-//   {
-//     _id: new ObjectId(),
-//     name: "javascript 101",
-//     price: 10,
-//     date: new Date("2023-12-13"),
-//     description: "javascript book",
-//     condition: "Brand New",
-//     seller_id: "8C5bGSz1FRVbAQ47EDnDSvmKsqg2",
-//     buyer_id: null,
-//     image: "7ENPNeTB3qkgvrS+W9aXTg==",
-//     category: "Book",
-//     status: "active",
-//     possible_buyers: [],
-//     completion_date: null,
-//   },
-//   {
-//     _id: new ObjectId(),
-//     name: "C# 101",
-//     price: 10,
-//     date: new Date("2023-12-14"),
-//     description: "C# book",
-//     condition: "Brand New",
-//     seller_id: "mRdeR8wDRzLVEbeer5PpbJY6TDE3",
-//     buyer_id: null,
-//     image: "7ENPNeTB3qkgvrS+W9aXTg==",
-//     category: "Book",
-//     status: "active",
-//     possible_buyers: [],
-//     completion_date: null,
-//   },
-//   {
-//     _id: new ObjectId(),
-//     name: "C++ 101",
-//     price: 10,
-//     date: new Date("2023-12-15"),
-//     description: "C++ book",
-//     condition: "Brand New",
-//     seller_id: "mRdeR8wDRzLVEbeer5PpbJY6TDE3",
-//     buyer_id: null,
-//     image: "7ENPNeTB3qkgvrS+W9aXTg==",
-//     category: "Book",
-//     status: "active",
-//     possible_buyers: [],
-//     completion_date: null,
-//   },
-//   {
-//     _id: new ObjectId(),
-//     name: "Kotlin 101",
-//     price: 10,
-//     date: new Date("2023-12-16"),
-//     description: "Kotlin book",
-//     condition: "Brand New",
-//     seller_id: "mRdeR8wDRzLVEbeer5PpbJY6TDE3",
-//     buyer_id: null,
-//     image: "7ENPNeTB3qkgvrS+W9aXTg==",
-//     category: "Book",
-//     status: "active",
-//     possible_buyers: [],
-//     completion_date: null,
-//   },
-//   {
-//     _id: new ObjectId(),
-//     name: "css",
-//     price: 1,
-//     date: new Date(),
-//     description: "css",
-//     condition: "Brand New",
-//     seller_id: "mRdeR8wDRzLVEbeer5PpbJY6TDE3",
-//     buyer_id: null,
-//     image:
-//       "https://vviv-images.s3.us-west-1.amazonaws.com/css1702976481029home.jpeg",
-//     category: "Book",
-//     status: "active",
-//     possible_buyers: [],
-//     completion_date: null,
-//   },
-// ];
+const postDetails = {
+  "Textbook for CS554": {
+    d: "Hi, anyone has the textbook for course 554 Web Programming II?",
+    c: "Book",
+  },
+  Calculator: {
+    d: "Need a calculator for my math exam! Thank you!",
+    c: "Electronics",
+  },
+  Pen: {
+    d: "EMERGENCY!!!! I have a test this afternoon and really need a black pen!!!!",
+    c: "Stationary",
+  },
+  "Textbook for CS546": {
+    d: "Hi, anyone has the textbook for course 546 Web Programming I?",
+    c: "Book",
+  },
+  Desk: {
+    d: "Hi, I'm a freshmen, really need a desk for my room.",
+    c: "Furniture",
+  },
+  Chair: {
+    d: "I have desks in my dorm, but no chairs...",
+    c: "Furniture",
+  },
+  Cellphone: {
+    d: "OMG!!! I just lost my phone, anyone got an old phone!!!",
+    c: "Electronic",
+  },
+  PS5: {
+    d: "To easy getting straight A's, need a PS5",
+    c: "Electronic",
+  },
+  "Windows Laptop": {
+    d: "The app I want to use only works on Windows laptops, anyone got one?",
+    c: "Electronic",
+  },
+  "Textbook for CS561": {
+    d: "Hi, anyone has the textbook for course 561 DBMS I?",
+    c: "Book",
+  },
+};
 
-const postList = [
-  {
+let postList = [];
+for (let key in postDetails) {
+  const details = postDetails[key];
+  const randomBuyer = Math.floor(Math.random() * userIds.length);
+  const randomCondition = Math.floor(Math.random() * conditions.length);
+
+  const post = {
     _id: new ObjectId(),
-    buyer_id: "mRdeR8wDRzLVEbeer5PpbJY6TDE3",
+    buyer_id: userIds[randomBuyer],
     seller_id: null,
-    item: "Textbook",
-    category: "Book",
-    price: 15,
-    condition: "Like New",
-    date: new Date("2023-12-19"),
-    description:
-      "Hi, anyone has the textbook for course 554 Web Programming II?",
+    item: key,
+    category: details.c,
+    price: Math.floor(Math.random() * 50),
+    condition: conditions[randomCondition],
+    date: new Date(
+      `2023-${Math.floor(Math.random() * 11) + 1}-${
+        Math.floor(Math.random() * 27) + 1
+      }`
+    ),
+    description: details.d,
     status: "active",
     possible_sellers: [],
     completion_date: null,
-  },
-  {
-    _id: new ObjectId(),
-    buyer_id: "mRdeR8wDRzLVEbeer5PpbJY6TDE3",
-    seller_id: null,
-    item: "Calculator",
-    category: "Stationary",
-    price: 15,
-    condition: "Functional",
-    date: new Date("2023-12-09"),
-    description: "Need a calculator for my math exam! Thank you!",
-    status: "active",
-    possible_sellers: [],
-    completion_date: null,
-  },
-  {
-    _id: new ObjectId(),
-    buyer_id: "mRdeR8wDRzLVEbeer5PpbJY6TDE3",
-    seller_id: null,
-    item: "Pen",
-    category: "Stationary",
-    price: 10,
-    condition: "Brand New",
-    date: new Date("2023-12-01"),
-    description:
-      "EMERGENCY!!!! I have a test this afternoon and really need a black pen!!!!",
-    status: "inactive",
-    possible_sellers: [],
-    completion_date: null,
-  },
-  {
-    _id: new ObjectId(),
-    buyer_id: "mRdeR8wDRzLVEbeer5PpbJY6TDE3",
-    seller_id: "8C5bGSz1FRVbAQ47EDnDSvmKsqg2",
-    item: "Book",
-    category: "Book",
-    price: 10,
-    condition: "Brand New",
-    date: new Date("2023-12-07"),
-    description: "textbook",
-    status: "completed",
-    possible_sellers: ["8C5bGSz1FRVbAQ47EDnDSvmKsqg2"],
-    completion_date: new Date("2023-12-08"),
-  },
-  {
-    _id: new ObjectId(),
-    buyer_id: "8C5bGSz1FRVbAQ47EDnDSvmKsqg2",
-    seller_id: "mRdeR8wDRzLVEbeer5PpbJY6TDE3",
-    item: "Phone",
-    category: "Electronics",
-    price: 10,
-    condition: "Brand New",
-    date: new Date("2023-12-01"),
-    description: "",
-    status: "completed",
-    possible_sellers: ["mRdeR8wDRzLVEbeer5PpbJY6TDE3"],
-    completion_date: new Date("2023-12-08"),
-  },
-  {
-    _id: new ObjectId(),
-    buyer_id: "7SKDog0fjKOeS1jeuq32a9vYPue2",
-    seller_id: null,
-    item: "chair",
-    category: "Furniture",
-    price: 10,
-    condition: "Like New",
-    date: new Date(),
-    description: "",
-    status: "active",
-    possible_sellers: [],
-    completion_date: null,
-  },
-];
+  };
+
+  postList.push(post);
+}
 
 const main = async () => {
   const db = await dbConnection();
@@ -444,7 +266,7 @@ const main = async () => {
 
   await userCollection.insertMany(userList);
   await productCollection.insertMany(productList);
-  // await postCollection.insertMany(postList);
+  await postCollection.insertMany(postList);
 
   console.log("Done seeding database");
   await closeConnection();

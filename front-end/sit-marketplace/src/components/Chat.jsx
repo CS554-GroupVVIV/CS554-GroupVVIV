@@ -18,9 +18,9 @@ export default function Chat({ chat, participants }) {
     for (const user of data.getUsersByIds) {
       participantDict[user._id] = user.firstname;
     }
-  }
+    // }
 
-  if (!loading) {
+    // if (!loading) {
     return (
       <div style={{ display: "flex", flexDirection: "column" }}>
         {chat &&

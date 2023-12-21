@@ -38,7 +38,7 @@ export default function ChatRoom({ room }) {
             ],
           });
         } catch (error) {
-          console.error("Error adding chat:", error);
+          alert("Error adding chat:", error);
         }
       }
     }
@@ -48,7 +48,6 @@ export default function ChatRoom({ room }) {
   const [addMsg] = useMutation(ADD_MESSAGE);
   const handleAddMsg = async (msgData) => {
     try {
-      console.log("adding...", msgData);
       await addMsg({
         variables: {
           chatId: msgData.chatId,
@@ -57,9 +56,8 @@ export default function ChatRoom({ room }) {
           time: msgData.time,
         },
       });
-      console.log("added");
     } catch (error) {
-      console.error("Error adding user:", error);
+      alert("Error adding user:", error);
     }
   };
 
@@ -156,7 +154,6 @@ export default function ChatRoom({ room }) {
                 time: msgData.time,
               });
 
-              // console.log(msgData);
               handleAddMsg(msgData);
 
               setMessage("");

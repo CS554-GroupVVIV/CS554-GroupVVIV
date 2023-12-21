@@ -2,14 +2,16 @@ import { Container, Link } from "@mui/material";
 import { useNavigate, useLocation } from "react-router";
 
 export default function Error({ messageProp, statusCodeProp }) {
-  const location = useLocation();
+  // const location = useLocation();
   const navigate = useNavigate();
-  const { message: locationMessage, statusCode: locationStatusCode } =
-    location.state || {};
+  // const { message: locationMessage, statusCode: locationStatusCode } =
+  //   location.state || {};
 
   // Use props if they exist, otherwise use location state
-  const message = messageProp || locationMessage;
-  const statusCode = statusCodeProp || locationStatusCode;
+  // const message = messageProp || locationMessage;
+  // const statusCode = statusCodeProp || locationStatusCode;
+  const message = messageProp;
+  const statusCode = statusCodeProp;
 
   let errorMessage;
   switch (statusCode) {
@@ -17,7 +19,7 @@ export default function Error({ messageProp, statusCodeProp }) {
       errorMessage = "Bad Request";
       break;
     case 404:
-      errorMessage = `${message} not found`;
+      errorMessage = `Not Found`;
       break;
     default:
       errorMessage = message;
@@ -26,12 +28,10 @@ export default function Error({ messageProp, statusCodeProp }) {
 
   return (
     <div>
-      <Container maxWidth="lg">
+      <Container maxWidth="lg" sx={{ marginTop: 10 }}>
         <h1>Error {statusCode}</h1>
         <p>{errorMessage}</p>
-        <Link onClick={() => navigate("/")}>
-          <h1>Home</h1>
-        </Link>
+        <Link onClick={() => navigate("/")}>Go back to homepage</Link>
       </Container>
     </div>
   );
