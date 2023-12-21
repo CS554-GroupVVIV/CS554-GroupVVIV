@@ -36,7 +36,14 @@ export default function ProductCard({ productData }) {
 
   const { currentUser } = useContext(AuthContext);
 
-  const [isPossibleBuyer, setIsPossibleBuyer] = useState(false);
+  const [isPossibleBuyer, setIsPossibleBuyer] = useState(
+    productData &&
+      productData.possible_buyers
+        .map((buyer) => {
+          return buyer._id;
+        })
+        .includes(currentUser && currentUser.uid)
+  );
   useEffect(() => {
     if (productData) {
       setIsPossibleBuyer(

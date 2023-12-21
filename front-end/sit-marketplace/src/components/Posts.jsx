@@ -129,7 +129,7 @@ export default function Posts() {
               event.preventDefault();
               setSearchTerm(text);
             }}
-            inputProps={{ maxLength: 100 }}
+            inputprops={{ maxLength: 100 }}
           >
             Search
           </Button>
