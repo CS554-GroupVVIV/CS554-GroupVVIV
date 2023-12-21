@@ -1627,7 +1627,8 @@ export const resolvers = {
         }
         const update = await posts.findOneAndUpdate(
           { _id: new ObjectId(_id) },
-          { $push: { possible_sellers: seller_id } }
+          { $push: { possible_sellers: seller_id } },
+          { returnDocument: "after" }
         );
         if (!update) {
           throw new GraphQLError(`Could not Edit Post`, {
@@ -1665,7 +1666,8 @@ export const resolvers = {
         }
         const update = await posts.findOneAndUpdate(
           { _id: new ObjectId(_id) },
-          { $pull: { possible_sellers: seller_id } }
+          { $pull: { possible_sellers: seller_id } },
+          { returnDocument: "after" }
         );
         if (!update) {
           throw new GraphQLError(`Could not Edit Post`, {
