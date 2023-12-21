@@ -79,12 +79,18 @@ export default function ProductDetailCard() {
       if (hasFavorited) {
         //if already favorited this product, remove this product from favorite list.
         removeFavorite({
-          variables: { id: currentUser.uid, productId: productData._id },
+          variables: {
+            id: currentUser.uid,
+            productId: data?.getProductById._id,
+          },
         });
         setHasFavorited(false);
       } else {
         addFavorite({
-          variables: { id: currentUser.uid, productId: productData._id },
+          variables: {
+            id: currentUser.uid,
+            productId: data?.getProductById._id,
+          },
         });
         setHasFavorited(true);
       }
