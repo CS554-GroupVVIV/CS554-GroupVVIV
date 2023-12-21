@@ -202,7 +202,7 @@ for (let key in productDetails) {
     image: details.url,
     category: details.c,
     status: "active",
-    possible_buyers: randomBuyer ? [randomBuyer] : null,
+    possible_buyers: userIds_2[randomBuyer] ? [userIds_2[randomBuyer]] : [],
     completion_date: null,
   };
 

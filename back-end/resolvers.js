@@ -1219,6 +1219,7 @@ export const resolvers = {
     // },
 
     addProductToUserFavorite: async (_, args) => {
+      console.log("addProductToUserFavorite");
       let { _id, productId } = args;
       try {
         //find current user by id
@@ -1251,6 +1252,9 @@ export const resolvers = {
             extensions: { code: "INTERNAL_SERVER_ERROR" },
           });
         }
+        client.json.del(`allProducts`);
+        client.json.del(`getProductById-${productId._id.toString()}`);
+
         return updatedUser.favorite;
       } catch (error) {
         throw new GraphQLError(error.message);
@@ -1290,6 +1294,8 @@ export const resolvers = {
             extensions: { code: "INTERNAL_SERVER_ERROR" },
           });
         }
+        client.json.del(`getPostById-${postId._id.toString()}`);
+        client.json.del(`allPosts`);
         return updatedUser.favorite_post;
       } catch (error) {
         throw new GraphQLError(error.message);
@@ -1355,6 +1361,7 @@ export const resolvers = {
     },
 
     removeProductFromUserFavorite: async (_, args) => {
+      console.log("removeProductFromUserFavorite");
       let { _id, productId } = args;
       try {
         //find current user by id
@@ -1386,6 +1393,8 @@ export const resolvers = {
             extensions: { code: "INTERNAL_SERVER_ERROR" },
           });
         }
+        client.json.del(`allProducts`);
+        client.json.del(`getProductById-${productId._id.toString()}`);
 
         return updatedUser.favorite;
       } catch (error) {
@@ -1425,6 +1434,8 @@ export const resolvers = {
             extensions: { code: "INTERNAL_SERVER_ERROR" },
           });
         }
+        client.json.del(`allPosts`);
+        client.json.del(`getPostById-${postId._id.toString()}`);
 
         return updatedUser.favorite_post;
       } catch (error) {
@@ -1558,7 +1569,9 @@ export const resolvers = {
           });
         }
         if (!product.possible_buyers.includes(buyer_id)) {
-          return product;
+          throw new GraphQLError("You are not a possible buyer", {
+            extensions: { code: "NOT_FOUND" },
+          });
         }
         const users = await userCollection();
         const buyer = await users.findOne({ _id: buyer_id });

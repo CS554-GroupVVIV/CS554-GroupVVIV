@@ -26,12 +26,13 @@ import {
   GET_USER_FOR_FAVORITE,
   GET_USER,
   REMOVE_POSSIBLE_BUYER,
-  GET_PRODUCTS,
+  GET_PRODUCTS_BY_STATUS,
 } from "../queries";
 import { useMutation } from "@apollo/client";
 import { useQuery } from "@apollo/client";
 
 export default function ProductCard({ productData }) {
+  console.log(productData);
   const navigate = useNavigate();
 
   const { currentUser } = useContext(AuthContext);
@@ -39,17 +40,19 @@ export default function ProductCard({ productData }) {
   const [isPossibleBuyer, setIsPossibleBuyer] = useState();
   useEffect(() => {
     if (productData) {
+      console.log(productData);
       setIsPossibleBuyer(
         productData &&
           productData.possible_buyers
             .map((buyer) => {
+              // console.log(buyer);
               return buyer._id;
             })
             .includes(currentUser.uid)
       );
     }
   }, [productData]);
-  console.log(isPossibleBuyer);
+  // console.log("here", isPossibleBuyer);
 
   const [hasFavorited, setHasFavorited] = useState(false);
 
@@ -92,7 +95,7 @@ export default function ProductCard({ productData }) {
         setHasFavorited(false);
       }
     }
-  }, [userLoading, userData, userError]);
+  }, [userLoading, userData, userError, isPossibleBuyer]);
 
   function handleFavorite() {
     try {
@@ -194,6 +197,11 @@ export default function ProductCard({ productData }) {
                               id: productData._id,
                               buyerId: currentUser.uid,
                             },
+                            refetchQueries: [
+                              {
+                                query: GET_PRODUCTS_BY_STATUS,
+                              },
+                            ],
                           });
                           // setIsPossibleBuyer(false);
 
@@ -216,6 +224,11 @@ export default function ProductCard({ productData }) {
                               id: productData._id,
                               buyerId: currentUser.uid,
                             },
+                            refetchQueries: [
+                              {
+                                query: GET_PRODUCTS_BY_STATUS,
+                              },
+                            ],
                           });
                           // setIsPossibleBuyer(true);
 
