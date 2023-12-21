@@ -36,6 +36,18 @@ export default function PostDetail() {
     fetchPolicy: "cache-and-network",
   });
 
+  const { data: buyerData } = useQuery(GET_USER, {
+    variables: { id: data ? data.getPostById.buyer_id : "" },
+    fetchPolicy: "cache-and-network",
+  });
+
+  const { data: sellerData } = useQuery(GET_USER, {
+    variables: {
+      id: data && data.getPostById.seller_id ? data.getPostById.seller_id : "",
+    },
+    fetchPolicy: "cache-and-network",
+  });
+
   const {
     data: userData,
     error: userError,
@@ -67,16 +79,14 @@ export default function PostDetail() {
   function handleFavorite() {
     try {
       if (!currentUser || !currentUser.uid) {
-        alert("You need to login to favorite this product!");
+        alert("You need to login to favorite this post!");
         return;
       }
       if (data) {
-        // console.log(data, "data");
         if (hasFavorited) {
           removeFavorite({
             variables: { id: currentUser.uid, postId: data.getPostById._id },
           });
-          console.log(false);
           setHasFavorited(false);
         } else {
           addFavorite({
@@ -86,15 +96,13 @@ export default function PostDetail() {
         }
       }
     } catch (error) {
-      console.log(error.message);
+      alert(error.message);
     }
   }
 
   useEffect(() => {
-    console.log(userData?.getUserById?.favorite_post);
     if (!userLoading) {
-      console.log(userData?.getUserById.favorite_post);
-
+      // console.log(userData?.getUserById.favorite_post);
       if (
         userData?.getUserById?.favorite_post?.includes(data?.getPostById._id)
       ) {
@@ -113,7 +121,7 @@ export default function PostDetail() {
     } else {
       return <Error statusCodeProp={404} />;
     }
-  } else if (data && userData) {
+  } else if (data && buyerData) {
     const post = data.getPostById;
     return (
       <div style={{ display: "flex", justifyContent: "center" }}>
@@ -132,21 +140,40 @@ export default function PostDetail() {
             </Typography>
           </Grid>
 
+          <Grid item xs>
+            <Typography align="left" variant="h5" sx={{ fontWeight: "bolder" }}>
+              {post.description}
+            </Typography>
+          </Grid>
+
           <Divider sx={{ marginTop: 3, marginBottom: 3 }} />
 
           <Grid item xs>
             <div>
-              <p>Buyer Id: {userData.getUserById.firstname}</p>
+              <p>Buyer: {buyerData.getUserById.firstname}</p>
+              {post.status === "completed" &&
+              currentUser &&
+              (currentUser.uid === post.seller_id ||
+                currentUser.uid === post.buyer_id) &&
+              sellerData ? (
+                <p>Seller: {sellerData.getUserById.firstname}</p>
+              ) : null}
+              <p>Category: {post.category}</p>
+              <p>Condition:{post.condition}</p>
+              <p>Price: {post.price}</p>
+              <p>Post Date: {new Date(post.date).toLocaleString()}</p>
+              <p>Status: {post.status}</p>
               {post.status === "completed" &&
               currentUser &&
               (currentUser.uid === post.seller_id ||
                 currentUser.uid === post.buyer_id) ? (
-                <p>Seller Id: {post.seller_id}</p>
-              ) : null}
-              <p>Category: {post.category}</p>
-              <p>Price: {post.price}</p>
-              <p>Transaction Date: {new Date(post.date).toLocaleString()}</p>
-              <p>Status: {post.status}</p>
+                <p>
+                  Completion Date:{" "}
+                  {new Date(post.completion_date).toLocaleString()}
+                </p>
+              ) : (
+                <></>
+              )}
             </div>
 
             <Divider sx={{ marginTop: 3, marginBottom: 3 }} />
@@ -156,19 +183,16 @@ export default function PostDetail() {
                   {post.status !== "completed" &&
                   post.buyer_id === currentUser.uid ? (
                     <EditPost postData={post} />
-                  ) : (
-                    <p>Completed, only poster can edit.</p>
-                  )}
+                  ) : null}
                   {post.status === "completed" &&
                   (post.buyer_id === currentUser.uid ||
                     post.seller_id === currentUser.uid) ? (
                     <Comment data={post} />
-                  ) : (
-                    <p>Completed, only poster/seller can comment.</p>
-                  )}
-                  {post.buyer_id !== currentUser.uid ? (
+                  ) : null}
+
+                  {post.status === "active" &&
+                  post.buyer_id !== currentUser.uid ? (
                     <>
-                      {" "}
                       <Button
                         size="small"
                         variant="contained"
@@ -187,6 +211,7 @@ export default function PostDetail() {
                             });
                           }
                         }}
+                        sx={{ fontWeight: "bold" }}
                       >
                         Chat with buyer
                       </Button>
@@ -207,7 +232,7 @@ export default function PostDetail() {
                 </div>
               </div>
             ) : (
-              <p>(Login to chat with seller or add product to favorite)</p>
+              <p>(Login to chat with buyer or add post to favorite)</p>
             )}
 
             <Divider sx={{ marginTop: 3, marginBottom: 3 }} />
