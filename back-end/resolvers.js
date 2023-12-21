@@ -1547,6 +1547,41 @@ export const resolvers = {
         throw new GraphQLError(error.message);
       }
     },
+    removePossibleBuyer: async (_, args) => {
+      try {
+        let { _id, buyer_id } = args;
+        const products = await productCollection();
+        const product = await products.findOne({ _id: new ObjectId(_id) });
+        if (!product) {
+          throw new GraphQLError("product not found", {
+            extensions: { code: "NOT_FOUND" },
+          });
+        }
+        if (!product.possible_buyers.includes(buyer_id)) {
+          return product;
+        }
+        const users = await userCollection();
+        const buyer = await users.findOne({ _id: buyer_id });
+        if (!buyer) {
+          throw new GraphQLError("buyer not found", {
+            extensions: { code: "NOT_FOUND" },
+          });
+        }
+        const update = await products.findOneAndUpdate(
+          { _id: new ObjectId(_id) },
+          { $pull: { possible_buyers: buyer_id } },
+          { new: true }
+        );
+        if (!update) {
+          throw new GraphQLError(`Could not Edit Product`, {
+            extensions: { code: "INTERNAL_SERVER_ERROR" },
+          });
+        }
+        return update;
+      } catch (error) {
+        throw new GraphQLError(error.message);
+      }
+    },
     addPossibleSeller: async (_, args) => {
       try {
         let { _id, seller_id } = args;
@@ -1570,6 +1605,40 @@ export const resolvers = {
         const update = await posts.findOneAndUpdate(
           { _id: new ObjectId(_id) },
           { $push: { possible_sellers: seller_id } }
+        );
+        if (!update) {
+          throw new GraphQLError(`Could not Edit Post`, {
+            extensions: { code: "INTERNAL_SERVER_ERROR" },
+          });
+        }
+        return update;
+      } catch (error) {
+        throw new GraphQLError(error.message);
+      }
+    },
+    removePossibleSeller: async (_, args) => {
+      try {
+        let { _id, seller_id } = args;
+        const posts = await postCollection();
+        const post = await posts.findOne({ _id: new ObjectId(_id) });
+        if (!post) {
+          throw new GraphQLError("post not found", {
+            extensions: { code: "NOT_FOUND" },
+          });
+        }
+        if (!post.possible_sellers.includes(seller_id)) {
+          return post;
+        }
+        const users = await userCollection();
+        const seller = await users.findOne({ _id: seller_id });
+        if (!seller) {
+          throw new GraphQLError("seller not found", {
+            extensions: { code: "NOT_FOUND" },
+          });
+        }
+        const update = await posts.findOneAndUpdate(
+          { _id: new ObjectId(_id) },
+          { $pull: { possible_sellers: seller_id } }
         );
         if (!update) {
           throw new GraphQLError(`Could not Edit Post`, {

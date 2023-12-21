@@ -510,9 +510,54 @@ export const ADD_POSSIBLE_BUYER = gql`
   }
 `;
 
+export const REMOVE_POSSIBLE_BUYER = gql`
+  mutation Mutation($id: String!, $buyerId: String!) {
+    removePossibleBuyer(_id: $id, buyer_id: $buyerId) {
+      _id
+      buyer_id
+      category
+      condition
+      date
+      description
+      image
+      name
+      price
+      seller_id
+      status
+      possible_buyers {
+        _id
+        firstname
+        lastname
+      }
+    }
+  }
+`;
+
 export const ADD_POSSIBLE_SELLER = gql`
   mutation Mutation($id: String!, $sellerId: String!) {
     addPossibleSeller(_id: $id, seller_id: $sellerId) {
+      _id
+      buyer_id
+      category
+      condition
+      date
+      description
+      item
+      possible_sellers {
+        _id
+        firstname
+        lastname
+      }
+      price
+      seller_id
+      status
+    }
+  }
+`;
+
+export const REMOVE_POSSIBLE_SELLER = gql`
+  mutation Mutation($id: String!, $sellerId: String!) {
+    removePossibleSeller(_id: $id, seller_id: $sellerId) {
       _id
       buyer_id
       category

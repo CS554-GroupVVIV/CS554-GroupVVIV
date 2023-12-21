@@ -25,6 +25,8 @@ import {
   ADD_POSSIBLE_BUYER,
   GET_USER_FOR_FAVORITE,
   GET_USER,
+  REMOVE_POSSIBLE_BUYER,
+  GET_PRODUCTS,
 } from "../queries";
 import { useMutation } from "@apollo/client";
 import { useQuery } from "@apollo/client";
@@ -33,6 +35,21 @@ export default function ProductCard({ productData }) {
   const navigate = useNavigate();
 
   const { currentUser } = useContext(AuthContext);
+
+  const [isPossibleBuyer, setIsPossibleBuyer] = useState();
+  useEffect(() => {
+    if (productData) {
+      setIsPossibleBuyer(
+        productData &&
+          productData.possible_buyers
+            .map((buyer) => {
+              return buyer._id;
+            })
+            .includes(currentUser.uid)
+      );
+    }
+  }, [productData]);
+  console.log(isPossibleBuyer);
 
   const [hasFavorited, setHasFavorited] = useState(false);
 
@@ -48,6 +65,7 @@ export default function ProductCard({ productData }) {
   const baseUrl = "/product/";
 
   const [addPossibleBuyer] = useMutation(ADD_POSSIBLE_BUYER);
+  const [removePossibleBuyer] = useMutation(REMOVE_POSSIBLE_BUYER);
 
   const [removeFavorite, { removeData, removeLoading, removeError }] =
     useMutation(REMOVE_FAVORITE_FROM_USER, {
@@ -103,6 +121,7 @@ export default function ProductCard({ productData }) {
     //   console.log(removeError);
     // }
   }
+
   return (
     <Grid item>
       <Card sx={{ width: 300, height: "100%" }}>
@@ -163,38 +182,64 @@ export default function ProductCard({ productData }) {
                     Chat
                   </Button>
 
-                  <Button
-                    size="small"
-                    variant="contained"
-                    color="inherit"
-                    onClick={async () => {
-                      if (currentUser.uid) {
-                        await addPossibleBuyer({
-                          variables: {
-                            id: productData._id,
-                            buyerId: currentUser.uid,
-                          },
-                        });
-
-                        if (!hasFavorited) {
-                          addFavorite({
+                  {isPossibleBuyer ? (
+                    <Button
+                      size="small"
+                      variant="contained"
+                      color="inherit"
+                      onClick={() => {
+                        if (currentUser.uid) {
+                          removePossibleBuyer({
                             variables: {
-                              id: currentUser.uid,
-                              productId: productData._id,
+                              id: productData._id,
+                              buyerId: currentUser.uid,
                             },
                           });
-                          setHasFavorited(true);
-                        }
+                          // setIsPossibleBuyer(false);
 
-                        alert(
-                          "Congrats! You're a potential buyer now!\n\nFeel free to contact the seller for further information."
-                        );
-                      }
-                    }}
-                    sx={{ fontWeight: "bold", marginLeft: 2 }}
-                  >
-                    Buy
-                  </Button>
+                          alert("You're no longer a potential buyer ...");
+                        }
+                      }}
+                      sx={{ fontWeight: "bold", marginLeft: 2 }}
+                    >
+                      Cancel
+                    </Button>
+                  ) : (
+                    <Button
+                      size="small"
+                      variant="contained"
+                      color="inherit"
+                      onClick={() => {
+                        if (currentUser.uid) {
+                          addPossibleBuyer({
+                            variables: {
+                              id: productData._id,
+                              buyerId: currentUser.uid,
+                            },
+                          });
+                          // setIsPossibleBuyer(true);
+
+                          if (!hasFavorited) {
+                            addFavorite({
+                              variables: {
+                                id: currentUser.uid,
+                                productId: productData._id,
+                              },
+                            });
+                            setHasFavorited(true);
+                          }
+
+                          alert(
+                            "Congrats! You're a potential buyer now!\n\nFeel free to contact the seller for further information."
+                          );
+                        }
+                      }}
+                      sx={{ fontWeight: "bold", marginLeft: 2 }}
+                    >
+                      Buy
+                    </Button>
+                  )}
+
                   <IconButton
                     sx={{ float: "right", justifyContent: "center" }}
                     onClick={handleFavorite}
