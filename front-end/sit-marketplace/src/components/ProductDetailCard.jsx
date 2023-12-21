@@ -223,9 +223,9 @@ export default function ProductDetailCard() {
                             size="small"
                             variant="contained"
                             // color="inherit"
-                            onClick={() => {
+                            onClick={async () => {
                               if (currentUser.uid) {
-                                addPossibleBuyer({
+                                await addPossibleBuyer({
                                   variables: {
                                     id: productData._id,
                                     buyerId: currentUser.uid,
