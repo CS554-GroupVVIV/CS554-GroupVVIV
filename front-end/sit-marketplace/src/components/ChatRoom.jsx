@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext, useRef } from "react";
 
-import { socketID, socket } from "./socket";
+import { socket } from "./socket";
 
 import { useQuery, useMutation } from "@apollo/client";
 import { GET_CHAT_BY_PARTICIPANTS, ADD_CHAT, ADD_MESSAGE } from "../queries";
@@ -64,7 +64,6 @@ export default function ChatRoom({ room }) {
   const messagesEndRef = useRef(null);
   useEffect(() => {
     socket.on("message", ({ sender, message, time }) => {
-      // console.log("The server has broadcast message data to all clients");
       setChat([...chat, { sender, message, time }]);
     });
 

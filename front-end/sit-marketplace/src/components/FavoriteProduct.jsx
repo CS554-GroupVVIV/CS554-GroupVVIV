@@ -1,9 +1,6 @@
 import { useQuery } from "@apollo/client";
 import { SEARCH_PRODUCTS_BY_ID } from "../queries";
-import { useNavigate, useParams } from "react-router-dom";
 import ProductCard from "./ProductCard";
-
-import { Link } from "@mui/material";
 
 export default function FavoriteProduct({ favId }) {
   const { loading, error, data } = useQuery(SEARCH_PRODUCTS_BY_ID, {

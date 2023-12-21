@@ -9,7 +9,7 @@ import {
   ADD_FAVORITE_POST_TO_USER,
   REMOVE_FAVORITE_POST_FROM_USER,
 } from "../queries";
-import { socketID, socket } from "./socket";
+import { socket } from "./socket";
 import { AuthContext } from "../context/AuthContext.jsx";
 import Comment from "./Comment.jsx";
 import { useNavigate, useParams } from "react-router-dom";
@@ -17,18 +17,7 @@ import EditPost from "./EditPost.jsx";
 import Error from "./Error.jsx";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-import {
-  Card,
-  CardHeader,
-  CardContent,
-  Grid,
-  Link,
-  CardMedia,
-  Typography,
-  Button,
-  IconButton,
-  Divider,
-} from "@mui/material";
+import { Grid, Typography, Button, IconButton, Divider } from "@mui/material";
 
 export default function PostDetail() {
   const { currentUser } = useContext(AuthContext);

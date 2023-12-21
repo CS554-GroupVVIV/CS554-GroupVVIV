@@ -1,7 +1,7 @@
-import React, { useEffect, useState, useContext, useRef } from "react";
-import { useQuery, useMutation } from "@apollo/client";
+import React, { useState, useContext, useRef } from "react";
+import { useMutation } from "@apollo/client";
 import { AuthContext } from "../context/AuthContext.jsx";
-import { ADD_COMMENT, GET_COMMENT, EDIT_COMMENT } from "../queries";
+import { ADD_COMMENT, GET_COMMENT } from "../queries";
 
 import {
   Button,
@@ -21,18 +21,18 @@ import {
 const NewComment = ({ user_id }) => {
   const { currentUser } = useContext(AuthContext);
 
-  const [toggleNewComment, setToggleNewComment] = useState<boolean>(false);
-  const [rating, setRating] = useState<number>(0);
+  const [toggleNewComment, setToggleNewComment] = useState < boolean > false;
+  const [rating, setRating] = useState < number > 0;
   const [commentInput, setCommentInput] = useState("");
 
   const ratingRef = useRef();
   const commentInputRef = useRef();
 
-  const [ratingError, setRatingError] = useState<boolean>(false);
-  const [commentInputError, setCommentInputError] = useState<boolean>(false);
+  const [ratingError, setRatingError] = useState < boolean > false;
+  const [commentInputError, setCommentInputError] = useState < boolean > false;
 
   const helper = {
-    checkRating: (newValue)=> {
+    checkRating: (newValue) => {
       setRatingError(false);
       let rating = newValue;
       if (!rating || rating < 1 || rating > 5) {
@@ -43,7 +43,7 @@ const NewComment = ({ user_id }) => {
       return;
     },
 
-    checkComment: ()=> {
+    checkComment: () => {
       setCommentInputError(false);
       let commentInput = commentInputRef.current?.value;
       if (!commentInput || commentInput.trim() == "") {

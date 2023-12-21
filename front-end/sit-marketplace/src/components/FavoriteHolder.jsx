@@ -1,5 +1,5 @@
 import React from "react";
-import { Container, Typography, Grid, Box } from "@mui/material";
+import { Container, Typography, Grid } from "@mui/material";
 import FavoriteProduct from "./FavoriteProduct";
 import FavoritePost from "./FavoritePost";
 import Divider from "@mui/material/Divider";

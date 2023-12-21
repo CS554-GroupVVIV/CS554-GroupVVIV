@@ -1,15 +1,14 @@
-import { useState, useRef, useEffect, useContext } from "react";
+import { useState, useRef, useContext } from "react";
 import React from "react";
-import { useNavigate, redirect } from "react-router-dom";
+import { useNavigate} from "react-router-dom";
 
-import { useMutation, useQuery } from "@apollo/client";
-import { ADD_PRODUCT, GET_PRODUCTS } from "../queries";
+import { useMutation } from "@apollo/client";
+import { ADD_PRODUCT } from "../queries";
 import { uploadFileToS3 } from "../aws";
 import { AuthContext } from "../context/AuthContext";
 
 import {
   Button,
-  CssBaseline,
   TextField,
   Grid,
   Box,
@@ -21,8 +20,6 @@ import {
   FormControl,
   Stack,
 } from "@mui/material";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { styled } from "@mui/material/styles";
 
 export default function SellForm() {
@@ -47,7 +44,6 @@ export default function SellForm() {
   const [categoryError, setCategoryError] = useState(false);
   const [imageError, setImageError] = useState(false);
 
-
   const [addProduct] = useMutation(ADD_PRODUCT, {
     onError: (e) => {
       alert(e);
@@ -59,7 +55,7 @@ export default function SellForm() {
   });
 
   const helper = {
-    checkName: ()=> {
+    checkName: () => {
       setNameError(false);
       let input = nameRef.current?.value;
       if (!input || input.trim() == "") {
@@ -80,7 +76,7 @@ export default function SellForm() {
       return;
     },
 
-    checkPrice: ()=> {
+    checkPrice: () => {
       setPriceError(false);
       setPrice(0);
       let price = priceRef.current?.value;
@@ -106,7 +102,7 @@ export default function SellForm() {
       return;
     },
 
-    checkCondition: ()=> {
+    checkCondition: () => {
       setConditionError(false);
       let condition = conditionRef.current?.value;
       if (!condition || condition.trim() == "") {
@@ -127,7 +123,7 @@ export default function SellForm() {
       setCondition(condition);
     },
 
-    checkDescription: ()=> {
+    checkDescription: () => {
       setDescriptionError(false);
       let description = descriptionRef.current?.value;
       if (description && description.trim() != "") {
@@ -144,7 +140,7 @@ export default function SellForm() {
       }
     },
 
-    checkCategory: ()=> {
+    checkCategory: () => {
       setCategoryError(false);
       let category = categoryRef.current?.value;
       if (!category || category.trim() == "") {
@@ -167,7 +163,7 @@ export default function SellForm() {
       setCategory(categoryLower);
     },
 
-    checkImage: (e)=> {
+    checkImage: (e) => {
       setImageError(false);
       const image = e.target.files?.[0];
       if (!image || !(image instanceof File)) {
@@ -249,7 +245,6 @@ export default function SellForm() {
       },
     });
   };
-
 
   const VisuallyHiddenInput = styled("input")({
     clip: "rect(0 0 0 0)",

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useContext } from "react";
+import React, { useState, useRef} from "react";
 import { EDIT_PRODUCT } from "../queries";
 import { useMutation } from "@apollo/client";
 import { uploadFileToS3 } from "../aws";

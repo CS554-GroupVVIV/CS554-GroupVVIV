@@ -1,11 +1,6 @@
 import { useQuery } from "@apollo/client";
-import { SEARCH_PRODUCTS_BY_ID } from "../queries";
-import { useNavigate, useParams } from "react-router-dom";
-import ProductCard from "./ProductCard";
 import { SEARCH_POST_BY_ID } from "../queries";
 import PostCard from "./PostCard";
-
-import { Link } from "@mui/material";
 
 export default function FavoritePost({ favId }) {
   const { loading, error, data } = useQuery(SEARCH_POST_BY_ID, {

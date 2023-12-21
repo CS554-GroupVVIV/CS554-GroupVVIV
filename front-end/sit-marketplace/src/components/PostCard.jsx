@@ -7,7 +7,6 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import {
   Card,
   CardHeader,
-  CardMedia,
   CardContent,
   Grid,
   Link,
@@ -16,12 +15,8 @@ import {
 } from "@mui/material";
 
 import {
-  // ADD_FAVORITE_TO_USER,
-  // REMOVE_FAVORITE_FROM_USER,
   ADD_FAVORITE_POST_TO_USER,
   REMOVE_FAVORITE_POST_FROM_USER,
-  ADD_POSSIBLE_BUYER,
-  GET_USERS_BY_IDS,
   GET_USER_FOR_FAVORITE,
 } from "../queries";
 import { useMutation } from "@apollo/client";

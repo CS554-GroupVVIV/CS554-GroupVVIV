@@ -3,14 +3,11 @@ import { useQuery } from "@apollo/client";
 import { GET_USER } from "../queries";
 import {
   Button,
-  Box,
   Dialog,
   DialogActions,
   DialogContent,
-  DialogContentText,
   DialogTitle,
 } from "@mui/material";
-import { useParams } from "react-router-dom";
 import CommentPage from "./CommentPage";
 
 const RatingProfile = ({ id }) => {

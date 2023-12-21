@@ -24,7 +24,7 @@ import {
   REMOVE_FAVORITE_FROM_USER,
   ADD_POSSIBLE_BUYER,
   GET_USER_FOR_FAVORITE,
-  GET_USER
+  GET_USER,
 } from "../queries";
 import { useMutation } from "@apollo/client";
 import { useQuery } from "@apollo/client";
@@ -67,27 +67,16 @@ export default function ProductCard({ productData }) {
   );
 
   useEffect(() => {
-    // console.log("user data", userData);
-    // console.log(userLoading);
-    // console.log("error", userError);
     if (!userLoading) {
-      // console.log(userData, "usedata");
-      // console.log("in favorite?", userData?.getUserById?.favorite);
       if (userData?.getUserById?.favorite?.includes(productData._id)) {
-        // console.log(userData);
-        // console.log(userData.getUserById);
         setHasFavorited(true);
       } else {
-        // console.log("in the else");
         setHasFavorited(false);
       }
     }
   }, [userLoading, userData, userError]);
 
   function handleFavorite() {
-    // console.log("user id", currentUser.uid);
-    // console.log("product id", productData._id);
-
     try {
       if (!currentUser || !currentUser.uid) {
         alert("You need to login to favorite this product!");
@@ -98,7 +87,7 @@ export default function ProductCard({ productData }) {
         removeFavorite({
           variables: { id: currentUser.uid, productId: productData._id },
         });
-        console.log(false)
+        console.log(false);
         setHasFavorited(false);
       } else {
         addFavorite({

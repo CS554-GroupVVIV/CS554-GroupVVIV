@@ -1,5 +1,5 @@
 import { Container, Link } from "@mui/material";
-import { useNavigate, useLocation } from "react-router";
+import { useNavigate } from "react-router";
 
 export default function Error({ messageProp, statusCodeProp }) {
   // const location = useLocation();
