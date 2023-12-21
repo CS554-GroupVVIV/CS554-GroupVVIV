@@ -1253,7 +1253,7 @@ export const resolvers = {
           });
         }
         client.json.del(`allProducts`);
-        client.json.del(`getProductById-${productId._id.toString()}`);
+        client.json.del(`getProductById-${productId}`);
 
         return updatedUser.favorite;
       } catch (error) {
@@ -1394,7 +1394,7 @@ export const resolvers = {
           });
         }
         client.json.del(`allProducts`);
-        client.json.del(`getProductById-${productId._id.toString()}`);
+        client.json.del(`getProductById-${productId}`);
 
         return updatedUser.favorite;
       } catch (error) {
@@ -1435,7 +1435,7 @@ export const resolvers = {
           });
         }
         client.json.del(`allPosts`);
-        client.json.del(`getPostById-${postId._id.toString()}`);
+        client.json.del(`getPostById-${postId}`);
 
         return updatedUser.favorite_post;
       } catch (error) {
