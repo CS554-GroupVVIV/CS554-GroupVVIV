@@ -4,7 +4,7 @@
 
 <br />
 <div align="center">
-  ![Imgur Image](https://i.imgur.com/SIZZorG.png)
+![Imgur Image](https://i.imgur.com/SIZZorG.png)
 
   <h3 align="center">CS554 Group VVIV — SIT Marketplace</h3>
 
