@@ -28,7 +28,6 @@ export default function PostCard({ postData }) {
   const [id, setId] = useState(undefined);
   const navigate = useNavigate();
   const { currentUser } = useContext(AuthContext);
-  console.log(currentUser);
   const [hasFavorited, setHasFavorited] = useState(false);
   const {
     data: userData,
@@ -58,10 +57,10 @@ export default function PostCard({ postData }) {
   );
 
   useEffect(() => {
-    console.log(userData?.getUserById?.favorite_post);
-    console.log(postData);
+    // console.log(userData?.getUserById?.favorite_post);
+    // console.log(postData);
     if (!userLoading) {
-      console.log(userData?.getUserById.favorite_post);
+      // console.log(userData?.getUserById.favorite_post);
 
       if (userData?.getUserById?.favorite_post?.includes(postData._id)) {
         setHasFavorited(true);

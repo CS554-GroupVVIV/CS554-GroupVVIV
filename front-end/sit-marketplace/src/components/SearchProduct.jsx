@@ -33,7 +33,13 @@ export default function SearchProduct({ searchTerm, category }) {
           <Grid container spacing={2} marginTop={1} justifyContent="center">
             {data && data.searchProductsByName.length !== 0 ? (
               data.searchProductsByName.map((product) => {
-                return <ProductCard key={product._id} productData={product} />;
+                {
+                  if (product.status === "active") {
+                    return (
+                      <ProductCard key={product._id} productData={product} />
+                    );
+                  }
+                }
               })
             ) : (
               <p>No result found</p>

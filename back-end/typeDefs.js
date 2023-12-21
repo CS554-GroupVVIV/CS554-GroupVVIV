@@ -95,10 +95,12 @@ export const typeDefs = `#graphql
     type Mutation {
         addProduct(name:String!, price: Float!,description:String!,condition:String!,seller_id:String!, image:String!,category:String!):Product,
         addPossibleBuyer(_id:String!,buyer_id:String!):Product,
+        removePossibleBuyer(_id:String!,buyer_id:String!):Product,
         editProduct(_id: String!, name:String!, price: Float!,description:String,condition:String!,seller_id:String!,buyer_id:String, image:String!,category:String!,status:String! ):Product,
         removeProduct(_id:String!):Product,
         addPost(buyer_id: String!, item:String!, category:String!, price: Float!, condition:String!, description:String):Post,
         addPossibleSeller(_id:String!,seller_id:String!):Post,
+        removePossibleSeller(_id:String!,seller_id:String!):Post,
         editPost(_id: String!, buyer_id: String!,seller_id:String, item:String!, category:String!, price: Float!, condition:String!, description:String, status:String!):Post,
         removePost(_id:String!):Post,
         addUser(_id: String!, email: String!, firstname: String!, lastname: String!, favorite: String): User,
