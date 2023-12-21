@@ -181,10 +181,11 @@ export default function ProductDetailCard() {
                     <></>
                   )}
                   <p>Category: {productData.category}</p>
-                  <p>Condition: {productData.condition}</p>
+                  <p>Condition:{productData.condition}</p>
                   <p>Price: {productData.price.toFixed(2)}</p>
                   <p>
-                    Post Date: {new Date(productData.date).toLocaleString()}
+                    Post Date:
+                    {new Date(productData.date).toLocaleString()}
                   </p>
                   <p>Status: {productData.status}</p>
                   {productData.status === "completed" &&
@@ -226,7 +227,7 @@ export default function ProductDetailCard() {
                               if (currentUser.uid) {
                                 addPossibleBuyer({
                                   variables: {
-                                    id: productData.seller_id,
+                                    id: productData._id,
                                     buyerId: currentUser.uid,
                                   },
                                 });
