@@ -1,5 +1,5 @@
 import { dbConnection, closeConnection } from "./config/mongoConnection.js";
-import { users, products, posts } from "./config/mongoCollections.js";
+import { users, products, posts, chats } from "./config/mongoCollections.js";
 import { ObjectId } from "mongodb";
 const userList = [
   {
@@ -16,8 +16,8 @@ const userList = [
     email: "cwu34@stevens.edu",
     firstname: "Jason",
     lastname: "Wu",
-    favorite: ["6584a667ff6d6e6b84730141"],
-    favorite_post: ["6584ad8e36f3bfc519a59f10"],
+    favorite: ["6584a667ff6d6e6b84730141", "6584b6619158ad1d1a74b89b"],
+    favorite_post: ["6584ad8e36f3bfc519a59f10", "6584b6619158ad1d1a74b89c"],
     comments: [
       {
         _id: new ObjectId(),
@@ -236,6 +236,25 @@ for (let key in productDetails) {
   productList.push(activeProduct);
 }
 
+const activeFavProduct = {
+  _id: new ObjectId("6584b6619158ad1d1a74b89b"),
+  name: "Disney Plush",
+  price: 30,
+  date: new Date(`2023-12-21`),
+  description: "Hate to say bye to my favorite Winnie Pooh!!",
+  condition: "like new",
+  seller_id: "MakfosvJBSRugNO7tQbAPA8XsW82",
+  buyer_id: null,
+  image:
+    "https://cdn-ssl.s7.disneystore.com/is/image/DisneyShopping/1516041283894?fmt=webp&qlt=70&wid=1216&hei=1216",
+  category: "other",
+  status: "active",
+  possible_buyers: [],
+  completion_date: null,
+};
+
+productList.push(activeFavProduct);
+
 const inactiveProducts = [
   {
     _id: new ObjectId(),
@@ -398,6 +417,23 @@ for (let key in postDetails) {
   postList.push(activePost);
 }
 
+const activeFavPost = {
+  _id: new ObjectId("6584b6619158ad1d1a74b89c"),
+  buyer_id: "MakfosvJBSRugNO7tQbAPA8XsW82",
+  seller_id: null,
+  item: "Bottle water",
+  category: "other",
+  price: 0,
+  condition: "brand new",
+  date: new Date(`2023-12-20`),
+  description: "for free",
+  status: "active",
+  possible_sellers: [],
+  completion_date: null,
+};
+
+postList.push(activeFavPost);
+
 const inactivePosts = [
   {
     _id: new ObjectId(),
@@ -446,7 +482,7 @@ const completedPosts = [
     _id: new ObjectId("6584ad8e36f3bfc519a59f0f"),
     item: "Calculator",
     price: 10,
-    date: new Date(`2023-11-30`),
+    date: new Date(`2023-11-20`),
     description: "I need a calculator for my Math test tomorrow",
     condition: "functional",
     seller_id: "MakfosvJBSRugNO7tQbAPA8XsW82",
@@ -454,7 +490,7 @@ const completedPosts = [
     category: "electronics",
     status: "completed",
     possible_sellers: ["MakfosvJBSRugNO7tQbAPA8XsW82"],
-    completion_date: new Date(`2023-11-31`),
+    completion_date: new Date(`2023-11-21`),
   },
   {
     _id: new ObjectId("6584ad8e36f3bfc519a59f10"),
@@ -479,16 +515,66 @@ completedPosts.map((completedPost) => {
   postList.push(completedPost);
 });
 
+// --------------------------------------------Chat------------------------------------------------
+
+const chatList = [
+  {
+    _id: new ObjectId(),
+    participants: [
+      "8C5bGSz1FRVbAQ47EDnDSvmKsqg2",
+      "MakfosvJBSRugNO7tQbAPA8XsW82",
+    ],
+    messages: [
+      {
+        sender: "MakfosvJBSRugNO7tQbAPA8XsW82",
+        date: new Date("2023-11-30T13:24:00"),
+        message: "hi! I want this earphone!!",
+      },
+      {
+        sender: "8C5bGSz1FRVbAQ47EDnDSvmKsqg2",
+        date: new Date("2023-11-30T13:26:00"),
+        message: "hi! Ok, I'm on my way to school. Can meet you at 5",
+      },
+      {
+        sender: "MakfosvJBSRugNO7tQbAPA8XsW82",
+        date: new Date("2023-11-30T13:30:00"),
+        message: "np",
+      },
+    ],
+  },
+  {
+    _id: new ObjectId(),
+    participants: [
+      "8C5bGSz1FRVbAQ47EDnDSvmKsqg2",
+      "7SKDog0fjKOeS1jeuq32a9vYPue2",
+    ],
+    messages: [
+      {
+        sender: "7SKDog0fjKOeS1jeuq32a9vYPue2",
+        date: new Date("2023-10-30T03:20:00"),
+        message: "Just want to say hi. I'm boring",
+      },
+      {
+        sender: "8C5bGSz1FRVbAQ47EDnDSvmKsqg2",
+        date: new Date("2023-11-01T10:26:00"),
+        message: "Go to bed early. for the sake of your health. Take care",
+      },
+    ],
+  },
+];
+
 const main = async () => {
   const db = await dbConnection();
   await db.dropDatabase();
   const userCollection = await users();
   const productCollection = await products();
   const postCollection = await posts();
+  const chatCollection = await chats();
 
   await userCollection.insertMany(userList);
   await productCollection.insertMany(productList);
   await postCollection.insertMany(postList);
+  await chatCollection.insertMany(chatList);
 
   console.log("Done seeding database");
   await closeConnection();
