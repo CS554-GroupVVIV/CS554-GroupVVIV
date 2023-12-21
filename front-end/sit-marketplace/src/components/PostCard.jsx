@@ -18,6 +18,7 @@ import {
   ADD_FAVORITE_POST_TO_USER,
   REMOVE_FAVORITE_POST_FROM_USER,
   GET_USER_FOR_FAVORITE,
+  ADD_POSSIBLE_SELLER
 } from "../queries";
 import { useMutation } from "@apollo/client";
 import { useQuery } from "@apollo/client";
@@ -41,6 +42,8 @@ export default function PostCard({ postData }) {
     useMutation(REMOVE_FAVORITE_POST_FROM_USER, {
       refetchQueries: [GET_USER, "getUserById"],
     });
+
+  const [addPossibleSeller] = useMutation(ADD_POSSIBLE_SELLER);
 
   const [addFavorite, { addData, addLoading, addError }] = useMutation(
     ADD_FAVORITE_POST_TO_USER,
@@ -107,7 +110,7 @@ export default function PostCard({ postData }) {
         </Link>
 
         <CardContent>
-          <p>Price: {postData && postData.price}</p>
+          <p>Price: {postData && postData.price.toFixed(2)}</p>
           <p>Condition: {postData && postData.condition}</p>
 
           {postData && currentUser && (
@@ -119,8 +122,16 @@ export default function PostCard({ postData }) {
                     size="small"
                     variant="contained"
                     color="inherit"
-                    onClick={() => {
+                    onClick={async () => {
                       if (currentUser.uid) {
+                        await addPossibleSeller(
+                          {
+                            variables: {
+                              id: postData._id,
+                              sellerId: currentUser.uid,
+                            },
+                          }
+                        );
                         socket.emit("join room", {
                           room: postData.buyer_id,
                           user: currentUser.uid,

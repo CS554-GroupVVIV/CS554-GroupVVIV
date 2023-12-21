@@ -324,12 +324,12 @@ const EditPost = ({ postData }) => {
                         defaultValue={category}
                         onBlur={helper.checkCategory}
                       >
-                        <MenuItem value={"Book"}>Book</MenuItem>
-                        <MenuItem value={"Clothing"}>Clothing</MenuItem>
-                        <MenuItem value={"Electronics"}>Electronics</MenuItem>
-                        <MenuItem value={"Furniture"}>Furniture</MenuItem>
-                        <MenuItem value={"Stationary"}>Stationary</MenuItem>
-                        <MenuItem value={"Other"}>Other</MenuItem>
+                        <MenuItem value={"book"}>Book</MenuItem>
+                        <MenuItem value={"clothing"}>Clothing</MenuItem>
+                        <MenuItem value={"electronics"}>Electronics</MenuItem>
+                        <MenuItem value={"furniture"}>Furniture</MenuItem>
+                        <MenuItem value={"stationary"}>Stationary</MenuItem>
+                        <MenuItem value={"other"}>Other</MenuItem>
                       </Select>
                     </FormControl>
                   </div>
@@ -378,10 +378,10 @@ const EditPost = ({ postData }) => {
                         label="Condition"
                         onBlur={helper.checkCondition}
                       >
-                        <MenuItem value={"Brand New"}>Brand New</MenuItem>
-                        <MenuItem value={"Like New"}>Like New</MenuItem>
-                        <MenuItem value={"Gently Used"}>Gently Used</MenuItem>
-                        <MenuItem value={"Functional"}>Functional</MenuItem>
+                        <MenuItem value={"brand new"}>Brand New</MenuItem>
+                        <MenuItem value={"like new"}>Like New</MenuItem>
+                        <MenuItem value={"gently used"}>Gently Used</MenuItem>
+                        <MenuItem value={"functional"}>Functional</MenuItem>
                       </Select>
                     </FormControl>
                   </div>

@@ -132,7 +132,7 @@ export default function ProductCard({ productData }) {
         </div>
 
         <CardContent>
-          <p>Price: {productData && productData.price}</p>
+          <p>Price: {productData && productData.price.toFixed(2)}</p>
           <p>Condition: {productData && productData.condition}</p>
 
           {currentUser && (
@@ -143,11 +143,11 @@ export default function ProductCard({ productData }) {
                     size="small"
                     variant="contained"
                     color="inherit"
-                    onClick={() => {
+                    onClick={async () => {
                       if (currentUser.uid) {
-                        addPossibleBuyer({
+                        await addPossibleBuyer({
                           variables: {
-                            id: productData.seller_id,
+                            id: productData._id,
                             buyerId: currentUser.uid,
                           },
                         });
