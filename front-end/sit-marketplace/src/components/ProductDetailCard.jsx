@@ -262,14 +262,13 @@ export default function ProductDetailCard() {
                                     },
                                   });
 
-
-                        addFavorite({
-                          variables: {
-                            id: currentUser.uid,
-                            productId: productData._id,
-                          },
-                        });
-                        setHasFavorited(true);
+                                  addFavorite({
+                                    variables: {
+                                      id: currentUser.uid,
+                                      productId: productData._id,
+                                    },
+                                  });
+                                  setHasFavorited(true);
 
                                   alert(
                                     "You're a potential buyer now!\n\nFeel free to contact the seller for further information."
@@ -293,7 +292,9 @@ export default function ProductDetailCard() {
                             </IconButton>
                           </>
                         ) : (
-                          <p>(You're the Poster)</p>
+                          <>
+                            <p>(You're the Poster)</p>
+                          </>
                         )}
                       </div>
                     ) : (

@@ -116,9 +116,6 @@ export default function ProductCard({ productData }) {
           <CardHeader
             titleTypographyProps={{ fontWeight: "bold" }}
             title={productData && productData.name}
-            sx={{
-              maxHeight: 100,
-            }}
           ></CardHeader>
         </Link>
 
@@ -141,7 +138,7 @@ export default function ProductCard({ productData }) {
           {currentUser && (
             <div>
               {productData.seller_id !== currentUser.uid ? (
-                <>
+                <div>
                   <Button
                     size="small"
                     variant="contained"
@@ -196,17 +193,21 @@ export default function ProductCard({ productData }) {
                   >
                     Buy
                   </Button>
-
-                  <IconButton sx={{ float: "right" }} onClick={handleFavorite}>
+                  <IconButton
+                    sx={{ float: "right", justifyContent: "center" }}
+                    onClick={handleFavorite}
+                  >
                     {hasFavorited ? (
                       <FavoriteIcon sx={{ color: "#e91e63" }} />
                     ) : (
                       <FavoriteBorderIcon />
                     )}
                   </IconButton>
-                </>
+                </div>
               ) : (
-                <p>(You're the Poster)</p>
+                <>
+                  <p>(You're the Poster)</p>
+                </>
               )}
             </div>
           )}

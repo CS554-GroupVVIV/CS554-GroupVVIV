@@ -106,9 +106,6 @@ export default function PostCard({ postData }) {
           <CardHeader
             titleTypographyProps={{ fontWeight: "bold" }}
             title={postData && postData.item}
-            sx={{
-              maxHeight: 100,
-            }}
           ></CardHeader>
         </Link>
 
@@ -174,7 +171,9 @@ export default function PostCard({ postData }) {
                   </IconButton>
                 </>
               ) : (
-                <p>(You're the Poster)</p>
+                <>
+                  <p>(You're the Poster)</p>
+                </>
               )}
             </div>
           )}
