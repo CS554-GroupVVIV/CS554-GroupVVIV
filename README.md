@@ -4,17 +4,15 @@
 
 <br />
 <div align="center">
-  <a href="">
-    <img src="http://tinyurl.com/mr385a7v" alt="Logo" width="600" >
-  </a>
 
-  <h3 align="center">CS554 Group VVIV — SIT Marketplace</h3>
+  ![Imgur Image](https://i.imgur.com/SIZZorG.png)
 
-  <p align="center">
+  <h5 align="center">
   Enabling students, faculty, staff, and alumni from Stevens to buy their preferred products.
-    <br />
-  </p>
+  <br />
+  </h5>
 </div>
+
 
 <!-- TABLE OF CONTENTS -->
 <details>
@@ -56,12 +54,11 @@ Daixuan Chen<br/>Luoyi Fu<br/>Jichen Jiang<br/>Tzu-Ming Lu<br/>Chia Hsiang Wu<br
 
 <p align="right"><a href="#readme-top">back to top</a></p>
 
-
 <!-- GETTING STARTED -->
+
 ## Getting Started
 
 This is an example of how you may give instructions on setting up your project.
-
 
 ### Installation :
 
@@ -87,23 +84,65 @@ Then, you can open http://localhost:5173 on browser to start using the website.
 
 1 - Access the Home page to browse products without the need to log in.
 
+<div align="center">
+
+  ![Image Imgur](https://i.imgur.com/LB5ksF4.gif)
+
+</div>
+
 2 - Register a user using a Stevens' email address to access additional functionalities
 
-3 - Adding a new post to offer products for sale
+<div align="center">
+
+  ![Image Imgur](https://i.imgur.com/hCrPISW.gif)
+
+</div>
+
+3 - Adding a new post to offer products for sale (Error)
+
+<div align="center">
+
+  ![Image Imgur](https://i.imgur.com/LB5ksF4.gif)
+
+</div>
 
 4 - Submitting a new request to buy specific products
 
+<div align="center">
+
+  ![Image Imgur](https://i.imgur.com/eXO6Zqu.gif)
+
+</div>
+
 5 - Adding products to the favorites list
+
+<div align="center">
+
+  ![Image Imgur](https://i.imgur.com/7TB1quf.gif)
+
+</div>
 
 6 - Communicate with the seller or buyer using the chat system
 
+<div align="center">
+
+  ![Image Imgur](https://i.imgur.com/QcbF7Tc.gif)
+
+</div>
+
 7 - View information on the user profile page
 
+<div align="center">
+
+  ![Image Imgur](https://i.imgur.com/HJDd2qe.gif)
+
+</div>
 
 <p align="right"><a href="#readme-top">back to top</a></p>
 
 ## Built With
-<!-- <h3>Course Tech</h3> -->
+
+<h3>Course Tech</h3>
 
 - [![JavaScript][JavaScript-img]][JavaScript-url]
 - [![node.js][node.js-img]][node.js-url]
@@ -112,24 +151,16 @@ Then, you can open http://localhost:5173 on browser to start using the website.
 - [![redux][redux-img]][redux-url]
 - [![graphql][graphql-img]][graphql-url]
 
-<!-- <h3>Independent Tech</h3> -->
+<h3>Independent Tech</h3>
 
 - [![docker][docker-img]][docker-url]
 - [![aws][aws-img]][aws-url]
 
 <p align="right"><a href="#readme-top">back to top</a></p>
 
-<!-- ## Database Schema
-
-<div align="center">
-  <a href="">
-    <img src="Group VVIV SIT—Marketplace.jpeg" alt="Database" width="600" >
-  </a>
-  <br/>
-  <p align="right"><a href="#readme-top">back to top</a></p>
-</div> -->
 
 <!-- MARKDOWN LINKS & IMAGES -->
+
 [JavaScript-url]: https://developer.mozilla.org/en-US/docs/Web/JavaScript
 [JavaScript-img]: https://img.shields.io/badge/logo-javascript-blue?logo=javascript
 [node.js-url]: https://nodejs.org/en
