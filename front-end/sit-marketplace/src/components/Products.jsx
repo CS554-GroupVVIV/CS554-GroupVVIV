@@ -115,6 +115,7 @@ export default function Products() {
               marginRight: 5,
             }}
             sx={{ minWidth: 400 }}
+            inputProps={{ maxLength: 100 }}
           />
           <Button
             size="small"

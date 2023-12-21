@@ -156,6 +156,7 @@ const EditComment = ({ record }) => {
                   inputRef={commentInputRef}
                   defaultValue={prevComment.comment}
                   onBlur={helper.checkComment}
+                  inputProps={{ maxLength: 100 }}
                 />
                 {commentInputError && (
                   <Typography

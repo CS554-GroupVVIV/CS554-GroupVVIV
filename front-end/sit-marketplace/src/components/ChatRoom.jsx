@@ -120,6 +120,7 @@ export default function ChatRoom({ room }) {
             value={message}
             onInput={(e) => setMessage(e.target.value)}
             autoFocus
+            inputProps={{ maxLength: 200 }}
             autoComplete="off"
             InputLabelProps={{
               sx: {

@@ -18,7 +18,6 @@ import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
 import Stack from "@mui/material/Stack";
 
-
 export default function PostForm() {
   const { currentUser } = useContext(AuthContext);
   const nameRef = useRef(null);
@@ -65,7 +64,7 @@ export default function PostForm() {
   // }, [currentUser]);
 
   const helper = {
-    checkName: ()=> {
+    checkName: () => {
       setNameError(false);
       let input = nameRef.current?.value;
       if (!input || input.trim() == "") {
@@ -86,9 +85,9 @@ export default function PostForm() {
       return;
     },
 
-    checkCategory: ()=> {
+    checkCategory: () => {
       setCategoryError(false);
-      let input= categoryRef.current?.value;
+      let input = categoryRef.current?.value;
       if (!input || input.trim() == "") {
         setCategoryError(true);
         return;
@@ -110,7 +109,7 @@ export default function PostForm() {
       return;
     },
 
-    checkPrice: ()=> {
+    checkPrice: () => {
       setPriceError(false);
       setPrice(0);
       let price = priceRef.current?.value;
@@ -136,9 +135,9 @@ export default function PostForm() {
       return;
     },
 
-    checkCondition: ()=> {
+    checkCondition: () => {
       setConditionError(false);
-      let condition= conditionRef.current?.value;
+      let condition = conditionRef.current?.value;
       if (!condition || condition.trim() == "") {
         setConditionError(true);
         return;
@@ -157,7 +156,7 @@ export default function PostForm() {
       setCondition(condition);
     },
 
-    checkdescription: ()=> {
+    checkdescription: () => {
       setdescriptionError(false);
       let description = descriptionRef.current?.value;
       if (description && description.trim() != "") {
@@ -237,6 +236,7 @@ export default function PostForm() {
                 label="Item Name"
                 inputRef={nameRef}
                 onBlur={helper.checkName}
+                inputProps={{ minLength: 1, maxLength: 20 }}
               />
               {nameError && (
                 <Typography
@@ -340,6 +340,7 @@ export default function PostForm() {
                 defaultValue={""}
                 inputRef={descriptionRef}
                 onBlur={helper.checkdescription}
+                inputProps={{ maxLength: 100 }}
               />
               {descriptionError && (
                 <Typography
