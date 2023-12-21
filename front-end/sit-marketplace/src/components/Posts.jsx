@@ -177,7 +177,9 @@ export default function Posts() {
           })} */}
               {data && curCategory === "All" && data.posts.length > 0
                 ? data.posts.map((post) => {
-                    return <PostCard key={post._id} postData={post} />;
+                    if (post.status === "active") {
+                      return <PostCard key={post._id} postData={post} />;
+                    }
                   })
                 : null}
               {data && curCategory === "All" && data.posts.length == 0 ? (
@@ -187,7 +189,9 @@ export default function Posts() {
               curCategory != "All" &&
               data.getPostsByCategory.length > 0
                 ? data.getPostsByCategory.map((post) => {
-                    return <PostCard key={post._id} postData={post} />;
+                    if (post.status === "active") {
+                      return <PostCard key={post._id} postData={post} />;
+                    }
                   })
                 : null}
               {data &&

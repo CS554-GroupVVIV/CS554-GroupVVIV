@@ -169,9 +169,11 @@ export default function Products() {
             <Grid container spacing={2} marginTop={1} justifyContent="center">
               {data && curCategory === "All" && data.products.length > 0
                 ? data.products.map((product) => {
-                    return (
-                      <ProductCard key={product._id} productData={product} />
-                    );
+                    if (product.status === "active") {
+                      return (
+                        <ProductCard key={product._id} productData={product} />
+                      );
+                    }
                   })
                 : null}
               {data && curCategory === "All" && data.products.length == 0 ? (
@@ -181,9 +183,11 @@ export default function Products() {
               curCategory != "All" &&
               data.getProductsByCategory.length > 0
                 ? data.getProductsByCategory.map((product) => {
-                    return (
-                      <ProductCard key={product._id} productData={product} />
-                    );
+                    if (product.status === "active") {
+                      return (
+                        <ProductCard key={product._id} productData={product} />
+                      );
+                    }
                   })
                 : null}
               {data &&
