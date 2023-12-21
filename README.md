@@ -4,9 +4,9 @@
 
 <br />
 <div align="center">
-  <a href="">
-    <img src="http://tinyurl.com/mr385a7v" alt="Logo" width="400" >
-  </a>
+  <div align="center">
+    ![Imgur](https://i.imgur.com/SIZZorG.png)
+  <div>
 
   <h3 align="center">CS554 Group VVIV — SIT Marketplace</h3>
 
@@ -85,8 +85,10 @@ Then, you can open http://localhost:5173 on browser to start using the website.
 ### Start :
 
 1 - Access the Home page to browse products without the need to log in.
-<br/>
+
+<div align="center">
 ![Imgur Image](https://i.imgur.com/dwc80Yo.gif)
+<div>
 
 2 - Register a user using a Stevens' email address to access additional functionalities
 
