@@ -136,7 +136,7 @@ export default function ChatRoom({ room }) {
           />
           <Button
             variant="contained"
-            color="inherit"
+            // color="inherit"
             onClick={(event) => {
               event.preventDefault();
               const msgData = {

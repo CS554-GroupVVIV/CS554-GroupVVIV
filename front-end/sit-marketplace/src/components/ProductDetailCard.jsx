@@ -199,7 +199,7 @@ export default function ProductDetailCard() {
                           <Button
                             size="small"
                             variant="contained"
-                            color="inherit"
+                            // color="inherit"
                             onClick={() => {
                               if (currentUser.uid) {
                                 addPossibleBuyer({
@@ -244,7 +244,7 @@ export default function ProductDetailCard() {
                 <Button
                   size="small"
                   variant="contained"
-                  color="inherit"
+                  // color="inherit"
                   onClick={() => {
                     navigate(-1);
                   }}

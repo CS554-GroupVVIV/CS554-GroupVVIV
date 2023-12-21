@@ -66,7 +66,7 @@ export default function ChatRoomList({ uid }) {
             <Button
               size="small"
               variant="contained"
-              color="inherit"
+              // color="inherit"
               onClick={() => {
                 socket.emit("leave");
                 setCurRoom(undefined);

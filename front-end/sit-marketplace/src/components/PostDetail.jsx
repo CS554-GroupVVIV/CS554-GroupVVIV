@@ -172,7 +172,7 @@ export default function PostDetail() {
                       <Button
                         size="small"
                         variant="contained"
-                        color="inherit"
+                        // color="inherit"
                         onClick={() => {
                           if (currentUser.uid) {
                             addPossibleSeller({
@@ -214,7 +214,7 @@ export default function PostDetail() {
             <Button
               size="small"
               variant="contained"
-              color="inherit"
+              // color="inherit"
               onClick={() => {
                 navigate(-1);
               }}

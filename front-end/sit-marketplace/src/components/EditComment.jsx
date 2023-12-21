@@ -21,17 +21,17 @@ import {
 const EditComment = ({ record }) => {
   const { currentUser } = useContext(AuthContext);
 
-  const [toggleEditComment, setToggleEditComment] = useState<boolean>(false);
+  const [toggleEditComment, setToggleEditComment] = useState < boolean > false;
 
   const [prevComment, setPrevComment] = useState({});
-  const [rating, setRating] = useState<number>(0);
+  const [rating, setRating] = useState < number > 0;
   const [commentInput, setCommentInput] = useState("");
 
   const ratingRef = useRef();
   const commentInputRef = useRef();
 
-  const [ratingError, setRatingError] = useState<boolean>(false);
-  const [commentInputError, setCommentInputError] = useState<boolean>(false);
+  const [ratingError, setRatingError] = useState < boolean > false;
+  const [commentInputError, setCommentInputError] = useState < boolean > false;
 
   let user_id = undefined;
   if (record.comments[0].comment_id !== currentUser.uid) {
@@ -39,7 +39,7 @@ const EditComment = ({ record }) => {
   }
 
   const helper = {
-    checkRating: (newValue)=> {
+    checkRating: (newValue) => {
       setRatingError(false);
       let rating = newValue;
       if (!rating || rating < 1 || rating > 5) {
@@ -50,7 +50,7 @@ const EditComment = ({ record }) => {
       return;
     },
 
-    checkComment: ()=> {
+    checkComment: () => {
       setCommentInputError(false);
       let commentInput = commentInputRef.current?.value;
       if (!commentInput || commentInput.trim() == "") {
@@ -105,7 +105,7 @@ const EditComment = ({ record }) => {
       <Button
         size="small"
         variant="contained"
-        color="inherit"
+        // color="inherit"
         onClick={() => {
           setPrevComment(record.comments[0]);
           setRating(record.rating);
