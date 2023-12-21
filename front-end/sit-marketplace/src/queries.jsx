@@ -59,6 +59,8 @@ export const GET_USER = gql`
         rating
         comment_id
         comment
+        firstname
+        date
       }
       rating
       favorite
@@ -115,6 +117,12 @@ export const GET_POSTS_BY_SELLER = gql`
       date
       description
       status
+      possible_sellers {
+        _id
+        firstname
+        lastname
+      }
+      completion_date
     }
   }
 `;
@@ -132,6 +140,12 @@ export const GET_POSTS_BY_BUYER = gql`
       date
       description
       status
+      possible_sellers {
+        _id
+        firstname
+        lastname
+      }
+      completion_date
     }
   }
 `;
@@ -150,6 +164,12 @@ export const GET_PRODUCTS_BY_SELLER = gql`
       price
       seller_id
       status
+      possible_buyers {
+        _id
+        firstname
+        lastname
+      }
+      completion_date
     }
   }
 `;
@@ -168,6 +188,12 @@ export const GET_PRODUCTS_BY_BUYER = gql`
       price
       seller_id
       status
+      possible_buyers {
+        _id
+        firstname
+        lastname
+      }
+      completion_date
     }
   }
 `;
@@ -186,6 +212,12 @@ export const GET_PRODUCTS_BY_STATUS = gql`
       price
       seller_id
       status
+      possible_buyers {
+        _id
+        firstname
+        lastname
+      }
+      completion_date
     }
   }
 `;
@@ -202,6 +234,8 @@ export const GET_COMMENT = gql`
         rating
         comment_id
         comment
+        date
+        firstname
       }
       rating
     }
@@ -238,6 +272,12 @@ export const ADD_PRODUCT = gql`
       price
       seller_id
       status
+      possible_buyers {
+        _id
+        firstname
+        lastname
+      }
+      completion_date
     }
   }
 `;
@@ -287,19 +327,6 @@ export const EDIT_PRODUCT = gql`
     }
   }
 `;
-
-// export const DELETE_PRODUCT = gql`
-//   mutation ($id: String!) {
-//     deleteProduct(_id: $id) {
-//       name
-//       price
-//       date
-//       description
-//       condition
-//       category
-//     }
-//   }
-// `;
 
 export const ADD_POST = gql`
   mutation (
@@ -381,25 +408,6 @@ export const EDIT_POST = gql`
   }
 `;
 
-// export const DELETE_POST = gql`
-//   mutation ($id: String!) {
-//     deletePost(_id: $id) {
-//       _id
-//       buyer_id
-//       seller_id
-//       item
-//       category
-//       price
-//       condition
-//       date
-//       description
-//       status
-//       possible_sellers
-//       completion_date
-//     }
-//   }
-// `;
-
 export const ADD_MESSAGE = gql`
   mutation (
     $chatId: String!
@@ -440,7 +448,9 @@ export const ADD_USER = gql`
         _id
         comment
         comment_id
+        firstname
         rating
+        date
       }
       favorite_post
     }
@@ -510,7 +520,11 @@ export const ADD_POSSIBLE_SELLER = gql`
       date
       description
       item
-      possible_sellers
+      possible_sellers {
+        _id
+        firstname
+        lastname
+      }
       price
       seller_id
       status
@@ -548,6 +562,12 @@ export const SEARCH_POSTS = gql`
       condition
       description
       status
+      possible_sellers {
+        _id
+        firstname
+        lastname
+      }
+      completion_date
     }
   }
 `;
@@ -566,6 +586,12 @@ export const SEARCH_PRODUCTS_BY_NAME = gql`
       price
       seller_id
       status
+      possible_buyers {
+        _id
+        firstname
+        lastname
+      }
+      completion_date
     }
   }
 `;
@@ -589,6 +615,7 @@ export const SEARCH_PRODUCTS_BY_ID = gql`
       price
       seller_id
       status
+      completion_date
     }
   }
 `;
@@ -609,9 +636,11 @@ export const SEARCH_POST_BY_ID = gql`
         favorite
         comments {
           comment_id
+          firstname
           comment
           _id
           rating
+          date
         }
         favorite_post
         email
@@ -632,12 +661,14 @@ export const ADD_COMMENT = gql`
     $comment_id: String!
     $rating: Int!
     $comment: String
+    $firstname: String!
   ) {
     addComment(
       user_id: $user_id
       comment_id: $comment_id
       rating: $rating
       comment: $comment
+      firstname: $firstname
     ) {
       _id
       email
@@ -647,7 +678,9 @@ export const ADD_COMMENT = gql`
         _id
         rating
         comment_id
+        firstname
         comment
+        date
       }
       rating
     }
@@ -676,6 +709,8 @@ export const EDIT_COMMENT = gql`
         rating
         comment_id
         comment
+        firstname
+        date
       }
       rating
     }
@@ -730,6 +765,12 @@ export const GET_PRODUCTS_BY_CATEGORY = gql`
       price
       seller_id
       status
+      possible_buyers {
+        _id
+        firstname
+        lastname
+      }
+      completion_date
     }
   }
 `;
@@ -747,6 +788,12 @@ export const GET_POSTS_BY_CATEGORY = gql`
       price
       status
       seller_id
+      possible_sellers {
+        _id
+        firstname
+        lastname
+      }
+      completion_date
     }
   }
 `;
@@ -764,6 +811,12 @@ export const GET_POSTS_BY_STATUS = gql`
       price
       status
       seller_id
+      possible_sellers {
+        _id
+        firstname
+        lastname
+      }
+      completion_date
     }
   }
 `;

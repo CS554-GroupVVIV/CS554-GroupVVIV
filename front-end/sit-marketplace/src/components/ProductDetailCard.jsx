@@ -50,6 +50,16 @@ export default function ProductDetailCard() {
     fetchPolicy: "cache-and-network",
   });
 
+  const { data: buyerData } = useQuery(GET_USER, {
+    variables: {
+      id:
+        data && data.getProductById.buyer_id
+          ? data.getProductById.buyer_id
+          : "",
+    },
+    fetchPolicy: "cache-and-network",
+  });
+
   const [addPossibleBuyer] = useMutation(ADD_POSSIBLE_BUYER);
 
   const [removeFavorite, { removeData, removeLoading, removeError }] =
@@ -113,6 +123,7 @@ export default function ProductDetailCard() {
   }
   if (data && sellerData) {
     const productData = data.getProductById;
+    console.log(productData);
     return (
       <div style={{ display: "flex", justifyContent: "center" }}>
         <Grid container direction="row" marginTop={12} component="main">
@@ -164,18 +175,31 @@ export default function ProductDetailCard() {
                   {productData.status === "completed" &&
                   currentUser &&
                   (currentUser.uid === productData.seller_id ||
-                    currentUser.uid === productData.buyer_id) ? (
-                    <p>Buyer Id: {productData.buyer_id}</p>
+                    currentUser.uid === productData.buyer_id) &&
+                  buyerData ? (
+                    <p>Buyer: {buyerData.getUserById.firstname}</p>
                   ) : (
                     <></>
                   )}
                   <p>Category: {productData.category}</p>
-                  <p>Price: {productData.price}</p>
+                  <p>Condition:{productData.condition}</p>
+                  <p>Price: {productData.price.toFixed(2)}</p>
                   <p>
-                    Transaction Date:
+                    Post Date:
                     {new Date(productData.date).toLocaleString()}
                   </p>
                   <p>Status: {productData.status}</p>
+                  {productData.status === "completed" &&
+                  currentUser &&
+                  (currentUser.uid === productData.seller_id ||
+                    currentUser.uid === productData.buyer_id) ? (
+                    <p>
+                      Completion Date:{" "}
+                      {new Date(productData.completion_date).toLocaleString()}
+                    </p>
+                  ) : (
+                    <></>
+                  )}
                 </div>
 
                 <Divider sx={{ marginTop: 3, marginBottom: 3 }} />

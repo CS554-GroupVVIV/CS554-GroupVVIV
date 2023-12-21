@@ -21,17 +21,17 @@ import {
 const EditComment = ({ record }) => {
   const { currentUser } = useContext(AuthContext);
 
-  const [toggleEditComment, setToggleEditComment] = useState < boolean > false;
+  const [toggleEditComment, setToggleEditComment] = useState(false);
 
   const [prevComment, setPrevComment] = useState({});
-  const [rating, setRating] = useState < number > 0;
+  const [rating, setRating] = useState(0);
   const [commentInput, setCommentInput] = useState("");
 
   const ratingRef = useRef();
   const commentInputRef = useRef();
 
-  const [ratingError, setRatingError] = useState < boolean > false;
-  const [commentInputError, setCommentInputError] = useState < boolean > false;
+  const [ratingError, setRatingError] = useState(false);
+  const [commentInputError, setCommentInputError] = useState(false);
 
   let user_id = undefined;
   if (record.comments[0].comment_id !== currentUser.uid) {
