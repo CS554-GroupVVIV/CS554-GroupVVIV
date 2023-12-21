@@ -35,9 +35,11 @@ const RatingProfile = ({ id }) => {
           Rating Profile
         </Button>
 
-        <Dialog open={toggle} maxWidth="md">
+        <Dialog open={toggle} maxWidth="sm" fullWidth={true}>
           <DialogTitle>User Profile</DialogTitle>
-          <DialogContent style={{ overflow: "auto" }}>
+          <DialogContent
+            style={{ overflow: "auto", border: "1px solid black" }}
+          >
             <CommentPage user_id={id} />
           </DialogContent>
 

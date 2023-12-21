@@ -267,7 +267,7 @@ const EditProduct = ({ productData }) => {
       }
 
       let imageUrl = productData.image;
-      if (image) {
+      if (image && image != imageUrl) {
         imageUrl = await uploadFileToS3(image, name);
       }
 
@@ -438,10 +438,10 @@ const EditProduct = ({ productData }) => {
                       label="Condition"
                       onBlur={helper.checkCondition}
                     >
-                      <MenuItem value={"Brand New"}>Brand New</MenuItem>
-                      <MenuItem value={"Like New"}>Like New</MenuItem>
-                      <MenuItem value={"Gently Used"}>Gently Used</MenuItem>
-                      <MenuItem value={"Functional"}>Functional</MenuItem>
+                      <MenuItem value={"brand new"}>Brand New</MenuItem>
+                      <MenuItem value={"like new"}>Like New</MenuItem>
+                      <MenuItem value={"gently used"}>Gently Used</MenuItem>
+                      <MenuItem value={"functional"}>Functional</MenuItem>
                     </Select>
                   </FormControl>
                 </div>

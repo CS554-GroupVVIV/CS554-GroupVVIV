@@ -36,11 +36,12 @@ const CommentPage = ({ user_id }) => {
           Rating: {rating?.toFixed(2)} from {comments?.length} users
         </Typography>
         {comments && comments.length == 0 ? (
-          <p>No Comments</p>
+          <p>No Comment</p>
         ) : (
           <List sx={style} component="div" aria-label="comment">
             {comments &&
               comments.map((comment) => {
+                console.log(comment);
                 return (
                   <>
                     <ListItem>
@@ -51,8 +52,9 @@ const CommentPage = ({ user_id }) => {
                             style={{ whiteSpace: "pre-line" }}
                           >
                             {`${comment.rating.toFixed(2)} from ${
-                              comment.comment_id
-                            }\n"${comment.comment}"`}
+                              comment.firstname
+                            } on ${comment.date.toLocaleString()}
+                            \n"${comment.comment}"`}
                           </Typography>
                         }
                       />
