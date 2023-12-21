@@ -4,15 +4,15 @@
 
 <br />
 <div align="center">
-![Imgur Image](https://i.imgur.com/SIZZorG.png)
 
-  <h3 align="center">CS554 Group VVIV — SIT Marketplace</h3>
+  ![Imgur Image](https://i.imgur.com/SIZZorG.png)
 
-  <p align="center">
+  <h5 align="center">
   Enabling students, faculty, staff, and alumni from Stevens to buy their preferred products.
-    <br />
-  </p>
+  <br />
+  </h5>
 </div>
+
 
 <!-- TABLE OF CONTENTS -->
 <details>
@@ -84,9 +84,11 @@ Then, you can open http://localhost:5173 on browser to start using the website.
 
 1 - Access the Home page to browse products without the need to log in.
 
-<div align="center">
-![Imgur Image](https://i.imgur.com/dwc80Yo.gif)
-<div>
+<div align="left">
+
+  ![Image Imgur]([Imgur](https://i.imgur.com/LB5ksF4.gifv))
+
+</div>
 
 2 - Register a user using a Stevens' email address to access additional functionalities
 
@@ -104,7 +106,7 @@ Then, you can open http://localhost:5173 on browser to start using the website.
 
 ## Built With
 
-<!-- <h3>Course Tech</h3> -->
+<h3>Course Tech</h3>
 
 - [![JavaScript][JavaScript-img]][JavaScript-url]
 - [![node.js][node.js-img]][node.js-url]
@@ -113,7 +115,7 @@ Then, you can open http://localhost:5173 on browser to start using the website.
 - [![redux][redux-img]][redux-url]
 - [![graphql][graphql-img]][graphql-url]
 
-<!-- <h3>Independent Tech</h3> -->
+<h3>Independent Tech</h3>
 
 - [![docker][docker-img]][docker-url]
 - [![aws][aws-img]][aws-url]
