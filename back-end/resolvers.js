@@ -182,20 +182,41 @@ export const resolvers = {
     searchPosts: async (_, args) => {
       try {
         let postItem = checkName(args.searchTerm);
+
+        if (args.category) {
+          args.category = checkCategory(args.category);
+        }
+
         const posts = await postCollection();
         // var postsByItem = await client.json.get(
         //   `searchPostsByItem-${postItem}`,
         //   "$"
         // );
         // if (!postsByItem) {
-        let postsByItem = await posts
-          .find({ item: { $regex: postItem, $options: "i" } })
-          .toArray();
+
+        let postsByItem = [];
+
+        if (args.category) {
+          postsByItem = await posts
+            .find({
+              item: { $regex: postItem, $options: "i" },
+              category: args.category,
+            })
+            .toArray();
+        } else {
+          postsByItem = await posts
+            .find({
+              item: { $regex: postItem, $options: "i" },
+            })
+            .toArray();
+        }
+
         // if (!postsByItem) {
         //   throw new GraphQLError("post not found", {
         //     extensions: { code: "NOT_FOUND" },
         //   });
         // }
+
         for (let i = 0; i < postsByItem.length; i++) {
           postsByItem[i].date = dateObjectToHTMLDate(postsByItem[i].date);
         }
@@ -210,15 +231,34 @@ export const resolvers = {
     searchProductsByName: async (_, args) => {
       try {
         let productName = checkName(args.name);
+
+        if (args.category) {
+          args.category = checkCategory(args.category);
+        }
+
         const products = await productCollection();
         // var productsByName = await client.json.get(
         //   `searchProductsByName-${productName}`,
         //   "$"
         // );
         // if (!productsByName) {
-        let productsByName = await products
-          .find({ name: { $regex: productName, $options: "i" } })
-          .toArray();
+        let productsByName = [];
+
+        if (args.category) {
+          productsByName = await products
+            .find({
+              name: { $regex: productName, $options: "i" },
+              category: args.category,
+            })
+            .toArray();
+        } else {
+          productsByName = await products
+            .find({
+              name: { $regex: productName, $options: "i" },
+            })
+            .toArray();
+        }
+
         // if (!productsByName) {
         //   throw new GraphQLError("product not found", {
         //     extensions: { code: "NOT_FOUND" },

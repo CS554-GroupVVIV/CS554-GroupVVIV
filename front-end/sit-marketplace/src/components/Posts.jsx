@@ -157,7 +157,12 @@ export default function Posts() {
             marginTop={1}
             sx={{ display: "flex", justifyContent: "center" }}
           >
-            {searchTerm && <SearchPost searchTerm={searchTerm} />}
+            {searchTerm && (
+              <SearchPost
+                searchTerm={searchTerm}
+                category={curCategory === "All" ? null : curCategory}
+              />
+            )}
           </Grid>
         </div>
 
