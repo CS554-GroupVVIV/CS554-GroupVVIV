@@ -11,6 +11,7 @@ import { AuthContext } from "../context/AuthContext.jsx";
 import Comment from "./Comment.jsx";
 import { useNavigate, useParams } from "react-router-dom";
 import EditPost from "./EditPost.jsx";
+import Error from "./Error.jsx";
 
 import {
   Card,
@@ -49,7 +50,11 @@ export default function PostDetail() {
   if (loading) {
     return <h1>Loading...</h1>;
   } else if (error) {
-    return <h1>Error loading post</h1>;
+    if (error.message == "Invalid id") {
+      return <Error statusCodeProp={400} />;
+    } else {
+      return <Error statusCodeProp={404} />;
+    }
   } else {
     const post = data.getPostById;
     return (

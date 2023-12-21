@@ -18,7 +18,7 @@ export default function FavoriteProduct({ favId }) {
   if (error) {
     return <h1>Error loading product</h1>;
   }
-
+  console.log(data);
   return (
     <div>
       <ProductCard productData={data.getProductById} />
