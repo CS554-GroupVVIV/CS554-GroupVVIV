@@ -24,16 +24,20 @@ export default function SearchProduct({ searchTerm, category }) {
               fontWeight: "bold",
             }}
           >
-            Search Results for "{searchTerm}" :
+            Search Results for "{searchTerm}"
+            {category ? ` (category: "${category}")` : null}:
           </Typography>
         </div>
 
         <div style={{ display: "flex", justifyContent: "center" }}>
           <Grid container spacing={2} marginTop={1} justifyContent="center">
-            {data &&
+            {data && data.searchProductsByName.length !== 0 ? (
               data.searchProductsByName.map((product) => {
                 return <ProductCard key={product._id} productData={product} />;
-              })}
+              })
+            ) : (
+              <p>No result found</p>
+            )}
           </Grid>
         </div>
       </Grid>

@@ -113,6 +113,7 @@ export default function Products() {
               fontWeight: "bold",
               color: "#424242",
               marginRight: 5,
+              marginTop: 5,
             }}
             sx={{ minWidth: 400 }}
             inputProps={{ maxLength: 100 }}

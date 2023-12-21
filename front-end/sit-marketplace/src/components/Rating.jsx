@@ -17,11 +17,7 @@ const RatingProfile = ({ id }) => {
     fetchPolicy: "cache-and-network",
   });
 
-  if (loading) {
-    return <p>Loading</p>;
-  } else if (error) {
-    <p>Error</p>;
-  } else if (data) {
+  if (data) {
     return (
       <>
         <Button
@@ -36,7 +32,9 @@ const RatingProfile = ({ id }) => {
         </Button>
 
         <Dialog open={toggle} maxWidth="sm" fullWidth={true}>
-          <DialogTitle>User Profile</DialogTitle>
+          <DialogTitle>
+            {data.getUserById.firstname}'s Rating Profile
+          </DialogTitle>
           <DialogContent style={{ overflow: "auto" }}>
             <CommentPage user_id={id} />
           </DialogContent>

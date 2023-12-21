@@ -18,7 +18,7 @@ import {
   ADD_FAVORITE_POST_TO_USER,
   REMOVE_FAVORITE_POST_FROM_USER,
   GET_USER_FOR_FAVORITE,
-  ADD_POSSIBLE_SELLER
+  ADD_POSSIBLE_SELLER,
 } from "../queries";
 import { useMutation } from "@apollo/client";
 import { useQuery } from "@apollo/client";
@@ -106,6 +106,9 @@ export default function PostCard({ postData }) {
           <CardHeader
             titleTypographyProps={{ fontWeight: "bold" }}
             title={postData && postData.item}
+            sx={{
+              maxHeight: 100,
+            }}
           ></CardHeader>
         </Link>
 
@@ -114,7 +117,7 @@ export default function PostCard({ postData }) {
           <p>Condition: {postData && postData.condition}</p>
 
           {postData && currentUser && (
-            <>
+            <div>
               {postData.buyer_id !== currentUser.uid ? (
                 <>
                   {" "}
@@ -124,14 +127,6 @@ export default function PostCard({ postData }) {
                     color="inherit"
                     onClick={async () => {
                       if (currentUser.uid) {
-                        await addPossibleSeller(
-                          {
-                            variables: {
-                              id: postData._id,
-                              sellerId: currentUser.uid,
-                            },
-                          }
-                        );
                         socket.emit("join room", {
                           room: postData.buyer_id,
                           user: currentUser.uid,
@@ -139,9 +134,38 @@ export default function PostCard({ postData }) {
                       }
                     }}
                   >
-                    Chat with buyer
+                    Chat
                   </Button>
-                  <IconButton sx={{ marginLeft: 3 }} onClick={handleFavorite}>
+                  <Button
+                    size="small"
+                    variant="contained"
+                    color="inherit"
+                    onClick={async () => {
+                      if (currentUser.uid) {
+                        await addPossibleSeller({
+                          variables: {
+                            id: postData._id,
+                            sellerId: currentUser.uid,
+                          },
+                        });
+
+                        addFavorite({
+                          variables: {
+                            id: currentUser.uid,
+                          },
+                        });
+                        setHasFavorited(true);
+
+                        alert(
+                          "You're a potential seller now!\n\nFeel free to contact the buyer for further information."
+                        );
+                      }
+                    }}
+                    sx={{ fontWeight: "bold", marginLeft: 2 }}
+                  >
+                    Sell
+                  </Button>
+                  <IconButton sx={{ float: "right" }} onClick={handleFavorite}>
                     {hasFavorited ? (
                       <FavoriteIcon sx={{ color: "#e91e63" }} />
                     ) : (
@@ -150,9 +174,9 @@ export default function PostCard({ postData }) {
                   </IconButton>
                 </>
               ) : (
-                <></>
+                <p>(You're the Poster)</p>
               )}
-            </>
+            </div>
           )}
         </CardContent>
       </Card>

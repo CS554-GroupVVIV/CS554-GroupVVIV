@@ -124,162 +124,181 @@ export default function ProductDetailCard() {
   if (data && sellerData) {
     const productData = data.getProductById;
     return (
-      <div style={{ display: "flex", justifyContent: "center" }}>
-        <Grid container direction="row" marginTop={12} component="main">
-          <Grid item xs>
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-              }}
-            >
-              <CardMedia
-                component="img"
-                image={productData.image}
-                title="thumbnail"
-                sx={{
-                  maxWidth: "60%",
-                  height: "80vh",
+      <>
+        <Grid container marginTop={12} marginLeft={5} component="main">
+          <Button
+            size="small"
+            variant="contained"
+            // color="inherit"
+            onClick={() => {
+              navigate(-1);
+            }}
+            sx={{ fontWeight: "bold" }}
+          >
+            Back
+          </Button>
+        </Grid>
+
+        <div style={{ display: "flex", justifyContent: "center" }}>
+          <Grid container direction="row" component="main">
+            <Grid item xs>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
                 }}
-              />
-            </div>
-          </Grid>
-
-          <Grid item xs>
-            <Grid container direction="column" padding={2} spacing={5}>
-              <Grid item xs>
-                <Typography
-                  align="left"
-                  variant="h4"
-                  sx={{ fontWeight: "bolder" }}
-                >
-                  {productData.name}
-                </Typography>
-              </Grid>
-
-              <Grid item xs>
-                <Typography
-                  align="left"
-                  variant="h5"
-                  sx={{ fontWeight: "bold" }}
-                >
-                  {productData.description}
-                </Typography>
-              </Grid>
-
-              <Grid item xs>
-                <div>
-                  {/* <p>Seller Id: {productData.seller_id}</p> */}
-                  <p>Seller: {sellerData.getUserById.firstname}</p>
-                  {productData.status === "completed" &&
-                  currentUser &&
-                  (currentUser.uid === productData.seller_id ||
-                    currentUser.uid === productData.buyer_id) &&
-                  buyerData ? (
-                    <p>Buyer: {buyerData.getUserById.firstname}</p>
-                  ) : (
-                    <></>
-                  )}
-                  <p>Category: {productData.category}</p>
-                  <p>Condition:{productData.condition}</p>
-                  <p>Price: {productData.price.toFixed(2)}</p>
-                  <p>
-                    Post Date:
-                    {new Date(productData.date).toLocaleString()}
-                  </p>
-                  <p>Status: {productData.status}</p>
-                  {productData.status === "completed" &&
-                  currentUser &&
-                  (currentUser.uid === productData.seller_id ||
-                    currentUser.uid === productData.buyer_id) ? (
-                    <p>
-                      Completion Date:{" "}
-                      {new Date(productData.completion_date).toLocaleString()}
-                    </p>
-                  ) : (
-                    <></>
-                  )}
-                </div>
-
-                <Divider sx={{ marginTop: 3, marginBottom: 3 }} />
-
-                <div>
-                  {currentUser ? (
-                    <div className="card-actions justify-end">
-                      {productData.status !== "completed" &&
-                      productData.seller_id === currentUser.uid ? (
-                        <EditProduct productData={productData} />
-                      ) : null}
-                      {productData.status === "completed" &&
-                      (productData.buyer_id === currentUser.uid ||
-                        productData.seller_id === currentUser.uid) ? (
-                        <Comment data={productData} />
-                      ) : null}
-
-                      {productData.status === "active" &&
-                      productData.seller_id !== currentUser.uid ? (
-                        <>
-                          <Button
-                            size="small"
-                            variant="contained"
-                            // color="inherit"
-                            onClick={async () => {
-                              if (currentUser.uid) {
-                                await addPossibleBuyer({
-                                  variables: {
-                                    id: productData._id,
-                                    buyerId: currentUser.uid,
-                                  },
-                                });
-                                socket.emit("join room", {
-                                  room: productData.seller_id,
-                                  user: currentUser.uid,
-                                });
-                              }
-                            }}
-                            sx={{ fontWeight: "bold" }}
-                          >
-                            Chat with seller
-                          </Button>
-                          <IconButton
-                            sx={{ marginLeft: 3 }}
-                            onClick={handleFavorite}
-                          >
-                            {hasFavorited ? (
-                              <FavoriteIcon sx={{ color: "#e91e63" }} />
-                            ) : (
-                              <FavoriteBorderIcon />
-                            )}
-                          </IconButton>
-                        </>
-                      ) : (
-                        <></>
-                      )}
-                    </div>
-                  ) : (
-                    <p>
-                      (Login to chat with seller or add product to favorite)
-                    </p>
-                  )}
-                </div>
-
-                <Divider sx={{ marginTop: 3, marginBottom: 3 }} />
-                <Button
-                  size="small"
-                  variant="contained"
-                  // color="inherit"
-                  onClick={() => {
-                    navigate(-1);
+              >
+                <CardMedia
+                  component="img"
+                  image={productData.image}
+                  title="thumbnail"
+                  sx={{
+                    maxWidth: "60%",
+                    height: "80vh",
                   }}
-                  sx={{ fontWeight: "bold" }}
-                >
-                  Back
-                </Button>
+                />
+              </div>
+            </Grid>
+
+            <Grid item xs>
+              <Grid container direction="column" padding={2} spacing={5}>
+                <Grid item xs>
+                  <Typography
+                    align="left"
+                    variant="h4"
+                    sx={{ fontWeight: "bolder" }}
+                  >
+                    {productData.name}
+                  </Typography>
+                </Grid>
+
+                <Grid item xs>
+                  <Typography
+                    align="left"
+                    variant="h5"
+                    sx={{ fontWeight: "bold" }}
+                  >
+                    {productData.description}
+                  </Typography>
+                </Grid>
+
+                <Grid item xs>
+                  <div>
+                    {/* <p>Seller Id: {productData.seller_id}</p> */}
+                    <p>Seller: {sellerData.getUserById.firstname}</p>
+                    {productData.status === "completed" &&
+                    currentUser &&
+                    (currentUser.uid === productData.seller_id ||
+                      currentUser.uid === productData.buyer_id) &&
+                    buyerData ? (
+                      <p>Buyer: {buyerData.getUserById.firstname}</p>
+                    ) : (
+                      <></>
+                    )}
+                    <p>Category: {productData.category}</p>
+                    <p>Condition: {productData.condition}</p>
+                    <p>Price: {productData.price.toFixed(2)}</p>
+                    <p>
+                      Post Date: {new Date(productData.date).toLocaleString()}
+                    </p>
+                    <p>Status: {productData.status}</p>
+                    {productData.status === "completed" &&
+                    currentUser &&
+                    (currentUser.uid === productData.seller_id ||
+                      currentUser.uid === productData.buyer_id) ? (
+                      <p>
+                        Completion Date:{" "}
+                        {new Date(productData.completion_date).toLocaleString()}
+                      </p>
+                    ) : (
+                      <></>
+                    )}
+                  </div>
+
+                  <Divider sx={{ marginTop: 3, marginBottom: 3 }} />
+
+                  <div>
+                    {currentUser ? (
+                      <div className="card-actions justify-end">
+                        {productData.status !== "completed" &&
+                        productData.seller_id === currentUser.uid ? (
+                          <EditProduct productData={productData} />
+                        ) : null}
+                        {productData.status === "completed" &&
+                        (productData.buyer_id === currentUser.uid ||
+                          productData.seller_id === currentUser.uid) ? (
+                          <Comment data={productData} />
+                        ) : null}
+
+                        {productData.status === "active" &&
+                        productData.seller_id !== currentUser.uid ? (
+                          <>
+                            <Button
+                              size="small"
+                              variant="contained"
+                              // color="inherit"
+                              onClick={async () => {
+                                if (currentUser.uid) {
+                                  socket.emit("join room", {
+                                    room: productData.seller_id,
+                                    user: currentUser.uid,
+                                  });
+                                }
+                              }}
+                              sx={{ fontWeight: "bold" }}
+                            >
+                              Chat
+                            </Button>
+
+                            <Button
+                              size="small"
+                              variant="contained"
+                              onClick={async () => {
+                                if (currentUser.uid) {
+                                  await addPossibleBuyer({
+                                    variables: {
+                                      id: productData._id,
+                                      buyerId: currentUser.uid,
+                                    },
+                                  });
+
+                                  alert(
+                                    "You're a potential buyer now!\n\nFeel free to contact the seller for further information."
+                                  );
+                                }
+                              }}
+                              sx={{ fontWeight: "bold", marginLeft: 3 }}
+                            >
+                              Buy
+                            </Button>
+
+                            <IconButton
+                              sx={{ marginLeft: 3 }}
+                              onClick={handleFavorite}
+                            >
+                              {hasFavorited ? (
+                                <FavoriteIcon sx={{ color: "#e91e63" }} />
+                              ) : (
+                                <FavoriteBorderIcon />
+                              )}
+                            </IconButton>
+                          </>
+                        ) : (
+                          <p>(You're the Poster)</p>
+                        )}
+                      </div>
+                    ) : (
+                      <p>
+                        (Login to chat with seller or add product to favorite)
+                      </p>
+                    )}
+                  </div>
+                </Grid>
               </Grid>
             </Grid>
           </Grid>
-        </Grid>
-      </div>
+        </div>
+      </>
     );
   }
 }

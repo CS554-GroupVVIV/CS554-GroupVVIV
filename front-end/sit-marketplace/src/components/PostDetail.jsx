@@ -124,132 +124,163 @@ export default function PostDetail() {
   } else if (data && buyerData) {
     const post = data.getPostById;
     return (
-      <div style={{ display: "flex", justifyContent: "center" }}>
-        <Grid
-          container
-          direction={"column"}
-          marginTop={12}
-          component="main"
-          style={{
-            maxWidth: "50vw",
-          }}
-        >
-          <Grid item xs>
-            <Typography align="left" variant="h4" sx={{ fontWeight: "bolder" }}>
-              {post.item}
-            </Typography>
-          </Grid>
-
-          <Grid item xs>
-            <Typography align="left" variant="h5" sx={{ fontWeight: "bolder" }}>
-              {post.description}
-            </Typography>
-          </Grid>
-
-          <Divider sx={{ marginTop: 3, marginBottom: 3 }} />
-
-          <Grid item xs>
-            <div>
-              <p>Buyer: {buyerData.getUserById.firstname}</p>
-              {post.status === "completed" &&
-              currentUser &&
-              (currentUser.uid === post.seller_id ||
-                currentUser.uid === post.buyer_id) &&
-              sellerData ? (
-                <p>Seller: {sellerData.getUserById.firstname}</p>
-              ) : null}
-              <p>Category: {post.category}</p>
-              <p>Condition: {post.condition}</p>
-              <p>Price: {post.price.toFixed(2)}</p>
-              <p>Post Date: {new Date(post.date).toLocaleString()}</p>
-              <p>Status: {post.status}</p>
-              {post.status === "completed" &&
-              currentUser &&
-              (currentUser.uid === post.seller_id ||
-                currentUser.uid === post.buyer_id) ? (
-                <p>
-                  Completion Date:{" "}
-                  {new Date(post.completion_date).toLocaleString()}
-                </p>
-              ) : (
-                <></>
-              )}
-            </div>
-
-            <Divider sx={{ marginTop: 3, marginBottom: 3 }} />
-            {currentUser ? (
-              <div>
-                <div className="card-actions justify-end">
-                  {post.status !== "completed" &&
-                  post.buyer_id === currentUser.uid ? (
-                    <EditPost postData={post} />
-                  ) : null}
-                  {post.status === "completed" &&
-                  (post.buyer_id === currentUser.uid ||
-                    post.seller_id === currentUser.uid) ? (
-                    <Comment data={post} />
-                  ) : null}
-
-                  {post.status === "active" &&
-                  post.buyer_id !== currentUser.uid ? (
-                    <>
-                      <Button
-                        size="small"
-                        variant="contained"
-                        // color="inherit"
-                        onClick={ async () => {
-                          if (currentUser.uid) {
-                            await addPossibleSeller({
-                              variables: {
-                                id: post._id,
-                                sellerId: currentUser.uid,
-                              },
-                            });
-                            socket.emit("join room", {
-                              room: post.buyer_id,
-                              user: currentUser.uid,
-                            });
-                          }
-                        }}
-                        sx={{ fontWeight: "bold" }}
-                      >
-                        Chat with buyer
-                      </Button>
-                      <IconButton
-                        sx={{ marginLeft: 3 }}
-                        onClick={handleFavorite}
-                      >
-                        {hasFavorited ? (
-                          <FavoriteIcon sx={{ color: "#e91e63" }} />
-                        ) : (
-                          <FavoriteBorderIcon />
-                        )}
-                      </IconButton>
-                    </>
-                  ) : (
-                    <></>
-                  )}
-                </div>
-              </div>
-            ) : (
-              <p>(Login to chat with buyer or add post to favorite)</p>
-            )}
-
-            <Divider sx={{ marginTop: 3, marginBottom: 3 }} />
-            <Button
-              size="small"
-              variant="contained"
-              // color="inherit"
-              onClick={() => {
-                navigate(-1);
-              }}
-              sx={{ fontWeight: "bold" }}
-            >
-              Back
-            </Button>
-          </Grid>
+      <>
+        <Grid container marginTop={12} marginLeft={5} component="main">
+          <Button
+            size="small"
+            variant="contained"
+            // color="inherit"
+            onClick={() => {
+              navigate(-1);
+            }}
+            sx={{ fontWeight: "bold" }}
+          >
+            Back
+          </Button>
         </Grid>
-      </div>
+        <div style={{ display: "flex", justifyContent: "center" }}>
+          <Grid
+            container
+            direction={"column"}
+            component="main"
+            style={{
+              maxWidth: "50vw",
+            }}
+          >
+            <Grid item xs>
+              <Typography
+                align="left"
+                variant="h4"
+                sx={{ fontWeight: "bolder" }}
+              >
+                {post.item}
+              </Typography>
+            </Grid>
+
+            <Grid item xs>
+              <Typography
+                align="left"
+                variant="h5"
+                sx={{ mt: 5, fontWeight: "bolder" }}
+              >
+                {post.description}
+              </Typography>
+            </Grid>
+
+            <Divider sx={{ marginTop: 3, marginBottom: 3 }} />
+
+            <Grid item xs>
+              <div>
+                <p>Buyer: {buyerData.getUserById.firstname}</p>
+                {post.status === "completed" &&
+                currentUser &&
+                (currentUser.uid === post.seller_id ||
+                  currentUser.uid === post.buyer_id) &&
+                sellerData ? (
+                  <p>Seller: {sellerData.getUserById.firstname}</p>
+                ) : null}
+                <p>Category: {post.category}</p>
+                <p>Condition: {post.condition}</p>
+                <p>Price: {post.price.toFixed(2)}</p>
+                <p>Post Date: {new Date(post.date).toLocaleString()}</p>
+                <p>Status: {post.status}</p>
+                {post.status === "completed" &&
+                currentUser &&
+                (currentUser.uid === post.seller_id ||
+                  currentUser.uid === post.buyer_id) ? (
+                  <p>
+                    Completion Date:{" "}
+                    {new Date(post.completion_date).toLocaleString()}
+                  </p>
+                ) : (
+                  <></>
+                )}
+              </div>
+
+              <Divider sx={{ marginTop: 3, marginBottom: 3 }} />
+              {currentUser ? (
+                <div>
+                  <div className="card-actions justify-end">
+                    {post.status !== "completed" &&
+                    post.buyer_id === currentUser.uid ? (
+                      <EditPost postData={post} />
+                    ) : null}
+                    {post.status === "completed" &&
+                    (post.buyer_id === currentUser.uid ||
+                      post.seller_id === currentUser.uid) ? (
+                      <Comment data={post} />
+                    ) : null}
+
+                    {post.status === "active" &&
+                    post.buyer_id !== currentUser.uid ? (
+                      <>
+                        <Button
+                          size="small"
+                          variant="contained"
+                          // color="inherit"
+                          onClick={async () => {
+                            if (currentUser.uid) {
+                              socket.emit("join room", {
+                                room: post.buyer_id,
+                                user: currentUser.uid,
+                              });
+                            }
+                          }}
+                          sx={{ fontWeight: "bold" }}
+                        >
+                          Chat
+                        </Button>
+                        <Button
+                          size="small"
+                          variant="contained"
+                          onClick={async () => {
+                            if (currentUser.uid) {
+                              await addPossibleSeller({
+                                variables: {
+                                  id: post._id,
+                                  sellerId: currentUser.uid,
+                                },
+                              });
+
+                              addFavorite({
+                                variables: {
+                                  id: currentUser.uid,
+                                },
+                              });
+                              setHasFavorited(true);
+
+                              alert(
+                                "You're a potential seller now!\n\nFeel free to contact the buyer for further information."
+                              );
+                            }
+                          }}
+                          sx={{ fontWeight: "bold", marginLeft: 2 }}
+                        >
+                          Sell
+                        </Button>
+                        <IconButton
+                          sx={{ marginLeft: 3 }}
+                          onClick={handleFavorite}
+                        >
+                          {hasFavorited ? (
+                            <FavoriteIcon sx={{ color: "#e91e63" }} />
+                          ) : (
+                            <FavoriteBorderIcon />
+                          )}
+                        </IconButton>
+                      </>
+                    ) : (
+                      <p>(You're the Poster)</p>
+                    )}
+                  </div>
+                </div>
+              ) : (
+                <p>(Login to chat with buyer or add post to favorite)</p>
+              )}
+            </Grid>
+          </Grid>
+        </div>
+      </>
     );
   }
 }

@@ -116,6 +116,9 @@ export default function ProductCard({ productData }) {
           <CardHeader
             titleTypographyProps={{ fontWeight: "bold" }}
             title={productData && productData.name}
+            sx={{
+              maxHeight: 100,
+            }}
           ></CardHeader>
         </Link>
 
@@ -136,7 +139,7 @@ export default function ProductCard({ productData }) {
           <p>Condition: {productData && productData.condition}</p>
 
           {currentUser && (
-            <div style={{ display: "flex", justifyContent: "center" }}>
+            <div>
               {productData.seller_id !== currentUser.uid ? (
                 <>
                   <Button
@@ -145,12 +148,6 @@ export default function ProductCard({ productData }) {
                     color="inherit"
                     onClick={async () => {
                       if (currentUser.uid) {
-                        await addPossibleBuyer({
-                          variables: {
-                            id: productData._id,
-                            buyerId: currentUser.uid,
-                          },
-                        });
                         socket.emit("join room", {
                           room: productData.seller_id,
                           user: currentUser.uid,
@@ -166,10 +163,41 @@ export default function ProductCard({ productData }) {
                     }}
                     sx={{ fontWeight: "bold" }}
                   >
-                    Chat with seller
+                    Chat
                   </Button>
 
-                  <IconButton sx={{ marginLeft: 3 }} onClick={handleFavorite}>
+                  <Button
+                    size="small"
+                    variant="contained"
+                    color="inherit"
+                    onClick={async () => {
+                      if (currentUser.uid) {
+                        await addPossibleBuyer({
+                          variables: {
+                            id: productData._id,
+                            buyerId: currentUser.uid,
+                          },
+                        });
+
+                        addFavorite({
+                          variables: {
+                            id: currentUser.uid,
+                            productId: productData._id,
+                          },
+                        });
+                        setHasFavorited(true);
+
+                        alert(
+                          "Congrats! You're a potential buyer now!\n\nFeel free to contact the seller for further information."
+                        );
+                      }
+                    }}
+                    sx={{ fontWeight: "bold", marginLeft: 2 }}
+                  >
+                    Buy
+                  </Button>
+
+                  <IconButton sx={{ float: "right" }} onClick={handleFavorite}>
                     {hasFavorited ? (
                       <FavoriteIcon sx={{ color: "#e91e63" }} />
                     ) : (
@@ -178,7 +206,7 @@ export default function ProductCard({ productData }) {
                   </IconButton>
                 </>
               ) : (
-                <></>
+                <p>(You're the Poster)</p>
               )}
             </div>
           )}
