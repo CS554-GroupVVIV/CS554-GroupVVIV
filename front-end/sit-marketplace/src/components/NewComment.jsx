@@ -2,7 +2,6 @@ import React, { useState, useContext, useRef } from "react";
 import { useMutation, useQuery } from "@apollo/client";
 import { AuthContext } from "../context/AuthContext.jsx";
 import { ADD_COMMENT, GET_COMMENT, GET_USER } from "../queries";
-import { useQuery, useMutation } from "@apollo/client";
 
 import {
   Button,
