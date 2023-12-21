@@ -33,7 +33,11 @@ export default function SearchPost({ searchTerm, category }) {
           <Grid container spacing={2} marginTop={1} justifyContent="center">
             {data && data.searchPosts.length !== 0 ? (
               data.searchPosts.map((post) => {
-                return <PostCard key={post._id} postData={post} />;
+                {
+                  if (post.status === "active") {
+                    return <PostCard key={post._id} postData={post} />;
+                  }
+                }
               })
             ) : (
               <p>No result found</p>
