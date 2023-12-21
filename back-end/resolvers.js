@@ -1523,9 +1523,7 @@ export const resolvers = {
           });
         }
         if (product.possible_buyers.includes(buyer_id)) {
-          throw new GraphQLError("The possible buyer already exists", {
-            extensions: { code: "BAD_INPUT" },
-          });
+          return product;
         }
         const users = await userCollection();
         const buyer = await users.findOne({ _id: buyer_id });
@@ -1560,9 +1558,7 @@ export const resolvers = {
           });
         }
         if (post.possible_sellers.includes(seller_id)) {
-          throw new GraphQLError("The possible seller already exists", {
-            extensions: { code: "BAD_INPUT" },
-          });
+          return post;
         }
         const users = await userCollection();
         const seller = await users.findOne({ _id: seller_id });

@@ -143,11 +143,11 @@ export default function ProductCard({ productData }) {
                     size="small"
                     variant="contained"
                     color="inherit"
-                    onClick={() => {
+                    onClick={async () => {
                       if (currentUser.uid) {
-                        addPossibleBuyer({
+                        await addPossibleBuyer({
                           variables: {
-                            id: productData.seller_id,
+                            id: productData._id,
                             buyerId: currentUser.uid,
                           },
                         });
