@@ -182,7 +182,7 @@ export default function PostDetail() {
                               },
                             });
                             socket.emit("join room", {
-                              room: post.seller_id,
+                              room: post.buyer_id,
                               user: currentUser.uid,
                             });
                           }
