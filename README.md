@@ -1,4 +1,4 @@
-# CS554A-TeamVVIV-SIT MArketplace
+# CS554-TeamVVIV-SIT Marketplace
 
 <a name="readme-top"></a>
 
@@ -38,9 +38,12 @@
 
 ## Members
 
-<div align="left">
-Daixuan Chen<br/>Luoyi Fu<br/>Jichen Jiang<br/>Tzu-Ming Lu<br/>Chia Hsiang Wu<br/>
-</div>
+- [Daixuan Chen](https://github.com/Karol-Chen)
+- [Luoyi Fu](https://github.com/Lori-Fu)
+- [Jichen Jiang](https://github.com/aturret)
+- [Tzu-Ming Lu](https://github.com/tzuminglu)
+- [Chia Hsiang Wu](https://github.com/Jason-Wuuuu)
+
 
 <p align="right"><a href="#readme-top">back to top</a></p>
 
@@ -142,7 +145,7 @@ Then, you can open http://localhost:5173 on browser to start using the website.
 
 ## Built With
 
-<h3>Course Tech</h3>
+### Course Tech
 
 - [![JavaScript][JavaScript-img]][JavaScript-url]
 - [![node.js][node.js-img]][node.js-url]
@@ -151,7 +154,7 @@ Then, you can open http://localhost:5173 on browser to start using the website.
 - [![redux][redux-img]][redux-url]
 - [![graphql][graphql-img]][graphql-url]
 
-<h3>Independent Tech</h3>
+### Independent Tech
 
 - [![docker][docker-img]][docker-url]
 - [![aws][aws-img]][aws-url]
