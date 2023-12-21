@@ -16,7 +16,7 @@ export const uploadFileToS3 = async (file, name) => {
   const timestamp = Date.now().toString();
   const params = {
     Bucket: import.meta.env.VITE_AWS_S3_BUCKET_NAME,
-    Key: name + timestamp + encodeURIComponent(file.name),
+    Key: encodeURIComponent(name) + timestamp + encodeURIComponent(file.name),
     Body: file,
   };
 
