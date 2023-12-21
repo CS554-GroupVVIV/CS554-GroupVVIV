@@ -5,6 +5,9 @@ import {
   SEARCH_POST_BY_ID,
   GET_USER,
   ADD_POSSIBLE_SELLER,
+  GET_USER_FOR_FAVORITE,
+  ADD_FAVORITE_POST_TO_USER,
+  REMOVE_FAVORITE_POST_FROM_USER,
 } from "../queries";
 import { socketID, socket } from "./socket";
 import { AuthContext } from "../context/AuthContext.jsx";
@@ -12,7 +15,8 @@ import Comment from "./Comment.jsx";
 import { useNavigate, useParams } from "react-router-dom";
 import EditPost from "./EditPost.jsx";
 import Error from "./Error.jsx";
-
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import {
   Card,
   CardHeader,
@@ -30,6 +34,8 @@ export default function PostDetail() {
   const { currentUser } = useContext(AuthContext);
   const navigate = useNavigate();
   let { id } = useParams();
+  const [hasFavorited, setHasFavorited] = useState(false);
+
   const {
     data: posts,
     loading: postsLoading,
@@ -40,12 +46,75 @@ export default function PostDetail() {
     variables: { id: id },
     fetchPolicy: "cache-and-network",
   });
-  const { data: userData, error: userError } = useQuery(GET_USER, {
+
+  const {
+    data: userData,
+    error: userError,
+    loading: userLoading,
+  } = useQuery(GET_USER_FOR_FAVORITE, {
     variables: { id: currentUser ? currentUser.uid : "" },
     fetchPolicy: "cache-and-network",
   });
 
   const [addPossibleSeller] = useMutation(ADD_POSSIBLE_SELLER);
+
+  const [removeFavorite, { removeData, removeLoading, removeError }] =
+    useMutation(REMOVE_FAVORITE_POST_FROM_USER, {
+      refetchQueries: [GET_USER, "getUserById"],
+    });
+
+  const [addFavorite, { addData, addLoading, addError }] = useMutation(
+    ADD_FAVORITE_POST_TO_USER,
+    {
+      refetchQueries: [
+        {
+          query: GET_USER,
+          variables: { _id: currentUser ? currentUser.uid : "" },
+        },
+      ],
+    }
+  );
+
+  function handleFavorite() {
+    try {
+      if (!currentUser || !currentUser.uid) {
+        alert("You need to login to favorite this product!");
+        return;
+      }
+      if (data) {
+        // console.log(data, "data");
+        if (hasFavorited) {
+          removeFavorite({
+            variables: { id: currentUser.uid, postId: data.getPostById._id },
+          });
+          console.log(false);
+          setHasFavorited(false);
+        } else {
+          addFavorite({
+            variables: { id: currentUser.uid, postId: data.getPostById._id },
+          });
+          setHasFavorited(true);
+        }
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
+
+  useEffect(() => {
+    console.log(userData?.getUserById?.favorite_post);
+    if (!userLoading) {
+      console.log(userData?.getUserById.favorite_post);
+
+      if (
+        userData?.getUserById?.favorite_post?.includes(data?.getPostById._id)
+      ) {
+        setHasFavorited(true);
+      } else {
+        setHasFavorited(false);
+      }
+    }
+  }, [userLoading, userData, userError]);
 
   if (loading) {
     return <h1>Loading...</h1>;
@@ -109,27 +178,40 @@ export default function PostDetail() {
                     <p>Completed, only poster/seller can comment.</p>
                   )}
                   {post.buyer_id !== currentUser.uid ? (
-                    <Button
-                      size="small"
-                      variant="contained"
-                      color="inherit"
-                      onClick={() => {
-                        if (currentUser.uid) {
-                          addPossibleSeller({
-                            variables: {
-                              id: data.getPostById._id,
-                              buyerId: currentUser.uid,
-                            },
-                          });
-                          socket.emit("join room", {
-                            room: post.seller_id,
-                            user: currentUser.uid,
-                          });
-                        }
-                      }}
-                    >
-                      Chat with buyer
-                    </Button>
+                    <>
+                      {" "}
+                      <Button
+                        size="small"
+                        variant="contained"
+                        color="inherit"
+                        onClick={() => {
+                          if (currentUser.uid) {
+                            addPossibleSeller({
+                              variables: {
+                                id: data.getPostById._id,
+                                buyerId: currentUser.uid,
+                              },
+                            });
+                            socket.emit("join room", {
+                              room: post.seller_id,
+                              user: currentUser.uid,
+                            });
+                          }
+                        }}
+                      >
+                        Chat with buyer
+                      </Button>
+                      <IconButton
+                        sx={{ marginLeft: 3 }}
+                        onClick={handleFavorite}
+                      >
+                        {hasFavorited ? (
+                          <FavoriteIcon sx={{ color: "#e91e63" }} />
+                        ) : (
+                          <FavoriteBorderIcon />
+                        )}
+                      </IconButton>
+                    </>
                   ) : (
                     <></>
                   )}
