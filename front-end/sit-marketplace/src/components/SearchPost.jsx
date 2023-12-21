@@ -18,7 +18,7 @@ export default function SearchPost({ searchTerm, category }) {
       <Grid item>
         <div style={{ textAlign: "center" }}>
           <Typography
-            variant="h4"
+            variant="h5"
             sx={{
               // fontFamily: "monospace",
               fontWeight: "bold",
