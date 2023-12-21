@@ -5,7 +5,7 @@
 <br />
 <div align="center">
   <a href="">
-    <img src="http://tinyurl.com/mr385a7v" alt="Logo" width="600" >
+    <img src="http://tinyurl.com/mr385a7v" alt="Logo" width="200" >
   </a>
 
   <h3 align="center">CS554 Group VVIV — SIT Marketplace</h3>
@@ -56,12 +56,11 @@ Daixuan Chen<br/>Luoyi Fu<br/>Jichen Jiang<br/>Tzu-Ming Lu<br/>Chia Hsiang Wu<br
 
 <p align="right"><a href="#readme-top">back to top</a></p>
 
-
 <!-- GETTING STARTED -->
+
 ## Getting Started
 
 This is an example of how you may give instructions on setting up your project.
-
 
 ### Installation :
 
@@ -86,6 +85,7 @@ Then, you can open http://localhost:5173 on browser to start using the website.
 ### Start :
 
 1 - Access the Home page to browse products without the need to log in.
+<img src="https://imgur.com/dwc80Yo" alt="home" width="200" >
 
 2 - Register a user using a Stevens' email address to access additional functionalities
 
@@ -99,10 +99,10 @@ Then, you can open http://localhost:5173 on browser to start using the website.
 
 7 - View information on the user profile page
 
-
 <p align="right"><a href="#readme-top">back to top</a></p>
 
 ## Built With
+
 <!-- <h3>Course Tech</h3> -->
 
 - [![JavaScript][JavaScript-img]][JavaScript-url]
@@ -130,6 +130,7 @@ Then, you can open http://localhost:5173 on browser to start using the website.
 </div> -->
 
 <!-- MARKDOWN LINKS & IMAGES -->
+
 [JavaScript-url]: https://developer.mozilla.org/en-US/docs/Web/JavaScript
 [JavaScript-img]: https://img.shields.io/badge/logo-javascript-blue?logo=javascript
 [node.js-url]: https://nodejs.org/en
