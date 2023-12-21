@@ -1,4 +1,4 @@
-import React, { useState, useRef} from "react";
+import React, { useState, useRef } from "react";
 import { EDIT_PRODUCT } from "../queries";
 import { useMutation } from "@apollo/client";
 import { uploadFileToS3 } from "../aws";
@@ -327,6 +327,7 @@ const EditProduct = ({ productData }) => {
                   inputRef={nameRef}
                   defaultValue={name}
                   onBlur={helper.checkName}
+                  inputProps={{ minLength: 1, maxLength: 20 }}
                 />
                 {nameError && (
                   <Typography
@@ -464,6 +465,7 @@ const EditProduct = ({ productData }) => {
                   defaultValue={description}
                   inputRef={descriptionRef}
                   onBlur={helper.checkDescription}
+                  inputProps={{ maxLength: 100 }}
                 />
                 {descriptionError && (
                   <Typography
