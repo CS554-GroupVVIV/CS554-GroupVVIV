@@ -1,3 +1,5 @@
+import https from "https";
+import fs from "fs";
 import { ApolloServer } from "@apollo/server";
 import { startStandaloneServer } from "@apollo/server/standalone";
 import app from "express";
@@ -8,8 +10,8 @@ import redis from "redis";
 import { typeDefs } from "./typeDefs.js";
 import { resolvers } from "./resolvers.js";
 
-export const client = redis.createClient( {
-  url: process.env.REDIS_URL || 'redis://localhost:6379'
+export const client = redis.createClient({
+  url: process.env.REDIS_URL || "redis://localhost:6379",
 });
 client.connect().then(() => {});
 
@@ -17,8 +19,22 @@ const server = new ApolloServer({
   typeDefs,
   resolvers,
 });
+let httpServer;
+if (process.env.ENV == "PROD") {
+  try {
+    const credentials = {
+      key: fs.readFileSync(process.env.SSL_KEY_PATH, "utf8"),
+      cert: fs.readFileSync(process.env.SSL_CERT_PATH, "utf8"),
+    };
+    httpServer = https.createServer(credentials, app);
+  } catch (e) {
+    console.error(e);
+    process.exit(1);
+  }
+} else {
+  httpServer = createServer(app);
+}
 
-const httpServer = createServer(app);
 const io = new Server(httpServer, { cors: { origin: "*" } });
 
 const { url } = await startStandaloneServer(server, {
