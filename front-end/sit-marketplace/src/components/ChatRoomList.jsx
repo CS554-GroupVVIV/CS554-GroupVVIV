@@ -14,7 +14,7 @@ export default function ChatRoomList({ uid }) {
   const [curRoom, setCurRoom] = useState(undefined);
 
   const { loading, error, data } = useQuery(GET_USERS_BY_IDS, {
-    variables: { ids: Object.keys(rooms) },
+    variables: { ids: [Object.keys(rooms)[0], uid] },
     fetchPolicy: "cache-and-network",
   });
 
@@ -34,9 +34,9 @@ export default function ChatRoomList({ uid }) {
       setRooms(data);
     });
 
-    socket.on("join room", (data) => {
-      setCurRoom(data.room);
-    });
+    // socket.on("join room", (data) => {
+    //   setCurRoom(data.room);
+    // });
 
     let cur = undefined;
     for (const key in rooms) {

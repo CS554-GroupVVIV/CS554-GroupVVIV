@@ -574,7 +574,7 @@ const main = async () => {
   await userCollection.insertMany(userList);
   await productCollection.insertMany(productList);
   await postCollection.insertMany(postList);
-  await chatCollection.insertMany(chatList);
+  // await chatCollection.insertMany(chatList);
 
   console.log("Done seeding database");
   await closeConnection();
