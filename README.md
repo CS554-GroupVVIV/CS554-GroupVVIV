@@ -73,13 +73,15 @@ git clone https://github.com/CS554-GroupVVIV/CS554-GroupVVIV.git
 
 2 - To have a [MongoDB](https://www.mongodb.com/docs/manual/installation/) running on your device, which listen to port `27017`.
 
-3 - To have a [Redis-Stack-Server](https://redis.io/docs/install/install-stack/) running on your device, whih listen to the port `6379`.
+3 - Run `node seed.js` under `back-end` directory to seed the database.
 
-4 - Run `npm start` under the `back-end` directory for launch the backend part of the application.
+4 - To have a [Redis-Stack-Server](https://redis.io/docs/install/install-stack/) running on your device, whih listen to the port `6379`.
 
-5 - Run `npm run dev` under the `front-end/sit-marketplace` directory.
+5 - Run `npm start` under the `back-end` directory for launch the backend part of the application.
 
-6 - Open your browser, go to http://localhost:5713 and enjoy!
+6 - Run `npm run dev` under the `front-end/sit-marketplace` directory.
+
+7 - Open your browser, go to http://localhost:5713 and enjoy!
 
 ### Deploy by Docker-Compose:
 
@@ -90,7 +92,7 @@ git clone https://github.com/CS554-GroupVVIV/CS554-GroupVVIV.git
 3 - Execute the following terminal command in the project root directory:
 
 ```bash
-docker-compose up --build -d
+docker-compose up -d
 ```
 
 This command will build each service's image in docker, including data seeding process.
