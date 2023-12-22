@@ -161,7 +161,7 @@ const EditPost = ({ postData }) => {
         categoryLower != "clothing" &&
         categoryLower != "furniture" &&
         categoryLower != "book" &&
-        categoryLower != "stationery" &&
+        categoryLower != "stationary" &&
         categoryLower != "other"
       ) {
         setCategoryError(true);
