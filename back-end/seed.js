@@ -167,7 +167,7 @@ const productDetails = {
     p: 3,
     url: "https://m.media-amazon.com/images/I/51Gh1bFIMlL.jpg",
   },
-  "TCP/IP Book": {
+  "TCPIP Book": {
     d: "TCP/IP protocol suit",
     c: "book",
     p: 15,
