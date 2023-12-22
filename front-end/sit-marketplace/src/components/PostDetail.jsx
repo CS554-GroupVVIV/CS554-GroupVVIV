@@ -227,6 +227,20 @@ export default function PostDetail() {
                       <Comment data={post} />
                     ) : null}
 
+                    {post.status === "completed" &&
+                    post.seller_id === currentUser.uid ? (
+                      <IconButton
+                        sx={{ float: "right" }}
+                        onClick={handleFavorite}
+                      >
+                        {hasFavorited ? (
+                          <FavoriteIcon sx={{ color: "#e91e63" }} />
+                        ) : (
+                          <FavoriteBorderIcon />
+                        )}
+                      </IconButton>
+                    ) : null}
+
                     {post.status === "active" &&
                     post.buyer_id !== currentUser.uid ? (
                       <>

@@ -250,6 +250,20 @@ export default function ProductDetailCard() {
                           <Comment data={productData} />
                         ) : null}
 
+                        {productData.status === "completed" &&
+                        productData.buyer_id === currentUser.uid ? (
+                          <IconButton
+                            sx={{ justifyContent: "center" }}
+                            onClick={handleFavorite}
+                          >
+                            {hasFavorited ? (
+                              <FavoriteIcon sx={{ color: "#e91e63" }} />
+                            ) : (
+                              <FavoriteBorderIcon />
+                            )}
+                          </IconButton>
+                        ) : null}
+
                         {productData.status === "active" &&
                         productData.seller_id !== currentUser.uid ? (
                           <>

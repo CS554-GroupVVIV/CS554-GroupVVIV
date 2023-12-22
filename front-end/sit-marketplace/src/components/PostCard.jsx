@@ -136,11 +136,24 @@ export default function PostCard({ postData }) {
               postData.buyer_id === currentUser.uid ? (
                 <EditPost postData={postData} />
               ) : null}
+
               {postData.status === "completed" &&
               (postData.buyer_id === currentUser.uid ||
                 postData.seller_id === currentUser.uid) ? (
                 <Comment data={postData} />
               ) : null}
+
+              {postData.status === "completed" &&
+              postData.seller_id === currentUser.uid ? (
+                <IconButton sx={{ float: "right" }} onClick={handleFavorite}>
+                  {hasFavorited ? (
+                    <FavoriteIcon sx={{ color: "#e91e63" }} />
+                  ) : (
+                    <FavoriteBorderIcon />
+                  )}
+                </IconButton>
+              ) : null}
+
               {postData.status == "active" &&
               postData.buyer_id !== currentUser.uid ? (
                 <>
