@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import noImage from "../assets/noimage.jpg";
 import { AuthContext } from "../context/AuthContext";
-import Comment from "./Comment.jsx";
 import EditProduct from "./EditProduct.jsx";
 
 import FavoriteIcon from "@mui/icons-material/Favorite";

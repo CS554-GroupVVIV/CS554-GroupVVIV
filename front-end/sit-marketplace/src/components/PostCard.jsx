@@ -25,7 +25,6 @@ import {
 import { useMutation } from "@apollo/client";
 import { useQuery } from "@apollo/client";
 import { GET_USER } from "../queries";
-import Comment from "./Comment";
 
 export default function PostCard({ postData }) {
   const [id, setId] = useState(undefined);
