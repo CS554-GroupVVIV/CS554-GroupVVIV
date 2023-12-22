@@ -1092,11 +1092,12 @@ export const resolvers = {
           }
           return newChat;
         }
-        for (let i = 0; i < chat.messages.length; i++) {
-          chat.messages[i].time = dateObjectToHTMLDate(
-            chat.messages[i].time
-          ).toString();
-        }
+
+        // for (let i = 0; i < chat.messages.length; i++) {
+        //   chat.messages[i].time = dateObjectToHTMLDate(
+        //     chat.messages[i].time
+        //   ).toString();
+        // }
         return chat;
       } catch (error) {
         throw new GraphQLError(error.message);
