@@ -59,11 +59,29 @@
 
 <!-- GETTING STARTED -->
 
-## Getting Started
+## Install & Deploy
 
-This is an example of how you may give instructions on setting up your project.
+Download the code by git.
 
-### Installation :
+```shell
+git clone https://github.com/CS554-GroupVVIV/CS554-GroupVVIV.git
+```
+
+### Deploy by Native Node.js:
+
+1 - Run `npm install` under `back-end` directory and `front-end/sit-marketplace` directory.
+
+2 - To have a [MongoDB](https://www.mongodb.com/docs/manual/installation/) running on your device, which listen to port `27017`.
+
+3 - To have a [Redis-Stack-Server](https://redis.io/docs/install/install-stack/) running on your device, whih listen to the port `6379`.
+
+4 - Run `npm start` under the `back-end` directory for launch the backend part of the application.
+
+5 - Run `npm run dev` under the `front-end/sit-marketplace` directory.
+
+6 - Open your browser, go to http://localhost:5713 and enjoy!
+
+### Deploy by Docker-Compose:
 
 1 - Install docker: https://www.docker.com/get-started/
 
@@ -83,7 +101,7 @@ Then, you can open http://localhost:5173 on browser to start using the website.
 
 4 - Make sure the services are started correctly in docker.
 
-### Start :
+## Demo
 
 1 - Access the Home page to browse products without the need to log in.
 
