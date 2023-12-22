@@ -181,7 +181,7 @@ export default function ProductCard({ productData }) {
               {productData.status === "completed" &&
               productData.buyer_id === currentUser.uid ? (
                 <IconButton
-                  sx={{ justifyContent: "center" }}
+                  sx={{ float: "right", justifyContent: "center" }}
                   onClick={handleFavorite}
                 >
                   {hasFavorited ? (

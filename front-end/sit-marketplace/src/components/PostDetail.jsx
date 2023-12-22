@@ -229,10 +229,7 @@ export default function PostDetail() {
 
                     {post.status === "completed" &&
                     post.seller_id === currentUser.uid ? (
-                      <IconButton
-                        sx={{ float: "right" }}
-                        onClick={handleFavorite}
-                      >
+                      <IconButton onClick={handleFavorite}>
                         {hasFavorited ? (
                           <FavoriteIcon sx={{ color: "#e91e63" }} />
                         ) : (
