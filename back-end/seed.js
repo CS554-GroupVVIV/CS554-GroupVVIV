@@ -137,7 +137,7 @@ const productDetails = {
     p: 13,
     url: "https://m.media-amazon.com/images/W/MEDIAX_792452-T2/images/I/81eF-RxjuaL._AC_UF1000,1000_QL80_.jpg",
   },
-  "C# Book": {
+  "CSharp Book": {
     d: "3 in 1 C# books",
     c: "book",
     p: 13,
