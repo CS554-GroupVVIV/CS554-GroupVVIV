@@ -30,6 +30,7 @@ import {
 } from "../queries";
 import { useMutation } from "@apollo/client";
 import { useQuery } from "@apollo/client";
+import Comment from "./Comment";
 
 export default function ProductCard({ productData }) {
   const navigate = useNavigate();
@@ -167,86 +168,91 @@ export default function ProductCard({ productData }) {
             <div>
               {productData.seller_id !== currentUser.uid ? (
                 <div>
-                  <Button
-                    size="small"
-                    variant="contained"
-                    color="inherit"
-                    onClick={async () => {
-                      if (currentUser.uid) {
-                        socket.emit("join room", {
-                          room: productData.seller_id,
-                          user: currentUser.uid,
-                        });
-
-                        // socket.emit("message", {
-                        //   room: productData.seller_id,
-                        //   sender: currentUser.uid,
-                        //   message: `Hi, I have questions regarding product: "${productData.name}"`,
-                        //   time: new Date().toISOString(),
-                        // });
-                      }
-                    }}
-                    sx={{ fontWeight: "bold" }}
-                  >
-                    Chat
-                  </Button>
-
-                  {isPossibleBuyer ? (
-                    <Button
-                      size="small"
-                      variant="contained"
-                      color="inherit"
-                      onClick={() => {
-                        if (currentUser.uid) {
-                          removePossibleBuyer({
-                            variables: {
-                              id: productData._id,
-                              buyerId: currentUser.uid,
-                            },
-                          });
-                          // setIsPossibleBuyer(false);
-
-                          alert("You're no longer a potential buyer ...");
-                        }
-                      }}
-                      sx={{ fontWeight: "bold", marginLeft: 2 }}
-                    >
-                      Cancel
-                    </Button>
+                  {productData.status === "completed" ? (
+                    <Comment data={productData} />
                   ) : (
-                    <Button
-                      size="small"
-                      variant="contained"
-                      color="inherit"
-                      onClick={() => {
-                        if (currentUser.uid) {
-                          addPossibleBuyer({
-                            variables: {
-                              id: productData._id,
-                              buyerId: currentUser.uid,
-                            },
-                          });
-                          // setIsPossibleBuyer(true);
-
-                          if (!hasFavorited) {
-                            addFavorite({
-                              variables: {
-                                id: currentUser.uid,
-                                productId: productData._id,
-                              },
+                    <>
+                      <Button
+                        size="small"
+                        variant="contained"
+                        color="inherit"
+                        onClick={async () => {
+                          if (currentUser.uid) {
+                            socket.emit("join room", {
+                              room: productData.seller_id,
+                              user: currentUser.uid,
                             });
-                            setHasFavorited(true);
-                          }
 
-                          alert(
-                            "Congrats! You're a potential buyer now!\n\nFeel free to contact the seller for further information."
-                          );
-                        }
-                      }}
-                      sx={{ fontWeight: "bold", marginLeft: 2 }}
-                    >
-                      Buy
-                    </Button>
+                            // socket.emit("message", {
+                            //   room: productData.seller_id,
+                            //   sender: currentUser.uid,
+                            //   message: `Hi, I have questions regarding product: "${productData.name}"`,
+                            //   time: new Date().toISOString(),
+                            // });
+                          }
+                        }}
+                        sx={{ fontWeight: "bold" }}
+                      >
+                        Chat
+                      </Button>
+                      {isPossibleBuyer ? (
+                        <Button
+                          size="small"
+                          variant="contained"
+                          color="inherit"
+                          onClick={() => {
+                            if (currentUser.uid) {
+                              removePossibleBuyer({
+                                variables: {
+                                  id: productData._id,
+                                  buyerId: currentUser.uid,
+                                },
+                              });
+                              // setIsPossibleBuyer(false);
+
+                              alert("You're no longer a potential buyer ...");
+                            }
+                          }}
+                          sx={{ fontWeight: "bold", marginLeft: 2 }}
+                        >
+                          Cancel
+                        </Button>
+                      ) : (
+                        <Button
+                          size="small"
+                          variant="contained"
+                          color="inherit"
+                          onClick={() => {
+                            if (currentUser.uid) {
+                              addPossibleBuyer({
+                                variables: {
+                                  id: productData._id,
+                                  buyerId: currentUser.uid,
+                                },
+                              });
+                              // setIsPossibleBuyer(true);
+
+                              if (!hasFavorited) {
+                                addFavorite({
+                                  variables: {
+                                    id: currentUser.uid,
+                                    productId: productData._id,
+                                  },
+                                });
+                                setHasFavorited(true);
+                              }
+
+                              alert(
+                                "Congrats! You're a potential buyer now!\n\nFeel free to contact the seller for further information."
+                              );
+                            }
+                          }}
+                          sx={{ fontWeight: "bold", marginLeft: 2 }}
+                        >
+                          Buy
+                        </Button>
+                      )}
+                    </>
                   )}
 
                   <IconButton
