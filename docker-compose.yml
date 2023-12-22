@@ -30,7 +30,7 @@ services:
     environment:
       - MONGO_URL=mongodb://mongodb:27017/CS554-VVIV
       - REDIS_URL=redis://redis:6379
-    command: sh -c "node seed.js" && npm start"
+    command: sh -c "node seed.js && npm start"
     
   front-end:
     image: aturret/vviv-frontend:latest
