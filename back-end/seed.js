@@ -113,7 +113,7 @@ const productDetails = {
     p: 20,
     url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSBcoBPjwy_iEjEcOfo60pFHgpYzBr9Ka-fSMGKBDbjfdTQt-06mPLLSYnbN0NRgmZwR0U&usqp=CAU",
   },
-  "C++ Book": {
+  "CPP Book": {
     d: "C++ for beginners",
     c: "book",
     p: 13,
