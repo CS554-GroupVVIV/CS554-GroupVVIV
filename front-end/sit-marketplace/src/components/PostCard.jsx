@@ -133,77 +133,83 @@ export default function PostCard({ postData }) {
             <div>
               {postData.buyer_id !== currentUser.uid ? (
                 <>
-                  <Button
-                    size="small"
-                    variant="contained"
-                    color="inherit"
-                    onClick={async () => {
-                      if (currentUser.uid) {
-                        socket.emit("join room", {
-                          room: postData.buyer_id,
-                          user: currentUser.uid,
-                        });
-                      }
-                    }}
-                  >
-                    Chat
-                  </Button>
-
-                  {isPossibleSeller ? (
-                    <Button
-                      size="small"
-                      variant="contained"
-                      color="inherit"
-                      onClick={() => {
-                        if (currentUser.uid) {
-                          removePossibleSeller({
-                            variables: {
-                              id: postData._id,
-                              sellerId: currentUser.uid,
-                            },
-                          });
-                          // setIsPossibleBuyer(false);
-
-                          alert("You're no longer a potential Seller ...");
-                        }
-                      }}
-                      sx={{ fontWeight: "bold", marginLeft: 2 }}
-                    >
-                      Cancel
-                    </Button>
+                  {postData.status === "completed" ? (
+                    <Comment data={postData} />
                   ) : (
-                    <Button
-                      size="small"
-                      variant="contained"
-                      color="inherit"
-                      onClick={() => {
-                        if (currentUser.uid) {
-                          addPossibleSeller({
-                            variables: {
-                              id: postData._id,
-                              sellerId: currentUser.uid,
-                            },
-                          });
-
-                          if (!hasFavorited) {
-                            addFavorite({
-                              variables: {
-                                postId: postData._id,
-                                id: currentUser.uid,
-                              },
+                    <>
+                      <Button
+                        size="small"
+                        variant="contained"
+                        color="inherit"
+                        onClick={async () => {
+                          if (currentUser.uid) {
+                            socket.emit("join room", {
+                              room: postData.buyer_id,
+                              user: currentUser.uid,
                             });
-                            setHasFavorited(true);
                           }
+                        }}
+                      >
+                        Chat
+                      </Button>
 
-                          alert(
-                            "You're a potential seller now!\n\nFeel free to contact the buyer for further information."
-                          );
-                        }
-                      }}
-                      sx={{ fontWeight: "bold", marginLeft: 2 }}
-                    >
-                      Sell
-                    </Button>
+                      {isPossibleSeller ? (
+                        <Button
+                          size="small"
+                          variant="contained"
+                          color="inherit"
+                          onClick={() => {
+                            if (currentUser.uid) {
+                              removePossibleSeller({
+                                variables: {
+                                  id: postData._id,
+                                  sellerId: currentUser.uid,
+                                },
+                              });
+                              // setIsPossibleBuyer(false);
+
+                              alert("You're no longer a potential Seller ...");
+                            }
+                          }}
+                          sx={{ fontWeight: "bold", marginLeft: 2 }}
+                        >
+                          Cancel
+                        </Button>
+                      ) : (
+                        <Button
+                          size="small"
+                          variant="contained"
+                          color="inherit"
+                          onClick={() => {
+                            if (currentUser.uid) {
+                              addPossibleSeller({
+                                variables: {
+                                  id: postData._id,
+                                  sellerId: currentUser.uid,
+                                },
+                              });
+
+                              if (!hasFavorited) {
+                                addFavorite({
+                                  variables: {
+                                    postId: postData._id,
+                                    id: currentUser.uid,
+                                  },
+                                });
+                                setHasFavorited(true);
+                              }
+
+                              alert(
+                                "You're a potential seller now!\n\nFeel free to contact the buyer for further information."
+                              );
+                            }
+                          }}
+                          sx={{ fontWeight: "bold", marginLeft: 2 }}
+                        >
+                          Sell
+                        </Button>
+                      )}
+                    </>
                   )}
 
                   <IconButton sx={{ float: "right" }} onClick={handleFavorite}>
