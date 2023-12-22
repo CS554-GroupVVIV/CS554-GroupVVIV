@@ -339,9 +339,7 @@ export default function ProductDetailCard() {
                             </IconButton>
                           </>
                         ) : (
-                          <>
-                            <p>(You're the Poster)</p>
-                          </>
+                          <>{/* <p>(You're the Poster)</p> */}</>
                         )}
                       </div>
                     ) : (

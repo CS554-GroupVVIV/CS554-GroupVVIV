@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import noImage from "../assets/noimage.jpg";
 import { AuthContext } from "../context/AuthContext";
+import Comment from "./Comment.jsx";
+import EditProduct from "./EditProduct.jsx";
 
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
@@ -166,7 +168,17 @@ export default function ProductCard({ productData }) {
 
           {currentUser && (
             <div>
-              {productData.seller_id !== currentUser.uid ? (
+              {productData.status !== "completed" &&
+              productData.seller_id === currentUser.uid ? (
+                <EditProduct productData={productData} />
+              ) : null}
+              {productData.status === "completed" &&
+              (productData.buyer_id === currentUser.uid ||
+                productData.seller_id === currentUser.uid) ? (
+                <Comment data={productData} />
+              ) : null}
+              {productData.status == "active" &&
+              productData.seller_id !== currentUser.uid ? (
                 <div>
                   {productData.status === "completed" ? (
                     <Comment data={productData} />
@@ -267,9 +279,7 @@ export default function ProductCard({ productData }) {
                   </IconButton>
                 </div>
               ) : (
-                <>
-                  <p>(You're the Poster)</p>
-                </>
+                <>{/* <p>(You're the Poster)</p> */}</>
               )}
             </div>
           )}

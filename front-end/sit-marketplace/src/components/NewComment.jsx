@@ -110,7 +110,7 @@ const NewComment = ({ user_id }) => {
         <Button
           size="small"
           variant="contained"
-          color="inherit"
+          // color="inherit"
           onClick={() => {
             setToggleNewComment(true);
           }}

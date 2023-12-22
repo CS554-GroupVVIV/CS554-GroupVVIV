@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext.jsx";
 import { socketID, socket } from "./socket";
+import Comment from "./Comment.jsx";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import {
@@ -13,7 +14,7 @@ import {
   Button,
   IconButton,
 } from "@mui/material";
-
+import EditPost from "./EditPost.jsx";
 import {
   ADD_FAVORITE_POST_TO_USER,
   REMOVE_FAVORITE_POST_FROM_USER,
@@ -132,7 +133,17 @@ export default function PostCard({ postData }) {
 
           {postData && currentUser && (
             <div>
-              {postData.buyer_id !== currentUser.uid ? (
+              {postData.status !== "completed" &&
+              postData.buyer_id === currentUser.uid ? (
+                <EditPost postData={postData} />
+              ) : null}
+              {postData.status === "completed" &&
+              (postData.buyer_id === currentUser.uid ||
+                postData.seller_id === currentUser.uid) ? (
+                <Comment data={postData} />
+              ) : null}
+              {postData.status == "active" &&
+              postData.buyer_id !== currentUser.uid ? (
                 <>
                   {postData.status === "completed" ? (
                     <Comment data={postData} />
@@ -222,9 +233,7 @@ export default function PostCard({ postData }) {
                   </IconButton>
                 </>
               ) : (
-                <>
-                  <p>(You're the Poster)</p>
-                </>
+                <>{/* <p>(You're the Poster)</p> */}</>
               )}
             </div>
           )}

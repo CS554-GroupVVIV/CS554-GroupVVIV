@@ -315,9 +315,7 @@ export default function PostDetail() {
                         </IconButton>
                       </>
                     ) : (
-                      <>
-                        <p>(You're the Poster)</p>
-                      </>
+                      <>{/* <p>(You're the Poster)</p> */}</>
                     )}
                   </div>
                 </div>
