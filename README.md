@@ -30,7 +30,6 @@
       </ul>
     </li>
     <li><a href="#built-with">Built With</a></li>
-    <!-- <li><a href="#database">Database Schema</a></li> -->
   </ol>
 </details>
 
@@ -75,7 +74,7 @@ git clone https://github.com/CS554-GroupVVIV/CS554-GroupVVIV.git
 
 3 - Run `node seed.js` under `back-end` directory to seed the database.
 
-4 - To have a [Redis-Stack-Server](https://redis.io/docs/install/install-stack/) running on your device, whih listen to the port `6379`.
+4 - To have a [Redis-Stack-Server](https://redis.io/docs/install/install-stack/) running on your device, while listening to the port `6379`.
 
 5 - Run `npm start` under the `back-end` directory for launch the backend part of the application.
 
@@ -103,6 +102,11 @@ Then, you can open http://localhost:5173 on browser to start using the website.
 
 4 - Make sure the services are started correctly in docker.
 
+5- Open the Docker and go to redis/redis-stack's terminal run following command to start redis server.
+```bash
+redis-cli
+```
+
 ## Demo
 
 1 - Access the Home page to browse products without the need to log in.
@@ -121,11 +125,11 @@ Then, you can open http://localhost:5173 on browser to start using the website.
 
 </div>
 
-3 - Adding a new post to offer products for sale (Error)
+3 - Adding a new post to offer products for sale
 
 <div align="center">
 
-  ![Image Imgur](https://i.imgur.com/LB5ksF4.gif)
+  ![Image Imgur](https://i.imgur.com/qKuTNj2.gif)
 
 </div>
 
@@ -137,7 +141,7 @@ Then, you can open http://localhost:5173 on browser to start using the website.
 
 </div>
 
-5 - Adding products to the favorites list
+5 - Adding products to the favorite list
 
 <div align="center">
 
