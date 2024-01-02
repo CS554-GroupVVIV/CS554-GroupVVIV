@@ -3,15 +3,16 @@ import React, { useState, useEffect, useContext, useRef } from "react";
 import { socket } from "./socket";
 
 import { useQuery, useMutation } from "@apollo/client";
-import { GET_CHAT_BY_PARTICIPANTS, ADD_CHAT, ADD_MESSAGE } from "../queries";
+import { GET_CHAT_BY_PARTICIPANTS, ADD_MESSAGE, ADD_CHAT } from "../queries";
 
 import { AuthContext } from "../context/AuthContext";
 
 import Chat from "./Chat";
 
 import { Grid, Button, TextField, Divider } from "@mui/material";
+import { rootShouldForwardProp } from "@mui/material/styles/styled";
 
-export default function ChatRoom({ room }) {
+export default function ChatRoom({ room, name }) {
   const { currentUser } = useContext(AuthContext);
   const [message, setMessage] = useState("");
 
@@ -23,26 +24,24 @@ export default function ChatRoom({ room }) {
   const [addChat] = useMutation(ADD_CHAT);
 
   useEffect(() => {
-    if (!loading) {
-      if (!data && currentUser) {
-        try {
-          addChat({
-            variables: {
-              participants: [currentUser?.uid, room],
+    if (currentUser && data && !data.getChatByParticipants) {
+      try {
+        addChat({
+          variables: {
+            participants_id: [currentUser.uid, room],
+          },
+          refetchQueries: [
+            {
+              query: GET_CHAT_BY_PARTICIPANTS,
+              variables: { participants: [currentUser.uid, room] },
             },
-            refetchQueries: [
-              {
-                query: GET_CHAT_BY_PARTICIPANTS,
-                variables: { participants: [currentUser.uid, room] },
-              },
-            ],
-          });
-        } catch (error) {
-          alert("Error adding chat:", error);
-        }
+          ],
+        });
+      } catch (error) {
+        alert("Error adding chat:", error);
       }
     }
-  }, [loading]);
+  }, [data]);
 
   const [chat, setChat] = useState([]);
   const [addMsg] = useMutation(ADD_MESSAGE);
@@ -51,7 +50,7 @@ export default function ChatRoom({ room }) {
       await addMsg({
         variables: {
           chatId: msgData.chatId,
-          sender: msgData.sender,
+          sender_id: msgData.sender._id,
           message: msgData.message,
           time: msgData.time,
         },
@@ -63,8 +62,10 @@ export default function ChatRoom({ room }) {
 
   const messagesEndRef = useRef(null);
   useEffect(() => {
-    socket.on("message", ({ sender, message, time }) => {
-      setChat([...chat, { sender, message, time }]);
+    socket.on("message", ({ room, sender, message, time }) => {
+      if (sender._id == currentUser.uid || room._id == currentUser.uid) {
+        setChat([...chat, { sender, message, time }]);
+      }
     });
 
     messagesEndRef.current?.scrollIntoView({ behavior: "auto" });
@@ -85,85 +86,90 @@ export default function ChatRoom({ room }) {
     }
   }, [room]);
 
-  return (
-    <Grid container direction={"column"}>
-      <Grid
-        item
-        height={"60vh"}
-        sx={{ overflowY: "auto", border: 2 }}
-        mt={1}
-        mb={1}
-        pl={2}
-        pr={2}
-      >
-        <Chat
-          chat={data && data.getChatByParticipants.messages}
-          participants={[currentUser?.uid, room]}
-        />
+  if (data && data.getChatByParticipants) {
+    return (
+      <Grid container direction={"column"}>
+        <Grid
+          item
+          height={"60vh"}
+          sx={{ overflowY: "auto", border: 2 }}
+          mt={1}
+          mb={1}
+          pl={2}
+          pr={2}
+        >
+          <Chat chat={data && data.getChatByParticipants.messages} />
 
-        {chat.length > 0 && (
-          <>
-            <Divider />
-            <p>New Messages:</p>
-          </>
-        )}
-        <Chat chat={chat} participants={[currentUser?.uid, room]} />
+          {chat.length > 0 && (
+            <>
+              <Divider />
+              <p>New Messages:</p>
+            </>
+          )}
+          <Chat chat={chat} />
 
-        <div ref={messagesEndRef} />
-      </Grid>
+          <div ref={messagesEndRef} />
+        </Grid>
 
-      <Grid item sx={{ padding: 1 }}>
-        <div style={{ display: "flex", justifyContent: "center" }}>
-          <TextField
-            variant="outlined"
-            label="message"
-            value={message}
-            onInput={(e) => setMessage(e.target.value)}
-            autoFocus
-            inputProps={{ maxLength: 200 }}
-            autoComplete="off"
-            InputLabelProps={{
-              sx: {
+        <Grid item sx={{ padding: 1 }}>
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            <TextField
+              variant="outlined"
+              label="message"
+              value={message}
+              onInput={(e) => setMessage(e.target.value)}
+              autoFocus
+              inputProps={{ maxLength: 200 }}
+              autoComplete="off"
+              InputLabelProps={{
+                sx: {
+                  // fontFamily: "monospace",
+                  fontWeight: "bold",
+                },
+              }}
+              style={{
                 // fontFamily: "monospace",
                 fontWeight: "bold",
-              },
-            }}
-            style={{
-              // fontFamily: "monospace",
-              fontWeight: "bold",
-              color: "#424242",
-            }}
-            sx={{ width: "80%" }}
-          />
-          <Button
-            variant="contained"
-            // color="inherit"
-            onClick={(event) => {
-              event.preventDefault();
-              const msgData = {
-                sender: currentUser.uid,
-                time: new Date().toISOString(),
-                message: message,
-                chatId: data.getChatByParticipants._id,
-              };
+                color: "#424242",
+              }}
+              sx={{ width: "80%" }}
+            />
+            <Button
+              variant="contained"
+              // color="inherit"
+              onClick={(event) => {
+                event.preventDefault();
+                const msgData = {
+                  sender: {
+                    _id: currentUser.uid,
+                    firstname: currentUser.displayName,
+                  },
+                  time: new Date().toISOString(),
+                  message: message,
+                  chatId: data.getChatByParticipants._id,
+                };
 
-              socket.emit("message", {
-                room: room,
-                sender: msgData.sender,
-                message: msgData.message,
-                time: msgData.time,
-              });
+                socket.emit("message", {
+                  room: {
+                    _id: room,
+                    firstname: name,
+                  },
+                  sender: msgData.sender,
+                  message: msgData.message,
+                  time: msgData.time,
+                });
 
-              handleAddMsg(msgData);
+                handleAddMsg(msgData);
 
-              setMessage("");
-            }}
-            sx={{ marginLeft: 1 }}
-          >
-            Send
-          </Button>
-        </div>
+                setMessage("");
+              }}
+              sx={{ marginLeft: 1 }}
+            >
+              Send
+            </Button>
+          </div>
+        </Grid>
       </Grid>
-    </Grid>
-  );
+    );
+  }
 }

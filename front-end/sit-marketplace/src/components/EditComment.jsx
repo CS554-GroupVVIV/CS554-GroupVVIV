@@ -38,8 +38,7 @@ const EditComment = ({ record }) => {
     fetchPolicy: "cache-and-network",
   });
 
-  let user_id = undefined;
-  if (record.comments[0].comment_id !== currentUser.uid) {
+  if (record.comments[0].commenter._id !== currentUser.uid) {
     throw "You are not authorized to comment";
   }
 
@@ -58,12 +57,8 @@ const EditComment = ({ record }) => {
     checkComment: () => {
       setCommentInputError(false);
       let commentInput = commentInputRef.current?.value;
-      if (!commentInput || commentInput.trim() == "") {
-        setCommentInputError(true);
-        return;
-      }
       commentInput = commentInput.trim();
-      if (commentInput.length < 0 || commentInput.length > 100) {
+      if (commentInput.length > 100) {
         setCommentInputError(true);
         return;
       }

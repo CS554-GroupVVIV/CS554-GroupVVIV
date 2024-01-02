@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { socketID, socket } from "./socket";
+import { socket } from "./socket";
 
 import { Grid, MenuList, MenuItem, Button, Stack } from "@mui/material";
 
@@ -13,10 +13,13 @@ export default function ChatRoomList({ uid }) {
   const [rooms, setRooms] = useState({});
   const [curRoom, setCurRoom] = useState(undefined);
 
-  const { loading, error, data } = useQuery(GET_USERS_BY_IDS, {
-    variables: { ids: Object.keys(rooms) },
-    fetchPolicy: "cache-and-network",
-  });
+  if (rooms) {
+    console.log(rooms);
+    var { loading, error, data } = useQuery(GET_USERS_BY_IDS, {
+      variables: { ids: Object.keys(rooms) },
+      fetchPolicy: "cache-and-network",
+    });
+  }
 
   let participantDict = {};
   if (data) {
@@ -30,13 +33,31 @@ export default function ChatRoomList({ uid }) {
   // }, []);
 
   useEffect(() => {
+    socket.on("global room", (data) => {
+      data.map((chat) => {
+        if (chat.split("+")[0] == uid || chat.split("+")[1] == uid) {
+          let myroom;
+          if (chat.split("+")[0] == uid) {
+            myroom = chat.split("+")[1];
+          } else {
+            myroom = chat.split("+")[0];
+          }
+          socket.emit("join room", {
+            room: myroom,
+            user: uid,
+          });
+        }
+      });
+    });
+
     socket.on("rooms", (data) => {
       setRooms(data);
     });
+  }, [socket]);
 
-    socket.on("join room", (data) => {
-      setCurRoom(data.room);
-    });
+    // socket.on("join room", (data) => {
+    //   setCurRoom(data.room);
+    // });
 
     let cur = undefined;
     for (const key in rooms) {
@@ -46,7 +67,7 @@ export default function ChatRoomList({ uid }) {
       }
     }
     setCurRoom(cur);
-  }, [socket]);
+  }, [rooms]);
 
   useEffect(() => {
     if (curRoom) {
@@ -119,7 +140,9 @@ export default function ChatRoomList({ uid }) {
           </MenuList>
         </Grid>
         <Grid item xs sx={{ width: 500 }}>
-          {curRoom && <ChatRoom room={curRoom} />}
+          {curRoom && (
+            <ChatRoom room={curRoom} name={participantDict[curRoom]} />
+          )}
         </Grid>
       </Grid>
     </>

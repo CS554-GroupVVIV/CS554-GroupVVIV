@@ -10,6 +10,8 @@ const userList = [
     favorite: [],
     favorite_post: [],
     comments: [],
+    possible_buyer_id: [],
+    possible_seller_id: ["6584ad8e36f3bfc519a59f0f"],
   },
   {
     _id: "8C5bGSz1FRVbAQ47EDnDSvmKsqg2",
@@ -24,7 +26,6 @@ const userList = [
         comment:
           "Bad guy! The product is very much worn out though said brand new",
         comment_id: "MakfosvJBSRugNO7tQbAPA8XsW82",
-        firstname: "Lori",
         date: new Date("2023-12-01"),
         rating: 2,
       },
@@ -32,10 +33,19 @@ const userList = [
         _id: new ObjectId(),
         comment: "Thank you!",
         comment_id: "WiICBEajMHVeQPxxFrpYaMyyRIt1",
-        firstname: "Daniel",
         date: new Date("2023-12-21"),
         rating: 5,
       },
+    ],
+    possible_buyer_id: [
+      "6584a667ff6d6e6b84730141",
+      "658b82131fec12b79cf4697a",
+      "6584b6619158ad1d1a74b89b",
+    ],
+    possible_seller_id: [
+      "6584ad8e36f3bfc519a59f10",
+      "658b82131fec12b79cf4697b",
+      "6584b6619158ad1d1a74b89c",
     ],
   },
   {
@@ -46,6 +56,8 @@ const userList = [
     favorite: [],
     favorite_post: [],
     comments: [],
+    possible_buyer_id: [],
+    possible_seller_id: [],
   },
   {
     _id: "MakfosvJBSRugNO7tQbAPA8XsW82",
@@ -59,10 +71,14 @@ const userList = [
         _id: new ObjectId(),
         comment: "Great expereince!",
         comment_id: "8C5bGSz1FRVbAQ47EDnDSvmKsqg2",
-        firstname: "Jason",
         date: new Date("2023-12-21"),
         rating: 5,
       },
+    ],
+    possible_buyer_id: ["6584a667ff6d6e6b84730140", "6584a667ff6d6e6b84730141"],
+    possible_seller_id: [
+      "6584ad8e36f3bfc519a59f0f",
+      "6584ad8e36f3bfc519a59f10",
     ],
   },
   {
@@ -73,6 +89,8 @@ const userList = [
     favorite: [],
     favorite_post: [],
     comments: [],
+    possible_buyer_id: [],
+    possible_seller_id: [],
   },
 ];
 
@@ -229,7 +247,7 @@ for (let key in productDetails) {
     image: details.url,
     category: details.c,
     status: "active",
-    possible_buyers: userIds_2[randomBuyer] ? [userIds_2[randomBuyer]] : [],
+    possible_buyers: [],
     completion_date: null,
   };
 
@@ -257,7 +275,7 @@ productList.push(activeFavProduct);
 
 const inactiveProducts = [
   {
-    _id: new ObjectId(),
+    _id: new ObjectId("658b82131fec12b79cf4697a"),
     name: "Stevens Hoodie",
     price: 500,
     date: new Date(
@@ -267,13 +285,13 @@ const inactiveProducts = [
     ),
     description: "Stevens Hoodie - LIMITED EDITION",
     condition: "brand new",
-    seller_id: "8C5bGSz1FRVbAQ47EDnDSvmKsqg2",
+    seller_id: "mRdeR8wDRzLVEbeer5PpbJY6TDE3",
     buyer_id: null,
     image:
       "https://m.media-amazon.com/images/I/B1Wsm-8LxOS._CLa%7C2140%2C2000%7CB1nyqsQsIwL.png%7C0%2C0%2C2140%2C2000%2B0.0%2C0.0%2C2140.0%2C2000.0_AC_SX679_.png",
     category: "clothing",
     status: "inactive",
-    possible_buyers: [],
+    possible_buyers: ["8C5bGSz1FRVbAQ47EDnDSvmKsqg2"],
     completion_date: null,
   },
   {
@@ -293,7 +311,7 @@ const inactiveProducts = [
       "https://cdn.spiritshop.com/DynamicImageHandler.ashx?width=1000&height=1000&did=76518&logo=null&pid=1386&cid=14273&view=1&ndz=1&tt=Stevens&bt=Ducks&cp1=%23181C33&cp2=%23EEEEEE&yt=2024&pset=4&tn=Your%20Name&tm=00&photo=0",
     category: "clothing",
     status: "inactive",
-    possible_buyers: [],
+    possible_buyers: ["MakfosvJBSRugNO7tQbAPA8XsW82"],
     completion_date: null,
   },
 ];
@@ -399,7 +417,7 @@ for (let key in postDetails) {
     _id: new ObjectId(),
     buyer_id: userIds[randomBuyer],
     seller_id: null,
-    item: key,
+    name: key,
     category: details.c,
     price: Math.floor(Math.random() * 100),
     condition: conditions[randomCondition],
@@ -410,7 +428,7 @@ for (let key in postDetails) {
     ),
     description: details.d,
     status: "active",
-    possible_sellers: userIds_2[randomSeller] ? [userIds_2[randomSeller]] : [],
+    possible_sellers: [],
     completion_date: null,
   };
 
@@ -421,14 +439,14 @@ const activeFavPost = {
   _id: new ObjectId("6584b6619158ad1d1a74b89c"),
   buyer_id: "MakfosvJBSRugNO7tQbAPA8XsW82",
   seller_id: null,
-  item: "Bottle water",
+  name: "Bottle water",
   category: "other",
   price: 0,
   condition: "brand new",
   date: new Date(`2023-12-20`),
   description: "for free",
   status: "active",
-  possible_sellers: [],
+  possible_sellers: ["8C5bGSz1FRVbAQ47EDnDSvmKsqg2"],
   completion_date: null,
 };
 
@@ -436,8 +454,8 @@ postList.push(activeFavPost);
 
 const inactivePosts = [
   {
-    _id: new ObjectId(),
-    item: "Desk",
+    _id: new ObjectId("658b82131fec12b79cf4697b"),
+    name: "Desk",
     price: 30,
     date: new Date(
       `2023-${Math.floor(Math.random() * 10) + 1}-${
@@ -447,7 +465,7 @@ const inactivePosts = [
     description: "I need a desk to place in my dorm",
     condition: "like new",
     seller_id: null,
-    buyer_id: "8C5bGSz1FRVbAQ47EDnDSvmKsqg2",
+    buyer_id: "mRdeR8wDRzLVEbeer5PpbJY6TDE3",
     category: "furniture",
     status: "inactive",
     possible_sellers: [],
@@ -455,7 +473,7 @@ const inactivePosts = [
   },
   {
     _id: new ObjectId(),
-    item: "Camera",
+    name: "Camera",
     price: 100,
     date: new Date(
       `2023-${Math.floor(Math.random() * 10) + 1}-${
@@ -480,21 +498,21 @@ inactivePosts.map((inactivePost) => {
 const completedPosts = [
   {
     _id: new ObjectId("6584ad8e36f3bfc519a59f0f"),
-    item: "Calculator",
+    name: "Calculator",
     price: 10,
     date: new Date(`2023-11-20`),
     description: "I need a calculator for my Math test tomorrow",
     condition: "functional",
-    seller_id: "MakfosvJBSRugNO7tQbAPA8XsW82",
+    seller_id: "mRdeR8wDRzLVEbeer5PpbJY6TDE3",
     buyer_id: "8C5bGSz1FRVbAQ47EDnDSvmKsqg2",
     category: "electronics",
     status: "completed",
-    possible_sellers: ["MakfosvJBSRugNO7tQbAPA8XsW82"],
+    possible_sellers: ["mRdeR8wDRzLVEbeer5PpbJY6TDE3"],
     completion_date: new Date(`2023-11-21`),
   },
   {
     _id: new ObjectId("6584ad8e36f3bfc519a59f10"),
-    item: "backpack",
+    name: "backpack",
     price: 30,
     date: new Date(`2023-11-12`),
     description: "Anything that can hold a laptap will do",
@@ -520,43 +538,43 @@ completedPosts.map((completedPost) => {
 const chatList = [
   {
     _id: new ObjectId(),
-    participants: [
+    participants_id: [
       "8C5bGSz1FRVbAQ47EDnDSvmKsqg2",
       "MakfosvJBSRugNO7tQbAPA8XsW82",
     ],
     messages: [
       {
-        sender: "MakfosvJBSRugNO7tQbAPA8XsW82",
-        date: new Date("2023-11-30T13:24:00"),
+        sender_id: "MakfosvJBSRugNO7tQbAPA8XsW82",
+        time: new Date("2023-11-30T13:24:00"),
         message: "hi! I want this earphone!!",
       },
       {
-        sender: "8C5bGSz1FRVbAQ47EDnDSvmKsqg2",
-        date: new Date("2023-11-30T13:26:00"),
+        sender_id: "8C5bGSz1FRVbAQ47EDnDSvmKsqg2",
+        time: new Date("2023-11-30T13:26:00"),
         message: "hi! Ok, I'm on my way to school. Can meet you at 5",
       },
       {
-        sender: "MakfosvJBSRugNO7tQbAPA8XsW82",
-        date: new Date("2023-11-30T13:30:00"),
+        sender_id: "MakfosvJBSRugNO7tQbAPA8XsW82",
+        time: new Date("2023-11-30T13:30:00"),
         message: "np",
       },
     ],
   },
   {
     _id: new ObjectId(),
-    participants: [
+    participants_id: [
       "8C5bGSz1FRVbAQ47EDnDSvmKsqg2",
       "7SKDog0fjKOeS1jeuq32a9vYPue2",
     ],
     messages: [
       {
-        sender: "7SKDog0fjKOeS1jeuq32a9vYPue2",
-        date: new Date("2023-10-30T03:20:00"),
+        sender_id: "7SKDog0fjKOeS1jeuq32a9vYPue2",
+        time: new Date("2023-10-30T03:20:00"),
         message: "Just want to say hi. I'm boring",
       },
       {
-        sender: "8C5bGSz1FRVbAQ47EDnDSvmKsqg2",
-        date: new Date("2023-11-01T10:26:00"),
+        sender_id: "8C5bGSz1FRVbAQ47EDnDSvmKsqg2",
+        time: new Date("2023-11-01T10:26:00"),
         message: "Go to bed early. for the sake of your health. Take care",
       },
     ],
@@ -574,7 +592,7 @@ const main = async () => {
   await userCollection.insertMany(userList);
   await productCollection.insertMany(productList);
   await postCollection.insertMany(postList);
-  // await chatCollection.insertMany(chatList);
+  await chatCollection.insertMany(chatList);
 
   console.log("Done seeding database");
   await closeConnection();

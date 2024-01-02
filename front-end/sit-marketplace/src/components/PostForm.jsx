@@ -1,25 +1,27 @@
-import { useState, useRef, useEffect, useContext } from "react";
+import { useState, useRef, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { useMutation, useQuery } from "@apollo/client";
+import { useMutation } from "@apollo/client";
 import { AuthContext } from "../context/AuthContext.jsx";
 import { ADD_POST, GET_POSTS } from "../queries";
 
-import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
-import TextField from "@mui/material/TextField";
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import Select from "@mui/material/Select";
-import MenuItem from "@mui/material/MenuItem";
-import InputLabel from "@mui/material/InputLabel";
-import FormControl from "@mui/material/FormControl";
-import Stack from "@mui/material/Stack";
+import {
+  Button,
+  TextField,
+  Grid,
+  Box,
+  Typography,
+  Container,
+  Select,
+  MenuItem,
+  InputLabel,
+  FormControl,
+  Stack,
+} from "@mui/material";
 
 export default function PostForm() {
   const { currentUser } = useContext(AuthContext);
+  const navigate = useNavigate();
+
   const nameRef = useRef(null);
   const categoryRef = useRef(null);
   const priceRef = useRef(null);
@@ -36,18 +38,19 @@ export default function PostForm() {
   const [conditionError, setConditionError] = useState(false);
   const [descriptionError, setdescriptionError] = useState(false);
 
-  const { data, loading, error } = useQuery(GET_POSTS);
-  const [addPost] = useMutation(ADD_POST, {
-    update(cache, { data: { addPost } }) {
-      const { posts } = cache.readQuery({
-        query: GET_POSTS,
-      });
+  const [submitting, setSubmitting] = useState(false);
 
-      cache.writeQuery({
-        query: GET_POSTS,
-        data: { posts: [...posts, addPost] },
-      });
-    },
+  const [addPost] = useMutation(ADD_POST, {
+    // update(cache, { data: { addPost } }) {
+    //   const { posts } = cache.readQuery({
+    //     query: GET_POSTS,
+    //   });
+
+    //   cache.writeQuery({
+    //     query: GET_POSTS,
+    //     data: { posts: [...posts, addPost] },
+    //   });
+    // },
     onError: (e) => {
       alert(e);
     },
@@ -56,12 +59,6 @@ export default function PostForm() {
       navigate("/posts");
     },
   });
-
-  // useEffect(() => {
-  //   if (!currentUser) {
-  //     return navigate("/login");
-  //   }
-  // }, [currentUser]);
 
   const helper = {
     checkName: () => {
@@ -174,10 +171,9 @@ export default function PostForm() {
     },
   };
 
-  const navigate = useNavigate();
-
   const submit = async (e) => {
     e.preventDefault();
+    setSubmitting(true);
     helper.checkName();
     helper.checkCategory();
     helper.checkPrice();
@@ -190,12 +186,13 @@ export default function PostForm() {
       conditionError ||
       descriptionError
     ) {
+      setSubmitting(false);
       return;
     }
     addPost({
       variables: {
         buyer_id: currentUser.uid,
-        item: name,
+        name: name,
         category: category,
         price: price,
         condition: contidion,
@@ -261,12 +258,12 @@ export default function PostForm() {
                     label="Category"
                     onBlur={helper.checkCategory}
                   >
-                    <MenuItem value={"Book"}>Book</MenuItem>
-                    <MenuItem value={"Clothing"}>Clothing</MenuItem>
-                    <MenuItem value={"Electronics"}>Electronics</MenuItem>
-                    <MenuItem value={"Furniture"}>Furniture</MenuItem>
-                    <MenuItem value={"Stationary"}>Stationary</MenuItem>
-                    <MenuItem value={"Other"}>Other</MenuItem>
+                    <MenuItem value={"book"}>Book</MenuItem>
+                    <MenuItem value={"clothing"}>Clothing</MenuItem>
+                    <MenuItem value={"electronics"}>Electronics</MenuItem>
+                    <MenuItem value={"furniture"}>Furniture</MenuItem>
+                    <MenuItem value={"stationary"}>Stationary</MenuItem>
+                    <MenuItem value={"other"}>Other</MenuItem>
                   </Select>
                 </FormControl>
               </div>
@@ -314,10 +311,10 @@ export default function PostForm() {
                     label="Condition"
                     onBlur={helper.checkCondition}
                   >
-                    <MenuItem value={"Brand New"}>Brand New</MenuItem>
-                    <MenuItem value={"Like New"}>Like New</MenuItem>
-                    <MenuItem value={"Gently Used"}>Gently Used</MenuItem>
-                    <MenuItem value={"Functional"}>Functional</MenuItem>
+                    <MenuItem value={"brand new"}>Brand New</MenuItem>
+                    <MenuItem value={"like new"}>Like New</MenuItem>
+                    <MenuItem value={"gently used"}>Gently Used</MenuItem>
+                    <MenuItem value={"functional"}>Functional</MenuItem>
                   </Select>
                 </FormControl>
               </div>
@@ -359,11 +356,17 @@ export default function PostForm() {
               type="button"
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
+              disabled={submitting}
               onClick={() => navigate("/posts")}
             >
               Cancel
             </Button>
-            <Button type="submit" variant="contained" sx={{ mt: 3, mb: 2 }}>
+            <Button
+              type="submit"
+              disabled={submitting}
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+            >
               Save
             </Button>
           </Stack>

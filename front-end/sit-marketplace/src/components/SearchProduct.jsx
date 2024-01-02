@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 
 import { useQuery } from "@apollo/client";
 import { SEARCH_PRODUCTS_BY_NAME } from "../queries";
 
 import ProductCard from "./ProductCard.jsx";
 
-import { Grid, Button, Typography } from "@mui/material";
+import { Grid, Typography } from "@mui/material";
 
 export default function SearchProduct({ searchTerm, category }) {
   const { loading, error, data } = useQuery(SEARCH_PRODUCTS_BY_NAME, {

@@ -25,13 +25,13 @@ const NewComment = ({ user_id }) => {
   const [rating, setRating] = useState(0);
   const [commentInput, setCommentInput] = useState("");
 
-  const ratingRef = useRef();
-  const commentInputRef = useRef();
+  // const ratingRef = useRef();
+  // const commentInputRef = useRef();
 
   const [ratingError, setRatingError] = useState(false);
   const [commentInputError, setCommentInputError] = useState(false);
 
-  const { data } = useQuery(GET_USER, {
+  const { data, loading, error } = useQuery(GET_USER, {
     variables: { id: user_id },
     fetchPolicy: "cache-and-network",
   });
@@ -48,19 +48,14 @@ const NewComment = ({ user_id }) => {
       return;
     },
 
-    checkComment: () => {
+    checkComment: (value) => {
       setCommentInputError(false);
-      let commentInput = commentInputRef.current?.value;
-      if (!commentInput || commentInput.trim() == "") {
+      value = value.trim();
+      if (value.length > 100) {
         setCommentInputError(true);
         return;
       }
-      commentInput = commentInput.trim();
-      if (commentInput.length < 0 || commentInput.length > 100) {
-        setCommentInputError(true);
-        return;
-      }
-      setCommentInput(commentInput);
+      setCommentInput(value);
       return;
     },
   };
@@ -83,14 +78,14 @@ const NewComment = ({ user_id }) => {
   });
 
   const cancelNewComment = () => {
-    setToggleNewComment(false);
     setRating(0);
+    setToggleNewComment(false);
   };
 
   const saveNewComment = () => {
     try {
       helper.checkRating(rating);
-      helper.checkComment();
+      // helper.checkComment();
       addComment({
         variables: {
           user_id: user_id,
@@ -104,7 +99,11 @@ const NewComment = ({ user_id }) => {
       alert(e);
     }
   };
-  if (data)
+  if (loading) {
+    return <p>loading</p>;
+  } else if (error) {
+    return <p>Error</p>;
+  } else if (data)
     return (
       <>
         <Button
@@ -137,7 +136,6 @@ const NewComment = ({ user_id }) => {
                   <Rating
                     name="simple-controlled"
                     value={rating}
-                    ref={ratingRef}
                     onChange={(event, newValue) => {
                       helper.checkRating(newValue);
                     }}
@@ -158,8 +156,9 @@ const NewComment = ({ user_id }) => {
                     id="comment"
                     label="Comment"
                     name="comment"
-                    inputRef={commentInputRef}
-                    onBlur={helper.checkComment}
+                    onChange={(e) => {
+                      helper.checkComment(e.target.value);
+                    }}
                     inputProps={{ maxLength: 100 }}
                   />
                   {commentInputError && (
@@ -181,7 +180,7 @@ const NewComment = ({ user_id }) => {
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
                 onClick={() => {
-                  setToggleNewComment(false);
+                  cancelNewComment();
                 }}
               >
                 Cancel

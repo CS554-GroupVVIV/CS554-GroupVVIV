@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext.jsx";
-import { socketID, socket } from "./socket";
+import { socket } from "./socket";
 import Comment from "./Comment.jsx";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
@@ -13,84 +13,108 @@ import {
   Link,
   Button,
   IconButton,
+  Typography,
 } from "@mui/material";
 import EditPost from "./EditPost.jsx";
 import {
   ADD_FAVORITE_POST_TO_USER,
   REMOVE_FAVORITE_POST_FROM_USER,
-  GET_USER_FOR_FAVORITE,
   ADD_POSSIBLE_SELLER,
   REMOVE_POSSIBLE_SELLER,
+  GET_USER,
 } from "../queries";
-import { useMutation } from "@apollo/client";
-import { useQuery } from "@apollo/client";
-import { GET_USER } from "../queries";
+import { useQuery, useMutation } from "@apollo/client";
 
 export default function PostCard({ postData }) {
-  const [id, setId] = useState(undefined);
-  const navigate = useNavigate();
   const { currentUser } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const [isPossibleSeller, setIsPossibleSeller] = useState(false);
-  useEffect(() => {
-    if (postData) {
-      setIsPossibleSeller(
-        postData &&
-          postData.possible_sellers
-            .map((seller) => {
-              return seller._id;
-            })
-            .includes(currentUser && currentUser.uid)
-      );
-    }
-  }, [postData]);
-
   const [hasFavorited, setHasFavorited] = useState(false);
+
   const {
     data: userData,
     loading: userLoading,
     error: userError,
-  } = useQuery(GET_USER_FOR_FAVORITE, {
-    variables: { id: currentUser ? currentUser.uid : "" },
+  } = useQuery(GET_USER, {
+    variables: { id: currentUser?.uid },
     fetchPolicy: "cache-and-network",
   });
-  const [removeFavorite, { removeData, removeLoading, removeError }] =
-    useMutation(REMOVE_FAVORITE_POST_FROM_USER, {
-      refetchQueries: [GET_USER, "getUserById"],
-    });
+  const [addPossibleSeller] = useMutation(ADD_POSSIBLE_SELLER, {
+    onCompleted: () => {
+      setIsPossibleSeller(true);
+      alert(
+        "Congrats! You're a candidate seller now!\n\nFeel free to contact the buyer for further information."
+      );
+    },
+    refetchQueries: [
+      {
+        query: GET_USER,
+        variables: { id: currentUser?.uid },
+      },
+    ],
+  });
 
-  const [addPossibleSeller] = useMutation(ADD_POSSIBLE_SELLER);
-  const [removePossibleSeller] = useMutation(REMOVE_POSSIBLE_SELLER);
+  const [removePossibleSeller] = useMutation(REMOVE_POSSIBLE_SELLER, {
+    onCompleted: () => {
+      setIsPossibleSeller(false);
+      alert("You're no longer a seller candidate...");
+    },
+    refetchQueries: [
+      {
+        query: GET_USER,
+        variables: { id: currentUser?.uid },
+      },
+    ],
+  });
+  // }
 
-  const [addFavorite, { addData, addLoading, addError }] = useMutation(
-    ADD_FAVORITE_POST_TO_USER,
-    {
-      refetchQueries: [
-        {
-          query: GET_USER,
-          variables: { _id: currentUser ? currentUser.uid : "" },
-        },
-      ],
-    }
-  );
+  const baseUrl = "/post/";
+
+  const [removeFavorite] = useMutation(REMOVE_FAVORITE_POST_FROM_USER, {
+    // refetchQueries: [GET_USER, "getUserById"],
+    onCompleted: () => {
+      setHasFavorited(false);
+    },
+  });
+
+  const [addFavorite] = useMutation(ADD_FAVORITE_POST_TO_USER, {
+    // refetchQueries: [
+    //   {
+    //     query: GET_USER,
+    //     variables: { _id: currentUser ? currentUser.uid : "" },
+    //   },
+    // ],
+    onCompleted: () => {
+      setHasFavorited(true);
+    },
+  });
 
   useEffect(() => {
-    // console.log(userData?.getUserById?.favorite_post);
-    // console.log(postData);
-    if (!userLoading) {
-      // console.log(userData?.getUserById.favorite_post);
-
-      if (userData?.getUserById?.favorite_post?.includes(postData._id)) {
-        setHasFavorited(true);
-      } else {
-        setHasFavorited(false);
+    if (currentUser && postData && postData.possible_sellers) {
+      let isCandidate = postData.possible_sellers.filter((seller) => {
+        return seller._id == currentUser.uid;
+      });
+      if (isCandidate?.length > 0) {
+        setIsPossibleSeller(true);
       }
     }
-  }, [userLoading, userData, userError]);
+  }, [currentUser, postData]);
+
+  useEffect(() => {
+    if (currentUser && userData) {
+      let fav = userData.getUserById.favorite_posts.filter((post) => {
+        return post._id == postData._id;
+      });
+      if (fav.length > 0) {
+        setHasFavorited(true);
+      }
+    }
+  }, [userData]);
 
   function handleFavorite() {
     try {
-      if (!currentUser || !currentUser.uid) {
+      if (!currentUser) {
         alert("You need to login to favorite this product!");
         return;
       }
@@ -98,102 +122,103 @@ export default function PostCard({ postData }) {
         removeFavorite({
           variables: { id: currentUser.uid, postId: postData._id },
         });
-        console.log(false);
-        setHasFavorited(false);
       } else {
         addFavorite({
           variables: { id: currentUser.uid, postId: postData._id },
         });
-        setHasFavorited(true);
       }
     } catch (error) {
-      console.log(error.message);
+      alert(error.message);
     }
   }
-  return (
-    <Grid item>
-      <Card sx={{ width: 300, height: "100%" }}>
-        <Link
-          component="button"
-          sx={{
-            textDecoration: "none",
-          }}
-          onClick={() => navigate(`/post/${postData && postData._id}`)}
-        >
-          <CardHeader
-            titleTypographyProps={{ fontWeight: "bold" }}
-            title={postData && postData.item}
-          ></CardHeader>
-        </Link>
 
-        <CardContent>
-          <p>Price: {postData && postData.price.toFixed(2)}</p>
-          <p>Condition: {postData && postData.condition}</p>
+  if (postData) {
+    return (
+      <Grid item>
+        <Card sx={{ width: 300, height: "100%" }}>
+          <Link
+            component="button"
+            sx={{
+              textDecoration: "none",
+            }}
+            onClick={() => navigate(baseUrl + postData._id)}
+          >
+            <CardHeader
+              titleTypographyProps={{ fontWeight: "bold" }}
+              title={postData.name}
+            ></CardHeader>
+          </Link>
 
-          {postData && currentUser && (
-            <div>
-              {postData.status !== "completed" &&
-              postData.buyer_id === currentUser.uid ? (
-                <EditPost postData={postData} />
-              ) : null}
+          <CardContent>
+            <p>Price: {postData.price.toFixed(2)}</p>
+            <p>
+              Condition:{" "}
+              {postData.condition == "brand new"
+                ? "Brand New"
+                : postData.condition == "like new"
+                ? "Like New"
+                : postData.condition == "gently used"
+                ? "Gently Used"
+                : "Functional"}
+            </p>
 
-              {postData.status === "completed" &&
-              (postData.buyer_id === currentUser.uid ||
-                postData.seller_id === currentUser.uid) ? (
-                <Comment data={postData} />
-              ) : null}
-
-              {postData.status === "completed" &&
-              postData.seller_id === currentUser.uid ? (
-                <IconButton sx={{ float: "right" }} onClick={handleFavorite}>
-                  {hasFavorited ? (
-                    <FavoriteIcon sx={{ color: "#e91e63" }} />
-                  ) : (
-                    <FavoriteBorderIcon />
+            {currentUser && (
+              <div>
+                {currentUser.uid == postData.buyer._id &&
+                  postData.status == "active" && (
+                    <EditPost postData={postData} />
                   )}
-                </IconButton>
-              ) : null}
 
-              {postData.status == "active" &&
-              postData.buyer_id !== currentUser.uid ? (
-                <>
-                  {postData.status === "completed" ? (
-                    <Comment data={postData} />
-                  ) : (
+                {currentUser.uid == postData.buyer._id &&
+                  postData.status == "inactive" && (
+                    <EditPost postData={postData} />
+                  )}
+
+                {currentUser.uid == postData.buyer._id &&
+                  postData.status == "pending" && (
+                    <p>
+                      Waiting for confirmation from {postData.seller.firstname}
+                    </p>
+                  )}
+                {currentUser.uid == postData.buyer._id &&
+                  postData.status == "rejected" && (
+                    <>
+                      <p>Rejected by {postData.seller.firstname}.</p>
+                      {/* <EditPost postData={postData} /> */}
+                    </>
+                  )}
+                {currentUser.uid == postData.buyer._id &&
+                  postData.status == "completed" && <Comment data={postData} />}
+
+                {currentUser.uid != postData.buyer._id &&
+                  postData.status == "active" && (
                     <>
                       <Button
                         size="small"
                         variant="contained"
                         color="inherit"
                         onClick={async () => {
-                          if (currentUser.uid) {
-                            socket.emit("join room", {
-                              room: postData.buyer_id,
-                              user: currentUser.uid,
-                            });
-                          }
+                          socket.emit("join room", {
+                            room: postData.buyer._id,
+                            user: currentUser.uid,
+                          });
                         }}
+                        sx={{ fontWeight: "bold" }}
                       >
                         Chat
                       </Button>
-
                       {isPossibleSeller ? (
                         <Button
                           size="small"
                           variant="contained"
                           color="inherit"
                           onClick={() => {
-                            if (currentUser.uid) {
-                              removePossibleSeller({
-                                variables: {
-                                  id: postData._id,
-                                  sellerId: currentUser.uid,
-                                },
-                              });
-                              // setIsPossibleBuyer(false);
-
-                              alert("You're no longer a potential Seller ...");
-                            }
+                            removePossibleSeller({
+                              variables: {
+                                id: postData._id,
+                                sellerId: currentUser.uid,
+                              },
+                            });
                           }}
                           sx={{ fontWeight: "bold", marginLeft: 2 }}
                         >
@@ -205,52 +230,195 @@ export default function PostCard({ postData }) {
                           variant="contained"
                           color="inherit"
                           onClick={() => {
-                            if (currentUser.uid) {
-                              addPossibleSeller({
-                                variables: {
-                                  id: postData._id,
-                                  sellerId: currentUser.uid,
-                                },
-                              });
-
-                              if (!hasFavorited) {
-                                addFavorite({
-                                  variables: {
-                                    postId: postData._id,
-                                    id: currentUser.uid,
-                                  },
-                                });
-                                setHasFavorited(true);
-                              }
-
-                              alert(
-                                "You're a potential seller now!\n\nFeel free to contact the buyer for further information."
-                              );
-                            }
+                            addPossibleSeller({
+                              variables: {
+                                id: postData._id,
+                                sellerId: currentUser.uid,
+                              },
+                            });
                           }}
                           sx={{ fontWeight: "bold", marginLeft: 2 }}
                         >
                           Sell
                         </Button>
                       )}
+                      <IconButton
+                        sx={{ float: "right", justifyContent: "center" }}
+                        onClick={handleFavorite}
+                      >
+                        {hasFavorited ? (
+                          <FavoriteIcon sx={{ color: "#e91e63" }} />
+                        ) : (
+                          <FavoriteBorderIcon />
+                        )}
+                      </IconButton>
+                    </>
+                  )}
+                {currentUser.uid != postData.buyer._id &&
+                  postData.status == "inactive" && (
+                    <>
+                      <IconButton
+                        sx={{ float: "right", justifyContent: "center" }}
+                        onClick={handleFavorite}
+                      >
+                        {hasFavorited ? (
+                          <FavoriteIcon sx={{ color: "#e91e63" }} />
+                        ) : (
+                          <FavoriteBorderIcon />
+                        )}
+                      </IconButton>
+
+                      {isPossibleSeller && (
+                        <Button
+                          size="small"
+                          variant="contained"
+                          color="inherit"
+                          onClick={() => {
+                            removePossibleSeller({
+                              variables: {
+                                id: postData._id,
+                                sellerId: currentUser.uid,
+                              },
+                            });
+                          }}
+                          sx={{ fontWeight: "bold", marginLeft: 2 }}
+                        >
+                          Cancel
+                        </Button>
+                      )}
+                    </>
+                  )}
+                {currentUser.uid != postData.buyer._id &&
+                  postData.seller &&
+                  currentUser.uid != postData.seller._id &&
+                  (postData.status == "pending" ||
+                    postData.status == "rejected") && (
+                    <>
+                      {isPossibleSeller ? (
+                        <Button
+                          size="small"
+                          variant="contained"
+                          color="inherit"
+                          onClick={() => {
+                            removePossibleSeller({
+                              variables: {
+                                id: postData._id,
+                                sellerId: currentUser.uid,
+                              },
+                            });
+                          }}
+                          sx={{ fontWeight: "bold", marginLeft: 2 }}
+                        >
+                          Cancel
+                        </Button>
+                      ) : (
+                        <Button
+                          size="small"
+                          variant="contained"
+                          color="inherit"
+                          onClick={() => {
+                            addPossibleSeller({
+                              variables: {
+                                id: postData._id,
+                                sellerId: currentUser.uid,
+                              },
+                            });
+                          }}
+                          sx={{ fontWeight: "bold", marginLeft: 2 }}
+                        >
+                          Sell
+                        </Button>
+                      )}
+                      <IconButton
+                        sx={{ float: "right", justifyContent: "center" }}
+                        onClick={handleFavorite}
+                      >
+                        {hasFavorited ? (
+                          <FavoriteIcon sx={{ color: "#e91e63" }} />
+                        ) : (
+                          <FavoriteBorderIcon />
+                        )}
+                      </IconButton>
+                    </>
+                  )}
+                {postData.status == "pending" &&
+                  postData.seller &&
+                  currentUser.uid == postData.seller._id && (
+                    <>
+                      {/* <Button
+                        size="small"
+                        variant="contained"
+                        color="inherit"
+                        sx={{ fontWeight: "bold", marginLeft: 2 }}
+                        
+                      >
+                        Confirm
+                      </Button>
+                      <Button
+                        size="small"
+                        variant="contained"
+                        color="inherit"
+                        sx={{ fontWeight: "bold", marginLeft: 2 }}
+                      >
+                        Reject
+                      </Button> */}
+                      <Typography variant="body1">
+                        Await your confirmation
+                      </Typography>
+
+                      <IconButton
+                        sx={{ float: "right", justifyContent: "center" }}
+                        onClick={handleFavorite}
+                      >
+                        {hasFavorited ? (
+                          <FavoriteIcon sx={{ color: "#e91e63" }} />
+                        ) : (
+                          <FavoriteBorderIcon />
+                        )}
+                      </IconButton>
                     </>
                   )}
 
-                  <IconButton sx={{ float: "right" }} onClick={handleFavorite}>
+                {postData.status == "rejected" &&
+                  postData.seller &&
+                  currentUser.uid == postData.seller._id && (
+                    <>
+                      You have rejetced this transaction
+                      <IconButton
+                        sx={{ float: "right", justifyContent: "center" }}
+                        onClick={handleFavorite}
+                      >
+                        {hasFavorited ? (
+                          <FavoriteIcon sx={{ color: "#e91e63" }} />
+                        ) : (
+                          <FavoriteBorderIcon />
+                        )}
+                      </IconButton>
+                    </>
+                  )}
+
+                {postData.status == "completed" &&
+                  postData.seller &&
+                  currentUser.uid == postData.seller._id && (
+                    <Comment data={postData} />
+                  )}
+                {postData.status == "completed" && (
+                  <IconButton
+                    sx={{ float: "right", justifyContent: "center" }}
+                    onClick={handleFavorite}
+                  >
                     {hasFavorited ? (
                       <FavoriteIcon sx={{ color: "#e91e63" }} />
                     ) : (
                       <FavoriteBorderIcon />
                     )}
                   </IconButton>
-                </>
-              ) : (
-                <>{/* <p>(You're the Poster)</p> */}</>
-              )}
-            </div>
-          )}
-        </CardContent>
-      </Card>
-    </Grid>
-  );
+                )}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </Grid>
+    );
+  }
 }

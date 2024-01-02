@@ -2,7 +2,6 @@
 
 export const checkFirstNameAndLastName = (str, valStr) => {
   if (str === undefined) throw new Error(`${valStr} must provide a string`);
-  console.log(str);
   if (typeof str !== "string") throw new Error(`${valStr} must be a string`);
   if (str.trim().length == 0)
     throw new Error(`${valStr} should not be just space`);
@@ -55,7 +54,11 @@ export const HTMLDateToDateObject = (date) => {
 
 export const checkPassword = (password) => {
   password = password.toString().trim();
-  if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@.#$!%*?&^])[A-Za-z\d@.#$!%*?&]{6,}$/.test(password))
+  if (
+    !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@.#$!%*?&^])[A-Za-z\d@.#$!%*?&]{6,}$/.test(
+      password
+    )
+  )
     throw new Error(
       "At least one uppercase letter, one lowercase, one special symbol, one number and more than 6 characters"
     );
@@ -100,13 +103,17 @@ export const checkString = (str) => {
   return str;
 };
 
-export const checkStatus = (status) =>{
+export const checkStatus = (status) => {
   status = checkString(status);
-  if(status.toLowerCase() != "active" && status.toLowerCase() != "inactive" && status.toLowerCase() != "completed"){
+  if (
+    status.toLowerCase() != "active" &&
+    status.toLowerCase() != "inactive" &&
+    status.toLowerCase() != "completed"
+  ) {
     throw new Error("Invalid Status. It must be active, inactive or completed");
   }
   return status;
-}
+};
 
 export const checkCondition = (condition) => {
   if (!condition || condition.trim() == "") {

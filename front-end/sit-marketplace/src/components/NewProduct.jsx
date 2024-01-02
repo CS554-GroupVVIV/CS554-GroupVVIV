@@ -1,11 +1,9 @@
 import { useState, useRef, useContext } from "react";
-import React from "react";
 import { useNavigate } from "react-router-dom";
-
 import { useMutation } from "@apollo/client";
+import { AuthContext } from "../context/AuthContext";
 import { ADD_PRODUCT } from "../queries";
 import { uploadFileToS3 } from "../aws";
-import { AuthContext } from "../context/AuthContext";
 
 import {
   Button,
@@ -20,17 +18,16 @@ import {
   FormControl,
   Stack,
 } from "@mui/material";
-import { styled } from "@mui/material/styles";
 
 export default function SellForm() {
   const { currentUser } = useContext(AuthContext);
   let navigate = useNavigate();
+
   const nameRef = useRef(null);
   const priceRef = useRef(null);
   const conditionRef = useRef(null);
   const descriptionRef = useRef(null);
   const categoryRef = useRef(null);
-  const imageRef = useRef(null);
   const [name, setName] = useState("");
   const [category, setCategory] = useState("");
   const [image, setImage] = useState(null);
@@ -43,6 +40,8 @@ export default function SellForm() {
   const [descriptionError, setDescriptionError] = useState(false);
   const [categoryError, setCategoryError] = useState(false);
   const [imageError, setImageError] = useState(false);
+
+  const [submitting, setSubmitting] = useState(false);
 
   const [addProduct] = useMutation(ADD_PRODUCT, {
     onError: (e) => {
@@ -120,7 +119,7 @@ export default function SellForm() {
         setConditionError(true);
         return;
       }
-      setCondition(condition);
+      setCondition(conditionLower);
     },
 
     checkDescription: () => {
@@ -184,25 +183,9 @@ export default function SellForm() {
     },
   };
 
-  // const router = useRouter();
-  // const uploadImage = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const image: File | undefined = e.target.files?.[0];
-  //   if (!image) {
-  //     return;
-  //   }
-  //   if (image.size > 10000000) {
-  //     console.log("image size", image.size);
-  //     return;
-  //   }
-  //   if (!image.type.match(/image.*/)) {
-  //     console.log("image type", image.type);
-  //     return;
-  //   }
-  //   setImage(image);
-  // };
-
   const submit = async (e) => {
     e.preventDefault();
+    setSubmitting(true);
     helper.checkName();
     helper.checkPrice();
     helper.checkCondition();
@@ -210,6 +193,7 @@ export default function SellForm() {
     helper.checkCategory();
     if (image == null) {
       setImageError(true);
+      setSubmitting(false);
       return;
     }
     if (
@@ -220,43 +204,24 @@ export default function SellForm() {
       categoryError ||
       imageError
     ) {
-      // console.log(
-      //   "error",
-      //   nameError,
-      //   priceError,
-      //   conditionError,l
-      //   descriptionError,
-      //   categoryError
-      // );
+      setSubmitting(false);
       return;
     }
 
     let imageUrl = await uploadFileToS3(image, name);
 
-    await addProduct({
+    addProduct({
       variables: {
+        sellerId: currentUser.uid,
         name: name,
+        category: category,
         price: price,
         condition: condition,
         description: description,
-        category: category,
-        sellerId: currentUser.uid,
         image: imageUrl,
       },
     });
   };
-
-  const VisuallyHiddenInput = styled("input")({
-    clip: "rect(0 0 0 0)",
-    clipPath: "inset(50%)",
-    height: 1,
-    overflow: "hidden",
-    position: "absolute",
-    bottom: 0,
-    left: 0,
-    whiteSpace: "nowrap",
-    width: 1,
-  });
 
   return (
     <Container component="main" maxWidth="sm">
@@ -312,12 +277,12 @@ export default function SellForm() {
                     label="Category"
                     onBlur={helper.checkCategory}
                   >
-                    <MenuItem value={"Book"}>Book</MenuItem>
-                    <MenuItem value={"Clothing"}>Clothing</MenuItem>
-                    <MenuItem value={"Electronics"}>Electronics</MenuItem>
-                    <MenuItem value={"Furniture"}>Furniture</MenuItem>
-                    <MenuItem value={"Stationary"}>Stationary</MenuItem>
-                    <MenuItem value={"Other"}>Other</MenuItem>
+                    <MenuItem value={"book"}>Book</MenuItem>
+                    <MenuItem value={"clothing"}>Clothing</MenuItem>
+                    <MenuItem value={"electronics"}>Electronics</MenuItem>
+                    <MenuItem value={"furniture"}>Furniture</MenuItem>
+                    <MenuItem value={"stationary"}>Stationary</MenuItem>
+                    <MenuItem value={"other"}>Other</MenuItem>
                   </Select>
                 </FormControl>
               </div>
@@ -398,10 +363,10 @@ export default function SellForm() {
                     label="Condition"
                     onBlur={helper.checkCondition}
                   >
-                    <MenuItem value={"Brand New"}>Brand New</MenuItem>
-                    <MenuItem value={"Like New"}>Like New</MenuItem>
-                    <MenuItem value={"Gently Used"}>Gently Used</MenuItem>
-                    <MenuItem value={"Functional"}>Functional</MenuItem>
+                    <MenuItem value={"brand new"}>Brand New</MenuItem>
+                    <MenuItem value={"like new"}>Like New</MenuItem>
+                    <MenuItem value={"gently used"}>Gently Used</MenuItem>
+                    <MenuItem value={"functional"}>Functional</MenuItem>
                   </Select>
                 </FormControl>
               </div>
@@ -443,11 +408,17 @@ export default function SellForm() {
               type="button"
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
+              disabled={submitting}
               onClick={() => navigate("/products")}
             >
               Cancel
             </Button>
-            <Button type="submit" variant="contained" sx={{ mt: 3, mb: 2 }}>
+            <Button
+              type="submit"
+              disabled={submitting}
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+            >
               Save
             </Button>
           </Stack>

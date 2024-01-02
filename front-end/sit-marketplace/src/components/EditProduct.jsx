@@ -1,9 +1,8 @@
 import React, { useState, useRef, useContext } from "react";
-import { EDIT_PRODUCT } from "../queries";
 import { useMutation } from "@apollo/client";
-import { uploadFileToS3 } from "../aws";
 import { AuthContext } from "../context/AuthContext";
-
+import { EDIT_PRODUCT } from "../queries";
+import { uploadFileToS3 } from "../aws";
 import {
   Button,
   TextField,
@@ -25,7 +24,6 @@ import {
 const EditProduct = ({ productData }) => {
   const { currentUser } = useContext(AuthContext);
 
-  // const [image, setImage] = useState<File | undefined>(undefined);
   const [toggleEditForm, setToggleEditForm] = useState(false);
 
   const nameRef = useRef(null);
@@ -33,7 +31,6 @@ const EditProduct = ({ productData }) => {
   const conditionRef = useRef(null);
   const descriptionRef = useRef(null);
   const categoryRef = useRef(null);
-  const imageRef = useRef(null);
   const statusRef = useRef(null);
   const buyerRef = useRef(null);
 
@@ -43,7 +40,6 @@ const EditProduct = ({ productData }) => {
   const [price, setPrice] = useState(productData.price);
   const [condition, setCondition] = useState(productData.condition);
   const [description, setDescription] = useState(productData.description);
-
   const [status, setStatus] = useState(productData.status);
   const [buyer, setBuyer] = useState("");
   const [nameError, setNameError] = useState(false);
@@ -54,6 +50,8 @@ const EditProduct = ({ productData }) => {
   const [imageError, setImageError] = useState(false);
   const [statusError, setStatusError] = useState(false);
   const [buyerError, setBuyerError] = useState(false);
+
+  const [submitting, setSubmitting] = useState(false);
 
   const [editProduct] = useMutation(EDIT_PRODUCT, {
     onError: (e) => {
@@ -206,7 +204,7 @@ const EditProduct = ({ productData }) => {
       if (
         statusLower != "active" &&
         statusLower != "inactive" &&
-        statusLower != "completed"
+        statusLower != "pending"
       ) {
         setStatusError(true);
         return;
@@ -236,6 +234,7 @@ const EditProduct = ({ productData }) => {
 
   const editSubmit = async () => {
     try {
+      setSubmitting(true);
       helper.checkName();
       helper.checkCategory();
       helper.checkPrice();
@@ -251,11 +250,9 @@ const EditProduct = ({ productData }) => {
         imageError ||
         statusError
       ) {
+        setSubmitting(false);
         return;
       }
-
-      console.log(name);
-      console.log(category);
 
       if (
         name == productData.name &&
@@ -277,23 +274,22 @@ const EditProduct = ({ productData }) => {
 
       let variables = {
         id: productData._id,
-        name: name,
-        description: description,
         sellerId: currentUser.uid,
-        price: price,
+        name: name,
         category: category,
+        price: price,
         condition: condition,
+        description: description,
         status: status,
         image: imageUrl,
       };
 
-      if (status == "completed") {
+      if (status == "pending") {
         variables.buyerId = buyer;
       }
-      console.log("variables", variables);
       await editProduct({ variables: variables });
     } catch (err) {
-      alert;
+      alert(err);
     }
   };
 
@@ -352,7 +348,11 @@ const EditProduct = ({ productData }) => {
                     <Select
                       inputRef={categoryRef}
                       label="Category"
-                      defaultValue={category}
+                      // defaultValue={category}
+                      value={category}
+                      onChange={(e) => {
+                        setCategory(e.target.value);
+                      }}
                       onBlur={helper.checkCategory}
                     >
                       <MenuItem value={"book"}>Book</MenuItem>
@@ -438,7 +438,11 @@ const EditProduct = ({ productData }) => {
                     </InputLabel>
                     <Select
                       inputRef={conditionRef}
-                      defaultValue={condition}
+                      // defaultValue={condition}
+                      value={condition}
+                      onChange={(e) => {
+                        setCondition(e.target.value);
+                      }}
                       label="Condition"
                       onBlur={helper.checkCondition}
                     >
@@ -488,13 +492,20 @@ const EditProduct = ({ productData }) => {
                     </InputLabel>
                     <Select
                       inputRef={statusRef}
-                      defaultValue={status}
+                      // defaultValue={status}
+                      value={status}
+                      onChange={(e) => {
+                        setStatus(e.target.value);
+                      }}
                       label="Status"
                       onBlur={helper.checkStatus}
                     >
                       <MenuItem value={"active"}>Active</MenuItem>
                       <MenuItem value={"inactive"}>Retrieve</MenuItem>
-                      <MenuItem value={"completed"}>Completed</MenuItem>
+                      <MenuItem value={"rejected"} disabled>
+                        Rejected
+                      </MenuItem>
+                      <MenuItem value={"pending"}>In Progress</MenuItem>
                     </Select>
                   </FormControl>
                 </div>
@@ -509,7 +520,7 @@ const EditProduct = ({ productData }) => {
                 )}
               </Grid>
 
-              {status == "completed" && (
+              {status == "pending" && (
                 <Grid item xs={12}>
                   <div>
                     <FormControl sx={{ minWidth: 200 }} required>

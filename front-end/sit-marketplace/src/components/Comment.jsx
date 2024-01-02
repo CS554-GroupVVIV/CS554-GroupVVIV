@@ -10,10 +10,10 @@ const Comment = ({ data }) => {
   const { currentUser } = useContext(AuthContext);
 
   let user_id = undefined;
-  if (data.seller_id === currentUser.uid) {
-    user_id = data.buyer_id;
-  } else if (data.buyer_id === currentUser.uid) {
-    user_id = data.seller_id;
+  if (data.seller._id === currentUser.uid) {
+    user_id = data.buyer._id;
+  } else if (data.buyer._id === currentUser.uid) {
+    user_id = data.seller._id;
   } else {
     throw "You are not authorized to comment";
   }
