@@ -71,83 +71,6 @@ function UserInfo({ data }) {
   };
 
   return (
-    // <div>
-    //   <form onSubmit={handleEdit}>
-    //     <div className="form-group">
-    //       <label>
-    //         First Name:
-    //         <br />
-    //         <input
-    //           className="form-control"
-    //           required
-    //           name="displayFirstName"
-    //           type="text"
-    //           placeholder="First Name"
-    //           value={firstname}
-    //           onChange={(e) => setFirstname(e.target.value)}
-    //         />
-    //       </label>
-    //     </div>
-    //     <div className="form-group">
-    //       <label>
-    //         Last Name:
-    //         <br />
-    //         <input
-    //           className="form-control"
-    //           required
-    //           name="displayLastName"
-    //           type="text"
-    //           placeholder="Last Name"
-    //           value={lastname}
-    //           onChange={(e) => setLastname(e.target.value)}
-    //         />
-    //       </label>
-    //     </div>
-    //     <div className="form-group">
-    //       <label>
-    //         Email:
-    //         <br />
-    //         <input
-    //           disabled
-    //           className="form-control"
-    //           required
-    //           name="email"
-    //           type="email"
-    //           placeholder="Email"
-    //           value={email}
-    //           onChange={(e) => setEmail(e.target.value)}
-    //         />
-    //       </label>
-    //     </div>
-    //     <div className="form-group">
-    //       <label>
-    //         Verified Password:
-    //         <br />
-    //         <input
-    //           className="form-control"
-    //           required
-    //           name="password"
-    //           type="password"
-    //           placeholder="Password"
-    //           onChange={(e) => setPassword(e.target.value)}
-    //         />
-    //       </label>
-    //     </div>
-    //     <br />
-    //     <button
-    //       className="button"
-    //       id="submitButton"
-    //       name="submitButton"
-    //       type="submit"
-    //     >
-    //       Update
-    //     </button>
-
-    //     <button className="forgotPassword" onClick={passwordReset}>
-    //       Reset Password
-    //     </button>
-    //   </form>
-    // </div>
     <Box component="form" noValidate onSubmit={handleEdit} sx={{ mt: 1 }}>
       <TextField
         margin="normal"
@@ -209,7 +132,8 @@ function UserInfo({ data }) {
           Update
         </Button>
         <Button
-          type="submit"
+          type="button"
+          onClick={passwordReset}
           fullWidth
           variant="contained"
           // sx={{ mt: 3, mb: 2 }}

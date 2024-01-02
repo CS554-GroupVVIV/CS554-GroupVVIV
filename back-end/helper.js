@@ -143,7 +143,6 @@ const checkDescription = (description) => {
 // };
 
 const checkUrl = (url) => {
-  console.log(url);
   if (!url) throw new Error("You must provide a URL to search for");
   if (typeof url !== "string") throw new Error("URL must be a string");
   if (url.trim().length === 0)
@@ -235,6 +234,7 @@ const checkStatus = (status) => {
   if (
     status.toLowerCase() != "active" &&
     status.toLowerCase() != "inactive" &&
+    status.toLowerCase() != "pending" &&
     status.toLowerCase() != "completed"
   ) {
     throw new Error("Invalid Status");

@@ -46,15 +46,21 @@ console.log(`🚀 Server ready at ${url}`);
 // socket io:
 
 // global list of available room
-const rooms = {};
+
+const globalRoom = [];
 
 io.on("connection", (socket) => {
+  const rooms = {};
+
   console.log("User connected", socket.id);
 
   // emit the initial list of available rooms
   socket.emit("rooms", rooms);
 
   socket.on("join room", ({ room, user }) => {
+    if (room == user) {
+      return;
+    }
     if (socket.room) {
       socket.leave(socket.room);
       rooms[socket.room]--;
@@ -74,7 +80,7 @@ io.on("connection", (socket) => {
     // room doesn't exist
     if (!rooms[room]) {
       rooms[room] = {
-        admin: socket.id,
+        // admin: socket.id,
         users: {},
       };
     }
@@ -84,7 +90,7 @@ io.on("connection", (socket) => {
       username,
     };
 
-    io.emit("rooms", rooms);
+    socket.emit("rooms", rooms);
     console.log(`User ${socket.id} joined room ${room} as ${username}`);
 
     socket.emit("join room", { room, username });
@@ -99,7 +105,7 @@ io.on("connection", (socket) => {
       if (!rooms[socket.room]) {
         delete rooms[socket.room];
       }
-      io.emit("rooms", rooms);
+      socket.emit("rooms", rooms);
       console.log(`User ${socket.id} left room ${socket.room}`);
       socket.room = null;
     }
@@ -112,14 +118,27 @@ io.on("connection", (socket) => {
       if (rooms[socket.room] === 0) {
         delete rooms[socket.room];
       }
-      io.emit("rooms", rooms);
+      socket.emit("rooms", rooms);
     }
+
     console.log("User disconnected:", socket.id);
   });
 
   socket.on("message", ({ room, sender, message, time }) => {
-    console.log(`${sender} sent "${message}" to room: ${room} at ${time}`);
-    io.to(room).emit("message", { sender, message, time });
+    let roomId;
+    if (room._id < sender._id) {
+      roomId = room._id + "+" + sender._id;
+    } else {
+      roomId = sender._id + "+" + room._id;
+    }
+    if (!globalRoom.includes[roomId]) {
+      globalRoom.push(roomId);
+    }
+    io.emit("global room", globalRoom);
+    console.log(`${sender} sent "${message}" to room: ${room._id} at ${time}`);
+    io.to(room._id).emit("message", { room, sender, message, time });
+    io.to(sender._id).emit("message", { sender, room, message, time });
+
     // Place to write into mogodb
   });
 });

@@ -4,7 +4,23 @@ export const GET_PRODUCTS = gql`
   query Products {
     products {
       _id
-      buyer_id
+      buyer {
+        _id
+        firstname
+        lastname
+        rating
+        comments {
+          _id
+          commenter {
+            _id
+            firstname
+            lastname
+          }
+          rating
+          comment
+          date
+        }
+      }
       category
       condition
       date
@@ -12,12 +28,40 @@ export const GET_PRODUCTS = gql`
       image
       name
       price
-      seller_id
+      seller {
+        _id
+        firstname
+        lastname
+        rating
+        comments {
+          _id
+          commenter {
+            _id
+            firstname
+            lastname
+          }
+          rating
+          comment
+          date
+        }
+      }
       status
       possible_buyers {
         _id
         firstname
         lastname
+        rating
+        comments {
+          _id
+          commenter {
+            _id
+            firstname
+            lastname
+          }
+          rating
+          comment
+          date
+        }
       }
       completion_date
     }
@@ -28,9 +72,41 @@ export const GET_POSTS = gql`
   query {
     posts {
       _id
-      buyer_id
-      seller_id
-      item
+      buyer {
+        _id
+        firstname
+        lastname
+        rating
+        comments {
+          _id
+          commenter {
+            _id
+            firstname
+            lastname
+          }
+          rating
+          comment
+          date
+        }
+      }
+      seller {
+        _id
+        firstname
+        lastname
+        rating
+        comments {
+          _id
+          commenter {
+            _id
+            firstname
+            lastname
+          }
+          rating
+          comment
+          date
+        }
+      }
+      name
       category
       date
       price
@@ -41,6 +117,18 @@ export const GET_POSTS = gql`
         _id
         firstname
         lastname
+        rating
+        comments {
+          _id
+          commenter {
+            _id
+            firstname
+            lastname
+          }
+          rating
+          comment
+          date
+        }
       }
       completion_date
     }
@@ -56,25 +144,126 @@ export const GET_USER = gql`
       lastname
       comments {
         _id
+        commenter {
+          _id
+          firstname
+          lastname
+        }
         rating
-        comment_id
         comment
-        firstname
         date
       }
       rating
-      favorite
-      favorite_post
-    }
-  }
-`;
-
-export const GET_USER_FOR_FAVORITE = gql`
-  query Query($id: String!) {
-    getUserById(_id: $id) {
-      _id
-      favorite
-      favorite_post
+      favorite_products {
+        _id
+        buyer {
+          _id
+        }
+        seller {
+          _id
+        }
+        possible_buyers {
+          _id
+        }
+        category
+        condition
+        date
+        description
+        image
+        name
+        price
+        status
+        completion_date
+      }
+      favorite_posts {
+        _id
+        buyer {
+          _id
+        }
+        seller {
+          _id
+        }
+        possible_sellers {
+          _id
+        }
+        category
+        condition
+        date
+        description
+        name
+        price
+        status
+        completion_date
+      }
+      possible_buyer {
+        _id
+        category
+        condition
+        date
+        description
+        image
+        buyer {
+          _id
+          firstname
+        }
+        name
+        price
+        seller {
+          _id
+          firstname
+          lastname
+          rating
+          comments {
+            _id
+            commenter {
+              _id
+              firstname
+              lastname
+            }
+            rating
+            comment
+            date
+          }
+        }
+        possible_buyers {
+          _id
+        }
+        status
+      }
+      possible_seller {
+        _id
+        category
+        condition
+        date
+        description
+        name
+        price
+        possible_sellers {
+          _id
+        }
+        buyer {
+          _id
+          firstname
+        }
+        seller {
+          _id
+          firstname
+          lastname
+          rating
+          comments {
+            _id
+            commenter {
+              _id
+              firstname
+              lastname
+            }
+            rating
+            comment
+            date
+          }
+        }
+        status
+      }
     }
   }
 `;
@@ -94,10 +283,16 @@ export const GET_CHAT_BY_PARTICIPANTS = gql`
   query ($participants: [String!]!) {
     getChatByParticipants(participants: $participants) {
       _id
-      participants
+      participants {
+        _id
+        firstname
+      }
       messages {
         message
-        sender
+        sender {
+          _id
+          firstname
+        }
         time
       }
     }
@@ -108,9 +303,41 @@ export const GET_POSTS_BY_SELLER = gql`
   query ($_id: String!) {
     getPostBySeller(_id: $_id) {
       _id
-      buyer_id
-      seller_id
-      item
+      buyer {
+        _id
+        firstname
+        lastname
+        rating
+        comments {
+          _id
+          commenter {
+            _id
+            firstname
+            lastname
+          }
+          rating
+          comment
+          date
+        }
+      }
+      seller {
+        _id
+        firstname
+        lastname
+        rating
+        comments {
+          _id
+          commenter {
+            _id
+            firstname
+            lastname
+          }
+          rating
+          comment
+          date
+        }
+      }
+      name
       category
       price
       condition
@@ -131,9 +358,41 @@ export const GET_POSTS_BY_BUYER = gql`
   query ($_id: String!) {
     getPostByBuyer(_id: $_id) {
       _id
-      buyer_id
-      seller_id
-      item
+      buyer {
+        _id
+        firstname
+        lastname
+        rating
+        comments {
+          _id
+          commenter {
+            _id
+            firstname
+            lastname
+          }
+          rating
+          comment
+          date
+        }
+      }
+      seller {
+        _id
+        firstname
+        lastname
+        rating
+        comments {
+          _id
+          commenter {
+            _id
+            firstname
+            lastname
+          }
+          rating
+          comment
+          date
+        }
+      }
+      name
       category
       price
       condition
@@ -154,7 +413,23 @@ export const GET_PRODUCTS_BY_SELLER = gql`
   query GetProductBySeller($id: String!) {
     getProductBySeller(_id: $id) {
       _id
-      buyer_id
+      buyer {
+        _id
+        firstname
+        lastname
+        rating
+        comments {
+          _id
+          commenter {
+            _id
+            firstname
+            lastname
+          }
+          rating
+          comment
+          date
+        }
+      }
       category
       condition
       date
@@ -162,12 +437,40 @@ export const GET_PRODUCTS_BY_SELLER = gql`
       image
       name
       price
-      seller_id
+      seller {
+        _id
+        firstname
+        lastname
+        rating
+        comments {
+          _id
+          commenter {
+            _id
+            firstname
+            lastname
+          }
+          rating
+          comment
+          date
+        }
+      }
       status
       possible_buyers {
         _id
         firstname
         lastname
+        rating
+        comments {
+          _id
+          commenter {
+            _id
+            firstname
+            lastname
+          }
+          rating
+          comment
+          date
+        }
       }
       completion_date
     }
@@ -178,7 +481,23 @@ export const GET_PRODUCTS_BY_BUYER = gql`
   query GetProductByBuyer($id: String!) {
     getProductByBuyer(_id: $id) {
       _id
-      buyer_id
+      buyer {
+        _id
+        firstname
+        lastname
+        rating
+        comments {
+          _id
+          commenter {
+            _id
+            firstname
+            lastname
+          }
+          rating
+          comment
+          date
+        }
+      }
       category
       condition
       date
@@ -186,12 +505,40 @@ export const GET_PRODUCTS_BY_BUYER = gql`
       image
       name
       price
-      seller_id
+      seller {
+        _id
+        firstname
+        lastname
+        rating
+        comments {
+          _id
+          commenter {
+            _id
+            firstname
+            lastname
+          }
+          rating
+          comment
+          date
+        }
+      }
       status
       possible_buyers {
         _id
         firstname
         lastname
+        rating
+        comments {
+          _id
+          commenter {
+            _id
+            firstname
+            lastname
+          }
+          rating
+          comment
+          date
+        }
       }
       completion_date
     }
@@ -202,7 +549,23 @@ export const GET_PRODUCTS_BY_STATUS = gql`
   query GetProductsByStatus($status: String!) {
     getProductsByStatus(status: $status) {
       _id
-      buyer_id
+      buyer {
+        _id
+        firstname
+        lastname
+        rating
+        comments {
+          _id
+          commenter {
+            _id
+            firstname
+            lastname
+          }
+          rating
+          comment
+          date
+        }
+      }
       category
       condition
       date
@@ -210,12 +573,40 @@ export const GET_PRODUCTS_BY_STATUS = gql`
       image
       name
       price
-      seller_id
+      seller {
+        _id
+        firstname
+        lastname
+        rating
+        comments {
+          _id
+          commenter {
+            _id
+            firstname
+            lastname
+          }
+          rating
+          comment
+          date
+        }
+      }
       status
       possible_buyers {
         _id
         firstname
         lastname
+        rating
+        comments {
+          _id
+          commenter {
+            _id
+            firstname
+            lastname
+          }
+          rating
+          comment
+          date
+        }
       }
       completion_date
     }
@@ -231,11 +622,14 @@ export const GET_COMMENT = gql`
       lastname
       comments {
         _id
+        commenter {
+          _id
+          firstname
+          lastname
+        }
         rating
-        comment_id
         comment
         date
-        firstname
       }
       rating
     }
@@ -262,7 +656,23 @@ export const ADD_PRODUCT = gql`
       category: $category
     ) {
       _id
-      buyer_id
+      buyer {
+        _id
+        firstname
+        lastname
+        rating
+        comments {
+          _id
+          commenter {
+            _id
+            firstname
+            lastname
+          }
+          rating
+          comment
+          date
+        }
+      }
       category
       condition
       date
@@ -270,12 +680,40 @@ export const ADD_PRODUCT = gql`
       image
       name
       price
-      seller_id
+      seller {
+        _id
+        firstname
+        lastname
+        rating
+        comments {
+          _id
+          commenter {
+            _id
+            firstname
+            lastname
+          }
+          rating
+          comment
+          date
+        }
+      }
       status
       possible_buyers {
         _id
         firstname
         lastname
+        rating
+        comments {
+          _id
+          commenter {
+            _id
+            firstname
+            lastname
+          }
+          rating
+          comment
+          date
+        }
       }
       completion_date
     }
@@ -308,7 +746,23 @@ export const EDIT_PRODUCT = gql`
       category: $category
     ) {
       _id
-      buyer_id
+      buyer {
+        _id
+        firstname
+        lastname
+        rating
+        comments {
+          _id
+          commenter {
+            _id
+            firstname
+            lastname
+          }
+          rating
+          comment
+          date
+        }
+      }
       category
       condition
       date
@@ -319,9 +773,37 @@ export const EDIT_PRODUCT = gql`
         _id
         firstname
         lastname
+        rating
+        comments {
+          _id
+          commenter {
+            _id
+            firstname
+            lastname
+          }
+          rating
+          comment
+          date
+        }
       }
       price
-      seller_id
+      seller {
+        _id
+        firstname
+        lastname
+        rating
+        comments {
+          _id
+          commenter {
+            _id
+            firstname
+            lastname
+          }
+          rating
+          comment
+          date
+        }
+      }
       status
       completion_date
     }
@@ -331,7 +813,7 @@ export const EDIT_PRODUCT = gql`
 export const ADD_POST = gql`
   mutation (
     $buyer_id: String!
-    $item: String!
+    $name: String!
     $category: String!
     $price: Float!
     $condition: String!
@@ -339,16 +821,48 @@ export const ADD_POST = gql`
   ) {
     addPost(
       buyer_id: $buyer_id
-      item: $item
+      name: $name
       category: $category
       price: $price
       condition: $condition
       description: $description
     ) {
       _id
-      buyer_id
-      seller_id
-      item
+      buyer {
+        _id
+        firstname
+        lastname
+        rating
+        comments {
+          _id
+          commenter {
+            _id
+            firstname
+            lastname
+          }
+          rating
+          comment
+          date
+        }
+      }
+      seller {
+        _id
+        firstname
+        lastname
+        rating
+        comments {
+          _id
+          commenter {
+            _id
+            firstname
+            lastname
+          }
+          rating
+          comment
+          date
+        }
+      }
+      name
       category
       price
       condition
@@ -359,6 +873,18 @@ export const ADD_POST = gql`
         _id
         firstname
         lastname
+        rating
+        comments {
+          _id
+          commenter {
+            _id
+            firstname
+            lastname
+          }
+          rating
+          comment
+          date
+        }
       }
       completion_date
     }
@@ -370,7 +896,7 @@ export const EDIT_POST = gql`
     $id: String!
     $buyer_id: String!
     $seller_id: String
-    $item: String!
+    $name: String!
     $category: String!
     $price: Float!
     $condition: String!
@@ -381,7 +907,7 @@ export const EDIT_POST = gql`
       _id: $id
       buyer_id: $buyer_id
       seller_id: $seller_id
-      item: $item
+      name: $name
       category: $category
       price: $price
       condition: $condition
@@ -389,9 +915,41 @@ export const EDIT_POST = gql`
       status: $status
     ) {
       _id
-      buyer_id
-      seller_id
-      item
+      buyer {
+        _id
+        firstname
+        lastname
+        rating
+        comments {
+          _id
+          commenter {
+            _id
+            firstname
+            lastname
+          }
+          rating
+          comment
+          date
+        }
+      }
+      seller {
+        _id
+        firstname
+        lastname
+        rating
+        comments {
+          _id
+          commenter {
+            _id
+            firstname
+            lastname
+          }
+          rating
+          comment
+          date
+        }
+      }
+      name
       category
       price
       condition
@@ -402,6 +960,18 @@ export const EDIT_POST = gql`
         _id
         firstname
         lastname
+        rating
+        comments {
+          _id
+          commenter {
+            _id
+            firstname
+            lastname
+          }
+          rating
+          comment
+          date
+        }
       }
       completion_date
     }
@@ -411,13 +981,21 @@ export const EDIT_POST = gql`
 export const ADD_MESSAGE = gql`
   mutation (
     $chatId: String!
-    $sender: ID!
+    $sender_id: String!
     $message: String!
     $time: DateTime!
   ) {
-    addMessage(_id: $chatId, sender: $sender, message: $message, time: $time) {
+    addMessage(
+      _id: $chatId
+      sender_id: $sender_id
+      message: $message
+      time: $time
+    ) {
       message
-      sender
+      sender {
+        _id
+        firstname
+      }
       time
     }
   }
@@ -442,26 +1020,44 @@ export const ADD_USER = gql`
       email
       firstname
       lastname
-      favorite
       rating
       comments {
         _id
-        comment
-        comment_id
-        firstname
+        commenter {
+          _id
+          firstname
+          lastname
+        }
         rating
+        comment
         date
       }
-      favorite_post
+      favorite_products {
+        _id
+      }
+      favorite_posts {
+        _id
+      }
     }
   }
 `;
 
 export const ADD_CHAT = gql`
-  mutation ($participants: [String!]!) {
-    addChat(participants: $participants) {
+  mutation ($participants_id: [String!]!) {
+    addChat(participants_id: $participants_id) {
       _id
-      participants
+      participants {
+        _id
+        firstname
+      }
+      messages {
+        message
+        sender {
+          _id
+          firstname
+        }
+        time
+      }
     }
   }
 `;
@@ -491,7 +1087,23 @@ export const ADD_POSSIBLE_BUYER = gql`
   mutation Mutation($id: String!, $buyerId: String!) {
     addPossibleBuyer(_id: $id, buyer_id: $buyerId) {
       _id
-      buyer_id
+      buyer {
+        _id
+        firstname
+        lastname
+        rating
+        comments {
+          _id
+          commenter {
+            _id
+            firstname
+            lastname
+          }
+          rating
+          comment
+          date
+        }
+      }
       category
       condition
       date
@@ -499,12 +1111,40 @@ export const ADD_POSSIBLE_BUYER = gql`
       image
       name
       price
-      seller_id
+      seller {
+        _id
+        firstname
+        lastname
+        rating
+        comments {
+          _id
+          commenter {
+            _id
+            firstname
+            lastname
+          }
+          rating
+          comment
+          date
+        }
+      }
       status
       possible_buyers {
         _id
         firstname
         lastname
+        rating
+        comments {
+          _id
+          commenter {
+            _id
+            firstname
+            lastname
+          }
+          rating
+          comment
+          date
+        }
       }
     }
   }
@@ -514,7 +1154,23 @@ export const REMOVE_POSSIBLE_BUYER = gql`
   mutation Mutation($id: String!, $buyerId: String!) {
     removePossibleBuyer(_id: $id, buyer_id: $buyerId) {
       _id
-      buyer_id
+      buyer {
+        _id
+        firstname
+        lastname
+        rating
+        comments {
+          _id
+          commenter {
+            _id
+            firstname
+            lastname
+          }
+          rating
+          comment
+          date
+        }
+      }
       category
       condition
       date
@@ -522,12 +1178,40 @@ export const REMOVE_POSSIBLE_BUYER = gql`
       image
       name
       price
-      seller_id
+      seller {
+        _id
+        firstname
+        lastname
+        rating
+        comments {
+          _id
+          commenter {
+            _id
+            firstname
+            lastname
+          }
+          rating
+          comment
+          date
+        }
+      }
       status
       possible_buyers {
         _id
         firstname
         lastname
+        rating
+        comments {
+          _id
+          commenter {
+            _id
+            firstname
+            lastname
+          }
+          rating
+          comment
+          date
+        }
       }
     }
   }
@@ -537,19 +1221,63 @@ export const ADD_POSSIBLE_SELLER = gql`
   mutation Mutation($id: String!, $sellerId: String!) {
     addPossibleSeller(_id: $id, seller_id: $sellerId) {
       _id
-      buyer_id
+      buyer {
+        _id
+        firstname
+        lastname
+        rating
+        comments {
+          _id
+          commenter {
+            _id
+            firstname
+            lastname
+          }
+          rating
+          comment
+          date
+        }
+      }
       category
       condition
       date
       description
-      item
+      name
       possible_sellers {
         _id
         firstname
         lastname
+        rating
+        comments {
+          _id
+          commenter {
+            _id
+            firstname
+            lastname
+          }
+          rating
+          comment
+          date
+        }
       }
       price
-      seller_id
+      seller {
+        _id
+        firstname
+        lastname
+        rating
+        comments {
+          _id
+          commenter {
+            _id
+            firstname
+            lastname
+          }
+          rating
+          comment
+          date
+        }
+      }
       status
     }
   }
@@ -559,48 +1287,107 @@ export const REMOVE_POSSIBLE_SELLER = gql`
   mutation Mutation($id: String!, $sellerId: String!) {
     removePossibleSeller(_id: $id, seller_id: $sellerId) {
       _id
-      buyer_id
+      buyer {
+        _id
+        firstname
+        lastname
+        rating
+        comments {
+          _id
+          commenter {
+            _id
+            firstname
+            lastname
+          }
+          rating
+          comment
+          date
+        }
+      }
       category
       condition
       date
       description
-      item
+      name
       possible_sellers {
         _id
         firstname
         lastname
+        rating
+        comments {
+          _id
+          commenter {
+            _id
+            firstname
+            lastname
+          }
+          rating
+          comment
+          date
+        }
       }
       price
-      seller_id
+      seller {
+        _id
+        firstname
+        lastname
+        rating
+        comments {
+          _id
+          commenter {
+            _id
+            firstname
+            lastname
+          }
+          rating
+          comment
+          date
+        }
+      }
       status
     }
   }
 `;
 
-// export const SEARCH_PRODUCTS = gql`
-//   query ($searchTerm: String!) {
-//     searchProducts(searchTerm: $searchTerm) {
-//       _id
-//       buyer_id
-//       category
-//       condition
-//       date
-//       description
-//       name
-//       price
-//       seller_id
-//       status
-//     }
-//   }
-// `;
-
 export const SEARCH_POSTS = gql`
   query ($searchTerm: String!, $category: String) {
-    searchPosts(searchTerm: $searchTerm, category: $category) {
+    searchPostsByName(searchTerm: $searchTerm, category: $category) {
       _id
-      buyer_id
-      seller_id
-      item
+      buyer {
+        _id
+        firstname
+        lastname
+        rating
+        comments {
+          _id
+          commenter {
+            _id
+            firstname
+            lastname
+          }
+          rating
+          comment
+          date
+        }
+      }
+      seller {
+        _id
+        firstname
+        lastname
+        rating
+        comments {
+          _id
+          commenter {
+            _id
+            firstname
+            lastname
+          }
+          rating
+          comment
+          date
+        }
+      }
+      name
       category
       date
       price
@@ -611,6 +1398,18 @@ export const SEARCH_POSTS = gql`
         _id
         firstname
         lastname
+        rating
+        comments {
+          _id
+          commenter {
+            _id
+            firstname
+            lastname
+          }
+          rating
+          comment
+          date
+        }
       }
       completion_date
     }
@@ -621,7 +1420,23 @@ export const SEARCH_PRODUCTS_BY_NAME = gql`
   query ($name: String!, $category: String) {
     searchProductsByName(name: $name, category: $category) {
       _id
-      buyer_id
+      buyer {
+        _id
+        firstname
+        lastname
+        rating
+        comments {
+          _id
+          commenter {
+            _id
+            firstname
+            lastname
+          }
+          rating
+          comment
+          date
+        }
+      }
       category
       condition
       image
@@ -629,12 +1444,40 @@ export const SEARCH_PRODUCTS_BY_NAME = gql`
       description
       name
       price
-      seller_id
+      seller {
+        _id
+        firstname
+        lastname
+        rating
+        comments {
+          _id
+          commenter {
+            _id
+            firstname
+            lastname
+          }
+          rating
+          comment
+          date
+        }
+      }
       status
       possible_buyers {
         _id
         firstname
         lastname
+        rating
+        comments {
+          _id
+          commenter {
+            _id
+            firstname
+            lastname
+          }
+          rating
+          comment
+          date
+        }
       }
       completion_date
     }
@@ -645,7 +1488,23 @@ export const SEARCH_PRODUCTS_BY_ID = gql`
   query GetProductById($id: String!) {
     getProductById(_id: $id) {
       _id
-      buyer_id
+      buyer {
+        _id
+        firstname
+        lastname
+        rating
+        comments {
+          _id
+          commenter {
+            _id
+            firstname
+            lastname
+          }
+          rating
+          comment
+          date
+        }
+      }
       category
       condition
       date
@@ -656,9 +1515,37 @@ export const SEARCH_PRODUCTS_BY_ID = gql`
         _id
         firstname
         lastname
+        rating
+        comments {
+          _id
+          commenter {
+            _id
+            firstname
+            lastname
+          }
+          rating
+          comment
+          date
+        }
       }
       price
-      seller_id
+      seller {
+        _id
+        firstname
+        lastname
+        rating
+        comments {
+          _id
+          commenter {
+            _id
+            firstname
+            lastname
+          }
+          rating
+          comment
+          date
+        }
+      }
       status
       completion_date
     }
@@ -669,32 +1556,64 @@ export const SEARCH_POST_BY_ID = gql`
   query Query($id: String!) {
     getPostById(_id: $id) {
       _id
-      buyer_id
+      buyer {
+        _id
+        firstname
+        lastname
+        rating
+        comments {
+          _id
+          commenter {
+            _id
+            firstname
+            lastname
+          }
+          rating
+          comment
+          date
+        }
+      }
       category
       completion_date
       condition
       date
       description
-      item
+      name
       possible_sellers {
         _id
-        favorite
-        comments {
-          comment_id
-          firstname
-          comment
-          _id
-          rating
-          date
-        }
-        favorite_post
-        email
         firstname
         lastname
         rating
+        comments {
+          _id
+          commenter {
+            _id
+            firstname
+            lastname
+          }
+          rating
+          comment
+          date
+        }
       }
       price
-      seller_id
+      seller {
+        _id
+        firstname
+        lastname
+        rating
+        comments {
+          _id
+          commenter {
+            _id
+            firstname
+            lastname
+          }
+          rating
+          comment
+          date
+        }
+      }
       status
       completion_date
     }
@@ -722,9 +1641,12 @@ export const ADD_COMMENT = gql`
       lastname
       comments {
         _id
+        commenter {
+          _id
+          firstname
+          lastname
+        }
         rating
-        comment_id
-        firstname
         comment
         date
       }
@@ -752,10 +1674,13 @@ export const EDIT_COMMENT = gql`
       lastname
       comments {
         _id
+        commenter {
+          _id
+          firstname
+          lastname
+        }
         rating
-        comment_id
         comment
-        firstname
         date
       }
       rating
@@ -765,34 +1690,116 @@ export const EDIT_COMMENT = gql`
 
 export const ADD_FAVORITE_TO_USER = gql`
   mutation Mutation($id: String!, $productId: String!) {
-    addProductToUserFavorite(_id: $id, productId: $productId)
+    addProductToUserFavorite(_id: $id, productId: $productId) {
+      _id
+      email
+      firstname
+      lastname
+      comments {
+        _id
+        commenter {
+          _id
+          firstname
+          lastname
+        }
+        rating
+        comment
+        date
+      }
+      rating
+      favorite_products {
+        _id
+      }
+      favorite_posts {
+        _id
+      }
+    }
   }
 `;
 
 export const REMOVE_FAVORITE_FROM_USER = gql`
   mutation Mutation($id: String!, $productId: String!) {
-    removeProductFromUserFavorite(_id: $id, productId: $productId)
+    removeProductFromUserFavorite(_id: $id, productId: $productId) {
+      _id
+      email
+      firstname
+      lastname
+      comments {
+        _id
+        commenter {
+          _id
+          firstname
+          lastname
+        }
+        rating
+        comment
+        date
+      }
+      rating
+      favorite_products {
+        _id
+      }
+      favorite_posts {
+        _id
+      }
+    }
   }
 `;
 
 export const ADD_FAVORITE_POST_TO_USER = gql`
   mutation Mutation($id: String!, $postId: String!) {
-    addPostToUserFavorite(_id: $id, postId: $postId)
+    addPostToUserFavorite(_id: $id, postId: $postId) {
+      _id
+      email
+      firstname
+      lastname
+      comments {
+        _id
+        commenter {
+          _id
+          firstname
+          lastname
+        }
+        rating
+        comment
+        date
+      }
+      rating
+      favorite_products {
+        _id
+      }
+      favorite_posts {
+        _id
+      }
+    }
   }
 `;
 
 export const REMOVE_FAVORITE_POST_FROM_USER = gql`
   mutation Mutation($id: String!, $postId: String!) {
-    removePostFromUserFavorite(_id: $id, postId: $postId)
-  }
-`;
-
-export const GET_PRODUCTS_BY_IDS = gql`
-  query Query($ids: [String!]!) {
-    getProductsByIds(ids: $ids) {
+    removePostFromUserFavorite(_id: $id, postId: $postId) {
       _id
-      name
-      price
+      email
+      firstname
+      lastname
+      comments {
+        _id
+        commenter {
+          _id
+          firstname
+          lastname
+        }
+        rating
+        comment
+        date
+      }
+      rating
+      favorite_products {
+        _id
+      }
+      favorite_posts {
+        _id
+      }
     }
   }
 `;
@@ -801,7 +1808,23 @@ export const GET_PRODUCTS_BY_CATEGORY = gql`
   query Query($category: String!) {
     getProductsByCategory(category: $category) {
       _id
-      buyer_id
+      buyer {
+        _id
+        firstname
+        lastname
+        rating
+        comments {
+          _id
+          commenter {
+            _id
+            firstname
+            lastname
+          }
+          rating
+          comment
+          date
+        }
+      }
       category
       condition
       date
@@ -809,12 +1832,40 @@ export const GET_PRODUCTS_BY_CATEGORY = gql`
       image
       name
       price
-      seller_id
+      seller {
+        _id
+        firstname
+        lastname
+        rating
+        comments {
+          _id
+          commenter {
+            _id
+            firstname
+            lastname
+          }
+          rating
+          comment
+          date
+        }
+      }
       status
       possible_buyers {
         _id
         firstname
         lastname
+        rating
+        comments {
+          _id
+          commenter {
+            _id
+            firstname
+            lastname
+          }
+          rating
+          comment
+          date
+        }
       }
       completion_date
     }
@@ -825,19 +1876,63 @@ export const GET_POSTS_BY_CATEGORY = gql`
   query Query($category: String!) {
     getPostsByCategory(category: $category) {
       _id
-      buyer_id
+      buyer {
+        _id
+        firstname
+        lastname
+        rating
+        comments {
+          _id
+          commenter {
+            _id
+            firstname
+            lastname
+          }
+          rating
+          comment
+          date
+        }
+      }
       condition
       category
       date
       description
-      item
+      name
       price
       status
-      seller_id
+      seller {
+        _id
+        firstname
+        lastname
+        rating
+        comments {
+          _id
+          commenter {
+            _id
+            firstname
+            lastname
+          }
+          rating
+          comment
+          date
+        }
+      }
       possible_sellers {
         _id
         firstname
         lastname
+        rating
+        comments {
+          _id
+          commenter {
+            _id
+            firstname
+            lastname
+          }
+          rating
+          comment
+          date
+        }
       }
       completion_date
     }
@@ -848,19 +1943,724 @@ export const GET_POSTS_BY_STATUS = gql`
   query GetPostsByStatus($status: String!) {
     getPostsByStatus(status: $status) {
       _id
-      buyer_id
+      buyer {
+        _id
+        firstname
+        lastname
+        rating
+        comments {
+          _id
+          commenter {
+            _id
+            firstname
+            lastname
+          }
+          rating
+          comment
+          date
+        }
+      }
       condition
       category
       date
       description
-      item
+      name
       price
       status
-      seller_id
+      seller {
+        _id
+        firstname
+        lastname
+        rating
+        comments {
+          _id
+          commenter {
+            _id
+            firstname
+            lastname
+          }
+          rating
+          comment
+          date
+        }
+      }
       possible_sellers {
         _id
         firstname
         lastname
+        rating
+        comments {
+          _id
+          commenter {
+            _id
+            firstname
+            lastname
+          }
+          rating
+          comment
+          date
+        }
+      }
+      completion_date
+    }
+  }
+`;
+
+export const CLEAR_PRODUCT_BUY = gql`
+  mutation Mutation($_id: String!) {
+    clearProductBuy(_id: $_id) {
+      _id
+      email
+      firstname
+      lastname
+      comments {
+        _id
+        commenter {
+          _id
+          firstname
+          lastname
+        }
+        rating
+        comment
+        date
+      }
+      rating
+      favorite_products {
+        _id
+        buyer {
+          _id
+        }
+        seller {
+          _id
+        }
+        possible_buyers {
+          _id
+        }
+        category
+        condition
+        date
+        description
+        image
+        name
+        price
+        status
+        completion_date
+      }
+      favorite_posts {
+        _id
+        buyer {
+          _id
+        }
+        seller {
+          _id
+        }
+        possible_sellers {
+          _id
+        }
+        category
+        condition
+        date
+        description
+        name
+        price
+        status
+        completion_date
+      }
+      possible_buyer {
+        _id
+        category
+        condition
+        date
+        description
+        image
+        name
+        price
+        seller {
+          _id
+          firstname
+          lastname
+          rating
+          comments {
+            _id
+            commenter {
+              _id
+              firstname
+              lastname
+            }
+            rating
+            comment
+            date
+          }
+        }
+        possible_buyers {
+          _id
+        }
+        status
+      }
+      possible_seller {
+        _id
+        category
+        condition
+        date
+        description
+        name
+        price
+        possible_sellers {
+          _id
+        }
+        buyer {
+          _id
+        }
+        seller {
+          _id
+          firstname
+          lastname
+          rating
+          comments {
+            _id
+            commenter {
+              _id
+              firstname
+              lastname
+            }
+            rating
+            comment
+            date
+          }
+        }
+        status
+      }
+    }
+  }
+`;
+
+export const CLEAR_PRODUCT_SELL = gql`
+  mutation Mutation($_id: String!) {
+    clearProductSell(_id: $_id) {
+      _id
+      buyer {
+        _id
+        firstname
+        lastname
+        rating
+        comments {
+          _id
+          commenter {
+            _id
+            firstname
+            lastname
+          }
+          rating
+          comment
+          date
+        }
+      }
+      condition
+      category
+      date
+      description
+      name
+      price
+      status
+      image
+      seller {
+        _id
+        firstname
+        lastname
+        rating
+        comments {
+          _id
+          commenter {
+            _id
+            firstname
+            lastname
+          }
+          rating
+          comment
+          date
+        }
+      }
+      possible_buyers {
+        _id
+        firstname
+        lastname
+        rating
+        comments {
+          _id
+          commenter {
+            _id
+            firstname
+            lastname
+          }
+          rating
+          comment
+          date
+        }
+      }
+      completion_date
+    }
+  }
+`;
+
+export const CLEAR_POST_BUY = gql`
+  mutation Mutation($_id: String!) {
+    clearPostBuy(_id: $_id) {
+      _id
+      buyer {
+        _id
+        firstname
+        lastname
+        rating
+        comments {
+          _id
+          commenter {
+            _id
+            firstname
+            lastname
+          }
+          rating
+          comment
+          date
+        }
+      }
+      condition
+      category
+      date
+      description
+      name
+      price
+      status
+      seller {
+        _id
+        firstname
+        lastname
+        rating
+        comments {
+          _id
+          commenter {
+            _id
+            firstname
+            lastname
+          }
+          rating
+          comment
+          date
+        }
+      }
+      possible_sellers {
+        _id
+        firstname
+        lastname
+        rating
+        comments {
+          _id
+          commenter {
+            _id
+            firstname
+            lastname
+          }
+          rating
+          comment
+          date
+        }
+      }
+      completion_date
+    }
+  }
+`;
+
+export const CLEAR_POST_SELL = gql`
+  mutation Mutation($_id: String!) {
+    clearPostSell(_id: $_id) {
+      _id
+      email
+      firstname
+      lastname
+      comments {
+        _id
+        commenter {
+          _id
+          firstname
+          lastname
+        }
+        rating
+        comment
+        date
+      }
+      rating
+      favorite_products {
+        _id
+        buyer {
+          _id
+        }
+        seller {
+          _id
+        }
+        possible_buyers {
+          _id
+        }
+        category
+        condition
+        date
+        description
+        image
+        name
+        price
+        status
+        completion_date
+      }
+      favorite_posts {
+        _id
+        buyer {
+          _id
+        }
+        seller {
+          _id
+        }
+        possible_sellers {
+          _id
+        }
+        category
+        condition
+        date
+        description
+        name
+        price
+        status
+        completion_date
+      }
+      possible_buyer {
+        _id
+        category
+        condition
+        date
+        description
+        image
+        name
+        price
+        seller {
+          _id
+          firstname
+          lastname
+          rating
+          comments {
+            _id
+            commenter {
+              _id
+              firstname
+              lastname
+            }
+            rating
+            comment
+            date
+          }
+        }
+        possible_buyers {
+          _id
+        }
+        status
+      }
+      possible_seller {
+        _id
+        category
+        condition
+        date
+        description
+        name
+        price
+        possible_sellers {
+          _id
+        }
+        buyer {
+          _id
+        }
+        seller {
+          _id
+          firstname
+          lastname
+          rating
+          comments {
+            _id
+            commenter {
+              _id
+              firstname
+              lastname
+            }
+            rating
+            comment
+            date
+          }
+        }
+        status
+      }
+    }
+  }
+`;
+
+export const CONFIRM_PRODUCT = gql`
+  mutation Mutation($_id: String!, $buyer_id: String!) {
+    confirmProduct(_id: $_id, buyer_id: $buyer_id) {
+      _id
+      buyer {
+        _id
+        firstname
+        lastname
+        rating
+        comments {
+          _id
+          commenter {
+            _id
+            firstname
+            lastname
+          }
+          rating
+          comment
+          date
+        }
+      }
+      category
+      condition
+      date
+      description
+      image
+      name
+      price
+      seller {
+        _id
+        firstname
+        lastname
+        rating
+        comments {
+          _id
+          commenter {
+            _id
+            firstname
+            lastname
+          }
+          rating
+          comment
+          date
+        }
+      }
+      status
+      possible_buyers {
+        _id
+        firstname
+        lastname
+        rating
+        comments {
+          _id
+          commenter {
+            _id
+            firstname
+            lastname
+          }
+          rating
+          comment
+          date
+        }
+      }
+      completion_date
+    }
+  }
+`;
+
+export const CONFIRM_POST = gql`
+  mutation Mutation($_id: String!, $seller_id: String!) {
+    confirmPost(_id: $_id, seller_id: $seller_id) {
+      _id
+      buyer {
+        _id
+        firstname
+        lastname
+        rating
+        comments {
+          _id
+          commenter {
+            _id
+            firstname
+            lastname
+          }
+          rating
+          comment
+          date
+        }
+      }
+      seller {
+        _id
+        firstname
+        lastname
+        rating
+        comments {
+          _id
+          commenter {
+            _id
+            firstname
+            lastname
+          }
+          rating
+          comment
+          date
+        }
+      }
+      name
+      category
+      date
+      price
+      condition
+      description
+      status
+      possible_sellers {
+        _id
+        firstname
+        lastname
+        rating
+        comments {
+          _id
+          commenter {
+            _id
+            firstname
+            lastname
+          }
+          rating
+          comment
+          date
+        }
+      }
+      completion_date
+    }
+  }
+`;
+
+export const REJECT_PRODUCT = gql`
+  mutation Mutation($_id: String!, $buyer_id: String!) {
+    rejectProduct(_id: $_id, buyer_id: $buyer_id) {
+      _id
+      buyer {
+        _id
+        firstname
+        lastname
+        rating
+        comments {
+          _id
+          commenter {
+            _id
+            firstname
+            lastname
+          }
+          rating
+          comment
+          date
+        }
+      }
+      category
+      condition
+      date
+      description
+      image
+      name
+      price
+      seller {
+        _id
+        firstname
+        lastname
+        rating
+        comments {
+          _id
+          commenter {
+            _id
+            firstname
+            lastname
+          }
+          rating
+          comment
+          date
+        }
+      }
+      status
+      possible_buyers {
+        _id
+        firstname
+        lastname
+        rating
+        comments {
+          _id
+          commenter {
+            _id
+            firstname
+            lastname
+          }
+          rating
+          comment
+          date
+        }
+      }
+      completion_date
+    }
+  }
+`;
+
+export const REJECT_POST = gql`
+  mutation Mutation($_id: String!, $seller_id: String!) {
+    rejectPost(_id: $_id, seller_id: $seller_id) {
+      _id
+      buyer {
+        _id
+        firstname
+        lastname
+        rating
+        comments {
+          _id
+          commenter {
+            _id
+            firstname
+            lastname
+          }
+          rating
+          comment
+          date
+        }
+      }
+      seller {
+        _id
+        firstname
+        lastname
+        rating
+        comments {
+          _id
+          commenter {
+            _id
+            firstname
+            lastname
+          }
+          rating
+          comment
+          date
+        }
+      }
+      name
+      category
+      date
+      price
+      condition
+      description
+      status
+      possible_sellers {
+        _id
+        firstname
+        lastname
+        rating
+        comments {
+          _id
+          commenter {
+            _id
+            firstname
+            lastname
+          }
+          rating
+          comment
+          date
+        }
       }
       completion_date
     }

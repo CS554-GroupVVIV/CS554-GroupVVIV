@@ -30,7 +30,6 @@ async function doCreateUserWithEmailAndPassword(email, password, displayName) {
 async function doChangePassword(email, oldPassword, newPassword) {
   const auth = getAuth();
   let credential = EmailAuthProvider.credential(email, oldPassword);
-  console.log(credential);
   await reauthenticateWithCredential(auth.currentUser, credential);
 
   await updatePassword(auth.currentUser, newPassword);
@@ -61,7 +60,6 @@ async function doSignOut() {
 async function updateUserProfile(displayName, oldEmail, newEmail, password) {
   let auth = getAuth();
   let credential = EmailAuthProvider.credential(oldEmail, password);
-  console.log(credential);
   await reauthenticateWithCredential(auth.currentUser, credential);
   await verifyBeforeUpdateEmail(auth.currentUser, newEmail)
     .then(function () {

@@ -1,9 +1,7 @@
-import React, { useState, useEffect, useRef, useContext } from "react";
-import { EDIT_POST } from "../queries";
+import React, { useState, useRef, useContext } from "react";
 import { useMutation } from "@apollo/client";
-import { uploadFileToS3 } from "../aws";
-import OutlinedInput from "@mui/material/OutlinedInput";
 import { AuthContext } from "../context/AuthContext";
+import { EDIT_POST } from "../queries";
 import {
   Button,
   TextField,
@@ -35,12 +33,11 @@ const EditPost = ({ postData }) => {
   const statusRef = useRef(null);
   const sellerRef = useRef(null);
 
-  const [name, setName] = useState(postData.item);
+  const [name, setName] = useState(postData.name);
   const [category, setCategory] = useState(postData.category);
   const [price, setPrice] = useState(postData.price);
   const [condition, setCondition] = useState(postData.condition);
   const [description, setDescription] = useState(postData.description);
-
   const [status, setStatus] = useState(postData.status);
   const [seller, setSeller] = useState("");
   const [nameError, setNameError] = useState(false);
@@ -50,6 +47,8 @@ const EditPost = ({ postData }) => {
   const [categoryError, setCategoryError] = useState(false);
   const [statusError, setStatusError] = useState(false);
   const [sellerError, setSellerError] = useState(false);
+
+  const [submitting, setSubmitting] = useState(false);
 
   const [editPost] = useMutation(EDIT_POST, {
     onError: (e) => {
@@ -161,7 +160,7 @@ const EditPost = ({ postData }) => {
         categoryLower != "clothing" &&
         categoryLower != "furniture" &&
         categoryLower != "book" &&
-        categoryLower != "stationery" &&
+        categoryLower != "stationary" &&
         categoryLower != "other"
       ) {
         setCategoryError(true);
@@ -182,7 +181,7 @@ const EditPost = ({ postData }) => {
       if (
         statusLower != "active" &&
         statusLower != "inactive" &&
-        statusLower != "completed"
+        statusLower != "pending"
       ) {
         setStatusError(true);
         return;
@@ -212,13 +211,14 @@ const EditPost = ({ postData }) => {
 
   const editSubmit = async () => {
     try {
+      setSubmitting(true);
       helper.checkName();
       helper.checkCategory();
       helper.checkPrice();
       helper.checkCondition();
       helper.checkDescription();
       helper.checkStatus();
-      if (status == "completed") {
+      if (status == "pending") {
         helper.checkSeller();
       }
       if (
@@ -229,6 +229,7 @@ const EditPost = ({ postData }) => {
         categoryError ||
         statusError
       ) {
+        setSubmitting(false);
         return;
       }
 
@@ -247,20 +248,20 @@ const EditPost = ({ postData }) => {
       let variables = {
         id: postData._id,
         buyer_id: currentUser.uid,
-        item: name,
+        name: name,
         category: category,
-        description: description,
         price: price,
         condition: condition,
+        description: description,
         status: status,
       };
 
-      if (status == "completed") {
+      if (status == "pending") {
         variables.seller_id = seller;
       }
       await editPost({ variables: variables });
     } catch (err) {
-      alert;
+      alert(err);
     }
   };
 
@@ -321,7 +322,11 @@ const EditPost = ({ postData }) => {
                       <Select
                         inputRef={categoryRef}
                         label="Category"
-                        defaultValue={category}
+                        // defaultValue={category}
+                        value={category}
+                        onChange={(e) => {
+                          setCategory(e.target.value);
+                        }}
                         onBlur={helper.checkCategory}
                       >
                         <MenuItem value={"book"}>Book</MenuItem>
@@ -374,7 +379,11 @@ const EditPost = ({ postData }) => {
                       </InputLabel>
                       <Select
                         inputRef={conditionRef}
-                        defaultValue={condition}
+                        // defaultValue={condition}
+                        value={condition}
+                        onChange={(e) => {
+                          setCondition(e.target.value);
+                        }}
                         label="Condition"
                         onBlur={helper.checkCondition}
                       >
@@ -424,13 +433,20 @@ const EditPost = ({ postData }) => {
                       </InputLabel>
                       <Select
                         inputRef={statusRef}
-                        defaultValue={status}
+                        // defaultValue={status}
+                        value={status}
+                        onChange={(e) => {
+                          setStatus(e.target.value);
+                        }}
                         label="Status"
                         onBlur={helper.checkStatus}
                       >
                         <MenuItem value={"active"}>Active</MenuItem>
                         <MenuItem value={"inactive"}>Retrieve</MenuItem>
-                        <MenuItem value={"completed"}>Completed</MenuItem>
+                        <MenuItem value={"rejected"} disabled>
+                          Rejected
+                        </MenuItem>
+                        <MenuItem value={"pending"}>In Progress</MenuItem>
                       </Select>
                     </FormControl>
                   </div>
@@ -445,7 +461,7 @@ const EditPost = ({ postData }) => {
                   )}
                 </Grid>
 
-                {status == "completed" && (
+                {status == "pending" && (
                   <Grid item xs={12}>
                     <div>
                       <FormControl sx={{ minWidth: 200 }} required>
@@ -454,7 +470,11 @@ const EditPost = ({ postData }) => {
                         </InputLabel>
                         <Select
                           inputRef={sellerRef}
-                          defaultValue={""}
+                          // defaultValue={""}
+                          value={seller}
+                          onChange={(e) => {
+                            setSeller(e.target.value);
+                          }}
                           label="Buyer"
                           onBlur={helper.checkSeller}
                         >

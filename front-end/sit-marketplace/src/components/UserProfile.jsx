@@ -1,19 +1,11 @@
-import { useState, useContext, useEffect } from "react";
+import { useState, useContext } from "react";
 import { useQuery } from "@apollo/client";
 import { AuthContext } from "../context/AuthContext.jsx";
-import {
-  GET_USER,
-  GET_PRODUCTS_BY_BUYER,
-  GET_PRODUCTS_BY_SELLER,
-  GET_POSTS_BY_SELLER,
-  GET_POSTS_BY_BUYER,
-} from "../queries";
+import { GET_USER } from "../queries";
 import UserInfo from "./UserInfo";
 import ProductTransactionHolder from "./ProductTransactionHolder";
 import PostTransactionHolder from "./PostTransactionHolder.jsx";
 import FavoriteHolder from "./FavoriteHolder.jsx";
-import { styled, createTheme, ThemeProvider } from "@mui/material/styles";
-import MuiDrawer from "@mui/material/Drawer";
 import CommentPage from "./CommentPage.jsx";
 import {
   Button,
@@ -27,71 +19,17 @@ import {
   CardActions,
   CardContent,
 } from "@mui/material";
-
-const drawerWidth = 300;
-
-const Drawer = styled(MuiDrawer, {
-  shouldForwardProp: (prop) => prop !== "open",
-})(({ theme, open }) => ({
-  "& .MuiDrawer-paper": {
-    position: "relative",
-    whiteSpace: "nowrap",
-    width: drawerWidth,
-    transition: theme.transitions.create("width", {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-    boxSizing: "border-box",
-  },
-}));
-
-// TODO remove, this demo shouldn't need to reset the theme.
-// const defaultTheme = createTheme();
+import Error from "./Error.jsx";
 
 export default function Dashboard() {
   let { currentUser } = useContext(AuthContext);
 
   const [value, setValue] = useState(0);
   const [toogleUpdateUser, setToggleUpdateUser] = useState(false);
-  const [user, setUser] = useState({});
 
-  const { loading, error, data } = useQuery(GET_USER, {
-    variables: { id: currentUser ? currentUser.uid : "" },
+  const { loading, error, data, refetch } = useQuery(GET_USER, {
+    variables: { id: currentUser?.uid },
     fetchPolicy: "cache-and-network",
-  });
-
-  console.log(data && data.getUserById);
-
-  const {
-    data: productSeller,
-    loading: productSellerLoading,
-    error: productSellerError,
-  } = useQuery(GET_PRODUCTS_BY_SELLER, {
-    variables: { id: currentUser ? currentUser.uid : "" },
-  });
-
-  const {
-    data: productBuyer,
-    loading: productBuyerLoading,
-    error: productBuyerError,
-  } = useQuery(GET_PRODUCTS_BY_BUYER, {
-    variables: { id: currentUser ? currentUser.uid : "" },
-  });
-
-  const {
-    data: postSeller,
-    loading: postSellerLoading,
-    error: postSellerError,
-  } = useQuery(GET_POSTS_BY_SELLER, {
-    variables: { _id: currentUser ? currentUser.uid : "" },
-  });
-
-  const {
-    data: postBuyer,
-    loading: postBuyerLoading,
-    error: postBuyerError,
-  } = useQuery(GET_POSTS_BY_BUYER, {
-    variables: { _id: currentUser ? currentUser.uid : "" },
   });
 
   const handleChange = (event, newValue) => {
@@ -117,16 +55,10 @@ export default function Dashboard() {
     );
   }
 
-  useEffect(() => {
-    if (data) {
-      setUser(data);
-    }
-  }, [data]);
-
   if (loading) {
     return <p>Loading</p>;
   } else if (error) {
-    <p>Error</p>;
+    <Error statusCodeProp={500} messageProp={"Something went wrong"} />;
   } else if (data) {
     return (
       <Grid container direction="row" height={"100vh"}>
@@ -212,33 +144,18 @@ export default function Dashboard() {
             </Box>
 
             <CustomTabPanel value={value} index={0}>
-              {productBuyer && productSeller ? (
-                <ProductTransactionHolder
-                  purchaseData={productBuyer.getProductByBuyer}
-                  soldData={productSeller.getProductBySeller}
-                />
-              ) : productBuyerLoading && productSellerLoading ? (
-                <p>Loading</p>
-              ) : (
-                <p>Error</p>
-              )}
+              <ProductTransactionHolder
+                userData={data.getUserById}
+                refetchUserData={refetch}
+              />
             </CustomTabPanel>
             <CustomTabPanel value={value} index={1}>
-              {postBuyer && postSeller ? (
-                <PostTransactionHolder
-                  purchaseData={postBuyer.getPostByBuyer}
-                  soldData={postSeller.getPostBySeller}
-                />
-              ) : postBuyerLoading && postSellerLoading ? (
-                <p>Loading</p>
-              ) : (
-                <p>Error</p>
-              )}
+              <PostTransactionHolder userData={data.getUserById} />
             </CustomTabPanel>
             <CustomTabPanel value={value} index={2}>
               <FavoriteHolder
-                favorite={data.getUserById.favorite}
-                favorite_post={data.getUserById.favorite_post}
+                favorite_products={data.getUserById.favorite_products}
+                favorite_posts={data.getUserById.favorite_posts}
               />
             </CustomTabPanel>
             <CustomTabPanel value={value} index={3}>

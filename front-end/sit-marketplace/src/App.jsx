@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Route, Routes, Navigate, useNavigate } from "react-router-dom";
 
 import Home from "./components/Home.jsx";
@@ -6,8 +6,6 @@ import Products from "./components/Products.jsx";
 import Posts from "./components/Posts.jsx";
 import Login from "./components/Login.jsx";
 import SignUp from "./components/Signup.jsx";
-import SearchProduct from "./components/SearchProduct.jsx";
-import ChatRooms from "./components/ChatRoomList.jsx";
 import { AuthProvider } from "./context/AuthContext.jsx";
 import PostForm from "./components/PostForm.jsx";
 import ProductDetailCard from "./components/ProductDetailCard.jsx";
@@ -20,7 +18,7 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import LogoutButton from "./components/LogoutButton.jsx";
 
 import ChatRoomList from "./components/ChatRoomList.jsx";
-import { socketID, socket } from "./components/socket.jsx";
+import { socket } from "./components/socket.jsx";
 
 // redux and theme
 import { useSelector, useDispatch } from "react-redux";
@@ -35,15 +33,11 @@ import {
   AppBar,
   Container,
   Toolbar,
-  FormGroup,
-  FormControlLabel,
-  Switch,
   Typography,
   Link,
   Dialog,
   DialogTitle,
   DialogContent,
-  DialogContentText,
   DialogActions,
   Divider,
   IconButton,
@@ -57,7 +51,6 @@ function App() {
   useEffect(() => {
     onAuthStateChanged(getAuth(), (user) => {
       if (user) {
-        const uid = user.uid;
         setUser(user);
       } else {
         setUser(null);
@@ -83,14 +76,14 @@ function App() {
   };
 
   useEffect(() => {
-    socket.on("join room", () => {
-      setOpen(true);
-    });
+    if (socket)
+      socket.on("join room", () => {
+        setOpen(true);
+      });
   }, [socket]);
 
   return (
     <ThemeProvider theme={theme.darkmode ? darkMode : lightMode}>
-      {/*  <ThemeProvider theme={darkMode}> */}
       <CssBaseline />
       <AuthProvider>
         <AppBar position="fixed">
@@ -183,6 +176,26 @@ function App() {
                         Chat Rooms
                       </Link>
 
+                      <Dialog open={open} keepMounted onClose={handleClose}>
+                        <DialogTitle>
+                          <Typography
+                            sx={{
+                              fontWeight: "bold",
+                            }}
+                            // onClick={async () => {
+                            //   socket.emit("rooms");
+                            // }}
+                          >
+                            Chat Rooms
+                          </Typography>
+                        </DialogTitle>
+                        <Divider />
+                        <DialogContent>
+                          <ChatRoomList uid={user.uid} />
+                        </DialogContent>
+                        <DialogActions></DialogActions>
+                      </Dialog>
+
                       <LogoutButton />
                     </>
                   ) : (
@@ -200,20 +213,6 @@ function App() {
                       >
                         Login
                       </Link>
-
-                      {/* <Link
-                        color="inherit"
-                        component="button"
-                        onClick={() => {
-                          navigate("/signup");
-                        }}
-                        sx={{
-                          textDecoration: "none",
-                          marginRight: 5,
-                        }}
-                      >
-                        Signup
-                      </Link> */}
                     </>
                   )}
 
@@ -231,23 +230,6 @@ function App() {
             </Toolbar>
           </Container>
         </AppBar>
-
-        <Dialog open={open} keepMounted onClose={handleClose}>
-          <DialogTitle>
-            <Typography
-              sx={{
-                fontWeight: "bold",
-              }}
-            >
-              Chat Rooms
-            </Typography>
-          </DialogTitle>
-          <Divider />
-          <DialogContent>
-            <ChatRoomList uid={user && user.uid} />
-          </DialogContent>
-          <DialogActions></DialogActions>
-        </Dialog>
 
         <div className="App">
           <Routes>

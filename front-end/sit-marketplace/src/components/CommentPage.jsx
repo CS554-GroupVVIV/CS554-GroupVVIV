@@ -25,9 +25,8 @@ const CommentPage = ({ user_id }) => {
   if (loading) {
     return <p>Loading</p>;
   } else if (error) {
-    <p>Error</p>;
+    return <p>Something went wrong</p>;
   } else if (data) {
-    console.log(data);
     const comments = data.getUserById.comments;
     const rating = data.getUserById.rating;
     return (
@@ -41,7 +40,6 @@ const CommentPage = ({ user_id }) => {
           <List sx={style} component="div" aria-label="comment">
             {comments &&
               comments.map((comment, index) => {
-                console.log(comment.comment);
                 return (
                   <div key={comment._id}>
                     <ListItem>
@@ -52,8 +50,25 @@ const CommentPage = ({ user_id }) => {
                             style={{ whiteSpace: "pre-line" }}
                           >
                             {`${comment.rating.toFixed(2)} from ${
-                              comment.firstname
-                            } on ${comment.date.toLocaleString()}
+                              comment.commenter.firstname
+                            } on ${
+                              /^\d+$/.test(comment.date)
+                                ? new Date(
+                                    parseInt(comment.date)
+                                  ).toLocaleString("en-US", {
+                                    year: "numeric",
+                                    month: "2-digit",
+                                    day: "2-digit",
+                                  })
+                                : new Date(comment.date).toLocaleString(
+                                    "en-US",
+                                    {
+                                      year: "numeric",
+                                      month: "2-digit",
+                                      day: "2-digit",
+                                    }
+                                  )
+                            }
                             `}
                             {comment.comment != ""
                               ? `\n"${comment.comment}"`

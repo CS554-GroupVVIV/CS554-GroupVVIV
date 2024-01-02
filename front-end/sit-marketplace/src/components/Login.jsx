@@ -24,10 +24,12 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 function Login() {
   const navigate = useNavigate();
   const { currentUser } = useContext(AuthContext);
+
   const { loading, error, data } = useQuery(GET_USER, {
-    variables: { id: currentUser ? currentUser.uid : "" },
+    variables: { id: currentUser?.uid },
     fetchPolicy: "cache-and-network",
   });
+
   const [emailInDOM, setEmailInDOM] = useState("");
   const [editUser] = useMutation(EDIT_USER);
   const defaultTheme = createTheme();

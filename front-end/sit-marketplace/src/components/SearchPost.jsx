@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 
 import { useQuery } from "@apollo/client";
 import { SEARCH_POSTS } from "../queries";
 
 import PostCard from "./PostCard.jsx";
 
-import { Grid, Button, Typography } from "@mui/material";
+import { Grid, Typography } from "@mui/material";
 
 export default function SearchPost({ searchTerm, category }) {
   const { loading, error, data } = useQuery(SEARCH_POSTS, {
@@ -31,8 +31,8 @@ export default function SearchPost({ searchTerm, category }) {
 
         <div style={{ display: "flex", justifyContent: "center" }}>
           <Grid container spacing={2} marginTop={1} justifyContent="center">
-            {data && data.searchPosts.length !== 0 ? (
-              data.searchPosts.map((post) => {
+            {data && data.searchPostsByName.length !== 0 ? (
+              data.searchPostsByName.map((post) => {
                 {
                   if (post.status === "active") {
                     return <PostCard key={post._id} postData={post} />;
