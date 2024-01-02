@@ -33,11 +33,13 @@ const app = initializeApp(fbconfig);
 const client = new ApolloClient({
   cache: new InMemoryCache(),
   link: new HttpLink({
-    uri: import.meta.env.VITE_APOLLO_URL || "http://localhost:4000",
+    uri:
+      import.meta.env.VITE_APOLLO_URL ||
+      "https://sit-marketplace-5265b1f40c10.herokuapp.com/",
   }),
 });
 
-ReactDOM.createRoot(document.getElementById('root')).render(
+ReactDOM.createRoot(document.getElementById("root")).render(
   <ApolloProvider client={client}>
     <Provider store={store}>
       <BrowserRouter>
